@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Jubyr LLC</title>
+<meta name="description" content="Tell Jubyr LLC what you need — events, venues, booking, tools — and we'll get back to you.">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="apple-touch-icon" href="assets/jubyr-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=27">
+</head>
+<body>
+
+<!-- announcement -->
+<div class="announce">
+  <span class="mono">Jubyr LLC &middot; Experience design studio &middot; Philadelphia</span>
+  <a class="mono" href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">Free consultation <span aria-hidden="true">&gt;</span></a>
+</div>
+
+<div class="frame">
+
+  <!-- nav -->
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
+      <ul class="nav__links mono">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#approach">Approach</a></li>
+        <li><a href="/#services">Services</a></li>
+        <li><a href="/#portfolio">Portfolio</a></li>
+        <li><a href="/signup">Stay in touch</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobilemenu mono" id="mobilemenu">
+      <a href="/">Home</a>
+      <a href="/#approach">Approach</a>
+      <a href="/#services">Services</a>
+      <a href="/#portfolio">Portfolio</a>
+      <a href="/signup">Stay in touch</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="box signup contactform" style="background-image: url('assets/bg-velvet.jpg')">
+      <div class="signup__inner">
+        <h1>What do you need?</h1>
+        <form id="inq-form" novalidate>
+
+          <fieldset class="inq__q">
+            <legend class="inq__legend">01 &middot; This inquiry is for &middot; <em>check all that apply</em></legend>
+            <div class="choices" role="group" aria-label="Inquiry topics">
+              <label class="choice"><input type="checkbox" name="TOPIC" value="Event production"><span>Event production</span></label>
+              <label class="choice"><input type="checkbox" name="TOPIC" value="Venue &amp; hospitality consulting"><span>Venue &amp; hospitality consulting</span></label>
+              <label class="choice"><input type="checkbox" name="TOPIC" value="Booking &amp; programming"><span>Booking &amp; programming</span></label>
+              <label class="choice"><input type="checkbox" name="TOPIC" value="Custom tools &amp; design"><span>Custom tools &amp; design</span></label>
+              <label class="choice"><input type="checkbox" name="TOPIC" value="Teaching &amp; speaking"><span>Teaching &amp; speaking</span></label>
+              <label class="choice"><input type="checkbox" name="TOPIC" value="Something else"><span>Something else</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="inq__q">
+            <legend class="inq__legend">02 &middot; What shape should it take?</legend>
+            <div class="choices" role="group" aria-label="Engagement type">
+              <label class="choice"><input type="radio" name="SHAPE" value="A single event or night"><span>A single event or night</span></label>
+              <label class="choice"><input type="radio" name="SHAPE" value="An ongoing partnership"><span>An ongoing partnership</span></label>
+              <label class="choice"><input type="radio" name="SHAPE" value="A one-time consult"><span>A one-time consult</span></label>
+              <label class="choice"><input type="radio" name="SHAPE" value="Not sure yet"><span>Not sure yet</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="inq__q">
+            <legend class="inq__legend">03 &middot; When do you need it?</legend>
+            <div class="choices" role="group" aria-label="Timeline">
+              <label class="choice"><input type="radio" name="WHEN" value="Just exploring"><span>Just exploring</span></label>
+              <label class="choice"><input type="radio" name="WHEN" value="In the next few months"><span>In the next few months</span></label>
+              <label class="choice"><input type="radio" name="WHEN" value="Soon — I have a date"><span>Soon &mdash; I have a date</span></label>
+            </div>
+          </fieldset>
+
+          <input class="signup__field" type="text" name="NAME" placeholder="Your Name" autocomplete="name" required>
+          <input class="signup__field" type="email" name="EMAIL" placeholder="Email Address" autocomplete="email" required>
+          <textarea class="signup__field" name="DETAILS" placeholder="Any further details — venue, date, budget, the vision&hellip;" rows="4"></textarea>
+
+          <p class="signup__note signup__note--error" id="inq-error" hidden></p>
+          <button class="signup__btn" type="submit" id="inq-submit">Send inquiry</button>
+          <p class="signup__note" id="inq-done" hidden>
+            Your email app should open with everything filled in &mdash; just hit
+            send. If it doesn&rsquo;t, write us directly at
+            <a href="mailto:ruby@jubyr.com" style="color:#fff">ruby@jubyr.com</a>.
+          </p>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- footer -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__top">
+      <div class="footer__logo">
+        <img src="assets/jubyr-logo-white.png?v=2" alt="Jubyr LLC" width="97" height="30">
+        <p>An experience design studio. We help organizations shape how people feel — before, during, and after every interaction.</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/#approach">Approach</a></li>
+          <li><a href="/#services">Services</a></li>
+          <li><a href="/#portfolio">Portfolio</a></li>
+          <li><a href="/signup">Stay in touch</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Based in</h5>
+        <address class="addr">
+          Philadelphia, PA
+        </address>
+      </div>
+      <div>
+        <h5>Say hi</h5>
+        <ul>
+          <li><a href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">Book a free consultation</a></li>
+          <li><a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a></li>
+          <li><a href="https://instagram.com/jubyrllc" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="status"><span class="dot" aria-hidden="true"></span> Now booking &mdash; consulting &amp; productions</span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // mobile menu
+  const burger = document.querySelector('.nav__burger');
+  const menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }));
+
+  // ---------------------------------------------------------------
+  // Inquiry form — composes a structured email to ruby@jubyr.com via
+  // the visitor's mail app (no backend on this static site).
+  // ---------------------------------------------------------------
+  const form = document.getElementById('inq-form');
+  const errEl = document.getElementById('inq-error');
+  const doneEl = document.getElementById('inq-done');
+
+  function showError(msg) {
+    errEl.textContent = msg;
+    errEl.hidden = false;
+    doneEl.hidden = true;
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    errEl.hidden = true;
+
+    const topics = [...form.querySelectorAll('input[name="TOPIC"]:checked')].map(i => i.value);
+    const shape = (form.querySelector('input[name="SHAPE"]:checked') || {}).value || '';
+    const when  = (form.querySelector('input[name="WHEN"]:checked') || {}).value || '';
+    const name = form.NAME.value.trim();
+    const email = form.EMAIL.value.trim();
+    const details = form.DETAILS.value.trim();
+
+    if (!topics.length) { showError('Check at least one option for what this inquiry is for.'); return; }
+    if (!name) { showError('Please add your name.'); return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { showError('Please add a valid email address.'); return; }
+
+    const subject = 'Jubyr inquiry — ' + topics.join(', ');
+    const body =
+      'New inquiry from jubyr.com\n\n' +
+      'Name: ' + name + '\n' +
+      'Email: ' + email + '\n\n' +
+      'Inquiry for: ' + topics.join(', ') + '\n' +
+      'Shape: ' + (shape || '—') + '\n' +
+      'Timeline: ' + (when || '—') + '\n\n' +
+      'Details:\n' + (details || '—');
+
+    window.location.href = 'mailto:ruby@jubyr.com?subject=' +
+      encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    doneEl.hidden = false;
+  });
+</script>
+
+</body>
+</html>
