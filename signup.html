@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stay in Touch — Jubyr LLC</title>
 <meta name="description" content="Join the Jubyr LLC list — events, projects, and openings from the studio, straight to your inbox.">
-<link rel="icon" type="image/svg+xml" href="assets/jubyr-icon.svg">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="apple-touch-icon" href="assets/jubyr-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=22">
+<link rel="stylesheet" href="styles.css?v=23">
 </head>
 <body>
 
@@ -24,7 +25,7 @@
   <!-- nav -->
   <header>
     <nav class="nav" aria-label="Main">
-      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png" alt="Jubyr LLC" width="99" height="30"></a>
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
       <ul class="nav__links mono">
         <li><a href="/">Home</a></li>
         <li><a href="/#approach">Approach</a></li>
@@ -56,6 +57,14 @@
           <input class="signup__field" type="text" name="LNAME" placeholder="Last Name" autocomplete="family-name" required>
           <input class="signup__field" type="email" name="EMAIL" placeholder="Email Address" autocomplete="email" required>
           <input class="signup__field" type="tel" name="PHONE" placeholder="Phone Number" autocomplete="tel">
+          <label class="signup__consent">
+            <input type="checkbox" name="SMSOK" id="signup-smsok">
+            <span>Text me updates &mdash; by checking this box, I agree to receive
+            promotional and marketing messages, notifications, and customer service
+            communications from Jubyr LLC at the number above. Message and data rates
+            may apply. Message frequency varies. Consent is not a condition of purchase.
+            Text HELP for help, STOP to cancel.</span>
+          </label>
           <textarea class="signup__field" name="MESSAGE" placeholder="Leave a Message (optional)" rows="3"></textarea>
           <p class="signup__note signup__note--error" id="signup-error" hidden></p>
           <button class="signup__btn" type="submit" id="signup-submit">Submit</button>
@@ -70,7 +79,7 @@
   <div class="footer__inner">
     <div class="footer__top">
       <div class="footer__logo">
-        <img src="assets/jubyr-logo-white.png" alt="Jubyr LLC" width="99" height="30">
+        <img src="assets/jubyr-logo-white.png?v=2" alt="Jubyr LLC" width="97" height="30">
         <p>An experience design studio. We help organizations shape how people feel — before, during, and after every interaction.</p>
       </div>
       <div>
@@ -163,6 +172,11 @@
       });
       const phone = usPhone(data.PHONE);
       if (phone) params.set('PHONE', phone);
+      // SMS opt-in: only sent when the visitor checked the consent box
+      if (data.SMSOK && phone) {
+        params.set('SMSPHONE[country]', 'US');
+        params.set('SMSPHONE', '+1 ' + phone.replace(/\D/g, ''));
+      }
       // honeypot field Mailchimp expects to be empty
       params.set('b_' + MAILCHIMP.u + '_' + MAILCHIMP.id, '');
       const script = document.createElement('script');
@@ -188,11 +202,13 @@
       LNAME: form.LNAME.value.trim(),
       EMAIL: form.EMAIL.value.trim(),
       PHONE: form.PHONE.value.trim(),
+      SMSOK: form.SMSOK.checked,
       MESSAGE: form.MESSAGE.value.trim()
     };
 
     if (!data.FNAME) { showError('Please add your first name.'); return; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.EMAIL)) { showError('Please add a valid email address.'); return; }
+    if (data.SMSOK && !usPhone(data.PHONE)) { showError('To receive texts, please add a valid US phone number.'); return; }
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending…';
