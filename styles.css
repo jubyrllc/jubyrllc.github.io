@@ -1625,6 +1625,13 @@
   background-position: center;
   padding: 100px 24px 88px;
 }
+/* variant that always shows the image's full width (never crops the
+   sides), letting near-black fill any vertical remainder seamlessly */
+.sechead--fitw {
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-color: #0E0D0C;
+}
 .sechead.sechead--photo h2 { color: #fff; }
 .sechead.sechead--photo p { color: rgba(255, 255, 255, 0.9); }
 .sechead.sechead--photo .tag {
