@@ -1562,16 +1562,17 @@
 }
 .gflag__lede {
   color: rgba(255, 255, 255, 0.96);
-  font-size: 16.5px;
+  font-size: 14px;
   line-height: 1.6;
-  max-width: 42ch;
-  margin: 0 auto 18px;
+  max-width: 44ch;
+  margin: 0 auto 16px;
   text-align: center;
   text-wrap: balance;
 }
 .gflag__nospam {
   color: rgba(255, 255, 255, 0.92);
-  font-size: 14.5px;
+  font-size: 14px;
+  line-height: 1.6;
   margin: 0 auto 36px;
   text-align: center;
   text-wrap: balance;
