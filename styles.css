@@ -1159,12 +1159,12 @@
 }
 .expander details[open] summary::after { content: "\2013"; }
 .expander--lead .xt {
-  font-size: clamp(20px, 2.6vw, 30px);
+  font-size: clamp(19px, 1.8vw, 22px);
   font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
 }
-.expander--lead summary { padding: 30px 28px; }
+.expander--lead summary { padding: 26px 28px; }
 .expander__body { padding: 2px 28px 30px 80px; max-width: 76ch; }
 .expander__body p { color: var(--muted); font-size: 15.5px; margin-bottom: 12px; }
 .expander__body p:last-child { margin-bottom: 0; }
