@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wavelength — Jubyr LLC</title>
+<meta name="description" content="We're on the same wavelength. Drop your info to stay in the loop for future gatherings of genuine folks.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="assets/jubyr-icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=22">
+</head>
+<body>
+
+<div class="frame">
+
+  <!-- nav -->
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png" alt="Jubyr LLC" width="99" height="30"></a>
+      <ul class="nav__links mono">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#approach">Approach</a></li>
+        <li><a href="/#services">Services</a></li>
+        <li><a href="/#portfolio">Portfolio</a></li>
+        <li><a href="/signup">Stay in touch</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobilemenu mono" id="mobilemenu">
+      <a href="/">Home</a>
+      <a href="/#approach">Approach</a>
+      <a href="/#services">Services</a>
+      <a href="/#portfolio">Portfolio</a>
+      <a href="/signup">Stay in touch</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="box gflag gflag--wave">
+      <div class="gflag__inner">
+
+        <!-- splash: what you see when you scan the card -->
+        <div class="gflag__panel" id="wl-splash">
+          <h1 class="gflag__wordmark">Wavelength</h1>
+          <svg class="wave-icon" viewBox="0 0 300 64" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path class="echo" d="M2 32 C 14 27, 22 27, 30 32 S 44 42, 54 32 S 64 14, 78 32 S 92 54, 106 32 S 116 6, 132 32 S 148 58, 162 32 S 172 16, 186 32 S 198 44, 210 32 S 220 24, 232 32 S 244 38, 254 32 S 266 29, 278 31 S 290 33, 298 31" transform="translate(0 5)"/>
+            <path class="echo" d="M2 32 C 14 27, 22 27, 30 32 S 44 42, 54 32 S 64 14, 78 32 S 92 54, 106 32 S 116 6, 132 32 S 148 58, 162 32 S 172 16, 186 32 S 198 44, 210 32 S 220 24, 232 32 S 244 38, 254 32 S 266 29, 278 31 S 290 33, 298 31" transform="translate(0 -5)"/>
+            <path d="M2 32 C 14 27, 22 27, 30 32 S 44 42, 54 32 S 64 14, 78 32 S 92 54, 106 32 S 116 6, 132 32 S 148 58, 162 32 S 172 16, 186 32 S 198 44, 210 32 S 220 24, 232 32 S 244 38, 254 32 S 266 29, 278 31 S 290 33, 298 31"/>
+            <path class="drift" d="M2 32 C 14 27, 22 27, 30 32 S 44 42, 54 32 S 64 14, 78 32 S 92 54, 106 32 S 116 6, 132 32 S 148 58, 162 32 S 172 16, 186 32 S 198 44, 210 32 S 220 24, 232 32 S 244 38, 254 32 S 266 29, 278 31 S 290 33, 298 31" transform="translate(0 2)"/>
+          </svg>
+          <p class="gflag__lede">
+            We&rsquo;re on the same wavelength. If you&rsquo;d like to stay in the
+            loop for future gatherings of genuine folks, just drop your info.
+          </p>
+          <p class="gflag__nospam">No spam&mdash;just an invite when cool shit happens.</p>
+          <button class="signup__btn" id="wl-join" type="button">Join</button>
+        </div>
+
+        <!-- form: revealed after Join -->
+        <div class="gflag__panel gone" id="wl-formwrap" hidden>
+          <h2>Thank You For Being You.</h2>
+          <form id="wl-form" novalidate>
+            <input class="signup__field" type="text" name="FNAME" placeholder="First Name" autocomplete="given-name" required>
+            <input class="signup__field" type="text" name="LNAME" placeholder="Last Name" autocomplete="family-name" required>
+            <input class="signup__field" type="email" name="EMAIL" placeholder="Email Address" autocomplete="email" required>
+            <input class="signup__field" type="tel" name="PHONE" placeholder="Phone Number" autocomplete="tel">
+            <input class="signup__field" type="text" name="INSTAGRAM" placeholder="Instagram @" autocomplete="off">
+            <textarea class="signup__field" name="MESSAGE" placeholder="Leave a Message (optional)" rows="3"></textarea>
+            <p class="signup__note signup__note--error" id="wl-error" hidden></p>
+            <button class="signup__btn" type="submit" id="wl-submit">Submit</button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- footer -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__top">
+      <div class="footer__logo">
+        <img src="assets/jubyr-logo-white.png" alt="Jubyr LLC" width="99" height="30">
+        <p>An experience design studio. We help organizations shape how people feel — before, during, and after every interaction.</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/#approach">Approach</a></li>
+          <li><a href="/#services">Services</a></li>
+          <li><a href="/#portfolio">Portfolio</a></li>
+          <li><a href="/signup">Stay in touch</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Based in</h5>
+        <address class="addr">
+          Philadelphia, PA
+        </address>
+      </div>
+      <div>
+        <h5>Say hi</h5>
+        <ul>
+          <li><a href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">Book a free consultation</a></li>
+          <li><a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a></li>
+          <li><a href="https://instagram.com/jubyrllc" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="status"><span class="dot" aria-hidden="true"></span> Now booking &mdash; consulting &amp; productions</span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // mobile menu
+  const burger = document.querySelector('.nav__burger');
+  const menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }));
+
+  // splash -> form
+  const splash = document.getElementById('wl-splash');
+  const formwrap = document.getElementById('wl-formwrap');
+  document.getElementById('wl-join').addEventListener('click', () => {
+    splash.classList.add('gone');
+    formwrap.hidden = false;
+    formwrap.classList.add('coming');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      formwrap.classList.remove('gone', 'coming');
+      document.querySelector('#wl-form input[name="FNAME"]').focus();
+    }));
+  });
+
+  // ---------------------------------------------------------------
+  // Mailchimp configuration — same audience as signup.html, but these
+  // contacts are segmented as Wavelength:
+  //   - SOURCE merge field is sent as "Wavelength"
+  //   - optionally set wlTagId to the numeric Mailchimp "Wavelength"
+  //     tag id to hard-tag them on arrival
+  // INSTAGRAM and MESSAGE must also exist as text merge fields.
+  // Until dc/u/id are filled in, submissions fall back to an email to
+  // ruby@jubyr.com marked "Wavelength registry".
+  // ---------------------------------------------------------------
+  const MAILCHIMP = {
+    dc: 'YOUR_DC',
+    u:  'YOUR_U',
+    id: 'YOUR_ID',
+    wlTagId: ''   // optional numeric Mailchimp tag id for "Wavelength"
+  };
+  const mcConfigured = !MAILCHIMP.u.startsWith('YOUR');
+
+  const form = document.getElementById('wl-form');
+  const errEl = document.getElementById('wl-error');
+  const submitBtn = document.getElementById('wl-submit');
+
+  function showError(msg) {
+    errEl.textContent = msg;
+    errEl.hidden = false;
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit';
+  }
+
+  function subscribeViaMailchimp(data) {
+    return new Promise((resolve, reject) => {
+      const cb = 'mcCallback_' + Date.now();
+      const params = new URLSearchParams({
+        u: MAILCHIMP.u,
+        id: MAILCHIMP.id,
+        EMAIL: data.EMAIL,
+        FNAME: data.FNAME,
+        LNAME: data.LNAME,
+        PHONE: data.PHONE,
+        INSTAGRAM: data.INSTAGRAM,
+        MESSAGE: data.MESSAGE,
+        SOURCE: 'Wavelength',
+        c: cb
+      });
+      if (MAILCHIMP.wlTagId) params.set('tags', MAILCHIMP.wlTagId);
+      params.set('b_' + MAILCHIMP.u + '_' + MAILCHIMP.id, '');
+      const script = document.createElement('script');
+      const timer = setTimeout(() => { cleanup(); reject(new Error('timeout')); }, 12000);
+      function cleanup() {
+        clearTimeout(timer);
+        delete window[cb];
+        script.remove();
+      }
+      window[cb] = (res) => { cleanup(); resolve(res); };
+      script.onerror = () => { cleanup(); reject(new Error('network')); };
+      script.src = 'https://' + MAILCHIMP.dc + '.list-manage.com/subscribe/post-json?' + params.toString();
+      document.body.appendChild(script);
+    });
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errEl.hidden = true;
+
+    const data = {
+      FNAME: form.FNAME.value.trim(),
+      LNAME: form.LNAME.value.trim(),
+      EMAIL: form.EMAIL.value.trim(),
+      PHONE: form.PHONE.value.trim(),
+      INSTAGRAM: form.INSTAGRAM.value.trim().replace(/^@/, ''),
+      MESSAGE: form.MESSAGE.value.trim()
+    };
+
+    if (!data.FNAME) { showError('Please add your first name.'); return; }
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.EMAIL)) { showError('Please add a valid email address.'); return; }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending…';
+
+    if (mcConfigured) {
+      try {
+        const res = await subscribeViaMailchimp(data);
+        if (res.result === 'success' || /already subscribed/i.test(res.msg || '')) {
+          window.location.href = '/thank-you-wavelength';
+        } else {
+          const msg = (res.msg || 'Something went wrong.').replace(/^\d+\s*-\s*/, '').replace(/<[^>]*>/g, '');
+          showError(msg);
+        }
+      } catch (err) {
+        showError('We couldn’t reach the list right now — please try again in a minute.');
+      }
+    } else {
+      // Fallback until Mailchimp is configured: send the signup by email.
+      const body = 'New WAVELENGTH registry signup\n\n' +
+        'Name: ' + data.FNAME + ' ' + data.LNAME + '\n' +
+        'Email: ' + data.EMAIL + '\n' +
+        'Phone: ' + (data.PHONE || '—') + '\n' +
+        'Instagram: ' + (data.INSTAGRAM ? '@' + data.INSTAGRAM : '—') + '\n' +
+        'Message: ' + (data.MESSAGE || '—');
+      window.location.href = 'mailto:ruby@jubyr.com?subject=' +
+        encodeURIComponent('Wavelength registry — ' + data.FNAME + ' ' + data.LNAME) +
+        '&body=' + encodeURIComponent(body);
+      setTimeout(() => { window.location.href = '/thank-you-wavelength'; }, 1200);
+    }
+  });
+</script>
+
+</body>
+</html>

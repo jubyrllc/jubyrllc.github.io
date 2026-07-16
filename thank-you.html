@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank You — Jubyr LLC</title>
+<meta name="description" content="You're on the Jubyr LLC list.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="assets/jubyr-icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=22">
+</head>
+<body>
+
+<!-- announcement -->
+<div class="announce">
+  <span class="mono">Jubyr LLC &middot; Experience design studio &middot; Philadelphia</span>
+  <a class="mono" href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">Free consultation <span aria-hidden="true">&gt;</span></a>
+</div>
+
+<div class="frame">
+
+  <!-- nav -->
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png" alt="Jubyr LLC" width="99" height="30"></a>
+      <ul class="nav__links mono">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#approach">Approach</a></li>
+        <li><a href="/#services">Services</a></li>
+        <li><a href="/#portfolio">Portfolio</a></li>
+        <li><a href="/signup">Stay in touch</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobilemenu mono" id="mobilemenu">
+      <a href="/">Home</a>
+      <a href="/#approach">Approach</a>
+      <a href="/#services">Services</a>
+      <a href="/#portfolio">Portfolio</a>
+      <a href="/signup">Stay in touch</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="box signup" style="background-image: url('assets/bg-lounge-dark.jpg')">
+      <div class="signup__inner">
+        <span class="signup__aff">You&rsquo;re on the list</span>
+        <h1>Thank you. Consider yourself considered.</h1>
+        <p class="thanks__body">
+          We&rsquo;ll only write when there&rsquo;s something worth your time —
+          new events, new projects, and the occasional opening you&rsquo;ll
+          want to know about first.
+        </p>
+        <div class="thanks__cta">
+          <a class="btn btn--onvideo" href="/#portfolio">See our work <span class="arw" aria-hidden="true">&gt;</span></a>
+          <a class="btn btn--ghostdark" href="/">Back to home <span aria-hidden="true">&gt;</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- footer -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__top">
+      <div class="footer__logo">
+        <img src="assets/jubyr-logo-white.png" alt="Jubyr LLC" width="99" height="30">
+        <p>An experience design studio. We help organizations shape how people feel — before, during, and after every interaction.</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/#approach">Approach</a></li>
+          <li><a href="/#services">Services</a></li>
+          <li><a href="/#portfolio">Portfolio</a></li>
+          <li><a href="/signup">Stay in touch</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Based in</h5>
+        <address class="addr">
+          Philadelphia, PA
+        </address>
+      </div>
+      <div>
+        <h5>Say hi</h5>
+        <ul>
+          <li><a href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">Book a free consultation</a></li>
+          <li><a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a></li>
+          <li><a href="https://instagram.com/jubyrllc" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="status"><span class="dot" aria-hidden="true"></span> Now booking &mdash; consulting &amp; productions</span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // mobile menu
+  const burger = document.querySelector('.nav__burger');
+  const menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }));
+</script>
+
+</body>
+</html>
