@@ -119,21 +119,23 @@
   }));
 
   // ---------------------------------------------------------------
-  // Mailchimp configuration.
-  // In Mailchimp: Audience -> Signup forms -> Embedded forms, then copy
-  // the values from the form action URL:
-  //   https://<DC>.list-manage.com/subscribe/post?u=<U>&id=<ID>
-  // The MESSAGE field must exist in the audience as a text merge field
-  // with the tag MESSAGE (Audience -> Settings -> Audience fields).
-  // Until these are set, submissions fall back to an email to
-  // ruby@jubyr.com so no signup is ever lost.
+  // Mailchimp configuration — posts to the "Jubyr LLC" audience.
+  // MESSAGE is a text merge field (tag MESSAGE) in that audience.
   // ---------------------------------------------------------------
   const MAILCHIMP = {
-    dc: 'YOUR_DC',   // e.g. 'us21'
-    u:  'YOUR_U',    // e.g. 'a1b2c3d4e5f6...'
-    id: 'YOUR_ID'    // e.g. '9f8e7d6c5b'
+    dc: 'jubyr.us1',              // account host prefix + datacenter
+    u:  '32214a4fe6b97ad520b643c6d',
+    id: '588dda8c52',
+    fid: '002dc6e1f0'             // embedded-form id (required by Mailchimp)
   };
   const mcConfigured = !MAILCHIMP.u.startsWith('YOUR');
+
+  // Mailchimp's phone field expects US format; send only what fits.
+  function usPhone(raw) {
+    const d = (raw || '').replace(/\D/g, '');
+    const n = (d.length === 11 && d[0] === '1') ? d.slice(1) : d;
+    return n.length === 10 ? '(' + n.slice(0,3) + ') ' + n.slice(3,6) + ' - ' + n.slice(6) : '';
+  }
 
   const form = document.getElementById('signup-form');
   const errEl = document.getElementById('signup-error');
@@ -152,13 +154,15 @@
       const params = new URLSearchParams({
         u: MAILCHIMP.u,
         id: MAILCHIMP.id,
+        f_id: MAILCHIMP.fid,
         EMAIL: data.EMAIL,
         FNAME: data.FNAME,
         LNAME: data.LNAME,
-        PHONE: data.PHONE,
         MESSAGE: data.MESSAGE,
         c: cb
       });
+      const phone = usPhone(data.PHONE);
+      if (phone) params.set('PHONE', phone);
       // honeypot field Mailchimp expects to be empty
       params.set('b_' + MAILCHIMP.u + '_' + MAILCHIMP.id, '');
       const script = document.createElement('script');

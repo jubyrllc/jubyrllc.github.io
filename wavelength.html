@@ -150,22 +150,28 @@
   });
 
   // ---------------------------------------------------------------
-  // Mailchimp configuration — same audience as signup.html, but these
-  // contacts are segmented as Wavelength:
-  //   - SOURCE merge field is sent as "Wavelength"
-  //   - optionally set wlTagId to the numeric Mailchimp "Wavelength"
-  //     tag id to hard-tag them on arrival
-  // INSTAGRAM and MESSAGE must also exist as text merge fields.
-  // Until dc/u/id are filled in, submissions fall back to an email to
-  // ruby@jubyr.com marked "Wavelength registry".
+  // Mailchimp configuration — posts to the main "Jubyr LLC" audience,
+  // segmented as Wavelength two ways:
+  //   - the audience's Source field (merge tag MMERGE14) = "Wavelength"
+  //   - hard-tagged with the "Wavelength" tag (wlTagId)
+  // Instagram goes to the audience's "Instagram Primary" field
+  // (merge tag MMERGE7); MESSAGE is a text merge field.
   // ---------------------------------------------------------------
   const MAILCHIMP = {
-    dc: 'YOUR_DC',
-    u:  'YOUR_U',
-    id: 'YOUR_ID',
-    wlTagId: ''   // optional numeric Mailchimp tag id for "Wavelength"
+    dc: 'jubyr.us1',              // account host prefix + datacenter
+    u:  '32214a4fe6b97ad520b643c6d',
+    id: '588dda8c52',
+    fid: '002dc6e1f0',            // embedded-form id (required by Mailchimp)
+    wlTagId: '3081504'   // numeric Mailchimp tag id for "Wavelength"
   };
   const mcConfigured = !MAILCHIMP.u.startsWith('YOUR');
+
+  // Mailchimp's phone field expects US format; send only what fits.
+  function usPhone(raw) {
+    const d = (raw || '').replace(/\D/g, '');
+    const n = (d.length === 11 && d[0] === '1') ? d.slice(1) : d;
+    return n.length === 10 ? '(' + n.slice(0,3) + ') ' + n.slice(3,6) + ' - ' + n.slice(6) : '';
+  }
 
   const form = document.getElementById('wl-form');
   const errEl = document.getElementById('wl-error');
@@ -184,15 +190,17 @@
       const params = new URLSearchParams({
         u: MAILCHIMP.u,
         id: MAILCHIMP.id,
+        f_id: MAILCHIMP.fid,
         EMAIL: data.EMAIL,
         FNAME: data.FNAME,
         LNAME: data.LNAME,
-        PHONE: data.PHONE,
-        INSTAGRAM: data.INSTAGRAM,
+        MMERGE7: data.INSTAGRAM,
         MESSAGE: data.MESSAGE,
-        SOURCE: 'Wavelength',
+        MMERGE14: 'Wavelength',
         c: cb
       });
+      const phone = usPhone(data.PHONE);
+      if (phone) params.set('PHONE', phone);
       if (MAILCHIMP.wlTagId) params.set('tags', MAILCHIMP.wlTagId);
       params.set('b_' + MAILCHIMP.u + '_' + MAILCHIMP.id, '');
       const script = document.createElement('script');
