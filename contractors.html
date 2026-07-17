@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=30">
+<link rel="stylesheet" href="styles.css?v=31">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
@@ -174,6 +174,13 @@
   const token = new URLSearchParams(location.search).get("t") || "";
   let stepIndex = 0;
 
+  // Cold arrivals (a shared link, not a click from jubyr.com) get a
+  // short welcome first. Site visitors and returning drafts skip it.
+  const cameFromSite = document.referrer.startsWith(location.origin);
+  const alreadyEntered = (()=>{ try{ return sessionStorage.getItem("jubyr-contractors-entered")==="1"; }catch(e){ return false; } })();
+  const draftStarted = !!(data.firstName || data.email || (data.segs||[]).length);
+  let showWelcome = !cameFromSite && !alreadyEntered && !draftStarted;
+
   const hasMaster = id => data.segs.includes(id);
   const hasDisc = v => (data.disc||[]).includes(v);
   const musicPicked = () => MUSIC_DISC.some(hasDisc);
@@ -307,7 +314,30 @@
     return "";
   }
 
+  function renderWelcome(){
+    progress.hidden = true;
+    host.innerHTML = `<div class="intake__welcome">
+      <p class="iw-kicker">Welcome &middot; from Ruby</p>
+      <h2 class="step-title">You were sent this link for a reason.</h2>
+      <p class="iw-body">Jubyr LLC is an experience design studio in Philadelphia
+      &mdash; we produce events, shape venues, and build the crews behind both.
+      I keep a working book of the people who make this city move: DJs,
+      photographers, designers, builders, and everyone in between.</p>
+      <p class="iw-body">When the right project lands, I book straight from the
+      book. Tell me what you do, how to reach you, and how you like to be
+      paid &mdash; and you&rsquo;re on the call list.</p>
+      <p class="iw-note">Takes about 3 minutes &middot; rates stay private</p>
+    </div>`;
+    navBtns.innerHTML = `<button type="button" class="btn btn--green" id="welcomeGo">Join the Client Book <span class="arw" aria-hidden="true">&gt;</span></button>`;
+    document.getElementById("welcomeGo").addEventListener("click", ()=>{
+      showWelcome = false;
+      try{ sessionStorage.setItem("jubyr-contractors-entered","1"); }catch(e){}
+      renderStep();
+    });
+  }
+
   function renderStep(keepScroll){
+    if(showWelcome){ renderWelcome(); return; }
     const y = window.scrollY;
     if(stepIndex >= STEPS.length) stepIndex = STEPS.length-1;
     const step = STEPS[stepIndex];

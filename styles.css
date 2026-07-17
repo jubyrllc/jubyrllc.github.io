@@ -1577,6 +1577,24 @@
   color: var(--muted);
   margin: 0 0 7px;
 }
+.intake__welcome { padding-top: 6px; }
+.iw-kicker {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin: 0 0 14px;
+}
+.iw-body { color: var(--muted); font-size: 16px; line-height: 1.65; margin: 0 0 16px; max-width: 62ch; }
+.iw-note {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 22px 0 0;
+}
 .intake__err {
   color: #A03A2E;
   font-size: 14.5px;
