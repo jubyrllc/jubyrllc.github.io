@@ -160,17 +160,17 @@
   });
 
   // ---------------------------------------------------------------
-  // Mailchimp configuration — posts to the dedicated "Green Flag"
-  // audience (its own list, separate from the main Jubyr LLC one), so
-  // no SOURCE segmentation is needed. INSTAGRAM and MESSAGE are text
-  // merge fields in that audience.
+  // Mailchimp configuration — posts into the MAIN Jubyr LLC audience
+  // and tags each signup "Green Flag" (gfTagId), exactly how the
+  // Wavelength form works. One audience segmented by tags is Mailchimp
+  // best practice. INSTAGRAM and MESSAGE are text merge fields.
   // ---------------------------------------------------------------
   const MAILCHIMP = {
     dc: 'jubyr.us1',              // account host prefix + datacenter
     u:  '32214a4fe6b97ad520b643c6d',
-    id: '007f013799',
-    fid: '002cc6e1f0',            // embedded-form id (required by Mailchimp)
-    gfTagId: ''   // unused — Green Flag has its own audience
+    id: '588dda8c52',            // main Jubyr LLC audience
+    fid: '002dc6e1f0',            // embedded-form id for that audience
+    gfTagId: '3081508'            // numeric id of the "Green Flag" tag
   };
   const mcConfigured = !MAILCHIMP.u.startsWith('YOUR');
 
