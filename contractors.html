@@ -152,7 +152,7 @@
     ["words","Words"],["influence","Influence"],["street","Street"],["vendors","Vendors"],["events","Events & Planning"]
   ];
   const SUBS = {
-    performance:["DJ","Dancer","Singer","Rapper / MC","Musician","Producer / Beatmaker","Band","Choreographer"],
+    performance:["DJ","Dancer","Singer","Rapper / MC","Musician","Producer / Beatmaker","Band","Choreographer","Circus performer"],
     visual:["Photographer","Videographer","Digital artist","Illustrator","Graphic designer","Muralist","Tattoo artist","Photo editor","Director"],
     build:["Web developer","App developer","Product / UX designer","Motion / 3D","Brand designer"],
     words:["Writer","Journalist","Poet / Spoken word","Copywriter","Editor"],
@@ -163,8 +163,9 @@
   };
   const MASTER_NAME = Object.fromEntries(MASTERS);
   const MUSIC_STYLES = ["House","Hip-Hop","R&B","Afrobeats","Amapiano","Jersey Club","Techno","Jazz","Soul","Funk","Reggae / Dancehall","Latin","Gospel","Open-format"];
-  const DANCE_STYLES = ["Hip-Hop","House","Majorette","Ballet","Contemporary","Jazz","Afro","Heels","Breaking","Vogue","Step","Aerial"];
+  const DANCE_STYLES = ["Hip-Hop","House","Majorette","Ballet","Contemporary","Jazz","Afro","Heels","Breaking","Vogue","Step","Aerial","Burlesque","Exotic / Stripping"];
   const AERIAL_APPARATUS = ["Hoop / Lyra","Pole","Silks / Cloth","Hammock","Trapeze","Straps","Rope"];
+  const CIRCUS_ARTS = ["Fire breathing / fire dance","Tightrope / wire","Juggling","Stilt walking","Contortion","Acrobatics","Clowning","Magic","Sword swallowing","Hula hoops"];
   const MUSIC_DISC = ["DJ","Singer","Rapper / MC","Musician","Producer / Beatmaker","Band"];
   const DANCE_DISC = ["Dancer","Choreographer"];
 
@@ -189,7 +190,8 @@
   const hasDisc = v => (data.disc||[]).includes(v);
   const musicPicked = () => MUSIC_DISC.some(hasDisc);
   const dancePicked = () => DANCE_DISC.some(hasDisc);
-  const stylesPicked = () => musicPicked() || dancePicked();
+  const circusPicked = () => hasDisc("Circus performer");
+  const stylesPicked = () => musicPicked() || dancePicked() || circusPicked();
   const paysBy = v => (data.paymentStructure||[]).includes(v);
   const emailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e||"").trim());
   const phoneDigits = p => String(p||"").replace(/\D/g,"");
@@ -298,6 +300,7 @@
       let groups = "";
       if(musicPicked()) groups += mk("Music genres", MUSIC_STYLES);
       if(dancePicked()) groups += mk("Dance styles", DANCE_STYLES);
+    if(circusPicked()) groups += mk("Circus arts", CIRCUS_ARTS);
     if(dancePicked() && cur.includes("Aerial")){
       const ap = Array.isArray(data.apparatus)?data.apparatus:[];
       const chips = AERIAL_APPARATUS.map(s=>`<button type="button" class="ichip${ap.includes(s)?" on":""}" data-multi="apparatus" data-val="${esc(s)}">${esc(s)}</button>`).join("");
