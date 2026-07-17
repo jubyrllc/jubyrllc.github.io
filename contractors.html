@@ -209,9 +209,9 @@
     ]},
     { title:"Rates", sub:"", note:"Nobody sees this but me. It just keeps me from wasting your time with budgets that don't fit.", fields:[
       {key:"paymentStructure", label:"How do you prefer to be paid?", type:"checks", options:["Hourly","Per project / flat fee","Day rate","Half day rate","Retainer / monthly","Per post","Per word","Commission","Trade / barter","Free tickets","Free for the right cause","Depends entirely"]},
-      {key:"hourlyRate", label:"Hourly rate", type:"text", when:()=>paysBy("Hourly")},
-      {key:"dayRate", label:"Day rate", type:"text", when:()=>paysBy("Day rate")||paysBy("Half day rate")},
-      {key:"projectRange", label:"Typical project range", type:"text", when:()=>paysBy("Per project / flat fee")},
+      {key:"hourlyRate", label:"Hourly rate", type:"text", when:()=>paysBy("Hourly"), help:"Your price per hour, e.g. $75/hour."},
+      {key:"dayRate", label:"Day rate", type:"text", when:()=>paysBy("Day rate")||paysBy("Half day rate"), help:"Your price per day or half day, e.g. $400 full / $250 half."},
+      {key:"projectRange", label:"Typical project price range", type:"text", when:()=>paysBy("Per project / flat fee"), help:"The price range you usually charge per project, e.g. $500\u2013$2,500."},
       {key:"payMethods", label:"Preferred payment", type:"checks", options:["Invoice","Zelle","Wire","Other"]}
     ]},
     { title:"Your work & who you run with", sub:"Everything here is optional.", fields:[
