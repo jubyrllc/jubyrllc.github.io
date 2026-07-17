@@ -1394,6 +1394,11 @@
   inset: 0;
   background: linear-gradient(rgba(14, 24, 32, 0.38), rgba(14, 24, 32, 0.5));
 }
+/* the inquiry page carries chip groups over the photo — needs a much
+   darker scrim than the plain signup form for the labels to read */
+.contactform::before {
+  background: linear-gradient(rgba(10, 14, 18, 0.72), rgba(10, 14, 18, 0.8));
+}
 .signup__inner {
   position: relative;
   width: 100%;

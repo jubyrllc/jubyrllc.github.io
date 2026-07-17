@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=29">
+<link rel="stylesheet" href="styles.css?v=30">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 </head>
 <body>
@@ -193,7 +193,7 @@
     { title:"How to reach you", sub:"So the right project can find you.", fields:[
       {key:"email", label:"Best email", type:"email", required:true, autocomplete:"email", placeholder:"you@email.com"},
       {key:"phone", label:"Phone number", type:"tel", required:true, autocomplete:"tel", placeholder:"10-digit number"},
-      {key:"bestContact", label:"Best way to reach you", type:"radio", options:["Text","Call","Email","Instagram DM","WhatsApp","Signal"]},
+      {key:"bestContact", label:"Best way to reach you", type:"radio", options:["Text","Call","Email","Instagram"]},
       {key:"instagram", label:"Instagram", type:"text", placeholder:"@yourhandle"},
       {key:"platforms", label:"Platforms + handles", type:"text", when:()=>hasMaster("influence"), help:"Where you post, e.g. TikTok @you, YouTube."},
       {key:"audienceSize", label:"Follower / audience size", type:"text", when:()=>hasMaster("influence"), help:"Rough per platform is fine, e.g. IG 12k, ~4% engagement."},
@@ -208,18 +208,17 @@
       ]}
     ]},
     { title:"Rates", sub:"", note:"Nobody sees this but me. It just keeps me from wasting your time with budgets that don't fit.", fields:[
-      {key:"paymentStructure", label:"How do you prefer to be paid?", type:"checks", options:["Hourly","Per project / flat fee","Day rate","Half day rate","Retainer / monthly","Per post","Per word","Commission","Trade / barter","Free for the right cause","Depends entirely"]},
+      {key:"paymentStructure", label:"How do you prefer to be paid?", type:"checks", options:["Hourly","Per project / flat fee","Day rate","Half day rate","Retainer / monthly","Per post","Per word","Commission","Trade / barter","Free tickets","Free for the right cause","Depends entirely"]},
       {key:"hourlyRate", label:"Hourly rate", type:"text", when:()=>paysBy("Hourly")},
       {key:"dayRate", label:"Day rate", type:"text", when:()=>paysBy("Day rate")||paysBy("Half day rate")},
       {key:"projectRange", label:"Typical project range", type:"text", when:()=>paysBy("Per project / flat fee")},
       {key:"payMethods", label:"Preferred payment", type:"checks", options:["Invoice","Zelle","Wire","Other"]}
     ]},
-    { title:"Your work & who you run with", sub:"", fields:[
+    { title:"Your work & who you run with", sub:"Everything here is optional.", fields:[
       {key:"notableClients", label:"Notable clients or orgs you've worked with", type:"textarea"},
-      {key:"workSamples", label:"Two or three work samples", type:"textarea", help:"Links. Show me your best, not your most recent."},
       {key:"referredByName", label:"Who referred you to me?", type:"text"},
       {key:"closePartners", label:"Close partners", type:"textarea", help:"Who else do you work with closely, or suggest and respect for their work? A name and how to find them is enough."},
-      {key:"sharePermission", label:"Can I share your contact with clients who are a good fit?", type:"radio", required:true, options:["Yes, share freely","Yes, but check with me first","No, route everything through me"]}
+      {key:"sharePermission", label:"Can I share your contact with clients who are a good fit?", type:"radio", options:["Yes, share freely","Yes, but check with me first","No, route everything through me"]}
     ]}
   ];
 
