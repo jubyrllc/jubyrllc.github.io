@@ -413,9 +413,9 @@
     const first = String(data.firstName||"").trim();
     host.innerHTML=`<div class="intake__done">
       <div class="mark">&#10003;</div>
-      <h2>You're in the book.</h2>
-      <p>Thanks${first?`, ${esc(first)}`:""}. I've got your details. When something
-      lands that fits you, you'll hear from me directly.</p>
+      <h2>Thank you${first?`, ${esc(first)}`:""}.</h2>
+      <p>You're in the book. We'll be in touch when the right project lands
+      in our lap. A welcome note is on its way to your inbox.</p>
     </div>`;
     navBtns.innerHTML="";
     stepErr.classList.remove("show");
