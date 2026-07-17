@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join the Client Book — Jubyr LLC</title>
+<meta name="description" content="Jubyr LLC keeps a working book of the people who make this city move. Tell us what you do and how to book you.">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="apple-touch-icon" href="assets/jubyr-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=29">
+<script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
+</head>
+<body>
+
+<!-- announcement -->
+<div class="announce">
+  <span class="mono">Jubyr LLC &middot; Experience design studio &middot; Philadelphia</span>
+  <a class="mono" href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">Free consultation <span aria-hidden="true">&gt;</span></a>
+</div>
+
+<div class="frame">
+
+  <!-- nav -->
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
+      <ul class="nav__links mono">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#approach">Approach</a></li>
+        <li><a href="/#services">Services</a></li>
+        <li><a href="/#portfolio">Portfolio</a></li>
+        <li><a href="/#get-involved">Get involved</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobilemenu mono" id="mobilemenu">
+      <a href="/">Home</a>
+      <a href="/#approach">Approach</a>
+      <a href="/#services">Services</a>
+      <a href="/#portfolio">Portfolio</a>
+      <a href="/#get-involved">Get involved</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="box">
+      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.45), rgba(12,12,12,0.6)), url('assets/bg-lounge-dark.jpg')">
+        <span class="tag">Client book</span>
+        <h2>Get in the book.</h2>
+        <p>Jubyr keeps a working book of the people who make this city move.
+        Tell me what you do, and when the right project lands, I&rsquo;ll know to call you.</p>
+      </div>
+
+      <div class="intake">
+        <div class="intake__progress" id="progress" hidden>
+          <span class="intake__count" id="stepCount"></span>
+          <div class="intake__bar"><i id="barFill" style="width:0%"></i></div>
+        </div>
+
+        <form id="intake-form" novalidate autocomplete="on">
+          <!-- honeypot: real people never see or fill this -->
+          <input type="text" name="company" value="" tabindex="-1" autocomplete="off"
+                 style="position:absolute;left:-5000px;height:0;width:0;opacity:0" aria-hidden="true">
+          <div id="host"></div>
+          <p class="intake__err" id="stepErr"></p>
+          <div class="intake__nav" id="navBtns"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- footer -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__top">
+      <div class="footer__logo">
+        <img src="assets/jubyr-logo-white.png?v=2" alt="Jubyr LLC" width="97" height="30">
+        <p>An experience design studio. We help organizations shape how people feel — before, during, and after every interaction.</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/#approach">Approach</a></li>
+          <li><a href="/#services">Services</a></li>
+          <li><a href="/#portfolio">Portfolio</a></li>
+          <li><a href="/signup">Stay in touch</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Based in</h5>
+        <address class="addr">
+          Philadelphia, PA
+        </address>
+      </div>
+      <div>
+        <h5>Say hi</h5>
+        <ul>
+          <li><a href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">Book a free consultation</a></li>
+          <li><a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a></li>
+          <li><a href="https://instagram.com/jubyrllc" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="status"><span class="dot" aria-hidden="true"></span> Now booking &mdash; consulting &amp; productions</span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // mobile menu
+  const burger = document.querySelector('.nav__burger');
+  const menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }));
+
+  // ===================================================================
+  // Client Book intake — the same flow as jubyr.tools/intake (client
+  // mode), restyled for jubyr.com. Submissions go to the same endpoint:
+  // they land in the Client Book's Review queue and sync to Mailchimp
+  // with the "clients" tag server-side.
+  // ===================================================================
+  const ENDPOINT = "https://jubyr.tools/intake.php";
+  const MASTERS = [
+    ["performance","Performance"],["visual","Visual"],["build","Build & Web"],
+    ["words","Words"],["influence","Influence"],["street","Street"]
+  ];
+  const SUBS = {
+    performance:["DJ","Dancer","Singer","Rapper / MC","Musician","Producer / Beatmaker","Band","Choreographer"],
+    visual:["Photographer","Videographer","Digital artist","Illustrator","Graphic designer","Muralist","Tattoo artist","Photo editor","Director"],
+    build:["Web developer","App developer","Product / UX designer","Motion / 3D","Brand designer"],
+    words:["Writer","Journalist","Poet / Spoken word","Copywriter","Editor"],
+    influence:["Influencer","Content creator","Podcaster","Model","Host / MC"],
+    street:["Skater","BMX","Graffiti / Street artist","Streetwear designer"]
+  };
+  const MASTER_NAME = Object.fromEntries(MASTERS);
+  const MUSIC_STYLES = ["House","Hip-Hop","R&B","Afrobeats","Amapiano","Jersey Club","Techno","Jazz","Soul","Funk","Reggae / Dancehall","Latin","Gospel","Open-format"];
+  const DANCE_STYLES = ["Hip-Hop","House","Majorette","Ballet","Contemporary","Jazz","Afro","Heels","Breaking","Vogue","Step"];
+  const MUSIC_DISC = ["DJ","Singer","Rapper / MC","Musician","Producer / Beatmaker","Band"];
+  const DANCE_DISC = ["Dancer","Choreographer"];
+
+  const DRAFT_KEY = "jubyr-contractors-draft";
+  const data = load();
+  if(!Array.isArray(data.segs)) data.segs = [];
+  if(!Array.isArray(data.disc)) data.disc = [];
+  if(!Array.isArray(data.styles)) data.styles = [];
+
+  const token = new URLSearchParams(location.search).get("t") || "";
+  let stepIndex = 0;
+
+  const hasMaster = id => data.segs.includes(id);
+  const hasDisc = v => (data.disc||[]).includes(v);
+  const musicPicked = () => MUSIC_DISC.some(hasDisc);
+  const dancePicked = () => DANCE_DISC.some(hasDisc);
+  const stylesPicked = () => musicPicked() || dancePicked();
+  const paysBy = v => (data.paymentStructure||[]).includes(v);
+  const emailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e||"").trim());
+  const phoneDigits = p => String(p||"").replace(/\D/g,"");
+  const phoneOk = p => phoneDigits(p).length===10;
+
+  const STEPS = [
+    { title:"Who you are", sub:"The basics, in your own words.", fields:[
+      {key:"firstName", label:"First name", type:"text", required:true, autocomplete:"given-name"},
+      {key:"lastName", label:"Last name", type:"text", autocomplete:"family-name"},
+      {key:"business", label:"Business or brand name", type:"text"},
+      {key:"segs", label:"What's your lane?", type:"masters", required:true, help:"Pick all that fit. You can be in more than one."},
+      {key:"disc", label:"Break it down", type:"disc", help:"The specifics, so I know exactly what you do."},
+      {key:"styles", label:"Styles", type:"styles", when:()=>stylesPicked(), help:"Pick all that apply so I can group you right."},
+      {key:"stack", label:"Tools & stack", type:"text", when:()=>hasMaster("build"), help:"e.g. React, Webflow, Figma, Next."},
+      {key:"formats", label:"Formats you write", type:"text", when:()=>hasMaster("words"), help:"e.g. editorial, copy, scripts, poetry."},
+      {key:"equipment", label:"Equipment, tools, or assets you own", type:"textarea", when:()=>hasMaster("visual"), help:"Cameras, lighting, studio, vehicle."},
+      {key:"turnaround", label:"Typical turnaround", type:"text", when:()=>hasMaster("visual"), help:"e.g. photos in 5 business days."},
+      {key:"role", label:"If you had to pick ONE title", type:"text", required:true, help:"This is how you'll show up in the book."},
+      {key:"whatYouDo", label:"In a sentence or two, what do you actually do?", type:"textarea", required:true},
+      {key:"specialties", label:"Anything you specialize in", type:"text"}
+    ]},
+    { title:"How to reach you", sub:"So the right project can find you.", fields:[
+      {key:"email", label:"Best email", type:"email", required:true, autocomplete:"email", placeholder:"you@email.com"},
+      {key:"phone", label:"Phone number", type:"tel", required:true, autocomplete:"tel", placeholder:"10-digit number"},
+      {key:"bestContact", label:"Best way to reach you", type:"radio", options:["Text","Call","Email","Instagram DM","WhatsApp","Signal"]},
+      {key:"instagram", label:"Instagram", type:"text", placeholder:"@yourhandle"},
+      {key:"platforms", label:"Platforms + handles", type:"text", when:()=>hasMaster("influence"), help:"Where you post, e.g. TikTok @you, YouTube."},
+      {key:"audienceSize", label:"Follower / audience size", type:"text", when:()=>hasMaster("influence"), help:"Rough per platform is fine, e.g. IG 12k, ~4% engagement."},
+      {key:"website", label:"Website / portfolio", type:"text", placeholder:"https://"},
+      {key:"__morelinks", label:"", type:"reveal", revealLabel:"+ Add more links", fields:[
+        {key:"tiktok", label:"TikTok", type:"text"},
+        {key:"linkedin", label:"LinkedIn", type:"text"},
+        {key:"twitter", label:"X / Twitter", type:"text"},
+        {key:"youtube", label:"YouTube", type:"text"},
+        {key:"facebook", label:"Facebook", type:"text"},
+        {key:"otherLinks", label:"Anything else worth having", type:"text"}
+      ]}
+    ]},
+    { title:"Rates", sub:"", note:"Nobody sees this but me. It just keeps me from wasting your time with budgets that don't fit.", fields:[
+      {key:"paymentStructure", label:"How do you prefer to be paid?", type:"checks", options:["Hourly","Per project / flat fee","Day rate","Half day rate","Retainer / monthly","Per post","Per word","Commission","Trade / barter","Free for the right cause","Depends entirely"]},
+      {key:"hourlyRate", label:"Hourly rate", type:"text", when:()=>paysBy("Hourly")},
+      {key:"dayRate", label:"Day rate", type:"text", when:()=>paysBy("Day rate")||paysBy("Half day rate")},
+      {key:"projectRange", label:"Typical project range", type:"text", when:()=>paysBy("Per project / flat fee")},
+      {key:"payMethods", label:"Preferred payment", type:"checks", options:["Invoice","Zelle","Wire","Other"]}
+    ]},
+    { title:"Your work & who you run with", sub:"", fields:[
+      {key:"notableClients", label:"Notable clients or orgs you've worked with", type:"textarea"},
+      {key:"workSamples", label:"Two or three work samples", type:"textarea", help:"Links. Show me your best, not your most recent."},
+      {key:"referredByName", label:"Who referred you to me?", type:"text"},
+      {key:"closePartners", label:"Close partners", type:"textarea", help:"Who else do you work with closely, or suggest and respect for their work? A name and how to find them is enough."},
+      {key:"sharePermission", label:"Can I share your contact with clients who are a good fit?", type:"radio", required:true, options:["Yes, share freely","Yes, but check with me first","No, route everything through me"]}
+    ]}
+  ];
+
+  function load(){
+    try{ const d = JSON.parse(localStorage.getItem(DRAFT_KEY)); if(d && typeof d==="object") return d; }catch(e){}
+    return { segs:[], disc:[], styles:[] };
+  }
+  function persist(){ try{ localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); }catch(e){} }
+
+  const host = document.getElementById("host");
+  const navBtns = document.getElementById("navBtns");
+  const stepErr = document.getElementById("stepErr");
+  const progress = document.getElementById("progress");
+  const barFill = document.getElementById("barFill");
+  const stepCount = document.getElementById("stepCount");
+  document.getElementById("intake-form").addEventListener("submit", e => e.preventDefault());
+
+  function esc(s){ return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  function fieldHTML(f){
+    if(f.when && !f.when()) return "";
+    const req = f.required ? ` <span class="req">*</span>` : "";
+    const help = f.help ? `<p class="help">${esc(f.help)}</p>` : "";
+    const v = data[f.key];
+    if(f.type==="text"||f.type==="tel"||f.type==="email"){
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label>
+        <input type="${f.type}" data-key="${f.key}" value="${esc(v||"")}" placeholder="${esc(f.placeholder||"")}"${f.autocomplete?` autocomplete="${f.autocomplete}"`:""}>${help}</div>`;
+    }
+    if(f.type==="textarea"){
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label><textarea data-key="${f.key}">${esc(v||"")}</textarea>${help}</div>`;
+    }
+    if(f.type==="masters"){
+      const cur = Array.isArray(v)?v:[];
+      const opts = MASTERS.map(([id,label])=>`<button type="button" class="ichip${cur.includes(id)?" on":""}" data-multi="${f.key}" data-val="${id}">${esc(label)}</button>`).join("");
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
+    }
+    if(f.type==="disc"){
+      if(!data.segs.length) return "";
+      const cur = Array.isArray(v)?v:[];
+      let groups = "";
+      data.segs.forEach(m=>{
+        const subs = SUBS[m]; if(!subs) return;
+        const chips = subs.map(s=>`<button type="button" class="ichip${cur.includes(s)?" on":""}" data-multi="disc" data-val="${esc(s)}">${esc(s)}</button>`).join("");
+        groups += `<div class="subgroup"><div class="sg-label">${esc(MASTER_NAME[m])}</div><div class="iopts">${chips}</div></div>`;
+      });
+      const other = `<div class="subgroup"><div class="sg-label">Other</div><input type="text" data-key="discOther" value="${esc(data.discOther||"")}" placeholder="Anything that doesn't fit above"></div>`;
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label>${groups}${other}${help}</div>`;
+    }
+    if(f.type==="styles"){
+      if(!stylesPicked()) return "";
+      const cur = Array.isArray(data.styles)?data.styles:[];
+      const mk = (label,list)=>{
+        const chips = list.map(s=>`<button type="button" class="ichip${cur.includes(s)?" on":""}" data-multi="styles" data-val="${esc(s)}">${esc(s)}</button>`).join("");
+        return `<div class="subgroup"><div class="sg-label">${esc(label)}</div><div class="iopts">${chips}</div></div>`;
+      };
+      let groups = "";
+      if(musicPicked()) groups += mk("Music genres", MUSIC_STYLES);
+      if(dancePicked()) groups += mk("Dance styles", DANCE_STYLES);
+      const other = `<div class="subgroup"><div class="sg-label">Other</div><input type="text" data-key="stylesOther" value="${esc(data.stylesOther||"")}" placeholder="Any style not listed"></div>`;
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label>${groups}${other}${help}</div>`;
+    }
+    if(f.type==="checks"){
+      const cur = Array.isArray(v)?v:[];
+      const opts = f.options.map(o=>`<button type="button" class="ichip${cur.includes(o)?" on":""}" data-multi="${f.key}" data-val="${esc(o)}">${esc(o)}</button>`).join("");
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
+    }
+    if(f.type==="radio"){
+      const opts = f.options.map(o=>`<button type="button" class="ichip${v===o?" on":""}" data-radio="${f.key}" data-val="${esc(o)}">${esc(o)}</button>`).join("");
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
+    }
+    if(f.type==="reveal"){
+      const anyFilled = f.fields.some(sf=>data[sf.key]);
+      if(!(data["__open_"+f.key] || anyFilled)) return `<div class="ifield"><button type="button" class="ichip" data-reveal="${f.key}">${esc(f.revealLabel)}</button></div>`;
+      return f.fields.map(fieldHTML).join("");
+    }
+    return "";
+  }
+
+  function renderStep(keepScroll){
+    const y = window.scrollY;
+    if(stepIndex >= STEPS.length) stepIndex = STEPS.length-1;
+    const step = STEPS[stepIndex];
+    progress.hidden = false;
+    barFill.style.width = Math.round((stepIndex/STEPS.length)*100) + "%";
+    stepCount.textContent = `Step ${stepIndex+1} of ${STEPS.length}`;
+    host.innerHTML = `<h2 class="step-title">${esc(step.title)}</h2>
+      ${step.sub?`<p class="step-sub">${esc(step.sub)}</p>`:""}
+      ${step.note?`<div class="note">${esc(step.note)}</div>`:""}
+      ${step.fields.map(fieldHTML).join("")}`;
+    navBtns.innerHTML = `${stepIndex>0?`<button type="button" class="btn btn--ghost" id="backBtn">Back</button>`:""}
+      <button type="button" class="btn btn--green" id="nextBtn">${stepIndex===STEPS.length-1?"Submit":"Continue"} <span class="arw" aria-hidden="true">&gt;</span></button>`;
+    bind();
+    if(keepScroll) window.scrollTo(0, y);
+    else document.querySelector('.intake').scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function bind(){
+    host.querySelectorAll("input[data-key],textarea[data-key]").forEach(el=>{
+      el.addEventListener("input", ()=>{ data[el.dataset.key]=el.value; persist(); });
+    });
+    host.querySelectorAll("[data-multi]").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const k=el.dataset.multi, val=el.dataset.val;
+        if(!Array.isArray(data[k])) data[k]=[];
+        const i=data[k].indexOf(val);
+        if(i>=0) data[k].splice(i,1); else data[k].push(val);
+        persist();
+        if(k==="segs"){
+          const allowed = new Set(data.segs.flatMap(m=>SUBS[m]||[]));
+          data.disc = (data.disc||[]).filter(d=>allowed.has(d));
+          persist(); renderStep(true);
+        } else {
+          renderStep(true);
+        }
+      });
+    });
+    host.querySelectorAll("[data-radio]").forEach(el=>{
+      el.addEventListener("click", ()=>{ const k=el.dataset.radio; data[k]=(data[k]===el.dataset.val)?"":el.dataset.val; persist(); renderStep(true); });
+    });
+    host.querySelectorAll("[data-reveal]").forEach(el=>{
+      el.addEventListener("click", ()=>{ data["__open_"+el.dataset.reveal]=true; renderStep(true); });
+    });
+    const back=document.getElementById("backBtn");
+    if(back) back.addEventListener("click", ()=>{ if(stepIndex>0){ stepIndex--; renderStep(); } });
+    document.getElementById("nextBtn").addEventListener("click", onNext);
+  }
+
+  function validate(step){
+    for(const f of step.fields){
+      if(f.when && !f.when()) continue;
+      if(!f.required) continue;
+      const v=data[f.key];
+      if(f.type==="masters"){ if(!Array.isArray(v)||!v.length) return "Please pick at least one lane."; continue; }
+      if(!v || !String(v).trim()) return "Please fill in the required fields.";
+    }
+    return null;
+  }
+
+  function onNext(){
+    stepErr.classList.remove("show");
+    const step = STEPS[stepIndex];
+    const contactStep = step.fields.some(f=>["email","phone","instagram"].includes(f.key));
+    if(contactStep){
+      const em=(data.email||"").trim(), ph=(data.phone||"").trim();
+      if(!em) return showErr("Please add your email.");
+      if(!emailOk(em)) return showErr("Please enter a valid email, with an @.");
+      if(!ph) return showErr("Please add your phone number.");
+      if(!phoneOk(ph)) return showErr("Please enter a 10-digit phone number.");
+    }
+    const msg = validate(step);
+    if(msg) return showErr(msg);
+    if(stepIndex < STEPS.length-1){ stepIndex++; return renderStep(); }
+    submit();
+  }
+
+  function showErr(m){ stepErr.textContent=m; stepErr.classList.add("show"); }
+
+  async function submit(){
+    const btn=document.getElementById("nextBtn");
+    btn.disabled=true; btn.textContent="Sending…";
+    const payload={ mode:"client", token, company:document.querySelector('input[name="company"]').value };
+    const MULTI=new Set(); STEPS.forEach(s=>s.fields.forEach(f=>{ if(f.type==="checks") MULTI.add(f.key); }));
+    payload.name = [data.firstName, data.lastName].map(s=>String(s||"").trim()).filter(Boolean).join(" ");
+    Object.keys(data).forEach(k=>{
+      if(k.startsWith("__")) return;
+      if(k==="firstName"||k==="lastName") return;
+      if(k==="segs"){ payload.segs=data.segs; return; }
+      if(k==="disc"){ payload.disciplines=[...(data.disc||[]), (data.discOther||"").trim()].filter(Boolean).join(", "); return; }
+      if(k==="discOther"){ return; }
+      if(k==="styles"){ payload.genres=[...(data.styles||[]), (data.stylesOther||"").trim()].filter(Boolean).join(", "); return; }
+      if(k==="stylesOther"||k==="genres"){ return; }
+      if(MULTI.has(k) && Array.isArray(data[k])){ payload[k]=data[k].join(", "); return; }
+      payload[k]=data[k];
+    });
+    const pd = phoneDigits(data.phone);
+    if(pd.length===10) payload.phone = "("+pd.slice(0,3)+") "+pd.slice(3,6)+"-"+pd.slice(6);
+    try{
+      // Cross-origin to jubyr.tools: no-cors delivers the body (the endpoint
+      // parses raw JSON regardless of content type); the response is opaque,
+      // so client-side validation above mirrors the server's rules.
+      await fetch(ENDPOINT, {method:"POST", mode:"no-cors", body:JSON.stringify(payload)});
+      try{ localStorage.removeItem(DRAFT_KEY); }catch(e){}
+      done();
+    }catch(e){
+      btn.disabled=false; btn.textContent="Submit";
+      showErr("Couldn't reach the server. Check your connection and try again.");
+    }
+  }
+
+  function done(){
+    progress.hidden=true;
+    const first = String(data.firstName||"").trim();
+    host.innerHTML=`<div class="intake__done">
+      <div class="mark">&#10003;</div>
+      <h2>You're in the book.</h2>
+      <p>Thanks${first?`, ${esc(first)}`:""}. I've got your details. When something
+      lands that fits you, you'll hear from me directly.</p>
+    </div>`;
+    navBtns.innerHTML="";
+    stepErr.classList.remove("show");
+  }
+
+  renderStep();
+</script>
+
+</body>
+</html>

@@ -1466,6 +1466,130 @@
 }
 .signup__consent a { color: rgba(255, 255, 255, 0.85); }
 
+/* ---------- ways-in path cards (homepage bottom) ---------- */
+.paths {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+.path {
+  display: block;
+  border: 1px dashed var(--line);
+  padding: 26px 24px 22px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.path:hover { border: 1px solid var(--green); background: #FAFAF7; }
+.path__kicker {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+  display: block;
+  margin-bottom: 12px;
+}
+.path h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
+.path p { color: var(--muted); font-size: 14.5px; line-height: 1.55; margin-bottom: 14px; }
+.path__go { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
+.path:hover .path__go { color: var(--green); }
+@media (max-width: 860px) {
+  .paths { grid-template-columns: 1fr; }
+}
+
+/* ---------- contractor intake (contractors page) ---------- */
+.intake { padding: 34px 28px 44px; max-width: 760px; margin: 0 auto; }
+.intake__progress { margin-bottom: 26px; }
+.intake__count {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 8px;
+}
+.intake__bar { height: 2px; background: var(--line); }
+.intake__bar i { display: block; height: 2px; background: var(--green); transition: width 0.25s ease; }
+.intake h2.step-title { font-size: clamp(22px, 3vw, 30px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+.intake .step-sub { color: var(--muted); font-size: 15.5px; margin-bottom: 22px; }
+.intake .note {
+  border: 1px dashed var(--green);
+  background: #F4F6EC;
+  color: var(--ink);
+  font-size: 14px;
+  padding: 12px 14px;
+  margin-bottom: 22px;
+}
+.ifield { margin-bottom: 22px; }
+.ifield > label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 9px;
+}
+.ifield .req { color: var(--green); }
+.ifield input[type="text"], .ifield input[type="email"], .ifield input[type="tel"],
+.ifield textarea, .ifield select {
+  width: 100%;
+  border: 1px dashed var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15.5px;
+  padding: 12px 14px;
+  outline: none;
+  border-radius: 0;
+}
+.ifield textarea { min-height: 92px; resize: vertical; }
+.ifield input:focus, .ifield textarea:focus { border: 1px solid var(--green); }
+.ifield .help { color: var(--muted); font-size: 13px; margin-top: 7px; }
+.iopts { display: flex; flex-wrap: wrap; gap: 8px; }
+.iopts.stack { flex-direction: column; align-items: flex-start; }
+.ichip {
+  border: 1px dashed var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.ichip:hover { border-color: var(--green); }
+.ichip.on { background: var(--green); border: 1px solid var(--green); color: #fff; }
+.subgroup { margin: 0 0 12px; }
+.sg-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 7px;
+}
+.intake__err {
+  color: #A03A2E;
+  font-size: 14.5px;
+  margin: 6px 0 0;
+  display: none;
+}
+.intake__err.show { display: block; }
+.intake__nav { display: flex; gap: 12px; margin-top: 28px; }
+.intake__done { text-align: center; padding: 40px 0 20px; }
+.intake__done .mark {
+  width: 54px; height: 54px; margin: 0 auto 18px;
+  border: 1px solid var(--green); color: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+.intake__done h2 { font-size: clamp(24px, 3vw, 32px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; }
+.intake__done p { color: var(--muted); font-size: 15.5px; max-width: 46ch; margin: 0 auto; }
+
 /* ---------- inquiry form (contact page) ---------- */
 .inq__q { border: none; margin: 4px 0 20px; padding: 0; }
 .inq__legend {
@@ -1562,17 +1686,16 @@
 }
 .gflag__lede {
   color: rgba(255, 255, 255, 0.96);
-  font-size: 14px;
+  font-size: 16.5px;
   line-height: 1.6;
-  max-width: 44ch;
-  margin: 0 auto 16px;
+  max-width: 42ch;
+  margin: 0 auto 18px;
   text-align: center;
   text-wrap: balance;
 }
 .gflag__nospam {
   color: rgba(255, 255, 255, 0.92);
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 14.5px;
   margin: 0 auto 36px;
   text-align: center;
   text-wrap: balance;
