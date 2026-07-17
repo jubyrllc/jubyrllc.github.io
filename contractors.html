@@ -163,7 +163,8 @@
   };
   const MASTER_NAME = Object.fromEntries(MASTERS);
   const MUSIC_STYLES = ["House","Hip-Hop","R&B","Afrobeats","Amapiano","Jersey Club","Techno","Jazz","Soul","Funk","Reggae / Dancehall","Latin","Gospel","Open-format"];
-  const DANCE_STYLES = ["Hip-Hop","House","Majorette","Ballet","Contemporary","Jazz","Afro","Heels","Breaking","Vogue","Step"];
+  const DANCE_STYLES = ["Hip-Hop","House","Majorette","Ballet","Contemporary","Jazz","Afro","Heels","Breaking","Vogue","Step","Aerial"];
+  const AERIAL_APPARATUS = ["Hoop / Lyra","Pole","Silks / Cloth","Hammock","Trapeze","Straps","Rope"];
   const MUSIC_DISC = ["DJ","Singer","Rapper / MC","Musician","Producer / Beatmaker","Band"];
   const DANCE_DISC = ["Dancer","Choreographer"];
 
@@ -172,6 +173,7 @@
   if(!Array.isArray(data.segs)) data.segs = [];
   if(!Array.isArray(data.disc)) data.disc = [];
   if(!Array.isArray(data.styles)) data.styles = [];
+  if(!Array.isArray(data.apparatus)) data.apparatus = [];
 
   const token = new URLSearchParams(location.search).get("t") || "";
   let stepIndex = 0;
@@ -296,6 +298,11 @@
       let groups = "";
       if(musicPicked()) groups += mk("Music genres", MUSIC_STYLES);
       if(dancePicked()) groups += mk("Dance styles", DANCE_STYLES);
+    if(dancePicked() && cur.includes("Aerial")){
+      const ap = Array.isArray(data.apparatus)?data.apparatus:[];
+      const chips = AERIAL_APPARATUS.map(s=>`<button type="button" class="ichip${ap.includes(s)?" on":""}" data-multi="apparatus" data-val="${esc(s)}">${esc(s)}</button>`).join("");
+      groups += `<div class="subgroup"><div class="sg-label">Aerial apparatus</div><div class="iopts">${chips}</div></div>`;
+    }
       const other = `<div class="subgroup"><div class="sg-label">Other</div><input type="text" data-key="stylesOther" value="${esc(data.stylesOther||"")}" placeholder="Any style not listed"></div>`;
       return `<div class="ifield"><label>${esc(f.label)}${req}</label>${groups}${other}${help}</div>`;
     }
@@ -424,7 +431,10 @@
       if(k==="segs"){ payload.segs=data.segs; return; }
       if(k==="disc"){ payload.disciplines=[...(data.disc||[]), (data.discOther||"").trim()].filter(Boolean).join(", "); return; }
       if(k==="discOther"){ return; }
-      if(k==="styles"){ payload.genres=[...(data.styles||[]), (data.stylesOther||"").trim()].filter(Boolean).join(", "); return; }
+      if(k==="styles"){
+        const aer = (data.styles||[]).includes("Aerial") ? (data.apparatus||[]).map(a=>"Aerial: "+a) : [];
+        payload.genres=[...(data.styles||[]), ...aer, (data.stylesOther||"").trim()].filter(Boolean).join(", "); return; }
+      if(k==="apparatus"){ return; }
       if(k==="stylesOther"||k==="genres"){ return; }
       if(MULTI.has(k) && Array.isArray(data[k])){ payload[k]=data[k].join(", "); return; }
       payload[k]=data[k];
