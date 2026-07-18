@@ -370,9 +370,11 @@
         <div class="path">
           <span class="path__kicker">Admission included</span>
           <h3>Your whole couch skips the door</h3>
-          <p>Free admission for all 5 guests is built in. Door price usually
-          runs $10&ndash;$25 a head, so a full couch can cover
-          $50&ndash;$125 of the fee before you even sit down.</p>
+          <p>Free admission for all 5 guests is built in &mdash; door price
+          usually runs $10&ndash;$25 a head, so a full couch can cover
+          $50&ndash;$125 of the fee. Bringing more than 5? The extra guests
+          just pay the regular door charge; we keep a tally of your party at
+          check-in.</p>
         </div>
         <div class="path">
           <span class="path__kicker">What the fee covers</span>
@@ -833,18 +835,18 @@
           {key:"phone", label:"Phone number", type:"tel", required:true, autocomplete:"tel", placeholder:"10-digit number"},
           {key:"email", label:"Email", type:"email", required:true, autocomplete:"email", placeholder:"you@email.com", help:"Your confirmation goes here."},
           {key:"resDate", label:"Date of reservation", type:"date", required:true, help:"Check the calendar above to see what's happening that night."},
-          {key:"guestCount", label:"Guest count", type:"text", required:true, placeholder:"e.g. 6", help:"Each couch is good for up to 5 guests."},
-          {key:"couches", label:"Number of couches", type:"radio", required:true, options:["1","2","3","4+"], help:"$200 VIP reservation fee per couch — each couch seats up to 5 guests and includes their admission. Bottle service is optional and billed separately."},
+          {key:"guestCount", label:"Guest count", type:"text", required:true, placeholder:"e.g. 6", help:"Each couch includes admission for up to 5 guests. Guests beyond your allotment pay the regular door charge — we keep a tally of your party at check-in and only start charging once your included spots are used."},
+          {key:"couches", label:"Number of couches", type:"radio", required:true, options:["1","2","3","4+"], help:"$200 VIP reservation fee per couch — each couch seats up to 5 guests, admission included. Bottle service is optional and billed separately."},
           {key:"eta", label:"Estimated time of arrival", type:"radio", required:true, options:["9pm–10pm","10pm–11pm","11pm–12am","12am–1am","1am–2am"]},
           {key:"notes", label:"Anything we should know?", type:"textarea", help:"Celebrating something? Interested in bottle service? Tell us."}
         ]}
       ],
       done: first => `<p>We'll confirm your couch shortly — a copy of your reservation is on
         its way to your inbox. Your $200-per-couch fee covers up to 5 guests
-        each, admission included, plus reserved seating, pre-event
-        communication, and check-in coordination. Couches are seating-only
-        (drinks are ordered at the bar), and bottle service is optional,
-        billed separately by Margolis.</p>`
+        each, admission included; anyone beyond your allotment pays the
+        regular door charge (we tally your party at check-in). Couches are
+        seating-only (drinks are ordered at the bar), and bottle service is
+        optional, billed separately by Margolis.</p>`
     },
 
     private: {
@@ -1159,14 +1161,6 @@
       if(d){
         const today = new Date(); today.setHours(0,0,0,0);
         if(new Date(d+"T12:00:00") < today) return showErr("That date has already passed — double-check the calendar.");
-      }
-    }
-    if(mode==="couch" && step.fields.some(f=>f.key==="couches")){
-      const g = parseInt(String(data.guestCount||"").replace(/\D/g,""),10);
-      const c = parseInt(String(data.couches||"").replace(/\D/g,""),10);
-      if(g && c && g > c*5){
-        const need = Math.ceil(g/5);
-        return showErr(`Each couch is good for up to 5 guests — for ${g} guests you'll need ${need} couches.`);
       }
     }
     if(step.fields.some(f=>f.key==="email")){
