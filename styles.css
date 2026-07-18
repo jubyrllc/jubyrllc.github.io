@@ -1930,3 +1930,16 @@
 .mg-cols--1 { grid-template-columns: 1fr; max-width: 640px; }
 .mg-calnote { padding: 44px 28px; text-align: center; color: var(--muted); font-size: 15px; }
 .mg-calnote a { color: var(--green); }
+.mg-calgate { grid-template-columns: 1fr 1fr; padding-bottom: 26px; }
+.mg-calgate .path {
+  font: inherit; text-align: left; cursor: pointer; background: none; width: 100%;
+}
+.mg-calgate .path.on {
+  border: 1px solid var(--green);
+  background: var(--green-tint, #F2F5E8);
+}
+.mg-calgate .path.on .path__go { color: var(--green); }
+.mgcal-wrap[hidden] { display: none; }
+@media (max-width: 720px) {
+  .mg-calgate { grid-template-columns: 1fr; }
+}

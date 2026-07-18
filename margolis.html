@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=36">
+<link rel="stylesheet" href="styles.css?v=37">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
@@ -82,7 +82,7 @@
         fair, given the volume of inquiries. Once submitted, your responses are
         final and binding.</p>
         <p>Questions before or after submitting? Email
-        <a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a> or
+        <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a> or
         <a href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">schedule a call</a> anytime.</p>
       </div>
     </section>
@@ -141,15 +141,31 @@
         <p>Live from the Margolis calendar &mdash; if a date looks open here,
         it&rsquo;s open. All times Eastern.</p>
       </div>
-      <div class="mgcal mgcal--month">
+            <div class="paths mg-pad mg-calgate">
+        <button type="button" class="path" data-gate="confirmed">
+          <span class="path__kicker">Date already set</span>
+          <h3>I&rsquo;ve confirmed my date with Ruby.</h3>
+          <p>Keep scrolling and go straight to the booking form.</p>
+          <span class="path__go">Skip ahead &gt;</span>
+        </button>
+        <button type="button" class="path" data-gate="check">
+          <span class="path__kicker">Need a date</span>
+          <h3>Show me the calendar.</h3>
+          <p>Search for an open date, or double-check the one you have in mind.</p>
+          <span class="path__go">Open the calendar &gt;</span>
+        </button>
+      </div>
+      <div class="mgcal-wrap" hidden>
+<div class="mgcal mgcal--month">
         <iframe title="Margolis booking calendar — month view" loading="lazy"
-          src="https://calendar.google.com/calendar/embed?src=fd203b4db1f1a69e5493ae771400902c653efa7bc369caa6891ae48980695ff6%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
+          data-src="https://calendar.google.com/calendar/embed?src=fd203b4db1f1a69e5493ae771400902c653efa7bc369caa6891ae48980695ff6%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
       <div class="mgcal mgcal--agenda">
         <iframe title="Margolis booking calendar — list view" loading="lazy"
-          src="https://calendar.google.com/calendar/embed?src=fd203b4db1f1a69e5493ae771400902c653efa7bc369caa6891ae48980695ff6%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
+          data-src="https://calendar.google.com/calendar/embed?src=fd203b4db1f1a69e5493ae771400902c653efa7bc369caa6891ae48980695ff6%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
       <p class="mg-caption mono">Updates automatically &middot; a completed booking form is the only way to hold a date</p>
+      </div>
     </section>
 
     <!-- patio calendar -->
@@ -160,7 +176,22 @@
         <p>Live from the Patio calendar &mdash; if a date looks open here,
         it&rsquo;s open. All times Eastern.</p>
       </div>
-      <div class="mgcal mgcal--month">
+            <div class="paths mg-pad mg-calgate">
+        <button type="button" class="path" data-gate="confirmed">
+          <span class="path__kicker">Date already set</span>
+          <h3>I&rsquo;ve confirmed my date with Ruby.</h3>
+          <p>Keep scrolling and go straight to the booking form.</p>
+          <span class="path__go">Skip ahead &gt;</span>
+        </button>
+        <button type="button" class="path" data-gate="check">
+          <span class="path__kicker">Need a date</span>
+          <h3>Show me the calendar.</h3>
+          <p>Search for an open date, or double-check the one you have in mind.</p>
+          <span class="path__go">Open the calendar &gt;</span>
+        </button>
+      </div>
+      <div class="mgcal-wrap" hidden>
+<div class="mgcal mgcal--month">
         <iframe title="Patio booking calendar — month view" loading="lazy"
           data-src="https://calendar.google.com/calendar/embed?src=c_db8c8657dba8090100eb89c6983a105c3a76a04fb0b3ab32b149e199cbc6e512%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
@@ -169,6 +200,7 @@
           data-src="https://calendar.google.com/calendar/embed?src=c_db8c8657dba8090100eb89c6983a105c3a76a04fb0b3ab32b149e199cbc6e512%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
       <p class="mg-caption mono">Updates automatically &middot; all patio events conclude by 10 PM</p>
+      </div>
     </section>
 
     <!-- fabrika calendar -->
@@ -179,7 +211,22 @@
         <p>Live from the Fabrika calendar &mdash; if a date looks open here,
         it&rsquo;s open. All times Eastern.</p>
       </div>
-      <div class="mgcal mgcal--month">
+            <div class="paths mg-pad mg-calgate">
+        <button type="button" class="path" data-gate="confirmed">
+          <span class="path__kicker">Date already set</span>
+          <h3>I&rsquo;ve confirmed my date with Ruby.</h3>
+          <p>Keep scrolling and go straight to the booking form.</p>
+          <span class="path__go">Skip ahead &gt;</span>
+        </button>
+        <button type="button" class="path" data-gate="check">
+          <span class="path__kicker">Need a date</span>
+          <h3>Show me the calendar.</h3>
+          <p>Search for an open date, or double-check the one you have in mind.</p>
+          <span class="path__go">Open the calendar &gt;</span>
+        </button>
+      </div>
+      <div class="mgcal-wrap" hidden>
+<div class="mgcal mgcal--month">
         <iframe title="Fabrika booking calendar — month view" loading="lazy"
           data-src="https://calendar.google.com/calendar/embed?src=c_16c0136a093a974f93145e1186abd9579d735129d1d1069aecb63c1627e20286%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
@@ -188,6 +235,7 @@
           data-src="https://calendar.google.com/calendar/embed?src=c_16c0136a093a974f93145e1186abd9579d735129d1d1069aecb63c1627e20286%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
       <p class="mg-caption mono">Updates automatically &middot; Friday &amp; Saturday late nights run 10 PM&ndash;2 AM</p>
+      </div>
     </section>
 
     <!-- ============ PUBLIC EVENTS: payouts / philosophy ============ -->
@@ -512,7 +560,7 @@
         <h5>Say hi</h5>
         <ul>
           <li><a href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">Schedule a call</a></li>
-          <li><a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a></li>
+          <li><a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a></li>
           <li><a href="https://instagram.com/margolisphilly" rel="noopener">@margolisphilly</a></li>
         </ul>
       </div>
@@ -602,7 +650,7 @@
     <p>Please <a href="${W9_URL}" target="_blank" rel="noopener">complete and
     sign the W9 form here</a>, download it as a PDF, and upload it below. If
     you'd rather not upload it now, you can email it to
-    <a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a> before your event.</p>`;
+    <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a> before your event.</p>`;
 
   const PRIVATE_TERMS_HTML = `
     <p><strong>Booking requirements.</strong> The remaining balance is due on
@@ -633,7 +681,7 @@
     <a href="${CCAUTH_URL}" target="_blank" rel="noopener">open this form</a>,
     download it (File &rarr; Download) or make a copy (File &rarr; Make a
     Copy), fill it out, and upload it below. If you'd rather not upload it
-    now, you can email it to <a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a>
+    now, you can email it to <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>
     before your event is confirmed.</p>`;
 
   const FABRIKA_ACK_HTML = `
@@ -1047,7 +1095,7 @@
       const out = await res.json().catch(()=>({}));
       if(!res.ok || !out.ok){
         btn.disabled=false; btn.textContent="Submit";
-        return showErr(out.error || "Something went wrong on our end. Please try again, or email ruby@jubyr.com.");
+        return showErr(out.error || "Something went wrong on our end. Please try again, or email ruby@margolisphilly.com.");
       }
       try{ localStorage.removeItem(FORMS[mode].draft); }catch(e){}
       done();
@@ -1069,14 +1117,21 @@
     stepErr.classList.remove("show");
   }
 
-  // -------- Patio & Fabrika calendars --------
-  // Those two Google Calendars belong to the venue account; the embeds only
-  // render once the owner makes them public. Ask jubyr.tools whether each is
-  // public yet: yes -> load the live embed, no -> a graceful note. The page
-  // heals itself the moment the calendar goes public, no redeploy needed.
-  Object.entries({patiocal:"patio", fabrikacal:"fabrika"}).forEach(([sec,key])=>{
-    const box = document.getElementById(sec);
+  // -------- calendar gates --------
+  // Each calendar hides behind a quick question: already confirmed with
+  // Ruby -> skip ahead; need a date -> expand the live calendar. Embeds
+  // lazy-load on first expand. The Patio and Fabrika calendars belong to
+  // the venue account and only render once the owner makes them public,
+  // so those check jubyr.tools first and show a graceful note until then
+  // (the page heals itself the moment a calendar goes public).
+  const CAL_KEYS = { patiocal: "patio", fabrikacal: "fabrika" };
+  function loadCal(box){
+    const wrap = box.querySelector(".mgcal-wrap");
+    if(wrap.dataset.loaded) return;
+    wrap.dataset.loaded = "1";
     const enable = ()=>box.querySelectorAll("iframe[data-src]").forEach(f=>{ f.src=f.dataset.src; });
+    const key = CAL_KEYS[box.id];
+    if(!key) return enable();
     fetch("https://jubyr.tools/calendar-status.php?cal="+key)
       .then(r=>r.json())
       .then(st=>{
@@ -1085,12 +1140,28 @@
           if(i===0){
             w.className = "mgcal";   // shed --month/--agenda so the note shows at every size
             w.innerHTML = `<p class="mg-calnote">The live calendar is being connected.
-              Until it appears here, email <a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a>
+              Until it appears here, email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>
               for current availability.</p>`;
           } else w.remove();
         });
       })
       .catch(enable);   // if the status check is unreachable, try the embed anyway
+  }
+  document.querySelectorAll(".mg-calgate").forEach(gate=>{
+    const box = gate.closest("section");
+    const wrap = box.querySelector(".mgcal-wrap");
+    gate.querySelectorAll(".path").forEach(btn=>btn.addEventListener("click", ()=>{
+      gate.querySelectorAll(".path").forEach(b=>b.classList.toggle("on", b===btn));
+      if(btn.dataset.gate==="check"){
+        wrap.hidden = false;
+        loadCal(box);
+      } else {
+        wrap.hidden = true;
+        let n = box.nextElementSibling;
+        while(n && n.style.display==="none") n = n.nextElementSibling;
+        if(n) n.scrollIntoView({behavior:"smooth", block:"start"});
+      }
+    }));
   });
 
   // -------- init --------
