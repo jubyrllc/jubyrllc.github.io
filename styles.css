@@ -1986,3 +1986,5 @@
 }
 .tagrow .tag-pfx + input { border-left: 0 !important; padding-left: 2px !important; }
 .tagrow input { flex: 1; min-width: 0; }
+.mg-cred { color: var(--muted); text-decoration: none; }
+.mg-cred:hover { color: var(--green); text-decoration: underline; }
