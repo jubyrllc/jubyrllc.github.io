@@ -101,7 +101,7 @@
           <span class="path__kicker">The Patio &middot; Public events</span>
           <h3>Take it outside.</h3>
           <p>Open-air public events, same payout model. Everything wraps
-          by 10 PM.</p>
+          by 9 PM.</p>
           <span class="path__go">Start here &gt;</span>
         </button>
         <button type="button" class="path" data-mode="couch">
@@ -201,7 +201,7 @@
         <iframe title="Patio booking calendar — list view" loading="lazy"
           data-src="https://calendar.google.com/calendar/embed?src=c_db8c8657dba8090100eb89c6983a105c3a76a04fb0b3ab32b149e199cbc6e512%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
-      <p class="mg-caption mono">Updates automatically &middot; all patio events conclude by 10 PM</p>
+      <p class="mg-caption mono">Updates automatically &middot; all patio events conclude by 9 PM</p>
       </div>
     </section>
 
@@ -331,11 +331,11 @@
         <h2>The numbers that keep the lights on.</h2>
         <p>Calculated on gross bar sales during official event hours, and
         strictly enforced. Due to city regulations, all patio events conclude
-        by 10:00 PM.</p>
+        by 9:00 PM.</p>
       </div>
       <div class="mg-cols mg-cols--1 mg-pad">
         <div class="mg-col">
-          <h3 class="mg-h3">The Patio <span class="mono mg-sub">(events end by 10 PM, per city regulations)</span></h3>
+          <h3 class="mg-h3">The Patio <span class="mono mg-sub">(events end by 9 PM, per city regulations)</span></h3>
           <div class="mrow"><span>Monday&ndash;Wednesday</span><strong>$1,000 &middot; 1 bartender</strong></div>
           <div class="mrow"><span>Monday&ndash;Wednesday</span><strong>$1,500 &middot; 2 bartenders</strong></div>
           <div class="mrow"><span>Thursday</span><strong>$1,500 &middot; 2 bartenders</strong></div>
@@ -734,7 +734,7 @@
   const publicSteps = venue => {
     const patio = venue === "The Patio";
     const minsRecap = patio
-      ? `<div class="mg-agree-recap"><p><strong>Patio bar minimums, in short:</strong> Monday&ndash;Wednesday $1,000 (1 bartender) or $1,500 (2 bartenders); Thursday and Sunday $1,500; Friday $2,000; Saturday $2,500 &mdash; kitchen service at a $2,000 total minimum where it isn't already included. All patio events end by 10 PM, per city regulations. If the minimum isn't met naturally, the organizer covers the shortage and forfeits payout. <a href="#minimums-patio">Full breakdown above.</a></p></div>`
+      ? `<div class="mg-agree-recap"><p><strong>Patio bar minimums, in short:</strong> Monday&ndash;Wednesday $1,000 (1 bartender) or $1,500 (2 bartenders); Thursday and Sunday $1,500; Friday $2,000; Saturday $2,500 &mdash; kitchen service at a $2,000 total minimum where it isn't already included. All patio events end by 9 PM, per city regulations. If the minimum isn't met naturally, the organizer covers the shortage and forfeits payout. <a href="#minimums-patio">Full breakdown above.</a></p></div>`
       : `<div class="mg-agree-recap"><p><strong>Margolis bar minimums, in short:</strong> $1,500 during kitchen-closed hours, $2,000 during kitchen-open hours, $4,000 Friday + Saturday 9 PM&ndash;2 AM. If the minimum isn't met naturally, the organizer covers the shortage and forfeits payout. <a href="#minimums">Full breakdown above.</a></p></div>`;
     return [
         { title:"The ground rules", sub:"Two quick agreements before the details.", fields:[
@@ -747,7 +747,7 @@
           {key:"eventName", label:"Name of anticipated event", type:"text", required:true},
           {key:"eventDate", label:"Date of event", type:"date", required:true, help:"Check the calendar above before you pick."},
           {key:"startTime", label:"Event start time", type:"time", required:true},
-          {key:"endTime", label:"Event end time", type:"time", required:true, help:patio?"All patio events must conclude by 10 PM.":"Friday and Saturday nights run to 2 AM."},
+          {key:"endTime", label:"Event end time", type:"time", required:true, help:patio?"All patio events must conclude by 9 PM.":"Friday and Saturday nights run to 2 AM."},
           {key:"guestCount", label:"Anticipated guest count", type:"range", required:true, min:50, max:250, step:10, def:100, help:"Slide in steps of 10. The readout shows what each guest would need to spend at the bar to hit a $1,500 minimum."},
           {key:"frequency", label:"Frequency of event", type:"radio", required:true, options:["One time","Monthly","Weekly","Quarterly","Not sure yet"]},
           {key:"eventType", label:"What type of event best describes this?", type:"radio", required:true, options:["Dance party / DJ night","Live music / concert","Listening session","Comedy / open mic","Art show / market","Private celebration","Community / fundraiser","Other"]},
@@ -810,7 +810,7 @@
       hash: "#patio", draft: "jubyr-margolis-draft-patio", fileKind: "w9",
       venue: "The Patio",
       tag: "The Patio · Booking form", title: "Lock in your patio night.",
-      desc: "About 5–7 minutes, saved on this device as you go. Patio events are 21+ and end by 10 PM; bookings confirm in the order forms are received.",
+      desc: "About 5–7 minutes, saved on this device as you go. Patio events are 21+ and end by 9 PM; bookings confirm in the order forms are received.",
       steps: publicSteps("The Patio"), done: publicDone
     },
 
