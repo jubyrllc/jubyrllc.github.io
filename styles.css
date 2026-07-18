@@ -1928,3 +1928,5 @@
   .mg-cols--3 { grid-template-columns: 1fr; }
 }
 .mg-cols--1 { grid-template-columns: 1fr; max-width: 640px; }
+.mg-calnote { padding: 44px 28px; text-align: center; color: var(--muted); font-size: 15px; }
+.mg-calnote a { color: var(--green); }

@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=35">
+<link rel="stylesheet" href="styles.css?v=36">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
@@ -162,11 +162,11 @@
       </div>
       <div class="mgcal mgcal--month">
         <iframe title="Patio booking calendar — month view" loading="lazy"
-          src="https://calendar.google.com/calendar/embed?src=c_db8c8657dba8090100eb89c6983a105c3a76a04fb0b3ab32b149e199cbc6e512%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
+          data-src="https://calendar.google.com/calendar/embed?src=c_db8c8657dba8090100eb89c6983a105c3a76a04fb0b3ab32b149e199cbc6e512%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
       <div class="mgcal mgcal--agenda">
         <iframe title="Patio booking calendar — list view" loading="lazy"
-          src="https://calendar.google.com/calendar/embed?src=c_db8c8657dba8090100eb89c6983a105c3a76a04fb0b3ab32b149e199cbc6e512%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
+          data-src="https://calendar.google.com/calendar/embed?src=c_db8c8657dba8090100eb89c6983a105c3a76a04fb0b3ab32b149e199cbc6e512%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
       <p class="mg-caption mono">Updates automatically &middot; all patio events conclude by 10 PM</p>
     </section>
@@ -181,11 +181,11 @@
       </div>
       <div class="mgcal mgcal--month">
         <iframe title="Fabrika booking calendar — month view" loading="lazy"
-          src="https://calendar.google.com/calendar/embed?src=c_16c0136a093a974f93145e1186abd9579d735129d1d1069aecb63c1627e20286%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
+          data-src="https://calendar.google.com/calendar/embed?src=c_16c0136a093a974f93145e1186abd9579d735129d1d1069aecb63c1627e20286%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
       <div class="mgcal mgcal--agenda">
         <iframe title="Fabrika booking calendar — list view" loading="lazy"
-          src="https://calendar.google.com/calendar/embed?src=c_16c0136a093a974f93145e1186abd9579d735129d1d1069aecb63c1627e20286%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
+          data-src="https://calendar.google.com/calendar/embed?src=c_16c0136a093a974f93145e1186abd9579d735129d1d1069aecb63c1627e20286%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
       <p class="mg-caption mono">Updates automatically &middot; Friday &amp; Saturday late nights run 10 PM&ndash;2 AM</p>
     </section>
@@ -1068,6 +1068,30 @@
     navBtns.innerHTML="";
     stepErr.classList.remove("show");
   }
+
+  // -------- Patio & Fabrika calendars --------
+  // Those two Google Calendars belong to the venue account; the embeds only
+  // render once the owner makes them public. Ask jubyr.tools whether each is
+  // public yet: yes -> load the live embed, no -> a graceful note. The page
+  // heals itself the moment the calendar goes public, no redeploy needed.
+  Object.entries({patiocal:"patio", fabrikacal:"fabrika"}).forEach(([sec,key])=>{
+    const box = document.getElementById(sec);
+    const enable = ()=>box.querySelectorAll("iframe[data-src]").forEach(f=>{ f.src=f.dataset.src; });
+    fetch("https://jubyr.tools/calendar-status.php?cal="+key)
+      .then(r=>r.json())
+      .then(st=>{
+        if(st.public) return enable();
+        box.querySelectorAll(".mgcal").forEach((w,i)=>{
+          if(i===0){
+            w.className = "mgcal";   // shed --month/--agenda so the note shows at every size
+            w.innerHTML = `<p class="mg-calnote">The live calendar is being connected.
+              Until it appears here, email <a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a>
+              for current availability.</p>`;
+          } else w.remove();
+        });
+      })
+      .catch(enable);   // if the status check is unreachable, try the embed anyway
+  });
 
   // -------- init --------
   const initMode = MODE_HASHES[location.hash] || "none";
