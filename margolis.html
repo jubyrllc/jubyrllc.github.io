@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=42">
+<link rel="stylesheet" href="styles.css?v=43">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
@@ -135,8 +135,59 @@
       </div>
     </section>
 
+    <!-- how it works (per path) -->
+    <section class="box" id="howitworks" data-modes="margolis patio couch private fabrika">
+      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-24.jpg')">
+        <span class="tag">How it works</span>
+        <h2>From inquiry to showtime.</h2>
+        <p>Every step of the process, so nothing surprises you.</p>
+      </div>
+
+      <ol class="mg-steps" data-steps="margolis">
+        <li><b>Check the calendar</b><span>Find an open date below &mdash; if it looks open, it&rsquo;s open.</span></li>
+        <li><b>Submit the booking form</b><span>About 5&ndash;7 minutes. Submissions are binding and confirmed in the order received.</span></li>
+        <li><b>We review &amp; confirm</b><span>You get an official confirmation email with every detail (and any adjustments) in writing.</span></li>
+        <li><b>Send your flyer</b><span>Once per event, due 10 days out &mdash; it goes in our weekly promo post.</span></li>
+        <li><b>Update your counts</b><span>Free RSVPs + tickets sold at 3 days, 2 days, and day of. We remind you each time.</span></li>
+        <li><b>Show up &amp; get paid</b><span>Doors at 9 on Fri/Sat with the $10 happy hour. Payout follows your night.</span></li>
+      </ol>
+
+      <ol class="mg-steps" data-steps="patio">
+        <li><b>Check the Patio calendar</b><span>Find an open date below &mdash; if it looks open, it&rsquo;s open.</span></li>
+        <li><b>Submit the booking form</b><span>About 5&ndash;7 minutes. Submissions are binding and confirmed in the order received.</span></li>
+        <li><b>We review &amp; confirm</b><span>You get an official confirmation email with every detail (and any adjustments) in writing.</span></li>
+        <li><b>Send your flyer</b><span>Once per event, due 10 days out &mdash; it goes in our weekly promo post.</span></li>
+        <li><b>Update your counts</b><span>Free RSVPs + tickets sold at 3 days, 2 days, and day of. We remind you each time.</span></li>
+        <li><b>Show up &amp; get paid</b><span>Everything wraps by 9 PM, per city regulations. Payout follows your event.</span></li>
+      </ol>
+
+      <ol class="mg-steps" data-steps="couch">
+        <li><b>Check the calendar</b><span>See what&rsquo;s happening the night you want to come through.</span></li>
+        <li><b>Reserve your couch</b><span>Under 2 minutes. $200 per couch, up to 5 guests each, admission included.</span></li>
+        <li><b>We confirm by email</b><span>Your reservation and details, in writing.</span></li>
+        <li><b>Walk in like you own it</b><span>Line skip at the door, your couch held all night, drinks at the bar. Extra guests past your allotment just pay the door.</span></li>
+      </ol>
+
+      <ol class="mg-steps" data-steps="private">
+        <li><b>Pick your date</b><span>Check the calendar below for an open night.</span></li>
+        <li><b>Submit the concept form</b><span>About 8&ndash;10 minutes &mdash; occasion, bar model, logistics.</span></li>
+        <li><b>We plan it with you</b><span>A call or email thread to lock details, the deposit, and your card authorization.</span></li>
+        <li><b>Final counts, 10 days out</b><span>Guest count and bar selections locked no later than 10 days before.</span></li>
+        <li><b>Your night, your room</b><span>Up to 5 hours, ~150 guests, run on your terms.</span></li>
+      </ol>
+
+      <ol class="mg-steps" data-steps="fabrika">
+        <li><b>Submit the intake</b><span>About 5 minutes &mdash; event, talent, and logistics.</span></li>
+        <li><b>Fabrika issues the agreement</b><span>Official contract with final details, timing, and terms.</span></li>
+        <li><b>Sign, then promote</b><span>No posts, tickets, or listings until the contract is fully executed.</span></li>
+        <li><b>Flyer &amp; counts</b><span>Flyer 10 days out; RSVP + ticket counts at 3 days, 2 days, and day of.</span></li>
+        <li><b>Show up ready</b><span>Room resets 9&ndash;10 PM Fri/Sat. Bring your gear and two XLR cables &mdash; keep the door, earn the bar.</span></li>
+      </ol>
+    </section>
+
+
     <!-- calendar -->
-    <section class="box" id="calendar" data-modes="none margolis couch private">
+    <section class="box" id="calendar" data-modes="margolis couch private">
       <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-22.jpg')">
         <span class="tag">Availability</span>
         <h2>The Margolis calendar.</h2>
@@ -995,6 +1046,7 @@
       s.style.display = s.dataset.modes.split(" ").includes(m) ? "" : "none";
     });
     cards.forEach(c=>c.classList.toggle("on", c.dataset.mode===m));
+    document.querySelectorAll("[data-steps]").forEach(el=>{ el.style.display = el.dataset.steps===m ? "" : "none"; });
     if(m==="none") return;
     const F = FORMS[m];
     if(F){

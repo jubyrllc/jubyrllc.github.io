@@ -2004,3 +2004,16 @@
 @media (max-width: 480px) {
   .sechead--band { padding: 48px 18px 42px; }
 }
+.mg-steps {
+  list-style: none; counter-reset: step;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px; padding: 0 28px 34px; margin: 0;
+}
+.mg-steps li { counter-increment: step; border: 1px dashed var(--line); padding: 18px 16px 16px; }
+.mg-steps li::before {
+  content: "0" counter(step);
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+  color: var(--green); display: block; margin-bottom: 8px;
+}
+.mg-steps b { display: block; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 4px; }
+.mg-steps span { font-size: 13px; color: var(--muted); line-height: 1.55; }
