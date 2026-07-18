@@ -615,7 +615,7 @@
   // it, emails Ruby the full inquiry, and receipts the submitter.
   // ===================================================================
   const ENDPOINT = "https://jubyr.tools/margolis-booking.php";
-  const W9_URL = "https://drive.google.com/file/d/1bshEfK2baPen7O2zHK0qzD3nkd9tY8oF/view?usp=sharing";
+  const W9_URL = "https://www.irs.gov/pub/irs-pdf/fw9.pdf";
   const CCAUTH_URL = "https://docs.google.com/document/d/1CNCHWDY-ExcbHie4A-PWvzsSLpN4MFF-/edit?usp=sharing&ouid=108252760139852238375&rtpof=true&sd=true";
 
   const emailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e||"").trim());
@@ -669,9 +669,10 @@
     totaling more than $600 in a calendar year may be issued a Form 1099-NEC.
     Depending on the structure of the booking, tax documentation and payouts
     may be processed through Baly LLC, Jubyr LLC, or both.</p>
-    <p>Please <a href="${W9_URL}" target="_blank" rel="noopener">complete and
-    sign the W9 form here</a>, download it as a PDF, and upload it below. If
-    you'd rather not upload it now, you can email it to
+    <p>Please <a href="${W9_URL}" target="_blank" rel="noopener">open the
+    official W9 form here</a> &mdash; it's fillable right in your browser.
+    Type your info, save it as a PDF, and upload it below. If you'd rather
+    not upload it now, you can email it to
     <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a> before your event.</p>`;
 
   const PRIVATE_TERMS_HTML = `
