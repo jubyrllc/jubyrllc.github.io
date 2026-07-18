@@ -741,10 +741,10 @@
           {key:"eventType", label:"What type of event best describes this?", type:"radio", required:true, options:["Dance party / DJ night","Live music / concert","Listening session","Comedy / open mic","Art show / market","Private celebration","Community / fundraiser","Other"]},
           {key:"eventTypeOther", label:"Tell us the type", type:"text", when:()=>is("eventType","Other"), required:true},
           {key:"performers", label:"Will there be live performers or just DJs?", type:"radio", required:true, options:["Just DJs","Live performers","Both"]},
-          {key:"genres", label:"Music genres for the night", type:"checks", required:true, options:["House","Hip-Hop","R&B","Afrobeats","Amapiano","Jersey Club","Techno","Disco","Jazz","Soul / Funk","Reggae / Dancehall","Latin","Open-format","Other"], help:"Pick all that apply."},
+          {key:"genres", label:"Music genres for the night", type:"checks", required:true, options:["House","Afro House","Hip-Hop","R&B","Afrobeats","Amapiano","Jersey Club","Techno","Disco","Jazz","Soul / Funk","Reggae / Dancehall","Latin","Open-format","Other"], help:"Pick all that apply."},
           {key:"genresOther", label:"What's the sound?", type:"text", when:()=>Array.isArray(data.genres)&&data.genres.includes("Other"), required:true},
           {key:"eventDescription", label:"Event description", type:"textarea", required:true, help:"Please do not use AI to generate this response. Be thorough and specific — this description is used for our weekly slide post featuring your event flyer and description."},
-          {key:"coverCharge", label:"Cover charge?", type:"radio", required:true, options:["Free entry","Cover at the door","Ticketed / pre-sale"]},
+          {key:"coverCharge", label:"Cover charge?", type:"radio", required:true, options:["Free entry","Presale + Door Sale","Door Sale Only"]},
           {key:"foodService", label:"Interested in food service or kitchen offerings?", type:"radio", required:true, options:["Yes","No","Outside catering (Patio only)","Not sure yet"]}
         ]},
         { title:"You & your crew", sub:"Who's running the night.", fields:[
