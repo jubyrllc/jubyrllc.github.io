@@ -115,7 +115,7 @@
           <span class="path__kicker">Couch reservations</span>
           <h3>Reserve a couch.</h3>
           <p>Parties of 2 or more who want a dedicated home base for the night.
-          First couch $150, each additional $100. Free with a bottle.</p>
+          $150 VIP reservation fee per couch; bottle service optional.</p>
           <span class="path__go">Start here &gt;</span>
         </button>
         <button type="button" class="path" data-mode="private">
@@ -370,24 +370,24 @@
       </div>
       <div class="paths mg-pad">
         <div class="path">
-          <span class="path__kicker">Pricing</span>
-          <h3>$150 first couch</h3>
-          <p>Each additional couch is $100. Your couch is held for your group
-          all night.</p>
+          <span class="path__kicker">VIP reservation fee</span>
+          <h3>$150 per couch</h3>
+          <p>A flat reservation fee per couch, required for all reserved
+          seating &mdash; regardless of bottle purchase.</p>
         </div>
         <div class="path">
-          <span class="path__kicker">Seating only</span>
-          <h3>Order at the bar</h3>
-          <p>Couch reservations are seating-only; guests order drinks directly
-          at the bar. No waiting on a server, quicker access to cocktails all
-          night.</p>
+          <span class="path__kicker">What the fee covers</span>
+          <h3>Handled, start to finish</h3>
+          <p>Guaranteed reserved seating with priority placement, VIP
+          reservation processing and management, guest communication before
+          the event, and check-in coordination on the night.</p>
         </div>
         <div class="path">
-          <span class="path__kicker">Bottle policy</span>
-          <h3>Buy a bottle, couch is free</h3>
-          <p>Purchase a bottle and the couch is complimentary. Already reserved
-          and decide to get a bottle? Your $150 becomes a discount toward
-          bottle service.</p>
+          <span class="path__kicker">Bottle service</span>
+          <h3>Optional, billed separately</h3>
+          <p>Add bottle service if you want it &mdash; it&rsquo;s arranged and
+          billed separately by Margolis. Otherwise couches are seating-only
+          and guests order drinks directly at the bar.</p>
         </div>
       </div>
     </section>
@@ -815,7 +815,7 @@
     couch: {
       hash: "#couches", draft: "jubyr-margolis-draft-couch",
       tag: "Couch reservations · Reservation form", title: "Reserve your couch.",
-      desc: "Under two minutes. First couch $150, each additional $100 — and if you buy a bottle, the couch is on us.",
+      desc: "Under two minutes. A flat $150 VIP reservation fee per couch holds your group's home base for the night; bottle service is optional and billed separately.",
       steps: [
         { title:"Your reservation", sub:"", fields:[
           {key:"firstName", label:"First name", type:"text", required:true, autocomplete:"given-name"},
@@ -824,15 +824,16 @@
           {key:"email", label:"Email", type:"email", required:true, autocomplete:"email", placeholder:"you@email.com", help:"Your confirmation goes here."},
           {key:"resDate", label:"Date of reservation", type:"date", required:true, help:"Check the calendar above to see what's happening that night."},
           {key:"guestCount", label:"Guest count", type:"text", required:true, placeholder:"e.g. 6"},
-          {key:"couches", label:"Number of couches", type:"radio", required:true, options:["1","2","3","4+"], help:"First couch $150, each additional $100. Free with a bottle purchase."},
+          {key:"couches", label:"Number of couches", type:"radio", required:true, options:["1","2","3","4+"], help:"$150 VIP reservation fee per couch, required for all reserved seating. Bottle service is optional and billed separately."},
           {key:"eta", label:"Estimated time of arrival", type:"radio", required:true, options:["9pm–10pm","10pm–11pm","11pm–12am","12am–1am","1am–2am"]},
           {key:"notes", label:"Anything we should know?", type:"textarea", help:"Celebrating something? Interested in bottle service? Tell us."}
         ]}
       ],
       done: first => `<p>We'll confirm your couch shortly — a copy of your reservation is on
-        its way to your inbox. Remember: couches are seating-only and drinks
-        are ordered at the bar, and if you grab a bottle your reservation fee
-        becomes a $150 credit toward it.</p>`
+        its way to your inbox. Your $150-per-couch reservation fee covers
+        reserved seating, pre-event communication, and check-in coordination.
+        Couches are seating-only (drinks are ordered at the bar), and bottle
+        service is optional, billed separately by Margolis.</p>`
     },
 
     private: {
