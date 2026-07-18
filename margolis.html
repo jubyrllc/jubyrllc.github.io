@@ -789,10 +789,11 @@
           {key:"hearAboutOther", label:"Where?", type:"text", when:()=>is("hearAbout","Other"), required:true}
         ]},
         { title:"Payouts & tax documentation", sub:"So paying you is easy.", fields:[
-          {key:"__tax", type:"static", html:`<div class="mg-agree-recap">${TAX_HTML}</div>`},
+          {key:"w9OnFile", label:"Have you completed a W9 with us before?", type:"radio", required:true, options:["Yes, it's already on file","No / not sure"], help:"One W9 covers every event we book you for — if you've done one, you're set."},
+          {key:"__tax", type:"static", html:`<div class="mg-agree-recap">${TAX_HTML}</div>`, when:()=>is("w9OnFile","No / not sure")},
+          {key:"upload", label:"Upload your completed W9 (PDF)", type:"file", when:()=>is("w9OnFile","No / not sure"), help:"Optional now, required before payout. PDF or a clear photo, up to 8 MB. Stored securely, accessed only by the people who process payments."},
           {key:"payableTo", label:"Make check payable to (must match W9)", type:"text", required:true},
-          {key:"zelle", label:"Zelle information (must match W9)", type:"text", required:true},
-          {key:"upload", label:"Upload your completed W9 (PDF)", type:"file", help:"Optional now, required before payout. PDF or a clear photo, up to 8 MB. Stored securely, accessed only by the people who process payments."}
+          {key:"zelle", label:"Zelle information (must match W9)", type:"text", required:true}
         ]},
         { title:"Final agreements", sub:"The full terms, then your signature.", fields:[
           {key:"__terms", type:"static", html:`<div class="mg-terms">${TERMS_HTML}</div>`},
