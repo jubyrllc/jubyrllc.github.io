@@ -20,6 +20,7 @@
   .resv__act .help{margin-top:8px}
   .resv__form{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
   .resv__form .ifield{margin-bottom:14px}
+  .resv__done{margin-top:4px;color:var(--ink);font-size:15px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -141,7 +142,7 @@
           <div class="ifield"><label>Party size <span class="req">*</span></label><input type="text" data-k="partySize" inputmode="numeric" placeholder="e.g. 2"><p class="help">$20 reserves entry for your whole party listed here.</p></div>
           <p class="intake__err" data-err="${i}"></p>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-go="${i}">Reserve &middot; $20 <span class="arw" aria-hidden="true">&gt;</span></button></div>
-          <p class="signup__note" data-done="${i}" hidden></p>
+          <p class="resv__done" data-done="${i}" hidden></p>
         </form>
       </div>`).join("");
       bind(events);
@@ -176,7 +177,7 @@
         })});
         const out=await res.json().catch(()=>({}));
         if(!res.ok||!out.ok){ b.disabled=false; b.textContent="Reserve · $20"; return err(out.error||"Something went wrong — try again."); }
-        f.querySelectorAll(".ifield, .intake__nav").forEach(e=>e.hidden=true);
+        f.querySelectorAll(".ifield, .intake__nav").forEach(e=>e.style.display="none");
         const d=f.querySelector(`[data-done="${i}"]`);
         d.hidden=false;
         d.innerHTML = SQUARE_LINK
