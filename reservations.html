@@ -21,6 +21,10 @@
   .resv__form{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
   .resv__form .ifield{margin-bottom:14px}
   .resv__done{margin-top:4px;color:var(--ink);font-size:15px;line-height:1.6}
+  .mtabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+  .mtab{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);background:var(--paper);color:var(--muted);padding:8px 12px;cursor:pointer;border-radius:999px}
+  .mtab.on{border-color:var(--green);color:var(--green);font-weight:600}
+  .mtab__n{margin-left:6px;opacity:.65}
 </style>
 </head>
 <body>
@@ -76,7 +80,8 @@
       <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-16.jpg')">
         <span class="tag">Upcoming nights</span>
         <h2>What's on at Margolis.</h2>
-        <p>Straight from the live events calendar &mdash; the next two weeks.</p>
+        <p>Straight from the live events calendar &mdash; the next six months.
+        This month is open below; tap another month to browse ahead.</p>
       </div>
       <div class="mg-pad" id="eventList">
         <p class="mg-calnote">Loading upcoming events&hellip;</p>
@@ -114,6 +119,13 @@
   // $20 per person; every ticket after the first is $10 (2 = $30, 4 = $50).
   const priceFor = n => 20 + 10*(Math.max(1,n)-1);
 
+  function monthKey(d){ return String(d).slice(0,7); }
+  function monthLabel(m){
+    const d = new Date(m + "-15T12:00:00");
+    const name = d.toLocaleDateString("en-US", {month:"long"});
+    return d.getFullYear() === new Date().getFullYear() ? name : `${name} ${d.getFullYear()}`;
+  }
+
   async function loadEvents(){
     const box = document.getElementById("eventList");
     try{
@@ -121,11 +133,39 @@
       const out = await res.json();
       const events = out.events || [];
       if(!events.length){
-        box.innerHTML = `<p class="mg-calnote">Nothing posted for the next two weeks yet —
+        box.innerHTML = `<p class="mg-calnote">Nothing posted yet —
           check back soon, or follow <a href="https://instagram.com/margolisphilly" rel="noopener">@margolisphilly</a>.</p>`;
         return;
       }
-      box.innerHTML = events.map((ev,i)=>`<div class="resv" data-i="${i}">
+      const byMonth = {};
+      events.forEach(ev=>{ (byMonth[monthKey(ev.date)]=byMonth[monthKey(ev.date)]||[]).push(ev); });
+      const months = Object.keys(byMonth).sort();
+      const now = new Date();
+      const thisM = now.getFullYear() + "-" + String(now.getMonth()+1).padStart(2,"0");
+      let active = months.includes(thisM) ? thisM : months[0];
+
+      box.innerHTML = `<div class="mtabs" id="mtabs"></div><div id="mlist"></div>`;
+      const tabsEl = document.getElementById("mtabs");
+      const listEl = document.getElementById("mlist");
+      function renderTabs(){
+        tabsEl.innerHTML = months.map(m=>
+          `<button type="button" class="mtab${m===active?" on":""}" data-m="${m}">${esc(monthLabel(m))}<span class="mtab__n">${byMonth[m].length}</span></button>`).join("");
+        tabsEl.querySelectorAll(".mtab").forEach(t=>t.addEventListener("click",()=>{
+          if(t.dataset.m===active) return;
+          active=t.dataset.m; renderTabs(); renderMonth();
+        }));
+      }
+      function renderMonth(){ renderInto(listEl, byMonth[active]); }
+      renderTabs();
+      renderMonth();
+    }catch(e){
+      box.innerHTML = `<p class="mg-calnote">Couldn't load the calendar — refresh, or email
+        <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>`;
+    }
+  }
+
+  function renderInto(listEl, monthEvents){
+      listEl.innerHTML = monthEvents.map((ev,i)=>`<div class="resv" data-i="${i}">
         <div class="resv__head">
           <span class="resv__date mono">${esc(ev.day)} &middot; ${esc(ev.start)}&ndash;${esc(ev.end)}</span>
           <h3>${esc(ev.title)}</h3>
@@ -153,11 +193,7 @@
           <p class="resv__done" data-done="${i}" hidden></p>
         </form>
       </div>`).join("");
-      bind(events);
-    }catch(e){
-      box.innerHTML = `<p class="mg-calnote">Couldn't load the calendar — refresh, or email
-        <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>`;
-    }
+      bind(monthEvents);
   }
 
   function bind(events){
