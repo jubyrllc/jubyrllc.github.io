@@ -810,6 +810,7 @@
           {key:"__terms", type:"static", html:`<div class="mg-terms">${TERMS_HTML}</div>`},
           {key:"ackNotGuaranteed", label:"Do you understand that submission of this form does not guarantee booking confirmation?", type:"radio", required:true, options:["Yes, I understand"]},
           {key:"ackAll", label:"By submitting, do you acknowledge that you have read, understood, and agreed to all event policies and terms outlined above?", type:"radio", required:true, options:["Yes, I agree"]},
+          {key:"contactConsent", label:"Do you agree that Jubyr LLC may contact you about this booking by email, phone, and text message?", type:"radio", required:true, options:["Yes, I agree"], help:"Booking reminders, flyer and RSVP check-ins, and day-of coordination all come through Jubyr LLC."},
           {key:"signature", label:"Electronic signature (full legal name)", type:"text", required:true, autocomplete:"name"}
         ]}
     ];
@@ -850,6 +851,7 @@
           {key:"guestCount", label:"Guest count", type:"text", required:true, placeholder:"e.g. 6", help:"Each couch includes admission for up to 5 guests. Guests beyond your allotment pay the regular door charge — we keep a tally of your party at check-in and only start charging once your included spots are used."},
           {key:"couches", label:"Number of couches", type:"radio", required:true, options:["1","2","3","4+"], help:"$200 VIP reservation fee per couch — each couch seats up to 5 guests, admission included. Bottle service is optional and billed separately."},
           {key:"eta", label:"Estimated time of arrival", type:"radio", required:true, options:["9pm–10pm","10pm–11pm","11pm–12am","12am–1am","1am–2am"]},
+          {key:"contactConsent", label:"Do you agree that Jubyr LLC may contact you about this booking by email, phone, and text message?", type:"radio", required:true, options:["Yes, I agree"], help:"Booking reminders, flyer and RSVP check-ins, and day-of coordination all come through Jubyr LLC."},
           {key:"notes", label:"Anything we should know?", type:"textarea", help:"Celebrating something? Interested in bottle service? Tell us."}
         ]}
       ],
@@ -909,6 +911,7 @@
           {key:"__ccauth", type:"static", html:`<div class="mg-agree-recap">${CCAUTH_HTML}</div>`},
           {key:"upload", label:"Upload your completed credit card authorization form", type:"file", help:"PDF, Word doc, or a clear photo, up to 8 MB. Stored securely, accessed only by the people who process payments."},
           {key:"__pterms", type:"static", html:`<div class="mg-terms">${PRIVATE_TERMS_HTML}</div>`},
+{key:"contactConsent", label:"Do you agree that Jubyr LLC may contact you about this booking by email, phone, and text message?", type:"radio", required:true, options:["Yes, I agree"], help:"Booking reminders, flyer and RSVP check-ins, and day-of coordination all come through Jubyr LLC."},
           {key:"ackAll", label:"Do you acknowledge that you have read, understood, and agreed to the booking requirements, cancellation terms, and fee policies above?", type:"radio", required:true, options:["Yes, I agree"]},
           {key:"signature", label:"Signature of event organizer (full legal name)", type:"text", required:true, autocomplete:"name"},
           {key:"sigDate", label:"Date", type:"date", required:true}
@@ -950,6 +953,7 @@
           {key:"outsideVendors", label:"Are you bringing outside vendors?", type:"radio", required:true, options:["Yes","No"]},
           {key:"vendorList", label:"List them (videographer, photographer, planner, etc.)", type:"textarea", when:()=>is("outsideVendors","Yes"), required:true},
           {key:"__fack", type:"static", html:`<div class="mg-agree-recap">${FABRIKA_ACK_HTML}</div>`},
+{key:"contactConsent", label:"Do you agree that Jubyr LLC may contact you about this booking by email, phone, and text message?", type:"radio", required:true, options:["Yes, I agree"], help:"Booking reminders, flyer and RSVP check-ins, and day-of coordination all come through Jubyr LLC."},
           {key:"ackAll", label:"I acknowledge that I have read and understand the information outlined above and agree to the terms and policies described for hosting an event at Fabrika.", type:"radio", required:true, options:["I acknowledge and agree"]},
           {key:"signature", label:"Client signature (full legal name)", type:"text", required:true, autocomplete:"name"},
           {key:"sigDate", label:"Date", type:"date", required:true}
