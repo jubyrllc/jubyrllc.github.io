@@ -1912,3 +1912,18 @@
   .mgcal--agenda { display: block; }
   .mgcal iframe { height: 520px; }
 }
+
+/* ---------- margolis booking hub (4 forms) ---------- */
+.mg-chooser { padding-bottom: 34px; }
+.mg-chooser .path {
+  font: inherit; text-align: left; cursor: pointer; background: none; width: 100%;
+}
+.mg-chooser .path.on {
+  border: 1px solid var(--green);
+  background: var(--green-tint, #F2F5E8);
+}
+.mg-chooser .path.on .path__go { color: var(--green); }
+.mg-cols--3 { grid-template-columns: 1fr 1fr 1fr; }
+@media (max-width: 1000px) {
+  .mg-cols--3 { grid-template-columns: 1fr; }
+}
