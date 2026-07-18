@@ -65,6 +65,9 @@
           <div class="ifield"><label>Tickets sold</label>
             <input type="text" id="r-sold" inputmode="numeric" placeholder="e.g. 25">
             <p class="help">Actual ticket sales only &mdash; no holds, no maybes. Fill one box or both.</p></div>
+          <div class="ifield"><label>Event ticket link</label>
+            <input type="text" id="r-link" placeholder="https://posh.vip/e/your-event">
+            <p class="help">Your Posh / Eventbrite / ticket page. The moment it's on file, guests get sent to YOUR link instead of paying our $20 advance reservation.</p></div>
           <p class="intake__err" id="r-err"></p>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="r-go">Update counts <span class="arw" aria-hidden="true">&gt;</span></button></div>
           <p class="signup__note" id="r-done" hidden></p>
@@ -114,10 +117,12 @@
     const sold=document.getElementById("r-sold").value.trim();
     if(!emailOk(email)) return err("r-err","Please add the email you booked with.");
     if(!date) return err("r-err","Please add your event date.");
-    if(!free && !sold) return err("r-err","Add at least one number — free RSVPs or tickets sold.");
+    const link=document.getElementById("r-link").value.trim();
+    if(!free && !sold && !link) return err("r-err","Add at least one number — or your event ticket link.");
+    if(link && !/^https?:\/\//i.test(link)) return err("r-err","Ticket link should start with https://");
     const btn=document.getElementById("r-go"); btn.disabled=true; btn.textContent="Sending…";
     try{
-      const res=await fetch(ENDPOINT,{method:"POST",body:JSON.stringify({formType:"rsvp",email,eventDate:date,eventName:document.getElementById("r-name").value,rsvpFree:free,ticketsSold:sold})});
+      const res=await fetch(ENDPOINT,{method:"POST",body:JSON.stringify({formType:"rsvp",email,eventDate:date,eventName:document.getElementById("r-name").value,rsvpFree:free,ticketsSold:sold,eventLink:link})});
       const out=await res.json().catch(()=>({}));
       if(!res.ok||!out.ok){ btn.disabled=false; btn.textContent="Update counts"; return err("r-err",out.error||"Something went wrong — try again or email ruby@margolisphilly.com."); }
       document.getElementById("rsvp-form").querySelectorAll(".ifield, .intake__nav").forEach(e=>e.hidden=true);

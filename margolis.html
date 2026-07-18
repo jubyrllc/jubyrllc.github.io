@@ -132,6 +132,13 @@
           promo.</p>
           <span class="path__go">Start here &gt;</span>
         </button>
+        <a class="path" href="/reservations">
+          <span class="path__kicker">Coming to a show?</span>
+          <h3>Reserve your night.</h3>
+          <p>Guests can lock in entry to an upcoming event for $20 before
+          tickets go live.</p>
+          <span class="path__go">Reserve &gt;</span>
+        </a>
       </div>
     </section>
 
@@ -1065,6 +1072,7 @@
   }
   const MODE_HASH_OUT = {margolis:"#margolis", patio:"#patio", couch:"#couches", private:"#private", fabrika:"#fabrika", media:"#media"};
   cards.forEach(c=>c.addEventListener("click", ()=>{
+    if(!c.dataset.mode) return;   // the guest reservations card is a plain link
     setMode(c.dataset.mode, true);
     history.replaceState(null, "", MODE_HASH_OUT[c.dataset.mode]);
   }));
