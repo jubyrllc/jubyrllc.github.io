@@ -1958,3 +1958,31 @@
 }
 .mg-dl { color: var(--green); text-decoration: none; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
 .mg-dl:hover { text-decoration: underline; }
+.mg-slider input[type="range"] {
+  width: 100%; accent-color: var(--green); margin: 6px 0 10px; cursor: pointer;
+}
+.mg-slider__out { font-size: 12px; color: var(--muted); letter-spacing: 0.02em; }
+.mg-slider__out b { color: var(--ink); font-size: 13px; }
+.mg-dot {
+  display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+  vertical-align: baseline; margin: 0 2px;
+}
+.tag-items { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.tag-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--green); background: var(--green-tint, #F2F5E8);
+  color: var(--ink); font-size: 12.5px; padding: 6px 8px 6px 12px;
+}
+.tag-x {
+  border: 0; background: none; color: var(--muted); font-size: 15px;
+  line-height: 1; cursor: pointer; padding: 0 2px;
+}
+.tag-x:hover { color: var(--ink); }
+.tagrow { display: flex; gap: 8px; align-items: stretch; }
+.tagrow .tag-pfx {
+  display: flex; align-items: center; padding: 0 10px 0 12px;
+  border: 1px solid var(--line); border-right: 0; background: #FAFAF7;
+  color: var(--muted); font-size: 14px;
+}
+.tagrow .tag-pfx + input { border-left: 0 !important; padding-left: 2px !important; }
+.tagrow input { flex: 1; min-width: 0; }

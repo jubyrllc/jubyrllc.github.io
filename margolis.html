@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=38">
+<link rel="stylesheet" href="styles.css?v=39">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
@@ -735,24 +735,28 @@
           {key:"eventDate", label:"Date of event", type:"date", required:true, help:"Check the calendar above before you pick."},
           {key:"startTime", label:"Event start time", type:"time", required:true},
           {key:"endTime", label:"Event end time", type:"time", required:true, help:patio?"All patio events must conclude by 10 PM.":"Friday and Saturday nights run to 2 AM."},
-          {key:"guestCount", label:"Estimated guest count", type:"text", required:true, placeholder:"e.g. 80"},
+          {key:"guestCount", label:"Anticipated guest count", type:"range", required:true, min:50, max:250, step:10, def:100, help:"Slide in steps of 10. The readout shows what each guest would need to spend at the bar to hit a $1,500 minimum."},
           {key:"frequency", label:"Frequency of event", type:"radio", required:true, options:["One time","Monthly","Weekly","Quarterly","Not sure yet"]},
           {key:"eventType", label:"What type of event best describes this?", type:"radio", required:true, options:["Dance party / DJ night","Live music / concert","Listening session","Comedy / open mic","Art show / market","Private celebration","Community / fundraiser","Other"]},
           {key:"eventTypeOther", label:"Tell us the type", type:"text", when:()=>is("eventType","Other"), required:true},
           {key:"performers", label:"Will there be live performers or just DJs?", type:"radio", required:true, options:["Just DJs","Live performers","Both"]},
+          {key:"genres", label:"Music genres for the night", type:"checks", required:true, options:["House","Hip-Hop","R&B","Afrobeats","Amapiano","Jersey Club","Techno","Disco","Jazz","Soul / Funk","Reggae / Dancehall","Latin","Open-format","Other"], help:"Pick all that apply."},
+          {key:"genresOther", label:"What's the sound?", type:"text", when:()=>Array.isArray(data.genres)&&data.genres.includes("Other"), required:true},
           {key:"eventDescription", label:"Event description", type:"textarea", required:true, help:"Please do not use AI to generate this response. Be thorough and specific — this description is used for our weekly slide post featuring your event flyer and description."},
-          {key:"coverCharge", label:"Cover charge?", type:"radio", required:true, options:["Free entry","Cover at the door","Ticketed / pre-sale","Not sure yet"]},
+          {key:"coverCharge", label:"Cover charge?", type:"radio", required:true, options:["Free entry","Cover at the door","Ticketed / pre-sale"]},
           {key:"foodService", label:"Interested in food service or kitchen offerings?", type:"radio", required:true, options:["Yes","No","Outside catering (Patio only)","Not sure yet"]}
         ]},
         { title:"You & your crew", sub:"Who's running the night.", fields:[
-          {key:"contactName", label:"Primary contact name (legal first and last)", type:"text", required:true, autocomplete:"name"},
+          {key:"contactFirst", label:"Legal first name", type:"text", required:true, autocomplete:"given-name"},
+          {key:"contactMiddle", label:"Legal middle name", type:"text", autocomplete:"additional-name", help:"Optional."},
+          {key:"contactLast", label:"Legal last name", type:"text", required:true, autocomplete:"family-name"},
           {key:"phone", label:"Primary contact phone number", type:"tel", required:true, autocomplete:"tel", placeholder:"10-digit number"},
           {key:"email", label:"Best email", type:"email", required:true, autocomplete:"email", placeholder:"you@email.com", help:"Your confirmation copy goes here."},
-          {key:"instagram", label:"Instagram handle(s)", type:"text", required:true, placeholder:"@yourhandle"},
+          {key:"instagramList", label:"Instagram handles", type:"taglist", required:true, prefix:"@", placeholder:"yourhandle", addLabel:"Add handle", help:"One at a time, letters only — hit Add for each handle involved."},
           {key:"businessName", label:"Business / brand / collective name", type:"text", help:"If applicable."},
-          {key:"talent", label:"List all DJs, hosts, performers, collectives, or talent involved", type:"textarea", required:true},
+          {key:"talentList", label:"DJs, hosts, performers, collectives, or talent involved", type:"taglist", required:true, placeholder:"Name or collective", addLabel:"Add another", help:"One at a time — hit Add for each act so the lineup stays clean."},
           {key:"confidence", label:"How confident are you that you'll hit your attendance goals, based on previous event history?", type:"radio", required:true, options:["1","2","3","4","5","6","7","8","9","10"], help:"1 = not confident, 10 = extremely confident."},
-          {key:"ownController", label:"Will you be bringing your own DJ controller?", type:"radio", required:true, options:["Yes, bringing our own","No, using the house setup","Not applicable"]},
+          {key:"ownController", label:"Will you be bringing your own DJ controller?", type:"radio", required:true, options:["Yes, bringing our own","No, using the house setup","Not applicable"], help:"The house setup is a Pioneer XDJ-RX3."},
           {key:"visuals", label:"Visuals", type:"radio", required:true, options:["We'll provide our own","Use the house visuals","No visuals needed"]},
           {key:"doorPerson", label:"Door person", type:"radio", required:true, options:["We need one from the venue","We'll provide our own","No door needed"]},
           {key:"collabPost", label:"Do you agree to make a collaborative promotional post with @margolisphilly? We accept ONE collab post.", type:"radio", required:true, options:["Yes, I agree"]},
@@ -843,7 +847,7 @@
           {key:"guestCountP", label:"Estimated guest count", type:"text", required:true, placeholder:"e.g. 90", help:"Capacity is about 150 standing."},
           {key:"dressCode", label:"Dress code or theme", type:"text", required:true, placeholder:"None is a fine answer"},
           {key:"ageRange", label:"Average age range", type:"radio", required:true, options:["21–25","25–35","35–45","45+","Mixed ages"]},
-          {key:"ownEquipment", label:"Will you be bringing your own DJ equipment?", type:"radio", required:true, options:["Yes, bringing our own","No, using the house setup","Not applicable"], help:"House setup: 1 XDJ, 1 booth speaker, 4 house speakers, a sub, and a mixer."},
+          {key:"ownEquipment", label:"Will you be bringing your own DJ equipment?", type:"radio", required:true, options:["Yes, bringing our own","No, using the house setup","Not applicable"], help:"House setup: Pioneer XDJ-RX3, 1 booth speaker, 4 house speakers, a sub, and a mixer."},
           {key:"decorations", label:"Will you be setting up your own decorations?", type:"radio", required:true, options:["Yes","No","Not sure yet"]},
           {key:"mics", label:"Do you need mics?", type:"radio", required:true, options:["Yes","No"]},
           {key:"visuals", label:"Visuals", type:"radio", required:true, options:["We'll provide our own","Use the house visuals","No visuals needed"]},
@@ -986,6 +990,25 @@
     if(f.type==="textarea"){
       return `<div class="ifield"><label>${esc(f.label)}${req}</label><textarea data-key="${f.key}">${esc(v||"")}</textarea>${help}</div>`;
     }
+    if(f.type==="range"){
+      if(!data[f.key]) data[f.key] = String(f.def || f.min);
+      const val = parseInt(data[f.key],10);
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label>
+        <div class="mg-slider">
+          <input type="range" min="${f.min}" max="${f.max}" step="${f.step}" value="${val}" data-range="${f.key}">
+          <p class="mg-slider__out mono" id="rv_${f.key}"></p>
+        </div>${help}</div>`;
+    }
+    if(f.type==="taglist"){
+      const cur = Array.isArray(v)?v:[];
+      const chips = cur.map((t,i)=>`<span class="tag-item mono">${f.prefix?esc(f.prefix):""}${esc(t)}<button type="button" class="tag-x" data-tagrm="${f.key}" data-i="${i}" aria-label="Remove ${esc(t)}">&times;</button></span>`).join("");
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label>
+        ${chips?`<div class="tag-items">${chips}</div>`:""}
+        <div class="tagrow">${f.prefix?`<span class="tag-pfx mono">${esc(f.prefix)}</span>`:""}
+          <input type="text" data-taginput="${f.key}" placeholder="${esc(f.placeholder||"")}">
+          <button type="button" class="ichip" data-tagadd="${f.key}">${esc(f.addLabel||"Add")}</button>
+        </div>${help}</div>`;
+    }
     if(f.type==="radio"){
       const opts = f.options.map(o=>`<button type="button" class="ichip${v===o?" on":""}" data-radio="${f.key}" data-val="${esc(o)}">${esc(o)}</button>`).join("");
       return `<div class="ifield"><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
@@ -1023,9 +1046,46 @@
     else document.querySelector('#book .intake').scrollIntoView({behavior:"smooth", block:"start"});
   }
 
+  function paintRange(key, val){
+    const out = document.getElementById("rv_"+key);
+    if(!out) return;
+    const g = parseInt(val,10) || 50;
+    const pp = 1500 / g;
+    const hue = Math.max(0, Math.min(120, (30-pp)/(30-6)*120));
+    const word = pp<=10 ? "very reachable" : pp<=15 ? "reachable" : pp<=20 ? "needs a drinking crowd" : pp<=25 ? "a stretch" : "hard to hit";
+    out.innerHTML = `<b>${g} guests</b> &middot; <span class="mg-dot" style="background:hsl(${Math.round(hue)},65%,40%)"></span> about $${Math.ceil(pp)} per person at the bar to hit a $1,500 minimum &middot; ${word}`;
+  }
+  function addTag(key){
+    const inp = host.querySelector(`input[data-taginput="${key}"]`);
+    if(!inp) return;
+    let val = inp.value.trim().replace(/^@+/,"");
+    if(!val) return;
+    if(!Array.isArray(data[key])) data[key]=[];
+    if(!data[key].includes(val)) data[key].push(val);
+    persist(); renderStep(true);
+    const again = host.querySelector(`input[data-taginput="${key}"]`);
+    if(again) again.focus();
+  }
   function bind(){
     host.querySelectorAll("input[data-key],textarea[data-key]").forEach(el=>{
       el.addEventListener("input", ()=>{ data[el.dataset.key]=el.value; persist(); });
+    });
+    host.querySelectorAll("input[data-range]").forEach(el=>{
+      const k = el.dataset.range;
+      el.addEventListener("input", ()=>{ data[k]=el.value; persist(); paintRange(k, el.value); });
+      paintRange(k, el.value);
+    });
+    host.querySelectorAll("[data-tagadd]").forEach(el=>{
+      el.addEventListener("click", ()=>addTag(el.dataset.tagadd));
+    });
+    host.querySelectorAll("input[data-taginput]").forEach(el=>{
+      el.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); addTag(el.dataset.taginput); } });
+    });
+    host.querySelectorAll("[data-tagrm]").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const k=el.dataset.tagrm, i=+el.dataset.i;
+        if(Array.isArray(data[k])){ data[k].splice(i,1); persist(); renderStep(true); }
+      });
     });
     host.querySelectorAll("[data-radio]").forEach(el=>{
       el.addEventListener("click", ()=>{ const k=el.dataset.radio; data[k]=(data[k]===el.dataset.val)?"":el.dataset.val; persist(); renderStep(true); });
@@ -1058,6 +1118,7 @@
       if(!f.required) continue;
       const v=data[f.key];
       if(f.type==="checks"){ if(!Array.isArray(v)||!v.length) return "Please answer every question on this step."; continue; }
+      if(f.type==="taglist"){ if(!Array.isArray(v)||!v.length) return "Use the Add button to add at least one entry."; continue; }
       if(!v || !String(v).trim()){
         return (f.type==="radio") ? "Please answer every question on this step." : "Please fill in the required fields.";
       }
@@ -1109,8 +1170,17 @@
     if(isPublic) payload.venue = FORMS[mode].venue;
     Object.keys(data).forEach(k=>{
       if(k.startsWith("__")) return;
+      if(k==="instagramList"){ payload.instagram = (data[k]||[]).map(h=>"@"+h).join(", "); return; }
+      if(k==="talentList"){ payload.talent = (data[k]||[]).join(", "); return; }
+      if(k==="genres"){ payload.genres = [...(data.genres||[]).filter(g=>g!=="Other"), (data.genresOther||"").trim()].filter(Boolean).join(", "); return; }
+      if(k==="genresOther") return;
+      if(["contactFirst","contactMiddle","contactLast"].includes(k)) return;
       payload[k] = Array.isArray(data[k]) ? data[k].join(", ") : data[k];
     });
+    if(data.contactFirst || data.contactLast){
+      payload.contactName = [data.contactFirst, data.contactMiddle, data.contactLast]
+        .map(x=>String(x||"").trim()).filter(Boolean).join(" ");
+    }
     const pd = phoneDigits(data.phone);
     if(pd.length===10) payload.phone = "("+pd.slice(0,3)+") "+pd.slice(3,6)+"-"+pd.slice(6);
     const file = await readFile();
@@ -1132,7 +1202,7 @@
 
   function done(){
     progress.hidden=true;
-    const first = String(data.contactName||data.clientName||data.firstName||"").trim().split(" ")[0];
+    const first = String(data.contactFirst||data.contactName||data.clientName||data.firstName||"").trim().split(" ")[0];
     host.innerHTML=`<div class="intake__done">
       <div class="mark">&#10003;</div>
       <h2>${mode==="couch"?"Reservation request received":"Your inquiry is in"}${first?`, ${esc(first)}`:""}.</h2>
