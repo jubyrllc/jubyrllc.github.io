@@ -1943,3 +1943,18 @@
 @media (max-width: 720px) {
   .mg-calgate { grid-template-columns: 1fr; }
 }
+.mg-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+  padding-bottom: 34px;
+}
+.mg-gallery .mg-calnote { grid-column: 1 / -1; }
+.mg-media { border: 1px dashed var(--line); }
+.mg-media img, .mg-media video { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; background: #111; }
+.mg-media figcaption {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+  padding: 10px 12px; font-size: 12.5px; color: var(--muted);
+}
+.mg-dl { color: var(--green); text-decoration: none; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+.mg-dl:hover { text-decoration: underline; }

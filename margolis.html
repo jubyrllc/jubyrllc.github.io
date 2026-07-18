@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=37">
+<link rel="stylesheet" href="styles.css?v=38">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
@@ -44,6 +44,7 @@
         <li><a href="#couches">Couches</a></li>
         <li><a href="#private">Private events</a></li>
         <li><a href="#fabrika">Fabrika</a></li>
+        <li><a href="#media">Media</a></li>
       </ul>
       <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
         <span></span><span></span><span></span>
@@ -55,6 +56,7 @@
       <a href="#couches">Couches</a>
       <a href="#private">Private events</a>
       <a href="#fabrika">Fabrika</a>
+      <a href="#media">Media</a>
     </div>
   </header>
 
@@ -92,7 +94,7 @@
       <div class="sechead">
         <span class="tag">Choose your booking</span>
         <h2>What are we setting up?</h2>
-        <p>Five ways in. Pick one and the right details and form appear below.</p>
+        <p>Six ways in. Pick one and the right details appear below.</p>
       </div>
       <div class="paths mg-pad mg-chooser" id="chooserCards">
         <button type="button" class="path" data-mode="margolis">
@@ -128,6 +130,13 @@
           <h3>Host at Fabrika.</h3>
           <p>Talent and promoter-led events at our partner venue. Door / bar
           split: keep 100% of the door, earn commission on the bar.</p>
+          <span class="path__go">Start here &gt;</span>
+        </button>
+              <button type="button" class="path" data-mode="media">
+          <span class="path__kicker">Media gallery</span>
+          <h3>Grab photos &amp; video.</h3>
+          <p>Approved shots of the spaces for your flyers, promo, and
+          planning. Free to download and use for your event.</p>
           <span class="path__go">Start here &gt;</span>
         </button>
       </div>
@@ -502,6 +511,18 @@
       </div>
     </section>
 
+    <!-- ============ MEDIA GALLERY ============ -->
+    <section class="box" id="mediagallery" data-modes="media">
+      <div class="sechead">
+        <span class="tag">Media gallery</span>
+        <h2>Photos &amp; video of the space.</h2>
+        <p>Approved shots of Margolis, The Patio, and Fabrika &mdash; free to
+        download and use in your flyers, promo, and planning. Tag
+        @margolisphilly when you post.</p>
+      </div>
+      <div class="mg-gallery mg-pad" id="mediaGrid"></div>
+    </section>
+
     <!-- ============ THE FORM ============ -->
     <section class="box" id="book" data-modes="margolis patio couch private fabrika">
       <div class="sechead">
@@ -548,6 +569,7 @@
           <li><a href="#couches">Couch reservations</a></li>
           <li><a href="#private">Private events</a></li>
           <li><a href="#fabrika">Fabrika</a></li>
+          <li><a href="#media">Media gallery</a></li>
         </ul>
       </div>
       <div>
@@ -914,7 +936,7 @@
   function persist(){ if(mode==="none") return; try{ localStorage.setItem(FORMS[mode].draft, JSON.stringify(data)); }catch(e){} }
 
   // -------- mode switching --------
-  const MODE_HASHES = {"#margolis":"margolis","#public":"margolis","#patio":"patio","#couches":"couch","#private":"private","#fabrika":"fabrika"};
+  const MODE_HASHES = {"#margolis":"margolis","#public":"margolis","#patio":"patio","#couches":"couch","#private":"private","#fabrika":"fabrika","#media":"media"};
   const modeSections = document.querySelectorAll("[data-modes]");
   const cards = document.querySelectorAll("#chooserCards .path");
 
@@ -926,21 +948,24 @@
     cards.forEach(c=>c.classList.toggle("on", c.dataset.mode===m));
     if(m==="none") return;
     const F = FORMS[m];
-    document.getElementById("formTag").textContent = F.tag;
-    document.getElementById("formTitle").textContent = F.title;
-    document.getElementById("formDesc").textContent = F.desc;
-    data = loadDraft(F.draft);
-    attachedFile = null;
-    stepIndex = 0;
-    renderStep(true);
+    if(F){
+      document.getElementById("formTag").textContent = F.tag;
+      document.getElementById("formTitle").textContent = F.title;
+      document.getElementById("formDesc").textContent = F.desc;
+      data = loadDraft(F.draft);
+      attachedFile = null;
+      stepIndex = 0;
+      renderStep(true);
+    }
     if(scroll){
       const target = [...modeSections].find(s=>s.dataset.modes.split(" ").includes(m) && s.id!=="book");
       (target || document.getElementById("book")).scrollIntoView({behavior:"smooth", block:"start"});
     }
   }
+  const MODE_HASH_OUT = {margolis:"#margolis", patio:"#patio", couch:"#couches", private:"#private", fabrika:"#fabrika", media:"#media"};
   cards.forEach(c=>c.addEventListener("click", ()=>{
     setMode(c.dataset.mode, true);
-    history.replaceState(null, "", FORMS[c.dataset.mode].hash);
+    history.replaceState(null, "", MODE_HASH_OUT[c.dataset.mode]);
   }));
   window.addEventListener("hashchange", ()=>{
     const m = MODE_HASHES[location.hash];
@@ -980,7 +1005,7 @@
   }
 
   function renderStep(keepScroll){
-    if(mode==="none") return;
+    if(mode==="none" || !FORMS[mode]) return;
     const steps = FORMS[mode].steps;
     const y = window.scrollY;
     if(stepIndex >= steps.length) stepIndex = steps.length-1;
@@ -1163,6 +1188,30 @@
       }
     }));
   });
+
+  // -------- media gallery --------
+  // Add items as {type:"image"|"video", src, thumb?, caption?, venue?}.
+  // Every item gets a Download button. Content drops in as Ruby supplies
+  // it; until then the grid shows a friendly note.
+  const MEDIA = [];
+  (function renderMedia(){
+    const grid = document.getElementById("mediaGrid");
+    if(!MEDIA.length){
+      grid.innerHTML = `<p class="mg-calnote">The gallery is being stocked with
+        photos and video of all three spaces. Need assets today? Email
+        <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>`;
+      return;
+    }
+    grid.innerHTML = MEDIA.map(m=>`<figure class="mg-media">
+      ${m.type==="video"
+        ? `<video controls preload="metadata"${m.thumb?` poster="${m.thumb}"`:""}><source src="${m.src}"></video>`
+        : `<img loading="lazy" src="${m.src}" alt="${esc(m.caption||"Venue media")}">`}
+      <figcaption>
+        <span>${esc(m.caption||"")}${m.venue?` &middot; ${esc(m.venue)}`:""}</span>
+        <a class="mg-dl mono" href="${m.src}" download>Download</a>
+      </figcaption>
+    </figure>`).join("");
+  })();
 
   // -------- init --------
   const initMode = MODE_HASHES[location.hash] || "none";
