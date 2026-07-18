@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit Your Flyer — Margolis</title>
+<meta name="description" content="Submit your event flyer for your night at Margolis. Due 10 days before your event.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=42">
+</head>
+<body>
+
+<div class="announce">
+  <span class="mono">Margolis &middot; Event updates &middot; via Jubyr LLC</span>
+  <a class="mono" href="/margolis">Booking page <span aria-hidden="true">&gt;</span></a>
+</div>
+
+<div class="frame">
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
+      <ul class="nav__links mono">
+        <li><a href="/margolis">Booking page</a></li>
+        <li><a href="/margolis-rsvp">Update RSVP counts</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobilemenu mono" id="mobilemenu">
+      <a href="/margolis">Booking page</a>
+      <a href="/margolis-rsvp">Update RSVP counts</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="box" id="flyer">
+      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-03.jpg')">
+        <span class="tag">Your event &middot; Flyer</span>
+        <h2>Send us your flyer.</h2>
+        <p>Due at least 10 days before your event &mdash; it goes into our
+        weekly slide post and promo. Use the same email you booked with.</p>
+      </div>
+      <div class="intake">
+        <form id="flyer-form" novalidate>
+          <input type="text" name="company" value="" tabindex="-1" autocomplete="off"
+                 style="position:absolute;left:-5000px;height:0;width:0;opacity:0" aria-hidden="true">
+          <div class="ifield"><label>Email you booked with <span class="req">*</span></label>
+            <input type="email" id="f-email" autocomplete="email" placeholder="you@email.com"></div>
+          <div class="ifield"><label>Event date <span class="req">*</span></label>
+            <input type="date" id="f-date"></div>
+          <div class="ifield"><label>Event name</label>
+            <input type="text" id="f-name"></div>
+          <div class="ifield"><label>Flyer file <span class="req">*</span></label>
+            <input type="file" id="f-file" accept="image/*,.pdf">
+            <p class="help">Image or PDF, up to 8 MB.</p></div>
+          <div class="ifield"><label>Anything we should know?</label>
+            <textarea id="f-notes"></textarea></div>
+          <p class="intake__err" id="f-err"></p>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="f-go">Submit flyer <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          <p class="signup__note" id="f-done" hidden></p>
+        </form>
+      </div>
+    </section>
+
+
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__bottom">
+      <span class="status"><span class="dot" aria-hidden="true"></span> Margolis event coordination &mdash; Jubyr LLC</span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="mailto:ruby@margolisphilly.com" style="color:inherit">ruby@margolisphilly.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const burger = document.querySelector('.nav__burger');
+  const menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+  });
+
+  const ENDPOINT = "https://jubyr.tools/margolis-booking.php";
+  const qs = new URLSearchParams(location.search);
+  // Reminder emails link with ?email=&date=&event= so this is prefilled.
+  ["f","r"].forEach(p=>{
+    const em=document.getElementById(p+"-email");
+    if(!em) return;
+    if(qs.get("email")) em.value = qs.get("email");
+    if(qs.get("date")) document.getElementById(p+"-date").value = qs.get("date");
+    if(qs.get("event")) document.getElementById(p+"-name").value = qs.get("event");
+  });
+
+  const emailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e||"").trim());
+  function err(id,msg){ const el=document.getElementById(id); el.textContent=msg; el.classList.add("show"); }
+  function clearErr(id){ document.getElementById(id).classList.remove("show"); }
+
+  document.getElementById("f-go").addEventListener("click", async ()=>{
+    clearErr("f-err");
+    const email=document.getElementById("f-email").value.trim();
+    const date=document.getElementById("f-date").value.trim();
+    const file=document.getElementById("f-file").files[0];
+    if(!emailOk(email)) return err("f-err","Please add the email you booked with.");
+    if(!date) return err("f-err","Please add your event date.");
+    if(!file) return err("f-err","Please attach your flyer.");
+    if(file.size>8*1024*1024) return err("f-err","That file is over 8 MB — compress it and try again.");
+    const b64 = await new Promise(res=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(",")[1]); r.readAsDataURL(file); });
+    const btn=document.getElementById("f-go"); btn.disabled=true; btn.textContent="Sending…";
+    try{
+      const res=await fetch(ENDPOINT,{method:"POST",body:JSON.stringify({formType:"flyer",company:document.querySelector('[name="company"]').value,email,eventDate:date,eventName:document.getElementById("f-name").value,notes:document.getElementById("f-notes").value,fileName:file.name,fileB64:b64})});
+      const out=await res.json().catch(()=>({}));
+      if(!res.ok||!out.ok){ btn.disabled=false; btn.textContent="Submit flyer"; return err("f-err",out.error||"Something went wrong — try again or email ruby@margolisphilly.com."); }
+      document.getElementById("flyer-form").querySelectorAll(".ifield, .intake__nav").forEach(e=>e.hidden=true);
+      const d=document.getElementById("f-done"); d.hidden=false;
+      d.textContent="Got it — your flyer is in. The daily reminders stop now. Thank you!";
+    }catch(e){ btn.disabled=false; btn.textContent="Submit flyer"; err("f-err","Couldn't reach the server — check your connection."); }
+  });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Update Your RSVP Counts — Margolis</title>
+<meta name="description" content="Update your free RSVP count and tickets sold for your night at Margolis — 3 days out, 2 days out, and day of.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=42">
+</head>
+<body>
+
+<div class="announce">
+  <span class="mono">Margolis &middot; Event updates &middot; via Jubyr LLC</span>
+  <a class="mono" href="/margolis">Booking page <span aria-hidden="true">&gt;</span></a>
+</div>
+
+<div class="frame">
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
+      <ul class="nav__links mono">
+        <li><a href="/margolis">Booking page</a></li>
+        <li><a href="/margolis-flyer">Submit flyer</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobilemenu mono" id="mobilemenu">
+      <a href="/margolis">Booking page</a>
+      <a href="/margolis-flyer">Submit flyer</a>
+    </div>
+  </header>
+
+  <main id="top">
+
+
+    <section class="box" id="rsvp">
+      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-15.jpg')">
+        <span class="tag">Your event &middot; RSVP &amp; ticket counts</span>
+        <h2>How's the list looking?</h2>
+        <p>Update both numbers 3 days out, 2 days out, and day of so we can
+        staff your night right. Be straight with us on ticket sales &mdash;
+        the Posh scanner report shows us the exact count anyway, so there's
+        no upside to holding back. Count only real ticket sales.</p>
+      </div>
+      <div class="intake">
+        <form id="rsvp-form" novalidate>
+          <div class="ifield"><label>Email you booked with <span class="req">*</span></label>
+            <input type="email" id="r-email" autocomplete="email" placeholder="you@email.com"></div>
+          <div class="ifield"><label>Event date <span class="req">*</span></label>
+            <input type="date" id="r-date"></div>
+          <div class="ifield"><label>Event name</label>
+            <input type="text" id="r-name"></div>
+          <div class="ifield"><label>Free RSVP count</label>
+            <input type="text" id="r-free" inputmode="numeric" placeholder="e.g. 60">
+            <p class="help">People on the free list / RSVP'd without a ticket.</p></div>
+          <div class="ifield"><label>Tickets sold</label>
+            <input type="text" id="r-sold" inputmode="numeric" placeholder="e.g. 25">
+            <p class="help">Actual ticket sales only &mdash; no holds, no maybes. Fill one box or both.</p></div>
+          <p class="intake__err" id="r-err"></p>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="r-go">Update counts <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          <p class="signup__note" id="r-done" hidden></p>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__bottom">
+      <span class="status"><span class="dot" aria-hidden="true"></span> Margolis event coordination &mdash; Jubyr LLC</span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="mailto:ruby@margolisphilly.com" style="color:inherit">ruby@margolisphilly.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const burger = document.querySelector('.nav__burger');
+  const menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+  });
+
+  const ENDPOINT = "https://jubyr.tools/margolis-booking.php";
+  const qs = new URLSearchParams(location.search);
+  // Reminder emails link with ?email=&date=&event= so this is prefilled.
+  ["f","r"].forEach(p=>{
+    const em=document.getElementById(p+"-email");
+    if(!em) return;
+    if(qs.get("email")) em.value = qs.get("email");
+    if(qs.get("date")) document.getElementById(p+"-date").value = qs.get("date");
+    if(qs.get("event")) document.getElementById(p+"-name").value = qs.get("event");
+  });
+
+  const emailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e||"").trim());
+  function err(id,msg){ const el=document.getElementById(id); el.textContent=msg; el.classList.add("show"); }
+  function clearErr(id){ document.getElementById(id).classList.remove("show"); }
+
+  document.getElementById("r-go").addEventListener("click", async ()=>{
+    clearErr("r-err");
+    const email=document.getElementById("r-email").value.trim();
+    const date=document.getElementById("r-date").value.trim();
+    const free=document.getElementById("r-free").value.trim();
+    const sold=document.getElementById("r-sold").value.trim();
+    if(!emailOk(email)) return err("r-err","Please add the email you booked with.");
+    if(!date) return err("r-err","Please add your event date.");
+    if(!free && !sold) return err("r-err","Add at least one number — free RSVPs or tickets sold.");
+    const btn=document.getElementById("r-go"); btn.disabled=true; btn.textContent="Sending…";
+    try{
+      const res=await fetch(ENDPOINT,{method:"POST",body:JSON.stringify({formType:"rsvp",email,eventDate:date,eventName:document.getElementById("r-name").value,rsvpFree:free,ticketsSold:sold})});
+      const out=await res.json().catch(()=>({}));
+      if(!res.ok||!out.ok){ btn.disabled=false; btn.textContent="Update counts"; return err("r-err",out.error||"Something went wrong — try again or email ruby@margolisphilly.com."); }
+      document.getElementById("rsvp-form").querySelectorAll(".ifield, .intake__nav").forEach(e=>e.hidden=true);
+      const d=document.getElementById("r-done"); d.hidden=false;
+      d.textContent="Updated — thank you! We'll check in again as the night gets closer.";
+    }catch(e){ btn.disabled=false; btn.textContent="Update counts"; err("r-err","Couldn't reach the server — check your connection."); }
+  });
+</script>
+</body>
+</html>
