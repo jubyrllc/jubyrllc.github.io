@@ -263,9 +263,17 @@
         </div>
         <div class="path">
           <span class="path__kicker">Talent perk</span>
-          <h3>50% off drinks</h3>
-          <p>DJs and performers get half off personal beverage purchases
-          during their event.</p>
+          <h3>50% off food &amp; drinks</h3>
+          <p>DJs and performers get half off personal food and beverage
+          purchases during their event.</p>
+        </div>
+        <div class="path">
+          <span class="path__kicker">House equipment</span>
+          <h3>What&rsquo;s in the booth</h3>
+          <p>Pioneer XDJ-RX3 &middot; Yamaha 12-channel mixer &middot; 1 sub
+          &middot; 4 corner speakers &middot; 2 projectors &middot; house
+          XLRs. No sound engineer provided, microphones can&rsquo;t be
+          guaranteed, and all other cables are on you.</p>
         </div>
       </div>
       <div class="mg-intro">
@@ -660,8 +668,8 @@
     returned clean and organized. No drinks are permitted in the DJ booth.</p>
     <p><strong>Guests &amp; beverages.</strong> Complimentary guest lists must
     be submitted at least 2 hours before the event; otherwise every guest pays
-    at the door. DJs, hosts, and performers receive 50% off personal beverage
-    purchases.</p>
+    at the door. DJs, hosts, and performers receive 50% off personal food
+    and beverage purchases.</p>
     <p><strong>Conduct &amp; liability.</strong> All talent and organizers must
     treat the venue respectfully. Margolis Philly is not responsible for lost
     or stolen personal items. Damage to venue property or equipment will result
@@ -748,7 +756,7 @@
       : `<div class="mg-agree-recap"><p><strong>Margolis bar minimums, in short:</strong> $1,500 during kitchen-closed hours, $2,000 during kitchen-open hours, $4,000 Friday + Saturday 9 PM&ndash;2 AM. If the minimum isn't met naturally, the organizer covers the shortage and forfeits payout. <a href="#minimums">Full breakdown above.</a></p></div>`;
     return [
         { title:"The ground rules", sub:"Two quick agreements before the details.", fields:[
-          {key:"__phil", type:"static", html:`<div class="mg-agree-recap"><p><strong>The booking philosophy, in short:</strong> free events earn 20% of bar sales; ticketed events earn 100% of door plus 10% of bar; DJs and performers get 50% off personal drinks. We book people who want to build real community, not just throw parties. <a href="#payouts">Read the full philosophy above.</a></p></div>`},
+          {key:"__phil", type:"static", html:`<div class="mg-agree-recap"><p><strong>The booking philosophy, in short:</strong> free events earn 20% of bar sales; ticketed events earn 100% of door plus 10% of bar; DJs and performers get 50% off personal food and drinks. We book people who want to build real community, not just throw parties. <a href="#payouts">Read the full philosophy above.</a></p></div>`},
           {key:"agreePhilosophy", label:"Do you understand and agree to the Booking Philosophy?", type:"radio", required:true, options:["I understand and agree"]},
           {key:"__mins", type:"static", html:minsRecap},
           {key:"agreeMinimums", label:"Do you understand and agree to the Bar Minimum Policy?", type:"radio", required:true, options:["I understand and agree"]}
@@ -779,7 +787,7 @@
           {key:"businessName", label:"Business / brand / collective name", type:"text", help:"If applicable."},
           {key:"talentList", label:"DJs, hosts, performers, collectives, or talent involved", type:"taglist", required:true, placeholder:"Name or collective", addLabel:"Add another", help:"One at a time — hit Add for each act so the lineup stays clean."},
           {key:"confidence", label:"How confident are you that you'll hit your attendance goals, based on previous event history?", type:"radio", required:true, options:["1","2","3","4","5","6","7","8","9","10"], help:"1 = not confident, 10 = extremely confident."},
-          {key:"ownController", label:"Will you be bringing your own DJ controller?", type:"radio", required:true, options:["Yes, bringing our own","No, using the house setup","Not applicable"], help:"The house setup is a Pioneer XDJ-RX3."},
+          {key:"ownController", label:"Will you be bringing your own DJ controller?", type:"radio", required:true, options:["Yes, bringing our own","No, using the house setup","Not applicable"], help:"House: Pioneer XDJ-RX3, Yamaha 12-channel mixer, 1 sub, 4 corner speakers, 2 projectors, house XLRs. No sound engineer, microphones aren't guaranteed, and all other cables must be provided."},
           {key:"visuals", label:"Visuals", type:"radio", required:true, options:["We'll provide our own","Use the house visuals","No visuals needed"]},
           {key:"doorPerson", label:"Door person", type:"radio", required:true, options:["We need one from the venue","We'll provide our own","No door needed"]},
           {key:"collabPost", label:"Do you agree to make a collaborative promotional post with @margolisphilly? We accept ONE collab post.", type:"radio", required:true, options:["Yes, I agree"]},
@@ -874,9 +882,9 @@
           {key:"guestCountP", label:"Estimated guest count", type:"text", required:true, placeholder:"e.g. 90", help:"Capacity is about 150 standing."},
           {key:"dressCode", label:"Dress code or theme", type:"text", required:true, placeholder:"None is a fine answer"},
           {key:"ageRange", label:"Average age range", type:"radio", required:true, options:["21–25","25–35","35–45","45+","Mixed ages"]},
-          {key:"ownEquipment", label:"Will you be bringing your own DJ equipment?", type:"radio", required:true, options:["Yes, bringing our own","No, using the house setup","Not applicable"], help:"House setup: Pioneer XDJ-RX3, 1 booth speaker, 4 house speakers, a sub, and a mixer."},
+          {key:"ownEquipment", label:"Will you be bringing your own DJ equipment?", type:"radio", required:true, options:["Yes, bringing our own","No, using the house setup","Not applicable"], help:"House: Pioneer XDJ-RX3, Yamaha 12-channel mixer, 1 sub, 4 corner speakers, 2 projectors, house XLRs. All other cables must be provided; no sound engineer."},
           {key:"decorations", label:"Will you be setting up your own decorations?", type:"radio", required:true, options:["Yes","No","Not sure yet"]},
-          {key:"mics", label:"Do you need mics?", type:"radio", required:true, options:["Yes","No"]},
+          {key:"mics", label:"Do you need mics?", type:"radio", required:true, options:["Yes","No"], help:"We can't guarantee a microphone — flag it early so we can plan."},
           {key:"visuals", label:"Visuals", type:"radio", required:true, options:["We'll provide our own","Use the house visuals","No visuals needed"]},
           {key:"lighting", label:"Any specific lighting or setup requests?", type:"textarea"},
           {key:"performersP", label:"Will there be live performers or DJs?", type:"radio", required:true, options:["DJs","Live performers","Both","None","Other"]},
