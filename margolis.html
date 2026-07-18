@@ -6,8 +6,8 @@
 <title>Book Margolis — Jubyr LLC</title>
 <meta name="description" content="Live availability, payouts, policies, and every booking form for Margolis / The Patio — public events, couch reservations, private events, and Fabrika.">
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/png" href="assets/jubyr-icon.png?v=2">
-<link rel="apple-touch-icon" href="assets/jubyr-icon.png?v=2">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="apple-touch-icon" href="assets/jubyr-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -259,7 +259,8 @@
           <span class="path__kicker">Ticketed events</span>
           <h3>100% of door + 10% of bar</h3>
           <p>Every dollar collected at the door is yours, plus a cut of the
-          bar you helped fill.</p>
+          bar you helped fill. Ticket sales cap at 200 per event &mdash;
+          everyone past that pays at the door, subject to capacity.</p>
         </div>
         <div class="path">
           <span class="path__kicker">Talent perk</span>
@@ -775,6 +776,8 @@
           {key:"genresOther", label:"What's the sound?", type:"text", when:()=>Array.isArray(data.genres)&&data.genres.includes("Other"), required:true},
           {key:"eventDescription", label:"Event description", type:"textarea", required:true, help:"Please do not use AI to generate this response. Be thorough and specific — this description is used for our weekly slide post featuring your event flyer and description."},
           {key:"coverCharge", label:"Cover charge?", type:"radio", required:true, options:["Free entry","Presale + Door Sale","Door Sale Only"]},
+          {key:"__ticketCap", type:"static", when:()=>is("coverCharge","Presale + Door Sale"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> presale ticket sales are capped at <strong>200 per event</strong>. Everyone past that pays at the door, subject to capacity.</p></div>`},
+          {key:"__rsvpCap", type:"static", when:()=>is("coverCharge","Free entry"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> for free events we suggest capping your RSVP list at <strong>400</strong>.</p></div>`},
           {key:"foodService", label:"Interested in food service or kitchen offerings?", type:"radio", required:true, options:["Yes","No","Outside catering (Patio only)","Not sure yet"]},
           {key:"__kitchenNote", type:"static", when:()=>is("foodService","Yes"), html:patio
             ? `<div class="mg-agree-recap"><p><strong>Heads up:</strong> kitchen service on The Patio carries a <strong>$2,000 total minimum spend</strong> (already included during standard hours on Friday and Saturday).</p></div>`
