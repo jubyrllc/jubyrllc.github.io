@@ -21,7 +21,9 @@
   .resv__form{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
   .resv__form .ifield{margin-bottom:14px}
   .resv__done{margin-top:4px;color:var(--ink);font-size:15px;line-height:1.6}
-  .mtabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+  .mtabs{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 22px}
+  .resv__opts{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .resv__couchnote{display:block;font-size:10.5px;letter-spacing:.06em;opacity:.7;margin-top:2px}
   .mtab{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);background:var(--paper);color:var(--muted);padding:8px 12px;cursor:pointer;border-radius:999px}
   .mtab.on{border-color:var(--green);color:var(--green);font-weight:600}
   .mtab__n{margin-left:6px;opacity:.65}
@@ -68,11 +70,14 @@
         $50). Once the host's ticket link goes live, we point you there
         instead &mdash; and honestly, waiting for tickets will usually be
         cheaper. This is for the nights you refuse to miss.</p>
-        <p><strong>The fine print:</strong> some events are closed to the
-        public or go invite-only at the host's discretion &mdash; if that
-        happens, your reservation is refunded in full. Entry is only during
+        <p><strong>The fine print:</strong> reservations are non-refundable.
+        Can't make it anymore? Reach out at least 48 hours before the event
+        and we'll transfer your tickets to another night &mdash; within 48
+        hours of the event there are no transfers and no refunds. The one
+        exception: if a host takes an event invite-only and we can't honor
+        your reservation, you're refunded in full. Entry is only during
         posted event hours; we're not open outside of events. Your
-        reservation isn't confirmed until the $20 is paid.</p>
+        reservation isn't confirmed until it's paid.</p>
       </div>
     </section>
 
@@ -176,7 +181,13 @@
           ${ev.ticketUrl
             ? `<a class="btn btn--green" href="${esc(ev.ticketUrl)}" target="_blank" rel="noopener">Tickets are live — get yours <span class="arw" aria-hidden="true">&gt;</span></a>
                <p class="help">Ticket sales have opened for this event, so grab yours at the host's link (usually cheaper than the $20 reservation).</p>`
-            : `<button class="btn btn--green" data-open="${i}">Reserve my spot &middot; $20</button>`}
+            : `<div class="resv__opts">
+                <button class="btn btn--green" data-open="${i}" data-preset="1">Reserve my spot &middot; $20</button>
+                <button class="btn btn--green" data-open="${i}" data-preset="2">Reserve two spots &middot; $30</button>
+                <button class="btn btn--green" data-open="${i}" data-preset="4">Reserve four spots &middot; $50</button>
+                <a class="btn btn--ghost" href="/margolis#couches">Purchase a couch &middot; $200 <span class="resv__couchnote">parties up to 5</span></a>
+              </div>
+              <p class="help">A couch seats a party of up to 5 with admission included, reserved through our couch booking form.</p>`}
         </div>
         <form class="resv__form" data-form="${i}" hidden>
           <div class="ifield"><label>First name <span class="req">*</span></label><input type="text" data-k="firstName" autocomplete="given-name"></div>
@@ -198,8 +209,14 @@
 
   function bind(events){
     document.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>{
-      const f=document.querySelector(`[data-form="${b.dataset.open}"]`);
-      f.hidden=!f.hidden;
+      const i=b.dataset.open;
+      const f=document.querySelector(`[data-form="${i}"]`);
+      const sel=f.querySelector(`[data-tix="${i}"]`);
+      const preset=b.dataset.preset||"1";
+      if(!f.hidden && sel.value===preset){ f.hidden=true; return; }
+      f.hidden=false;
+      sel.value=preset;
+      sel.dispatchEvent(new Event("change"));
     }));
     document.querySelectorAll("[data-tix]").forEach(sel=>sel.addEventListener("change",()=>{
       const go=document.querySelector(`[data-go="${sel.dataset.tix}"]`);
@@ -230,9 +247,10 @@
         f.querySelectorAll(".ifield, .intake__nav").forEach(e=>e.style.display="none");
         const d=f.querySelector(`[data-done="${i}"]`);
         d.hidden=false;
+        const policy=`Reservations are non-refundable — transfers to another night are allowed up to 48 hours before the event. If this night goes invite-only, you're refunded in full.`;
         d.innerHTML = SQUARE_LINK
-          ? `You're on the list for ${tix} ticket${tix>1?"s":""} — one last step: <a href="${SQUARE_LINK}" target="_blank" rel="noopener"><strong>pay your $${total} here</strong></a> to lock it in. A confirmation is on its way to your inbox. If this night goes invite-only, you're refunded in full.`
-          : `You're on the list for ${tix} ticket${tix>1?"s":""} — we'll text or email your $${total} payment request shortly to lock it in. A confirmation is on its way to your inbox. If this night goes invite-only, you're refunded in full.`;
+          ? `You're on the list for ${tix} ticket${tix>1?"s":""} — one last step: <a href="${SQUARE_LINK}" target="_blank" rel="noopener"><strong>pay your $${total} here</strong></a> to lock it in. A confirmation is on its way to your inbox. ${policy}`
+          : `You're on the list for ${tix} ticket${tix>1?"s":""} — we'll text or email your $${total} payment request shortly to lock it in. A confirmation is on its way to your inbox. ${policy}`;
       }catch(e){ restore(); err("Couldn't reach the server — check your connection."); }
     }));
   }
