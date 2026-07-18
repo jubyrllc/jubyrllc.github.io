@@ -53,15 +53,17 @@
       <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.65)), url('assets/media/margolis/photo-15.jpg')">
         <span class="tag">Margolis guests &middot; Advance reservations</span>
         <h2>Lock your night before tickets drop.</h2>
-        <p>Pick an upcoming event and reserve guaranteed entry for a flat $20
-        &mdash; even before the host's ticket link is live.</p>
+        <p>Pick an upcoming event and reserve guaranteed entry for $20 a
+        person &mdash; even before the host's ticket link is live. Bringing
+        friends? 2 tickets for $30, 4 for $50.</p>
       </div>
       <div class="mg-intro">
-        <p><strong>How it works:</strong> a $20 advance reservation guarantees
-        your entry to the event you pick. Once the host's ticket link goes
-        live, we point you there instead &mdash; and honestly, waiting for
-        tickets will usually be cheaper. This is for the nights you refuse to
-        miss.</p>
+        <p><strong>How it works:</strong> an advance reservation guarantees
+        entry to the event you pick &mdash; $20 per person, and every ticket
+        after the first is just $10 (2 tickets $30, 3 tickets $40, 4 tickets
+        $50). Once the host's ticket link goes live, we point you there
+        instead &mdash; and honestly, waiting for tickets will usually be
+        cheaper. This is for the nights you refuse to miss.</p>
         <p><strong>The fine print:</strong> some events are closed to the
         public or go invite-only at the host's discretion &mdash; if that
         happens, your reservation is refunded in full. Entry is only during
@@ -109,6 +111,8 @@
 
   const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   const emailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e||"").trim());
+  // $20 per person; every ticket after the first is $10 (2 = $30, 4 = $50).
+  const priceFor = n => 20 + 10*(Math.max(1,n)-1);
 
   async function loadEvents(){
     const box = document.getElementById("eventList");
@@ -139,7 +143,11 @@
           <div class="ifield"><label>Last name</label><input type="text" data-k="lastName" autocomplete="family-name"></div>
           <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" data-k="email" autocomplete="email" placeholder="you@email.com"></div>
           <div class="ifield"><label>Phone <span class="req">*</span></label><input type="tel" data-k="phone" autocomplete="tel" placeholder="10-digit number"></div>
-          <div class="ifield"><label>Party size <span class="req">*</span></label><input type="text" data-k="partySize" inputmode="numeric" placeholder="e.g. 2"><p class="help">$20 reserves entry for your whole party listed here.</p></div>
+          <div class="ifield"><label>Tickets <span class="req">*</span></label>
+            <select data-k="tickets" data-tix="${i}">
+              ${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}">${n} ticket${n>1?"s":""} &middot; $${priceFor(n)} total</option>`).join("")}
+            </select>
+            <p class="help">$20 per person &mdash; every ticket after the first is $10. Each ticket is guaranteed entry for one guest.</p></div>
           <p class="intake__err" data-err="${i}"></p>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-go="${i}">Reserve &middot; $20 <span class="arw" aria-hidden="true">&gt;</span></button></div>
           <p class="resv__done" data-done="${i}" hidden></p>
@@ -157,6 +165,10 @@
       const f=document.querySelector(`[data-form="${b.dataset.open}"]`);
       f.hidden=!f.hidden;
     }));
+    document.querySelectorAll("[data-tix]").forEach(sel=>sel.addEventListener("change",()=>{
+      const go=document.querySelector(`[data-go="${sel.dataset.tix}"]`);
+      go.innerHTML=`Reserve &middot; $${priceFor(parseInt(sel.value,10)||1)} <span class="arw" aria-hidden="true">&gt;</span>`;
+    }));
     document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",async ()=>{
       const i=b.dataset.go, ev=events[i];
       const f=document.querySelector(`[data-form="${i}"]`);
@@ -167,23 +179,25 @@
       if(!g("firstName")) return err("Please add your first name.");
       if(!emailOk(g("email"))) return err("Please add a valid email.");
       if(g("phone").replace(/\D/g,"").length!==10) return err("Please add a 10-digit phone number.");
-      if(!g("partySize")) return err("How many people are coming?");
+      const tix=parseInt(g("tickets"),10)||1;
+      const total=priceFor(tix);
       b.disabled=true; b.textContent="Reserving…";
+      const restore=()=>{ b.disabled=false; b.innerHTML=`Reserve &middot; $${total} <span class="arw" aria-hidden="true">&gt;</span>`; };
       try{
         const res=await fetch(ENDPOINT,{method:"POST",body:JSON.stringify({
           formType:"reserve", eventDate:ev.date, eventName:ev.title,
           firstName:g("firstName"), lastName:g("lastName"), email:g("email"),
-          phone:g("phone"), partySize:g("partySize")
+          phone:g("phone"), tickets:String(tix)
         })});
         const out=await res.json().catch(()=>({}));
-        if(!res.ok||!out.ok){ b.disabled=false; b.textContent="Reserve · $20"; return err(out.error||"Something went wrong — try again."); }
+        if(!res.ok||!out.ok){ restore(); return err(out.error||"Something went wrong — try again."); }
         f.querySelectorAll(".ifield, .intake__nav").forEach(e=>e.style.display="none");
         const d=f.querySelector(`[data-done="${i}"]`);
         d.hidden=false;
         d.innerHTML = SQUARE_LINK
-          ? `You're on the list — one last step: <a href="${SQUARE_LINK}" target="_blank" rel="noopener"><strong>pay your $20 here</strong></a> to lock it in. A confirmation is on its way to your inbox. If this night goes invite-only, you're refunded in full.`
-          : `You're on the list — we'll text or email your $20 payment request shortly to lock it in. A confirmation is on its way to your inbox. If this night goes invite-only, you're refunded in full.`;
-      }catch(e){ b.disabled=false; b.textContent="Reserve · $20"; err("Couldn't reach the server — check your connection."); }
+          ? `You're on the list for ${tix} ticket${tix>1?"s":""} — one last step: <a href="${SQUARE_LINK}" target="_blank" rel="noopener"><strong>pay your $${total} here</strong></a> to lock it in. A confirmation is on its way to your inbox. If this night goes invite-only, you're refunded in full.`
+          : `You're on the list for ${tix} ticket${tix>1?"s":""} — we'll text or email your $${total} payment request shortly to lock it in. A confirmation is on its way to your inbox. If this night goes invite-only, you're refunded in full.`;
+      }catch(e){ restore(); err("Couldn't reach the server — check your connection."); }
     }));
   }
   loadEvents();
