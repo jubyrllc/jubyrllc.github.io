@@ -2000,3 +2000,7 @@
 .mg-more[open] summary::after { content: " \2013"; }
 .mg-more p { margin-top: 12px; }
 .mg-col .mg-more p { color: var(--muted); font-size: 13.5px; line-height: 1.6; }
+.sechead--band { padding: 64px 24px 56px; }
+@media (max-width: 480px) {
+  .sechead--band { padding: 48px 18px 42px; }
+}
