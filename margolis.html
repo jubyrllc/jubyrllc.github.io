@@ -306,7 +306,7 @@
         your night. They are calculated on gross bar sales generated naturally
         during official event hours, and they are strictly enforced.</p>
       </div>
-      <div class="mg-cols mg-cols--1 mg-pad">
+      <div class="mg-cols mg-pad">
         <div class="mg-col">
           <h3 class="mg-h3">Margolis <span class="mono mg-sub">(inside)</span></h3>
           <div class="mrow"><span>Kitchen-closed hours</span><strong>$1,500 minimum</strong></div>
@@ -315,6 +315,16 @@
           <p class="mg-fine">If the event does not organically meet the applicable
           minimum through guest spending during the event timeframe, the event
           organizer covers the remaining shortage and forfeits payout.</p>
+        </div>
+        <div class="mg-col">
+          <h3 class="mg-h3">Friday &amp; Saturday nights <span class="mono mg-sub">(how to run them)</span></h3>
+          <div class="mrow"><span>Doors &middot; Margolis opens</span><strong>9 PM</strong></div>
+          <div class="mrow"><span>Happy hour &middot; select cocktails</span><strong>$10 &middot; 9&ndash;10 PM</strong></div>
+          <div class="mrow"><span>Music</span><strong>9 or 10 PM start</strong></div>
+          <p class="mg-fine">Advertise doors at 9 PM on your flyer and posts,
+          even if your music starts at 10. The $10 happy hour gives your crowd
+          a real reason to come early, and early traffic is what gets a night
+          moving.</p>
         </div>
       </div>
     </section>
@@ -762,6 +772,7 @@
           {key:"doorPerson", label:"Door person", type:"radio", required:true, options:["We need one from the venue","We'll provide our own","No door needed"]},
           {key:"collabPost", label:"Do you agree to make a collaborative promotional post with @margolisphilly? We accept ONE collab post.", type:"radio", required:true, options:["Yes, I agree"]},
           {key:"flyerAgree", label:"Do you agree to send a promotional flyer at least 10 days before the event date?", type:"radio", required:true, options:["Yes, I agree"]},
+          {key:"doorsAt9", label:"Your date is a Friday or Saturday: do you agree to advertise doors at 9 PM, even if the music starts at 10?", type:"radio", required:true, options:["Yes, I agree"], when:()=>!patio && (()=>{const d=(data.eventDate||"").trim(); if(!d) return false; const day=new Date(d+"T12:00:00").getDay(); return day===5||day===6;})(), help:"Margolis opens at 9, and we run a $10 happy hour on select cocktails from 9 to 10 PM. Advertising doors at 9 drives the early traffic that gets your night moving."},
           {key:"hearAbout", label:"How did you hear about us?", type:"radio", required:true, options:["Instagram","Word of mouth","I've attended an event here","Referred by Margolis / Jubyr","Other"]},
           {key:"hearAboutOther", label:"Where?", type:"text", when:()=>is("hearAbout","Other"), required:true}
         ]},
