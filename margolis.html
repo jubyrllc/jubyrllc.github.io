@@ -775,7 +775,10 @@
           {key:"genresOther", label:"What's the sound?", type:"text", when:()=>Array.isArray(data.genres)&&data.genres.includes("Other"), required:true},
           {key:"eventDescription", label:"Event description", type:"textarea", required:true, help:"Please do not use AI to generate this response. Be thorough and specific — this description is used for our weekly slide post featuring your event flyer and description."},
           {key:"coverCharge", label:"Cover charge?", type:"radio", required:true, options:["Free entry","Presale + Door Sale","Door Sale Only"]},
-          {key:"foodService", label:"Interested in food service or kitchen offerings?", type:"radio", required:true, options:["Yes","No","Outside catering (Patio only)","Not sure yet"]}
+          {key:"foodService", label:"Interested in food service or kitchen offerings?", type:"radio", required:true, options:["Yes","No","Outside catering (Patio only)","Not sure yet"]},
+          {key:"__kitchenNote", type:"static", when:()=>is("foodService","Yes"), html:patio
+            ? `<div class="mg-agree-recap"><p><strong>Heads up:</strong> kitchen service on The Patio carries a <strong>$2,000 total minimum spend</strong> (already included during standard hours on Friday and Saturday).</p></div>`
+            : `<div class="mg-agree-recap"><p><strong>Heads up:</strong> choosing kitchen service moves your night to the kitchen-open bar minimum of <strong>$2,000</strong>.</p></div>`}
         ]},
         { title:"You & your crew", sub:"Who's running the night.", fields:[
           {key:"contactFirst", label:"Legal first name", type:"text", required:true, autocomplete:"given-name"},
