@@ -1923,6 +1923,12 @@
   background: var(--green-tint, #F2F5E8);
 }
 .mg-chooser .path.on .path__go { color: var(--green); }
+.mg-chooser--top { padding-bottom: 8px; }
+.mg-subgroup { padding-top: 22px; }
+.mg-subgroup[hidden] { display: none; }
+.path--pending { opacity: 0.55; cursor: default; }
+.path--pending:hover { border: 1px dashed var(--line); background: none; }
+.path__go--pending { color: var(--muted); }
 .mg-cols--3 { grid-template-columns: 1fr 1fr 1fr; }
 @media (max-width: 1000px) {
   .mg-cols--3 { grid-template-columns: 1fr; }

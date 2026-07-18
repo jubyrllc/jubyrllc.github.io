@@ -89,56 +89,118 @@
         <h2>What are we setting up?</h2>
         <p>Pick one. The details and form appear below.</p>
       </div>
-      <div class="paths mg-pad mg-chooser" id="chooserCards">
-        <button type="button" class="path" data-mode="margolis">
-          <span class="path__kicker">Margolis &middot; Public events</span>
-          <h3>Host a night inside.</h3>
-          <p>Public nights inside. You get paid through our partnership
-          model.</p>
-          <span class="path__go">Start here &gt;</span>
+      <div class="paths mg-pad mg-chooser mg-chooser--top" id="categoryCards">
+        <button type="button" class="path mg-cat" data-cat="margolis">
+          <span class="path__kicker">Margolis</span>
+          <h3>Book a night inside.</h3>
+          <p>Public events, private events, couch reservations, and media
+          &mdash; everything Margolis in one place.</p>
+          <span class="path__go">View options &gt;</span>
         </button>
-        <button type="button" class="path" data-mode="patio">
-          <span class="path__kicker">The Patio &middot; Public events</span>
+        <button type="button" class="path mg-cat" data-cat="patio">
+          <span class="path__kicker">The Patio</span>
           <h3>Take it outside.</h3>
-          <p>Open-air public events, same payout model. Everything wraps
-          by 9 PM.</p>
-          <span class="path__go">Start here &gt;</span>
+          <p>Open-air public events. Private events and media gallery
+          coming soon.</p>
+          <span class="path__go">View options &gt;</span>
         </button>
-        <button type="button" class="path" data-mode="couch">
-          <span class="path__kicker">Couch reservations</span>
-          <h3>Reserve a couch.</h3>
-          <p>A reserved home base for your group. $200 per couch, admission
-          included for up to 5 guests.</p>
-          <span class="path__go">Start here &gt;</span>
-        </button>
-        <button type="button" class="path" data-mode="private">
-          <span class="path__kicker">Private events</span>
-          <h3>Take the whole room.</h3>
-          <p>The whole room on your terms. Up to ~150 guests, five ways
-          to run the bar.</p>
-          <span class="path__go">Start here &gt;</span>
-        </button>
-        <button type="button" class="path" data-mode="fabrika">
+        <button type="button" class="path mg-cat" data-cat="fabrika">
           <span class="path__kicker">Fabrika</span>
-          <h3>Host at Fabrika.</h3>
-          <p>Promoter-led nights at our partner venue. Keep the door,
-          earn commission on the bar.</p>
-          <span class="path__go">Start here &gt;</span>
+          <h3>Host at our partner venue.</h3>
+          <p>Promoter-led nights at Fabrika. Private events and media
+          gallery coming soon.</p>
+          <span class="path__go">View options &gt;</span>
         </button>
-              <button type="button" class="path" data-mode="media">
-          <span class="path__kicker">Media gallery</span>
-          <h3>Grab photos &amp; video.</h3>
-          <p>Photos and video of the spaces, free to download for your
-          promo.</p>
-          <span class="path__go">Start here &gt;</span>
-        </button>
-        <a class="path" href="/reservations">
-          <span class="path__kicker">Margolis Presale</span>
-          <h3>Reserve your night.</h3>
-          <p>Guests can lock in entry to an upcoming event for $20 a head
-          before tickets go live.</p>
-          <span class="path__go">Reserve &gt;</span>
-        </a>
+      </div>
+
+      <div class="mg-subgroup" data-cat-group="margolis" hidden>
+        <div class="paths mg-pad mg-chooser">
+          <button type="button" class="path" data-mode="margolis">
+            <span class="path__kicker">Margolis &middot; Public events</span>
+            <h3>Host a night inside.</h3>
+            <p>Public nights inside. You get paid through our partnership
+            model.</p>
+            <span class="path__go">Start here &gt;</span>
+          </button>
+          <button type="button" class="path" data-mode="couch">
+            <span class="path__kicker">Margolis &middot; Couch reservations</span>
+            <h3>Reserve a couch.</h3>
+            <p>A reserved home base for your group. $200 per couch, admission
+            included for up to 5 guests.</p>
+            <span class="path__go">Start here &gt;</span>
+          </button>
+          <button type="button" class="path" data-mode="private">
+            <span class="path__kicker">Margolis &middot; Private events</span>
+            <h3>Take the whole room.</h3>
+            <p>The whole room on your terms. Up to ~150 guests, five ways
+            to run the bar.</p>
+            <span class="path__go">Start here &gt;</span>
+          </button>
+          <button type="button" class="path" data-mode="media">
+            <span class="path__kicker">Margolis &middot; Media gallery</span>
+            <h3>Grab photos &amp; video.</h3>
+            <p>Photos and video of the space, free to download for your
+            promo.</p>
+            <span class="path__go">Start here &gt;</span>
+          </button>
+          <a class="path" href="/reservations">
+            <span class="path__kicker">Margolis Presale</span>
+            <h3>Reserve your night.</h3>
+            <p>Guests can lock in entry to an upcoming event for $20 a head
+            before tickets go live.</p>
+            <span class="path__go">Reserve &gt;</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="mg-subgroup" data-cat-group="patio" hidden>
+        <div class="paths mg-pad mg-chooser">
+          <button type="button" class="path" data-mode="patio">
+            <span class="path__kicker">The Patio &middot; Public events</span>
+            <h3>Take it outside.</h3>
+            <p>Open-air public events, same payout model. Everything wraps
+            by 9 PM.</p>
+            <span class="path__go">Start here &gt;</span>
+          </button>
+          <div class="path path--pending" aria-disabled="true">
+            <span class="path__kicker">The Patio &middot; Private events</span>
+            <h3>Coming soon.</h3>
+            <p>We&rsquo;re still finalizing the private event model for the
+            Patio. Check back soon.</p>
+            <span class="path__go path__go--pending">Pending</span>
+          </div>
+          <div class="path path--pending" aria-disabled="true">
+            <span class="path__kicker">The Patio &middot; Media gallery</span>
+            <h3>Coming soon.</h3>
+            <p>Patio photos and video are on the way.</p>
+            <span class="path__go path__go--pending">Pending</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mg-subgroup" data-cat-group="fabrika" hidden>
+        <div class="paths mg-pad mg-chooser">
+          <button type="button" class="path" data-mode="fabrika">
+            <span class="path__kicker">Fabrika</span>
+            <h3>Host at Fabrika.</h3>
+            <p>Promoter-led nights at our partner venue. Keep the door,
+            earn commission on the bar.</p>
+            <span class="path__go">Start here &gt;</span>
+          </button>
+          <div class="path path--pending" aria-disabled="true">
+            <span class="path__kicker">Fabrika &middot; Private events</span>
+            <h3>Coming soon.</h3>
+            <p>We&rsquo;re still finalizing the private event model for
+            Fabrika. Check back soon.</p>
+            <span class="path__go path__go--pending">Pending</span>
+          </div>
+          <div class="path path--pending" aria-disabled="true">
+            <span class="path__kicker">Fabrika &middot; Media gallery</span>
+            <h3>Coming soon.</h3>
+            <p>Fabrika photos and video are on the way.</p>
+            <span class="path__go path__go--pending">Pending</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -632,7 +694,7 @@
     <!-- ============ MEDIA GALLERY ============ -->
     <section class="box" id="mediagallery" data-modes="media">
       <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-07.jpg')">
-        <span class="tag">Media gallery</span>
+        <span class="tag">Margolis &middot; Media gallery</span>
         <h2>Photos &amp; video of the space.</h2>
         <p>Free to download and use in your flyers and promo. Tag
         @margolisphilly when you post.</p>
@@ -1070,10 +1132,30 @@
   }
   function persist(){ if(mode==="none") return; try{ localStorage.setItem(FORMS[mode].draft, JSON.stringify(data)); }catch(e){} }
 
+  // -------- category accordion (Margolis / Patio / Fabrika) --------
+  // The chooser is two levels: pick a venue, then pick what within it.
+  // Only one venue's options are shown at a time, to keep the page short.
+  const CATEGORY_OF_MODE = {margolis:"margolis", couch:"margolis", private:"margolis", media:"margolis", patio:"patio", fabrika:"fabrika"};
+  const catCards = document.querySelectorAll(".mg-cat");
+  function openCategory(cat, scroll){
+    document.querySelectorAll(".mg-subgroup").forEach(g=>{ g.hidden = g.dataset.catGroup !== cat; });
+    catCards.forEach(b=>b.classList.toggle("on", b.dataset.cat===cat));
+    if(scroll){
+      const grp = document.querySelector(`.mg-subgroup[data-cat-group="${cat}"]`);
+      if(grp) grp.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+  }
+  catCards.forEach(b=>b.addEventListener("click", ()=>{
+    const cat = b.dataset.cat;
+    const grp = document.querySelector(`.mg-subgroup[data-cat-group="${cat}"]`);
+    if(grp && !grp.hidden){ grp.hidden = true; b.classList.remove("on"); }
+    else openCategory(cat, true);
+  }));
+
   // -------- mode switching --------
   const MODE_HASHES = {"#margolis":"margolis","#public":"margolis","#patio":"patio","#couches":"couch","#private":"private","#fabrika":"fabrika","#media":"media"};
   const modeSections = document.querySelectorAll("[data-modes]");
-  const cards = document.querySelectorAll("#chooserCards .path");
+  const cards = document.querySelectorAll(".mg-subgroup .path");
 
   function setMode(m, scroll){
     mode = m;
@@ -1082,6 +1164,7 @@
     });
     cards.forEach(c=>c.classList.toggle("on", c.dataset.mode===m));
     document.querySelectorAll("[data-steps]").forEach(el=>{ el.style.display = el.dataset.steps===m ? "" : "none"; });
+    if(CATEGORY_OF_MODE[m]) openCategory(CATEGORY_OF_MODE[m], false);
     if(m==="none") return;
     const F = FORMS[m];
     if(F){
