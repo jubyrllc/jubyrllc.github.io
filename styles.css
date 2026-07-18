@@ -1924,8 +1924,24 @@
 }
 .mg-chooser .path.on .path__go { color: var(--green); }
 .mg-chooser--top { padding-bottom: 8px; }
-.mg-subgroup { padding-top: 22px; }
+.mg-subgroup {
+  margin-top: 18px;
+  padding: 24px 0 8px;
+  border-top: 2px dashed var(--green-line, var(--line));
+  background: #FAFAF7;
+}
 .mg-subgroup[hidden] { display: none; }
+.mg-subgroup__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+  padding: 0 28px 16px;
+}
 .path--pending { opacity: 0.55; cursor: default; }
 .path--pending:hover { border: 1px dashed var(--line); background: none; }
 .path__go--pending { color: var(--muted); }

@@ -27,6 +27,9 @@
   .mtab{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);background:var(--paper);color:var(--muted);padding:8px 12px;cursor:pointer;border-radius:999px}
   .mtab.on{border-color:var(--green);color:var(--green);font-weight:600}
   .mtab__n{margin-left:6px;opacity:.65}
+  .rcheck{display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;cursor:pointer}
+  .rcheck input{margin-top:3px;flex-shrink:0}
+  .rcheck span{color:var(--muted);font-size:13.5px;line-height:1.55}
 </style>
 </head>
 <body>
@@ -124,6 +127,35 @@
   // $20 per person; every ticket after the first is $10 (2 = $30, 4 = $50).
   const priceFor = n => 20 + 10*(Math.max(1,n)-1);
 
+  // "Add to Google Calendar" for the event a guest just reserved — a plain
+  // render link, no auth needed, prefills a draft on the guest's own account.
+  function parse12h(str){
+    const m = /^(\d+):(\d+)\s*(AM|PM)/i.exec(String(str||"").trim());
+    if(!m) return null;
+    let h = parseInt(m[1],10)%12;
+    if(/pm/i.test(m[3])) h += 12;
+    return {h, m: parseInt(m[2],10)};
+  }
+  function gcalDatesFor(dateStr, startStr, endStr){
+    const s = parse12h(startStr);
+    if(!s) return null;
+    const pad2 = n=>String(n).padStart(2,"0");
+    const day = dateStr.replaceAll("-","");
+    const e = parse12h(endStr);
+    let eh = e ? e.h : (s.h+2)%24, em = e ? e.m : s.m;
+    let endDay = day;
+    if(e && (eh < s.h || (eh===s.h && em<=s.m))){
+      const d = new Date(dateStr+"T12:00:00"); d.setDate(d.getDate()+1);
+      endDay = d.toISOString().slice(0,10).replaceAll("-","");
+    }
+    return `${day}T${pad2(s.h)}${pad2(s.m)}00/${endDay}T${pad2(eh)}${pad2(em)}00`;
+  }
+  function gcalAddUrl(title, dates, location, details){
+    if(!dates) return "";
+    const p = new URLSearchParams({action:"TEMPLATE", text:title, dates, location, details, ctz:"America/New_York"});
+    return "https://calendar.google.com/calendar/render?" + p.toString();
+  }
+
   function monthKey(d){ return String(d).slice(0,7); }
   function monthLabel(m){
     const d = new Date(m + "-15T12:00:00");
@@ -198,9 +230,13 @@
               ${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}">${n} ticket${n>1?"s":""} &middot; $${priceFor(n)} total</option>`).join("")}
             </select>
             <p class="help">$20 per person &mdash; every ticket after the first is $10. Each ticket is guaranteed entry for one guest.</p></div>
+          <label class="rcheck">
+            <input type="checkbox" data-k="contactConsent">
+            <span>I agree that Jubyr LLC may contact me about this reservation and future, relevant events by email, phone, and text message. <span class="req">*</span> I can opt out at any time, and my information is never sold.</span>
+          </label>
           <p class="intake__err" data-err="${i}"></p>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-go="${i}">Reserve &middot; $20 <span class="arw" aria-hidden="true">&gt;</span></button></div>
-          <p class="resv__done" data-done="${i}" hidden></p>
+          <div class="resv__done" data-done="${i}" hidden></div>
         </form>
       </div>`).join("");
       bind(monthEvents);
@@ -225,12 +261,14 @@
       const i=b.dataset.go, ev=events[i];
       const f=document.querySelector(`[data-form="${i}"]`);
       const g=k=>f.querySelector(`[data-k="${k}"]`).value.trim();
+      const consentEl=f.querySelector('[data-k="contactConsent"]');
       const errEl=f.querySelector(`[data-err="${i}"]`);
       errEl.classList.remove("show");
       const err=m=>{errEl.textContent=m; errEl.classList.add("show");};
       if(!g("firstName")) return err("Please add your first name.");
       if(!emailOk(g("email"))) return err("Please add a valid email.");
       if(g("phone").replace(/\D/g,"").length!==10) return err("Please add a 10-digit phone number.");
+      if(!consentEl.checked) return err("Please agree to be contacted about your reservation — it's how we confirm and follow up.");
       const tix=parseInt(g("tickets"),10)||1;
       const total=priceFor(tix);
       b.disabled=true; b.textContent="Reserving…";
@@ -239,7 +277,8 @@
         const res=await fetch(ENDPOINT,{method:"POST",body:JSON.stringify({
           formType:"reserve", eventDate:ev.date, eventName:ev.title,
           firstName:g("firstName"), lastName:g("lastName"), email:g("email"),
-          phone:g("phone"), tickets:String(tix)
+          phone:g("phone"), tickets:String(tix),
+          contactConsent: consentEl.checked ? "Yes, I agree" : ""
         })});
         const out=await res.json().catch(()=>({}));
         if(!res.ok||!out.ok){ restore(); return err(out.error||"Something went wrong — try again."); }
@@ -247,9 +286,12 @@
         const d=f.querySelector(`[data-done="${i}"]`);
         d.hidden=false;
         const policy=`Reservations are non-refundable — transfers to another night are allowed up to 48 hours before the event. If this night goes invite-only, you're refunded in full.`;
-        d.innerHTML = SQUARE_LINK
+        const calDates = gcalDatesFor(ev.date, ev.start, ev.end);
+        const calUrl = gcalAddUrl(ev.title, calDates, "Margolis, 9 W Wildey St, Philadelphia, PA", "Reserved through jubyr.com/reservations");
+        const calLink = calUrl ? ` <a href="${calUrl}" target="_blank" rel="noopener" style="white-space:nowrap">Add to Google Calendar &gt;</a>` : "";
+        d.innerHTML = (SQUARE_LINK
           ? `You're on the list for ${tix} ticket${tix>1?"s":""} — one last step: <a href="${SQUARE_LINK}" target="_blank" rel="noopener"><strong>pay your $${total} here</strong></a> to lock it in. A confirmation is on its way to your inbox. ${policy}`
-          : `You're on the list for ${tix} ticket${tix>1?"s":""} — we'll text or email your $${total} payment request shortly to lock it in. A confirmation is on its way to your inbox. ${policy}`;
+          : `You're on the list for ${tix} ticket${tix>1?"s":""} — we'll text or email your $${total} payment request shortly to lock it in. A confirmation is on its way to your inbox. ${policy}`) + calLink;
       }catch(e){ restore(); err("Couldn't reach the server — check your connection."); }
     }));
   }

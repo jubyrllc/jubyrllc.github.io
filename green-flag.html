@@ -83,6 +83,12 @@
             <input class="signup__field" type="tel" name="PHONE" placeholder="Phone Number" autocomplete="tel">
             <input class="signup__field" type="text" name="INSTAGRAM" placeholder="Instagram @" autocomplete="off">
             <textarea class="signup__field" name="MESSAGE" placeholder="Leave a Message (optional)" rows="3"></textarea>
+            <label class="signup__consent">
+              <input type="checkbox" name="CONTACTOK" id="gf-contactok" required>
+              <span>I agree that Jubyr LLC may contact me about this and future,
+              relevant events by email, phone, and text message. I can opt out
+              at any time, and my information is never sold.</span>
+            </label>
             <p class="signup__note signup__note--error" id="gf-error" hidden></p>
             <button class="signup__btn" type="submit" id="gf-submit">Submit</button>
           </form>
@@ -160,17 +166,17 @@
   });
 
   // ---------------------------------------------------------------
-  // Mailchimp configuration — posts into the MAIN Jubyr LLC audience
-  // and tags each signup "Green Flag" (gfTagId), exactly how the
-  // Wavelength form works. One audience segmented by tags is Mailchimp
-  // best practice. INSTAGRAM and MESSAGE are text merge fields.
+  // Mailchimp configuration — posts to the dedicated "Green Flag"
+  // audience (its own list, separate from the main Jubyr LLC one), so
+  // no SOURCE segmentation is needed. INSTAGRAM and MESSAGE are text
+  // merge fields in that audience.
   // ---------------------------------------------------------------
   const MAILCHIMP = {
     dc: 'jubyr.us1',              // account host prefix + datacenter
     u:  '32214a4fe6b97ad520b643c6d',
-    id: '588dda8c52',            // main Jubyr LLC audience
-    fid: '002dc6e1f0',            // embedded-form id for that audience
-    gfTagId: '3081508'            // numeric id of the "Green Flag" tag
+    id: '007f013799',
+    fid: '002cc6e1f0',            // embedded-form id (required by Mailchimp)
+    gfTagId: ''   // unused — Green Flag has its own audience
   };
   const mcConfigured = !MAILCHIMP.u.startsWith('YOUR');
 
@@ -239,6 +245,7 @@
 
     if (!data.FNAME) { showError('Please add your first name.'); return; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.EMAIL)) { showError('Please add a valid email address.'); return; }
+    if (!form.CONTACTOK.checked) { showError('Please agree to be contacted before submitting.'); return; }
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending…';
