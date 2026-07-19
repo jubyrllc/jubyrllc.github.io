@@ -2023,6 +2023,27 @@
 .mg-more p { margin-top: 12px; }
 .mg-col .mg-more p { color: var(--muted); font-size: 13.5px; line-height: 1.6; }
 .mg-more--cards .paths { margin-top: 18px; }
+/* shared policy modal (presale read-more on margolis/bookings, login wizard, dashboard) */
+.mgmodal { position: fixed; inset: 0; z-index: 999; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(18,18,17,.55); }
+.mgmodal.show { display: flex; }
+.mgmodal__card { background: var(--paper, #fff); max-width: 560px; width: 100%; max-height: 86vh; overflow-y: auto; border-radius: 14px; padding: 30px 30px 26px; position: relative; }
+.mgmodal__close { position: absolute; top: 14px; right: 16px; background: none; border: none; font-size: 26px; line-height: 1; color: var(--muted); cursor: pointer; padding: 4px; }
+.mgmodal__close:hover { color: var(--ink); }
+.mgmodal__kicker { font-family: var(--mono, "IBM Plex Mono", monospace); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--green); display: block; margin-bottom: 12px; }
+.mgmodal__card h3 { font-size: 22px; font-weight: 800; letter-spacing: -.01em; margin: 0 0 14px; }
+.mgmodal__card p { font-size: 14.5px; line-height: 1.65; color: var(--muted); margin: 0 0 12px; }
+.mgmodal__card p strong { color: var(--ink); }
+.mg-readmore { display: inline-block; font-family: var(--mono, "IBM Plex Mono", monospace); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); background: none; border: none; cursor: pointer; border-bottom: 1px dashed var(--green); padding: 0 0 2px; margin-top: 8px; }
+.mg-more--cards > summary { margin-left: 28px; }
+.mg-payrows { margin-top: 16px; }
+.mg-payrow { border-bottom: 1px dashed var(--line); padding: 10px 0; }
+.mg-payrow:last-child { border-bottom: none; }
+.mg-payrow span {
+  display: block; color: var(--green); font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.mg-payrow strong { display: block; font-weight: 700; font-size: 14.5px; color: var(--ink); line-height: 1.5; }
 .faq--nested { padding: 0; }
 .sechead--band { padding: 64px 24px 56px; }
 @media (max-width: 480px) {

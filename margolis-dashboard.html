@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Nights — Margolis</title>
+<meta name="description" content="Manage your lineup, flyer, ticket link, and RSVP counts for every night you play at Margolis.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=43">
+<style>
+  .djd-wrap{max-width:680px;margin:0 auto}
+  .djd-err{color:#A03A2E;font-size:14px;margin:14px 0;display:none}
+  .djd-err.show{display:block}
+  .djd-note{color:var(--muted);font-size:13.5px;line-height:1.55}
+  .djd-topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+  .djd-hello{font-size:15px}
+  .djd-logout{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:1px dashed var(--line);padding-bottom:2px}
+  .djd-logout:hover{color:var(--green);border-color:var(--green)}
+  .evt{border:1px solid var(--line);border-radius:14px;background:var(--paper);margin-bottom:16px;overflow:hidden}
+  .evt__head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline;padding:18px 20px 14px;cursor:pointer}
+  .evt__date{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .evt__head h3{font-size:19px;margin:0;width:100%}
+  .evt__chips{display:flex;flex-wrap:wrap;gap:6px}
+  .stchip{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px}
+  .stchip--none{background:#F1F1EC;color:var(--muted)}
+  .stchip--pending{background:#FCF3DC;color:#8A6400}
+  .stchip--approved{background:#EAF3E4;color:#3F6B21}
+  .stchip--rejected{background:#FBEAE8;color:#A03A2E}
+  .evt__body{border-top:1px dashed var(--line);padding:0 20px 20px;display:none}
+  .evt.open .evt__body{display:block}
+  .evt__tabs{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+  .evt__tab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;border:1px dashed var(--line);background:#fff;color:var(--muted);padding:8px 12px;cursor:pointer}
+  .evt__tab.on{background:var(--green);border-color:var(--green);color:#fff}
+  .evt__pane{display:none}
+  .evt__pane.on{display:block}
+  .evt__status{font-size:13px;margin-bottom:12px}
+  .evt__ok{border-left:3px solid var(--green);background:var(--green-tint,#F2F5E8);padding:10px 14px;margin:14px 0 0;font-size:13.5px;line-height:1.5}
+  .evt__collapse{border:1px dashed var(--line);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .evt__collapse .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8A6400}
+  .arch{opacity:.75}
+  .arch .evt__head{cursor:default}
+  .djd-section{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin:30px 0 14px}
+  .djd-w9{padding:14px 16px;margin:18px 0 4px;font-size:14px;line-height:1.55}
+  .djd-w9--warn{border-left:3px solid #A03A2E;background:#FBEAE8;color:#5c1f18}
+  .djd-w9--warn strong{color:#A03A2E}
+  .djd-w9--ok{border-left:3px solid var(--green);background:var(--green-tint,#F2F5E8);color:var(--ink)}
+  .djd-w9 input[type=file]{margin:10px 0}
+  .djd-readmore{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);background:none;border:none;cursor:pointer;border-bottom:1px dashed var(--green);padding:0 0 2px;margin-top:6px}
+  .djd-prof{border:1px solid var(--line);border-radius:12px;background:#fff;margin:18px 0 4px;padding:0 18px}
+  .djd-prof summary{cursor:pointer;list-style:none;padding:15px 0;font-weight:700;font-size:15px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .djd-prof summary::-webkit-details-marker{display:none}
+  .djd-bar{flex:1;min-width:120px;height:8px;border-radius:99px;background:#F1F1EC;overflow:hidden}
+  .djd-bar i{display:block;height:100%;background:var(--green);border-radius:99px}
+  .djd-prof__body{border-top:1px dashed var(--line);padding:16px 0 18px}
+  .djd-check{list-style:none;margin:0 0 16px;padding:0}
+  .djd-check li{padding:6px 0;font-size:14px;color:var(--muted);display:flex;gap:9px;align-items:baseline}
+  .djd-check li.done{color:var(--ink)}
+  .djd-check .mk{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--green)}
+  .djd-check li:not(.done) .mk{color:#A03A2E}
+  .djd-task{border-top:1px dashed var(--line);padding:14px 0}
+  .djd-task h4{font-size:14.5px;margin:0 0 10px}
+</style>
+</head>
+<body>
+
+<div class="announce">
+  <span class="mono">Margolis &middot; 9 W Wildey St &middot; Fishtown, Philadelphia</span>
+  <a class="mono" href="https://margolisphilly.com" target="_blank" rel="noopener">margolisphilly.com <span aria-hidden="true">&gt;</span></a>
+</div>
+
+<div class="frame">
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
+      <ul class="nav__links mono">
+        <li><a href="/margolis">Host an event</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobilemenu mono" id="mobilemenu">
+      <a href="/margolis">Host an event</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="box">
+      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.65)), url('assets/media/margolis/photo-24.jpg')">
+        <span class="tag">DJs &amp; hosts</span>
+        <h2>Your nights.</h2>
+        <p>Lineup, flyer, ticket link, and RSVP counts &mdash; one place per event.</p>
+      </div>
+
+      <div class="mg-pad djd-wrap" style="padding-top:28px;padding-bottom:44px;">
+        <div class="djd-topbar">
+          <span class="djd-hello" id="hello"></span>
+          <button class="djd-logout" id="logout">Log out</button>
+        </div>
+        <p class="djd-note">Each part needs Margolis approval before it counts, and your lineup,
+        flyer, and ticket link are due <strong>at least 10 days before your night</strong> —
+        earlier is always welcome. Until all three are approved, our $20 presale stays live for
+        that night; the moment they clear, guests are sent to your ticket link instead.
+        <button type="button" class="djd-readmore" data-presale-open>Read the full presale policy &gt;</button></p>
+        <div class="djd-w9 djd-w9--warn" id="approvalBox" hidden>
+          <strong>Your account is awaiting Margolis review.</strong> You can finish your profile
+          and claim your residency now — everything goes live the moment you're approved.
+        </div>
+        <div id="profilePanel"></div>
+        <div class="djd-w9" id="w9Box" hidden></div>
+        <p class="djd-err" id="djdErr"></p>
+        <div id="content"><p class="djd-note" style="margin-top:20px">Loading your nights&hellip;</p></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="mgmodal" id="presaleModal" role="dialog" aria-modal="true" aria-labelledby="presaleModalTitle">
+  <div class="mgmodal__card">
+    <button type="button" class="mgmodal__close" data-presale-close aria-label="Close">&times;</button>
+    <span class="mgmodal__kicker">The presale, in full</span>
+    <h3 id="presaleModalTitle">Why we sell entry before your promo is ready.</h3>
+    <p>Guests who love Margolis commit early &mdash; often before a night&rsquo;s
+    lineup, flyer, or ticket link exists. Without a presale, those guests drift
+    to other plans and the night loses them for good. The $20 presale simply
+    holds them for your event while your promo comes together, so neither you
+    nor the venue loses potential guests while we wait.</p>
+    <p><strong>It never touches your money.</strong> You keep 100% of your
+    ticket sales and door sales, always. The presale ends the moment your
+    lineup, flyer, and ticket link are approved &mdash; from then on every
+    guest is sent to your link. Presale guests are venue-loyal turnout added
+    on top of your crowd, not taken out of it.</p>
+    <p><strong>Need a night without presale?</strong> For parties catered to
+    strict demographics &mdash; LGBTQ-only nights, guaranteed sell-outs (with
+    proof), private events, and similar &mdash; DJs and hosts may request that
+    no presale run for their night. Margolis reserves the right to deny the
+    request within reason. Ask by replying to your confirmation email or
+    writing <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__bottom">
+      <span class="status"><span class="dot" aria-hidden="true"></span> Margolis DJ &amp; host dashboard &mdash; Jubyr LLC</span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="mailto:ruby@margolisphilly.com" style="color:inherit">ruby@margolisphilly.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const burger = document.querySelector('.nav__burger');
+  const menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+  });
+
+  const AUTH_URL = "https://jubyr.tools/margolis-dj-auth.php";
+  const DASH_URL = "https://jubyr.tools/margolis-dj-dashboard.php";
+  const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+  let TOKEN = localStorage.getItem("margolis-dj-token") || "";
+
+  // ---------- demo mode (Ruby's preview only, no server writes) ----------
+  // Enabled by localStorage["margolis-dj-demo"]="1"; state persists in
+  // localStorage so the login page and this page share one demo account.
+  const DEMO = localStorage.getItem("margolis-dj-demo") === "1";
+  function demoState(){ try{ return JSON.parse(localStorage.getItem("margolis-dj-demo-state"))||{}; }catch(e){ return {}; } }
+  function demoSave(s){ localStorage.setItem("margolis-dj-demo-state", JSON.stringify(s)); }
+  function demoSeedEvents(s){
+    // v2: nothing seeds as approved — everything a DJ submits sits in
+    // "pending" until Ruby reviews it on the admin tile, and the demo
+    // has to show exactly that.
+    if(s.events && s.eventsSeedV === 2) return s;
+    const d = n => { const t=new Date(); t.setDate(t.getDate()+n); return t.toISOString().slice(0,10); };
+    const blank = (date,name) => ({date, eventName:name, lineup:{value:"",status:""}, flyerFile:{value:"",status:""}, ticketLink:{value:"",status:""}, rsvpFree:"", rsvpSold:"", partners:[], solo:false, fullyApproved:false});
+    const submitted = blank(d(8), "Kingspy Rhythm Nation");
+    submitted.lineup = {value:[{name:"Kingspy", instagram:"kingspy"},{name:"DJ Aura", instagram:"djaura"}], status:"pending"};
+    submitted.flyerFile = {value:"flyer-demo.png", status:"pending"};
+    submitted.ticketLink = {value:"https://posh.vip/e/demo", status:"pending"};
+    s.events = [
+      {date:d(8), eventName:"Kingspy Rhythm Nation", start:"9:00 PM", end:"2:00 AM", partnered:false, withNames:[], submission:submitted},
+      {date:d(15), eventName:"Kingspy Rhythm Nation", start:"9:00 PM", end:"2:00 AM", partnered:false, withNames:[], submission:null},
+      {date:d(22), eventName:"Kingspy Rhythm Nation", start:"9:00 PM", end:"2:00 AM", partnered:false, withNames:[], submission:null},
+    ];
+    const past = blank("2026-07-04", "Kingspy Rhythm Nation");
+    past.lineup = {value:[{name:"Kingspy", instagram:"kingspy"}], status:"pending"};
+    past.fullyApproved = false;
+    s.archive = [Object.assign(past, {withNames:[]})];
+    s.eventsSeedV = 2;
+    return s;
+  }
+  async function demoApi(payload){
+    const s = demoSeedEvents(demoState());
+    const findEv = ()=> s.events.find(e=>e.date===payload.date);
+    const ensureSub = ev => {
+      if(!ev.submission) ev.submission = {date:ev.date, eventName:ev.eventName, lineup:{value:"",status:""}, flyerFile:{value:"",status:""}, ticketLink:{value:"",status:""}, rsvpFree:"", rsvpSold:"", partners:[], solo:false, fullyApproved:false};
+      return ev.submission;
+    };
+    if(payload.action==="me"){
+      if(!s.account) throw "Please log in again.";
+      demoSave(s); return {ok:true, account:s.account};
+    }
+    const demoPct = a => { const c=[!!(a.name&&a.type&&a.phone),!!a.hasFacePhoto,!!a.hasFullBodyPhoto,(a.genres||[]).length>0||(a.venues||[]).length>0,!!(a.payableTo&&a.zelle),!!a.agreementsSigned,!!a.hasW9]; a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100); };
+    if(payload.action==="saveW9"){ s.account.hasW9 = true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="savePhoto"){
+      if(payload.kind==="face") s.account.hasFacePhoto=true; else s.account.hasFullBodyPhoto=true;
+      demoPct(s.account); demoSave(s); return {ok:true, account:s.account};
+    }
+    if(payload.action==="savePayout"){ s.account.payableTo=payload.payableTo; s.account.zelle=payload.zelle; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="saveAgreements"){ s.account.agreementsSigned=true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="events"){ demoSave(s); return {ok:true, events:s.events, archive:s.archive||[]}; }
+    if(payload.action==="saveLineup"){ const ev=findEv(); const sub=ensureSub(ev); sub.lineup={value:payload.lineup,status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
+    if(payload.action==="saveTicketLink"){ const ev=findEv(); const sub=ensureSub(ev); sub.ticketLink={value:payload.ticketLink,status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
+    if(payload.action==="saveFlyer"){ const ev=findEv(); const sub=ensureSub(ev); sub.flyerFile={value:payload.fileName||"flyer.png",status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
+    if(payload.action==="saveRsvp"){ const ev=findEv(); const sub=ensureSub(ev); if(payload.rsvpFree) sub.rsvpFree=payload.rsvpFree; if(payload.rsvpSold) sub.rsvpSold=payload.rsvpSold; demoSave(s); return {ok:true, submission:sub}; }
+    if(payload.action==="addEventPartner"){
+      const known = ["mikeoleary","docsow"];
+      const ig = String(payload.instagram||"").toLowerCase();
+      if(!known.includes(ig) && !payload.email) return {ok:true, needEmail:true};
+      const ev=findEv(); const sub=ensureSub(ev);
+      sub.solo = false;
+      sub.partners.push({name:payload.name, instagram:ig});
+      ev.partnered = true; ev.withNames = sub.partners.map(p=>p.name);
+      demoSave(s); return {ok:true, submission:sub};
+    }
+    if(payload.action==="setSolo"){
+      const ev=findEv(); const sub=ensureSub(ev);
+      sub.solo = !!payload.solo;
+      demoSave(s); return {ok:true, submission:sub};
+    }
+    throw "Demo: unsupported action " + payload.action;
+  }
+  let EVENTS = [];
+  let ARCHIVE = [];
+  const openCards = new Set();      // date|name keys that stay expanded across re-renders
+  const activeTab = {};             // date|name -> tab key
+  const openEditPart = new Set();   // "date|name|part" keys currently reopened for editing despite being under review
+
+  const errEl = document.getElementById("djdErr");
+  function showErr(m){ errEl.textContent = m; errEl.classList.add("show"); }
+  function clearErr(){ errEl.classList.remove("show"); }
+
+  async function api(url, payload){
+    if(DEMO) return demoApi(payload);
+    const r = await fetch(url, {method:"POST", body: JSON.stringify(Object.assign({token: TOKEN}, payload))});
+    const out = await r.json().catch(()=>({}));
+    if(r.status===401){ localStorage.removeItem("margolis-dj-token"); location.href="/margolis-login"; throw "auth"; }
+    if(!r.ok) throw (out.error || "Something went wrong — try again.");
+    return out;
+  }
+
+  // ---------- W9 upload (gates payouts, not bookings) ----------
+  // A plain file upload, same pattern as flyers and profile photos — no
+  // third-party filing service, just a completed form in Ruby's files.
+  const IRS_W9_URL = "https://www.irs.gov/pub/irs-pdf/fw9.pdf";
+  function renderW9(account){
+    const box = document.getElementById("w9Box");
+    box.hidden = false;
+    if(account.hasW9){
+      box.className = "djd-w9 djd-w9--ok";
+      box.innerHTML = `W9 on file — your payouts are clear to process once we verify it.`;
+      return;
+    }
+    box.className = "djd-w9 djd-w9--warn";
+    box.innerHTML = `<strong>Your W9 is missing.</strong> Your door payment or bar check will not
+      be processed until it's on file. Fill out the IRS's own
+      <a href="${IRS_W9_URL}" target="_blank" rel="noopener">blank W9 form</a> (most PDF readers let
+      you type directly into it and sign), then upload the completed form here.
+      <input type="file" id="w9File" accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf" style="display:block;margin-top:10px">
+      <div class="intake__nav" style="margin-top:10px"><button type="button" class="btn btn--green" id="w9Upload">Upload my W9 <span class="arw" aria-hidden="true">&gt;</span></button></div>`;
+    document.getElementById("w9Upload").addEventListener("click", async ()=>{
+      const input = document.getElementById("w9File");
+      const file = input.files && input.files[0];
+      if(!file) return showErr("Pick your completed W9 file first.");
+      if(file.size > 10*1024*1024) return showErr("That file is over 10 MB — please compress it.");
+      const btn = document.getElementById("w9Upload");
+      btn.disabled = true; btn.textContent = "Uploading…";
+      try{
+        const fileB64 = await readFileB64(file);
+        const out = await api(AUTH_URL, {action:"saveW9", fileB64});
+        clearErr(); renderW9(out.account); renderProfilePanel(out.account);
+      }catch(e){
+        btn.disabled = false; btn.innerHTML = `Upload my W9 <span class="arw" aria-hidden="true">&gt;</span>`;
+        if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+      }
+    });
+  }
+
+  // ---------- profile completion panel ----------
+  // Percent bar + the "everything on the other forms" tasks: payout
+  // info and the full agreement stack. W9 keeps its own banner below.
+  function renderProfilePanel(account){
+    document.getElementById("approvalBox").hidden = !!account.approved;
+    const p = account.profilePercent ?? 0;
+    const claim = account.claimedResidency;
+    const items = [
+      [!!(account.name && account.type && account.phone), "The essentials — name, DJ or host, phone"],
+      [!!account.hasFacePhoto, "Face photo (your profile icon)"],
+      [!!account.hasFullBodyPhoto, "Full body photo"],
+      [(account.genres||[]).length>0 || (account.venues||[]).length>0, "Genres and venues you play"],
+      [!!(account.payableTo && account.zelle), "Payout info — checks payable to + Zelle"],
+      [!!account.agreementsSigned, "The agreement stack, signed"],
+      [!!account.hasW9, "W9 on file"],
+    ];
+    const el = document.getElementById("profilePanel");
+    el.innerHTML = `<details class="djd-prof"${p<100?" open":""}>
+      <summary>Profile completion <span class="djd-bar"><i style="width:${p}%"></i></span> <span style="font-family:'IBM Plex Mono',monospace;font-size:13px">${p}%</span></summary>
+      <div class="djd-prof__body">
+        ${p<100?`<p class="djd-note" style="margin:0 0 14px"><strong>Until your profile hits 100%</strong>, your residency stays unlocked and no payout can be processed. We'll keep reminding you daily — finishing takes a few minutes.</p>`:""}
+        <ul class="djd-check">${items.map(([done,label])=>`<li class="${done?"done":""}"><span class="mk">${done?"&#10003;":"&#8226;"}</span>${label}</li>`).join("")}</ul>
+        <p class="djd-note" style="margin:0 0 4px"><strong>Residency:</strong> ${
+          claim ? (claim.status==="locked"
+            ? `${esc(claim.title)} — <span style="color:var(--green)">locked in</span>`
+            : `${esc(claim.title)} — claim under review${p<100?" (complete your profile to lock it)":""}`)
+          : `none claimed yet — <a href="/margolis-login?claim=1">claim your spot</a>`}</p>
+        ${!(account.hasFacePhoto && account.hasFullBodyPhoto)?`<div class="djd-task">
+          <h4>Profile photos</h4>
+          <p class="djd-note" style="margin:0 0 12px">No rush on these — we want a good photo, not a
+          hurried one. High quality, in color; a professional shot if you have one.</p>
+          ${!account.hasFacePhoto?`<div class="ifield"><label>Face photo <span class="req">*</span></label>
+            <input type="file" id="ppPhotoFace" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+            <p class="help">Face only — this becomes your profile icon.</p></div>`:""}
+          ${!account.hasFullBodyPhoto?`<div class="ifield"><label>Full body photo <span class="req">*</span></label>
+            <input type="file" id="ppPhotoBody" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+            <p class="help">We keep this on hand for promo.</p></div>`:""}
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePhotos">Upload photo${!account.hasFacePhoto&&!account.hasFullBodyPhoto?"s":""} <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        </div>`:""}
+        ${!(account.payableTo && account.zelle)?`<div class="djd-task">
+          <h4>Payout info</h4>
+          <p class="djd-note" style="margin:0 0 12px"><strong>Door payments must go through Zelle.</strong>
+          If you do not have one, please set one up.</p>
+          <div class="ifield"><label>Make checks payable to <span class="req">*</span></label><input type="text" id="ppPayable" value="${esc(account.payableTo||"")}" placeholder="Must match your W9"></div>
+          <div class="ifield"><label>Zelle <span class="req">*</span></label><input type="text" id="ppZelle" value="${esc(account.zelle||"")}" placeholder="Must match your W9">
+            <p class="help">Phone number, email, or Zelle tag associated with your Zelle account.</p></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePayout">Save payout info <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        </div>`:""}
+        ${!account.agreementsSigned?`<div class="djd-task">
+          <h4>The agreement stack</h4>
+          <p class="djd-note" style="margin:0 0 12px">The same terms every Margolis booking runs on — the
+          <a href="/margolis#payouts" target="_blank" rel="noopener">booking philosophy and payout model</a>,
+          the <a href="/margolis#minimums" target="_blank" rel="noopener">bar minimum policy</a>, and the full
+          event policies (sound, conduct, door operations, fees) on the
+          <a href="/margolis" target="_blank" rel="noopener">booking page</a>.</p>
+          ${[["agPhil","I understand and agree to the Booking Philosophy"],
+             ["agMins","I understand and agree to the Bar Minimum Policy"],
+             ["agAll","I have read and agree to all event policies and terms"],
+             ["agConsent","Jubyr LLC may contact me about my bookings and future events by email, phone, and text — opt out anytime, info never sold"]].map(([id,label])=>
+            `<label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="checkbox" id="${id}" style="margin-top:3px">${label}</label>`).join("")}
+          <div class="ifield" style="margin-top:6px"><label>Electronic signature (full legal name) <span class="req">*</span></label><input type="text" id="agSig" autocomplete="name"></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSignAgreements">Sign the agreements <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        </div>`:""}
+      </div>
+    </details>`;
+    const savePhotosBtn = document.getElementById("ppSavePhotos");
+    if(savePhotosBtn) savePhotosBtn.addEventListener("click", async ()=>{
+      const faceIn = document.getElementById("ppPhotoFace");
+      const bodyIn = document.getElementById("ppPhotoBody");
+      const facePick = faceIn && faceIn.files[0] || null;
+      const bodyPick = bodyIn && bodyIn.files[0] || null;
+      if(!facePick && !bodyPick) return showErr("Pick a photo first.");
+      for(const f of [facePick, bodyPick]){
+        if(f && f.size > 10*1024*1024) return showErr("One of your photos is over 10 MB — please compress it.");
+      }
+      savePhotosBtn.disabled = true;
+      try{
+        let acct = null;
+        if(facePick){
+          savePhotosBtn.textContent = "Uploading face photo…";
+          acct = (await api(AUTH_URL, {action:"savePhoto", kind:"face", fileB64: await readFileB64(facePick)})).account;
+        }
+        if(bodyPick){
+          savePhotosBtn.textContent = "Uploading full body photo…";
+          acct = (await api(AUTH_URL, {action:"savePhoto", kind:"fullBody", fileB64: await readFileB64(bodyPick)})).account;
+        }
+        clearErr(); renderProfilePanel(acct);
+      }catch(e){
+        savePhotosBtn.disabled = false;
+        savePhotosBtn.innerHTML = `Upload photos <span class="arw" aria-hidden="true">&gt;</span>`;
+        if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+      }
+    });
+    const savePayoutBtn = document.getElementById("ppSavePayout");
+    if(savePayoutBtn) savePayoutBtn.addEventListener("click", async ()=>{
+      const payableTo = document.getElementById("ppPayable").value.trim();
+      const zelle = document.getElementById("ppZelle").value.trim();
+      if(!payableTo || !zelle) return showErr("Add both: who checks are payable to, and your Zelle.");
+      savePayoutBtn.disabled = true; savePayoutBtn.textContent = "Saving…";
+      try{
+        const out = await api(AUTH_URL, {action:"savePayout", payableTo, zelle});
+        clearErr(); renderProfilePanel(out.account); renderW9(out.account);
+      }catch(e){ savePayoutBtn.disabled=false; if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server."); }
+    });
+    const signBtn = document.getElementById("ppSignAgreements");
+    if(signBtn) signBtn.addEventListener("click", async ()=>{
+      const boxes = ["agPhil","agMins","agAll","agConsent"].map(id=>document.getElementById(id).checked);
+      if(boxes.includes(false)) return showErr("Please agree to each policy before signing.");
+      const sig = document.getElementById("agSig").value.trim();
+      if(!sig) return showErr("Sign with your full legal name.");
+      signBtn.disabled = true; signBtn.textContent = "Signing…";
+      try{
+        const out = await api(AUTH_URL, {action:"saveAgreements", agreePhilosophy:1, agreeMinimums:1, ackAll:1, contactConsent:1, signature:sig});
+        clearErr(); renderProfilePanel(out.account);
+      }catch(e){ signBtn.disabled=false; if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server."); }
+    });
+  }
+
+  // ---------- presale policy modal ----------
+  (function(){
+    const modal = document.getElementById("presaleModal");
+    document.querySelectorAll("[data-presale-open]").forEach(b=>b.addEventListener("click", e=>{ e.preventDefault(); modal.classList.add("show"); }));
+    modal.addEventListener("click", e=>{ if(e.target===modal || e.target.closest("[data-presale-close]")) modal.classList.remove("show"); });
+    document.addEventListener("keydown", e=>{ if(e.key==="Escape") modal.classList.remove("show"); });
+  })();
+
+  const keyOf = ev => ev.date + "|" + (ev.eventName||"").toLowerCase();
+  // Lineups are singular acts (name + IG), not one typed-out list — the
+  // in-progress set for each event lives here until it's submitted.
+  const lineupDraft = {};
+  const lineupArr = v => Array.isArray(v) ? v : (v ? [{name:String(v), instagram:""}] : []);
+  const igInput = f => `<span style="display:flex;align-items:center"><span style="padding:0 2px 0 0;color:var(--muted);font-family:'IBM Plex Mono',monospace">@</span><input type="text" data-f="${f}" placeholder="handle" style="flex:1" autocapitalize="none" autocorrect="off"></span>`;
+  function stchip(label, status){
+    const cls = status==="approved"?"approved":status==="rejected"?"rejected":status==="pending"?"pending":"none";
+    const word = status==="approved"?"approved":status==="rejected"?"needs a redo":status==="pending"?"in review":"missing";
+    return `<span class="stchip stchip--${cls}">${label} · ${word}</span>`;
+  }
+  function fmtDay(d){
+    try{ return new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}); }
+    catch(e){ return d; }
+  }
+  function statusLine(part, rejectedMsg){
+    if(part.status==="approved") return `<p class="evt__status" style="color:#3F6B21">Approved — you're set here.</p>`;
+    if(part.status==="pending") return `<p class="evt__status" style="color:#8A6400">Submitted — waiting on Margolis to review.</p>`;
+    if(part.status==="rejected") return `<p class="evt__status" style="color:#A03A2E">${rejectedMsg} Resubmit below.</p>`;
+    return "";
+  }
+  // Once a gated part (lineup/flyer/ticket) is submitted and pending, its
+  // form collapses into a tight "Under Review" box instead of sitting open
+  // and editable — the DJ can still tap Edit to reopen and resubmit.
+  function gatedBody(tag, part, i, k, rejectedMsg, formHtml){
+    const editKey = k + "|" + tag;
+    if(part.status==="pending" && !openEditPart.has(editKey)){
+      return `<div class="evt__collapse"><span class="lbl">Under review</span><button type="button" class="djd-readmore" data-edit-part="${tag}" data-i="${i}">Edit</button></div>`;
+    }
+    return statusLine(part, rejectedMsg) + formHtml;
+  }
+
+  function eventCard(ev, i, archived){
+    const s = ev.submission || {lineup:{value:"",status:""}, flyerFile:{value:"",status:""}, ticketLink:{value:"",status:""}, rsvpFree:"", rsvpSold:"", partners:[], fullyApproved:false};
+    const k = keyOf(ev);
+    if(!archived && !(k in lineupDraft)) lineupDraft[k] = lineupArr(s.lineup.value).slice();
+    const tab = activeTab[k] || "lineup";
+    const chips = [stchip("Lineup", s.lineup.status), stchip("Flyer", s.flyerFile.status), stchip("Ticket link", s.ticketLink.status)].join("");
+    const withLine = (ev.withNames||[]).length ? `<span class="evt__date" style="width:100%;color:var(--green)">With ${esc(ev.withNames.join(" + "))}</span>` : "";
+    return `<div class="evt ${archived?"arch":""} ${openCards.has(k)?"open":""}" data-k="${esc(k)}" data-i="${i}">
+      <div class="evt__head" ${archived?"":`data-toggle="${esc(k)}"`}>
+        <span class="evt__date">${esc(fmtDay(ev.date))}${ev.start?` · ${esc(ev.start)}${ev.end?`–${esc(ev.end)}`:""}`:""}</span>
+        <h3>${esc(ev.eventName)}</h3>
+        ${withLine}
+        <div class="evt__chips">${chips}</div>
+        ${s.fullyApproved?`<div class="evt__ok" style="width:100%">All approved — the presale is off and guests go straight to your ticket link.</div>`:""}
+      </div>
+      ${archived?"":`<div class="evt__body">
+        <div class="evt__tabs">
+          ${[["lineup","1 · Lineup"],["flyer","2 · Flyer"],["ticket","3 · Ticket link"],["rsvp","4 · RSVP count"],["partners","5 · Partners"]].map(([tk,label])=>
+            `<button type="button" class="evt__tab ${tab===tk?"on":""}" data-tab="${tk}" data-k="${esc(k)}">${label}</button>`).join("")}
+        </div>
+        <div class="evt__pane ${tab==="lineup"?"on":""}" data-pane="lineup">
+          ${gatedBody("lineup", s.lineup, i, k, "Your lineup wasn't approved.", `
+          ${(lineupDraft[k]||[]).length?`<ul class="djd-check" style="margin-bottom:14px">${lineupDraft[k].map((a,ai)=>
+            `<li class="done"><span class="mk">&#9835;</span>${esc(a.name)}${a.instagram?` <span style="color:var(--muted)">@${esc(a.instagram)}</span>`:""}
+             <button type="button" class="djd-readmore" data-lu-rm="${ai}" data-i="${i}" style="margin-left:8px">remove</button></li>`).join("")}</ul>`:""}
+          <div class="ifield"><label>DJ name <span class="req">*</span></label>
+            <input type="text" data-f="luName" placeholder="Exactly as it should appear on the flyer"></div>
+          <div class="ifield"><label>Their Instagram</label>
+            ${igInput("luIg")}
+            <p class="help">Just the letters — the @ is already there.</p></div>
+          <div class="intake__nav" style="margin-bottom:8px"><button type="button" class="btn" data-save="lineupAdd" data-i="${i}">Add this act +</button></div>
+          <p class="help">Add each act one at a time — every event needs a fresh lineup, even for residencies; this is what we promote. Due at least 10 days before your night; earlier is always welcome.</p>
+          <div class="intake__nav"><button type="button" class="btn btn--green" data-save="lineup" data-i="${i}">Submit lineup <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          `)}
+        </div>
+        <div class="evt__pane ${tab==="flyer"?"on":""}" data-pane="flyer">
+          ${gatedBody("flyer", s.flyerFile, i, k, "Your flyer wasn't approved.", `
+          <div class="ifield"><label>Event flyer <span class="req">*</span></label>
+            <input type="file" data-f="flyer" accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf">
+            ${s.flyerFile.value?`<p class="help">On file: ${esc(s.flyerFile.value)}</p>`:""}
+            <p class="help">PDF, JPG, or PNG up to 10 MB. <strong>No AI-generated flyers — they will not be approved.</strong> Due at least 10 days before your night. A new upload replaces the old one and goes back into review.</p></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" data-save="flyer" data-i="${i}">Upload flyer <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          `)}
+        </div>
+        <div class="evt__pane ${tab==="ticket"?"on":""}" data-pane="ticket">
+          ${gatedBody("ticket", s.ticketLink, i, k, "Your ticket link wasn't approved.", `
+          <div class="ifield"><label>Ticket link <span class="req">*</span></label>
+            <input type="url" data-f="ticket" placeholder="https://posh.vip/e/your-event" value="${esc(s.ticketLink.value)}">
+            <p class="help">Once approved (with your lineup and flyer), guests get sent here instead of our $20 presale. Due at least 10 days before your night.</p></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" data-save="ticket" data-i="${i}">Submit link <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          `)}
+        </div>
+        <div class="evt__pane ${tab==="rsvp"?"on":""}" data-pane="rsvp">
+          <p class="evt__status">Update these 3 days out, 2 days out, and day of. Be straight with the numbers — the Posh scanner tells us tickets sold anyway.</p>
+          <div class="ifield"><label>Free RSVPs</label><input type="text" inputmode="numeric" data-f="rsvpFree" value="${esc(s.rsvpFree)}" placeholder="e.g. 120"></div>
+          <div class="ifield"><label>Tickets sold</label><input type="text" inputmode="numeric" data-f="rsvpSold" value="${esc(s.rsvpSold)}" placeholder="e.g. 85"></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" data-save="rsvp" data-i="${i}">Update counts <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        </div>
+        <div class="evt__pane ${tab==="partners"?"on":""}" data-pane="partners">
+          <p class="evt__status">Hosting this night with someone? <strong>Every partner needs their own Margolis profile</strong> — the night isn't official until they do.</p>
+          ${(s.partners||[]).length?`<p class="evt__status"><strong>On this night:</strong> ${(s.partners||[]).map(p=>esc(p.name)+(p.instagram?` (@${esc(p.instagram)})`:"")).join(", ")}</p>`:""}
+          ${s.solo?`<div class="evt__collapse"><span class="lbl">No partner — solo night</span><button type="button" class="djd-readmore" data-solo-undo="1" data-i="${i}">Actually, add one</button></div>`:`
+          <label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:16px;cursor:pointer;font-size:13.5px;color:var(--muted)">
+            <input type="checkbox" data-f="soloCheck" style="margin-top:3px">No partner for this night — I'm running it solo.
+          </label>
+          <div class="intake__nav" style="margin-bottom:20px"><button type="button" class="btn" data-save="solo" data-i="${i}">Confirm solo night</button></div>
+          <div class="ifield"><label>Partner legal first name <span class="req">*</span></label><input type="text" data-f="pfirst" placeholder="Their legal first name"></div>
+          <div class="ifield"><label>Partner legal last name <span class="req">*</span></label><input type="text" data-f="plast" placeholder="Their legal last name"></div>
+          <div class="ifield"><label>Partner Instagram <span class="req">*</span></label>${igInput("pig")}<p class="help">Just the letters — the @ is already there. If they already have a profile, this links them instantly.</p></div>
+          <div class="ifield" data-pemail-wrap hidden><label>Partner email <span class="req">*</span></label><input type="email" data-f="pemail" placeholder="partner@email.com"><p class="help">We don't have a profile for them yet — add their email and we'll create one and send them their login.</p></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" data-save="partner" data-i="${i}">Add partner <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          `}
+        </div>
+      </div>`}
+    </div>`;
+  }
+
+  function render(){
+    const c = document.getElementById("content");
+    let html = "";
+    // Solo nights and partnered nights are two separate data points —
+    // a residency run with a partner never mixes with someone's own events.
+    const solo = [], partnered = [];
+    EVENTS.forEach((ev,i)=>{ (ev.partnered ? partnered : solo).push([ev,i]); });
+    if(!EVENTS.length){
+      html += `<p class="djd-note" style="margin-top:20px">No upcoming nights on your account yet. Once a booking is confirmed (or your residency dates hit the calendar), they show up here automatically.</p>`;
+    } else if(!partnered.length){
+      html += `<div class="djd-section">Upcoming</div>`;
+      html += solo.map(([ev,i])=>eventCard(ev,i,false)).join("");
+    } else {
+      if(solo.length){
+        html += `<div class="djd-section">Your nights</div>`;
+        html += solo.map(([ev,i])=>eventCard(ev,i,false)).join("");
+      }
+      html += `<div class="djd-section">Partnered nights</div>`;
+      html += partnered.map(([ev,i])=>eventCard(ev,i,false)).join("");
+    }
+    if(ARCHIVE.length){
+      html += `<div class="djd-section">Past events</div>`;
+      html += ARCHIVE.map((s,i)=>eventCard({date:s.date, eventName:s.eventName, start:"", end:"", withNames:s.withNames||[], submission:s}, i, true)).join("");
+    }
+    c.innerHTML = html;
+    bind();
+  }
+
+  function bind(){
+    const c = document.getElementById("content");
+    c.querySelectorAll("[data-toggle]").forEach(h=>h.addEventListener("click", e=>{
+      if(e.target.closest("button,a,input,textarea")) return;
+      const k = h.dataset.toggle;
+      if(openCards.has(k)) openCards.delete(k); else openCards.add(k);
+      render();
+    }));
+    c.querySelectorAll(".evt__tab").forEach(t=>t.addEventListener("click", ()=>{
+      activeTab[t.dataset.k] = t.dataset.tab;
+      const card = t.closest(".evt");
+      card.querySelectorAll(".evt__tab").forEach(x=>x.classList.toggle("on", x===t));
+      card.querySelectorAll(".evt__pane").forEach(p=>p.classList.toggle("on", p.dataset.pane===t.dataset.tab));
+    }));
+    c.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click", ()=>save(b)));
+    c.querySelectorAll("[data-lu-rm]").forEach(b=>b.addEventListener("click", ()=>{
+      const ev = EVENTS[+b.dataset.i];
+      const k = keyOf(ev);
+      (lineupDraft[k]||[]).splice(+b.dataset.luRm, 1);
+      openCards.add(k); activeTab[k] = "lineup";
+      render();
+    }));
+    c.querySelectorAll("[data-edit-part]").forEach(b=>b.addEventListener("click", ()=>{
+      const ev = EVENTS[+b.dataset.i];
+      const k = keyOf(ev);
+      openEditPart.add(k + "|" + b.dataset.editPart);
+      openCards.add(k); activeTab[k] = b.dataset.editPart;
+      render();
+    }));
+    c.querySelectorAll("[data-solo-undo]").forEach(b=>b.addEventListener("click", async ()=>{
+      const ev = EVENTS[+b.dataset.i];
+      b.disabled = true;
+      try{
+        const out = await api(DASH_URL, {action:"setSolo", solo:false, date:ev.date, eventName:ev.eventName});
+        if(out.submission) ev.submission = out.submission;
+        openCards.add(keyOf(ev)); activeTab[keyOf(ev)] = "partners";
+        render();
+      }catch(e){
+        b.disabled = false;
+        if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+      }
+    }));
+  }
+
+  function readFileB64(file){
+    return new Promise((resolve,reject)=>{
+      const r = new FileReader();
+      r.onload = ()=>{ const s=String(r.result||""); resolve(s.slice(s.indexOf(",")+1)); };
+      r.onerror = ()=>reject("Couldn't read that file.");
+      r.readAsDataURL(file);
+    });
+  }
+
+  async function save(btn){
+    clearErr();
+    const kind = btn.dataset.save;
+    const ev = EVENTS[+btn.dataset.i];
+    const card = btn.closest(".evt");
+    const orig = btn.innerHTML;
+    const base = {date: ev.date, eventName: ev.eventName};
+    let payload = null;
+    if(kind==="lineupAdd"){
+      const k = keyOf(ev);
+      const name = card.querySelector('[data-f="luName"]').value.trim();
+      const ig = card.querySelector('[data-f="luIg"]').value.trim().replace(/^@/,"");
+      if(!name) return showErr("Add the DJ name as it should appear on the flyer.");
+      (lineupDraft[k] = lineupDraft[k]||[]).push({name, instagram:ig});
+      openCards.add(k); activeTab[k] = "lineup";
+      render();
+      return;
+    }
+    if(kind==="lineup"){
+      const acts = lineupDraft[keyOf(ev)] || [];
+      const typedName = card.querySelector('[data-f="luName"]').value.trim();
+      if(typedName) return showErr('Press "Add this act +" first, then submit.');
+      if(!acts.length) return showErr("Add at least one act to your lineup first.");
+      payload = Object.assign({action:"saveLineup", lineup:acts}, base);
+    }
+    if(kind==="ticket"){
+      const v = card.querySelector('[data-f="ticket"]').value.trim();
+      if(!/^https?:\/\//i.test(v)) return showErr("Please paste the full link, starting with http.");
+      payload = Object.assign({action:"saveTicketLink", ticketLink:v}, base);
+    }
+    if(kind==="solo"){
+      const checked = card.querySelector('[data-f="soloCheck"]').checked;
+      if(!checked) return showErr("Check the box to confirm this is a solo night.");
+      payload = Object.assign({action:"setSolo", solo:true}, base);
+    }
+    if(kind==="rsvp"){
+      const free = card.querySelector('[data-f="rsvpFree"]').value.trim();
+      const sold = card.querySelector('[data-f="rsvpSold"]').value.trim();
+      if(!free && !sold) return showErr("Add at least one count.");
+      payload = Object.assign({action:"saveRsvp", rsvpFree:free, rsvpSold:sold}, base);
+    }
+    if(kind==="partner"){
+      const pfirst = card.querySelector('[data-f="pfirst"]').value.trim();
+      const plast = card.querySelector('[data-f="plast"]').value.trim();
+      const name = (pfirst + " " + plast).trim();
+      const ig = card.querySelector('[data-f="pig"]').value.trim().replace(/^@/,"");
+      const emailWrap = card.querySelector('[data-pemail-wrap]');
+      const email = card.querySelector('[data-f="pemail"]').value.trim();
+      if(!pfirst || !plast) return showErr("Add your partner's legal first and last name.");
+      if(!ig) return showErr("Add your partner's Instagram handle.");
+      payload = Object.assign({action:"addEventPartner", name, instagram:ig, email}, base);
+      btn.disabled = true; btn.textContent = "Adding…";
+      try{
+        const out = await api(DASH_URL, payload);
+        if(out.needEmail){
+          btn.disabled = false; btn.innerHTML = orig;
+          emailWrap.hidden = false;
+          activeTab[keyOf(ev)] = "partners";
+          return showErr("We don't have a profile for that partner yet — add their email so we can create one and send their login.");
+        }
+        if(out.submission){
+          ev.submission = out.submission;
+          ev.partnered = true;
+          ev.withNames = (out.submission.partners||[]).map(p=>p.name);
+        }
+        openCards.add(keyOf(ev));
+        activeTab[keyOf(ev)] = "partners";
+        render();
+      }catch(e){
+        btn.disabled = false; btn.innerHTML = orig;
+        if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+      }
+      return;
+    }
+    if(kind==="flyer"){
+      const input = card.querySelector('[data-f="flyer"]');
+      const file = input.files && input.files[0];
+      if(!file) return showErr("Pick your flyer file first.");
+      if(file.size > 10*1024*1024) return showErr("That file is over 10 MB — please compress it.");
+      btn.disabled = true; btn.textContent = "Uploading…";
+      try{
+        const b64 = await readFileB64(file);
+        payload = Object.assign({action:"saveFlyer", fileName:file.name, fileB64:b64}, base);
+      }catch(e){ btn.disabled=false; btn.innerHTML=orig; return showErr(String(e)); }
+    }
+    btn.disabled = true; if(kind!=="flyer") btn.textContent = "Saving…";
+    try{
+      const out = await api(DASH_URL, payload);
+      if(out.submission) ev.submission = out.submission;
+      openEditPart.delete(keyOf(ev) + "|" + kind);
+      openCards.add(keyOf(ev));
+      render();
+    }catch(e){
+      btn.disabled = false; btn.innerHTML = orig;
+      if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+    }
+  }
+
+  document.getElementById("logout").addEventListener("click", ()=>{
+    localStorage.removeItem("margolis-dj-token");
+    location.href = "/margolis-login";
+  });
+
+  (async function init(){
+    if(!TOKEN){ location.href = "/margolis-login"; return; }
+    try{
+      const me = await api(AUTH_URL, {action:"me"});
+      const first = (me.account.name||"").split(" ")[0] || "there";
+      document.getElementById("hello").innerHTML = `Good to see you, <strong>${esc(first)}</strong>.`;
+      if(me.account.mustSetPassword || !me.account.quickProfileDone){ location.href = "/margolis-login"; return; }
+      renderProfilePanel(me.account);
+      renderW9(me.account);
+      const out = await api(DASH_URL, {action:"events"});
+      EVENTS = out.events || [];
+      ARCHIVE = out.archive || [];
+      if(EVENTS.length) openCards.add(keyOf(EVENTS[0]));
+      render();
+    }catch(e){
+      if(e!=="auth") document.getElementById("content").innerHTML = `<p class="djd-note" style="margin-top:20px">Couldn't load your nights — refresh, or email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>`;
+    }
+  })();
+</script>
+</body>
+</html>

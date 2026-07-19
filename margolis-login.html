@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DJ &amp; Host Login — Margolis</title>
+<meta name="description" content="Log in to manage your flyer, ticket link, and RSVP counts for your Margolis nights.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=43">
+<style>
+  .dj-wrap{max-width:440px;margin:0 auto}
+  .dj-tag{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .dj-err{color:#A03A2E;font-size:14px;margin:0 0 14px;display:none}
+  .dj-err.show{display:block}
+  .dj-note{color:var(--muted);font-size:13.5px;line-height:1.55;margin-top:14px}
+  .dj-note a{color:var(--green)}
+  .dj-chiprow{display:flex;gap:10px;margin-bottom:6px}
+  .dj-chiprow button{flex:1;border:1px dashed var(--line);background:#fff;padding:14px;font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.04em;cursor:pointer;transition:border-color .15s ease,background .15s ease,color .15s ease}
+  .dj-chiprow button:hover{border-color:var(--green)}
+  .dj-chiprow button.on{background:var(--green);border-color:var(--green);color:#fff}
+  .dj-multi{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+  .dj-multi button{border:1px dashed var(--line);background:#fff;padding:8px 13px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;cursor:pointer;transition:border-color .15s ease,background .15s ease,color .15s ease}
+  .dj-multi button:hover{border-color:var(--green)}
+  .dj-multi button.on{background:var(--green);border-color:var(--green);color:#fff}
+  .dj-done{text-align:center;padding:20px 0}
+  .dj-done .mark{width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 18px}
+  /* full-screen intro wizard */
+  .wiz{min-height:calc(100vh - 180px);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 24px 28px;text-align:center}
+  .wiz__inner{max-width:560px;width:100%}
+  .wiz__kicker{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--green);display:block;margin-bottom:16px}
+  .wiz__step{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:10px}
+  .wiz__inner h2{font-size:clamp(26px,4.5vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0 0 18px}
+  .wiz__inner p{font-size:16px;line-height:1.65;color:var(--muted);margin:0 0 14px;text-align:left}
+  .wiz__inner p strong{color:var(--ink)}
+  .wiz__list{text-align:left;margin:0 0 14px;padding:0;list-style:none}
+  .wiz__list li{position:relative;padding:10px 0 10px 26px;border-bottom:1px dashed var(--line);font-size:15px;line-height:1.55;color:var(--muted)}
+  .wiz__list li:last-child{border-bottom:none}
+  .wiz__list li::before{content:"";position:absolute;left:4px;top:17px;width:7px;height:7px;border-radius:50%;background:var(--green)}
+  .wiz__list li strong{color:var(--ink)}
+  .wiz__nav{display:flex;align-items:center;gap:18px;margin-top:34px}
+  .wiz__dots{display:flex;gap:7px}
+  .wiz__dot{width:8px;height:8px;border-radius:50%;background:var(--line);transition:background .15s ease}
+  .wiz__dot.on{background:var(--green)}
+  .wiz__skip{margin-top:22px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:1px dashed var(--line);padding-bottom:2px}
+  .wiz__skip:hover{color:var(--green);border-color:var(--green)}
+  .wiz__nav .btn[hidden]{display:none}
+  .wiz__more{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);background:none;border:none;cursor:pointer;border-bottom:1px dashed var(--green);padding:0 0 2px}
+</style>
+</head>
+<body>
+
+<div class="announce">
+  <span class="mono">Margolis &middot; 9 W Wildey St &middot; Fishtown, Philadelphia</span>
+  <a class="mono" href="https://margolisphilly.com" target="_blank" rel="noopener">margolisphilly.com <span aria-hidden="true">&gt;</span></a>
+</div>
+
+<div class="frame">
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
+      <ul class="nav__links mono">
+        <li><a href="/margolis">Host an event</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobilemenu mono" id="mobilemenu">
+      <a href="/margolis">Host an event</a>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ===== full-screen click-through intro (cold load only) ===== -->
+    <section class="box" id="wizBox">
+      <div class="wiz">
+        <div class="wiz__inner" id="wizSlide"></div>
+        <div class="wiz__nav">
+          <button type="button" class="btn btn--ghost" id="wizBack" hidden>Back</button>
+          <div class="wiz__dots" id="wizDots" aria-hidden="true"></div>
+          <button type="button" class="btn btn--green" id="wizNext">Next steps <span class="arw" aria-hidden="true">&gt;</span></button>
+        </div>
+        <button type="button" class="wiz__skip" id="wizSkip">Already set up? Skip to login</button>
+      </div>
+    </section>
+
+    <section class="box" id="loginSection" hidden>
+      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.65)), url('assets/bg-lounge-dark.jpg')">
+        <span class="tag">DJs &amp; hosts &middot; Your Margolis account</span>
+        <h2>One login for your nights.</h2>
+        <p>Lineup, flyer, ticket link, and RSVP counts &mdash; managed in one
+        place for every event you play with us.</p>
+      </div>
+
+      <div class="mg-pad dj-wrap" id="login" style="padding-top:34px;padding-bottom:44px;">
+        <p class="dj-err" id="djErr"></p>
+
+        <!-- ===== sign up (default for the cold-screen audience) ===== -->
+        <form id="stepSignup">
+          <h3 style="margin-bottom:6px">Create your account</h3>
+          <p class="dj-note" style="margin:0 0 18px">Just the essentials — the rest of your profile
+          comes after. Your account sits in awaiting review until Margolis approves it.</p>
+          <div class="ifield"><label>First name <span class="req">*</span></label><input type="text" id="suFirstName" autocomplete="given-name"></div>
+          <div class="ifield"><label>Last name <span class="req">*</span></label><input type="text" id="suLastName" autocomplete="family-name"></div>
+          <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="suEmail" autocomplete="email" placeholder="you@email.com"></div>
+          <div class="ifield"><label>Phone <span class="req">*</span></label><input type="tel" id="suPhone" autocomplete="tel" placeholder="10-digit number"></div>
+          <div class="ifield">
+            <label>Are you a DJ or an event host? <span class="req">*</span></label>
+            <div class="dj-chiprow" id="suTypeRow">
+              <button type="button" data-sutype="dj">DJ</button>
+              <button type="button" data-sutype="host">Event host</button>
+            </div>
+          </div>
+          <div class="ifield"><label>Password <span class="req">*</span></label><input type="password" id="suPassword" autocomplete="new-password" placeholder="At least 8 characters"></div>
+          <div class="ifield"><label>Confirm password <span class="req">*</span></label><input type="password" id="suPassword2" autocomplete="new-password"></div>
+          <label class="rcheck" style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;cursor:pointer">
+            <input type="checkbox" id="suConsent" style="margin-top:3px;flex-shrink:0">
+            <span style="color:var(--muted);font-size:13.5px;line-height:1.55">I agree that Jubyr LLC may contact me about my bookings and future events by email, phone, and text message. <span class="req">*</span> I can opt out at any time, and my information is never sold.</span>
+          </label>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnSignup">Create my account <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          <p class="dj-note">Already have an account? <a href="#login" id="toLogin">Log in</a>.</p>
+        </form>
+
+        <!-- ===== login ===== -->
+        <form id="stepLogin" hidden>
+          <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="loginEmail" autocomplete="email" placeholder="you@email.com"></div>
+          <div class="ifield"><label>Password <span class="req">*</span></label><input type="password" id="loginPassword" autocomplete="current-password"></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnLogin">Log in <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          <p class="dj-note">Booked with us before? Check the email we sent when your booking was
+          confirmed — it has a temporary password. New here? <a href="#login" id="toSignup">Sign up</a>.
+          Forgot your password? <a href="/margolis-reset">Reset it</a>.</p>
+        </form>
+
+        <!-- ===== forced password set (first login) ===== -->
+        <form id="stepSetPassword" hidden>
+          <h3 style="margin-bottom:6px">Set your password</h3>
+          <p class="dj-note" style="margin-top:0 0 18px">You logged in with a temporary password — pick a real one now.</p>
+          <div class="ifield"><label>New password <span class="req">*</span></label><input type="password" id="newPassword" autocomplete="new-password" placeholder="At least 8 characters"></div>
+          <div class="ifield"><label>Confirm password <span class="req">*</span></label><input type="password" id="newPassword2" autocomplete="new-password"></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnSetPassword">Save password <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        </form>
+
+        <!-- ===== short profile completion ===== -->
+        <form id="stepProfile" hidden>
+          <h3 style="margin-bottom:6px">Quick profile</h3>
+          <p class="dj-note" style="margin:0 0 18px">Just the basics for now — you can add rates and equipment later if you're open to private bookings.</p>
+          <div class="ifield"><label>Name <span class="req">*</span></label><input type="text" id="pName" autocomplete="name"></div>
+          <div class="ifield"><label>Phone</label><input type="tel" id="pPhone" autocomplete="tel" placeholder="10-digit number"></div>
+          <div class="ifield"><label>Instagram</label><input type="text" id="pInstagram" placeholder="@yourhandle"></div>
+          <div class="ifield">
+            <label>Are you a DJ or an event host? <span class="req">*</span></label>
+            <div class="dj-chiprow">
+              <button type="button" data-type="dj">DJ</button>
+              <button type="button" data-type="host">Event host</button>
+            </div>
+          </div>
+          <div class="ifield">
+            <label id="genresLabel">Genres you play</label>
+            <div class="dj-multi" id="genreOpts"></div>
+            <p class="help">Pick all that apply.</p>
+          </div>
+          <div class="ifield">
+            <label>Other venues you primarily DJ at</label>
+            <div class="dj-multi" id="venueOpts"></div>
+            <p class="help">Pick all that apply — we're always adding more to this list.</p>
+          </div>
+          <p class="dj-note" style="margin:0 0 18px">Your two profile photos (face + full body) are
+          waiting on your dashboard — no rush, we want a good one, not a hurried one.</p>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnProfile">Save profile <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        </form>
+
+        <!-- ===== residency claim (right after profile) ===== -->
+        <div id="stepClaim" hidden>
+          <h3 style="margin-bottom:6px">Claim your residency</h3>
+          <p class="dj-note" style="margin:0 0 18px">If one of these recurring nights on our events
+          calendar is yours, claim it — Margolis reviews every claim before it's locked in. Your
+          residency is not locked until your profile is complete and the claim is approved.</p>
+          <div id="claimList"><p class="dj-note">Loading the calendar&hellip;</p></div>
+          <p class="dj-note" style="margin-top:18px"><a href="#login" id="claimSkip">None of these are mine — skip for now</a></p>
+        </div>
+
+        <!-- ===== done ===== -->
+        <div class="dj-done" id="stepDone" hidden>
+          <div class="mark">&#10003;</div>
+          <h3 id="doneHeading">You're all set.</h3>
+          <p class="dj-note" id="doneBody"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="mgmodal" id="presaleModal" role="dialog" aria-modal="true" aria-labelledby="presaleModalTitle">
+  <div class="mgmodal__card">
+    <button type="button" class="mgmodal__close" data-presale-close aria-label="Close">&times;</button>
+    <span class="mgmodal__kicker">The presale, in full</span>
+    <h3 id="presaleModalTitle">Why we sell entry before your promo is ready.</h3>
+    <p>Guests who love Margolis commit early &mdash; often before a night&rsquo;s
+    lineup, flyer, or ticket link exists. Without a presale, those guests drift
+    to other plans and the night loses them for good. The $20 presale simply
+    holds them for your event while your promo comes together, so neither you
+    nor the venue loses potential guests while we wait.</p>
+    <p><strong>It never touches your money.</strong> You keep 100% of your
+    ticket sales and door sales, always. The presale ends the moment your
+    lineup, flyer, and ticket link are approved &mdash; from then on every
+    guest is sent to your link. Presale guests are venue-loyal turnout added
+    on top of your crowd, not taken out of it.</p>
+    <p><strong>Need a night without presale?</strong> For parties catered to
+    strict demographics &mdash; LGBTQ-only nights, guaranteed sell-outs (with
+    proof), private events, and similar &mdash; DJs and hosts may request that
+    no presale run for their night. Margolis reserves the right to deny the
+    request within reason. Ask by replying to your confirmation email or
+    writing <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__bottom">
+      <span class="status"><span class="dot" aria-hidden="true"></span> Margolis DJ &amp; host login &mdash; Jubyr LLC</span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="mailto:ruby@margolisphilly.com" style="color:inherit">ruby@margolisphilly.com</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const burger = document.querySelector('.nav__burger');
+  const menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+  });
+
+  const AUTH_URL = "https://jubyr.tools/margolis-dj-auth.php";
+  const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  const emailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e||"").trim());
+
+  // ---------- phone auto-format: (215)-771-4222 as you type ----------
+  function formatPhone(v){
+    const d = String(v||"").replace(/\D/g,"").slice(0,10);
+    if(d.length<=3) return d.length?`(${d}`:"";
+    if(d.length<=6) return `(${d.slice(0,3)})-${d.slice(3)}`;
+    return `(${d.slice(0,3)})-${d.slice(3,6)}-${d.slice(6)}`;
+  }
+  const phoneValid = v => /^\(\d{3}\)-\d{3}-\d{4}$/.test(String(v||"").trim());
+  ["suPhone","pPhone"].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener("input", ()=>{ el.value = formatPhone(el.value); });
+  });
+
+  const errEl = document.getElementById("djErr");
+  function showErr(m){ errEl.textContent = m; errEl.classList.add("show"); }
+  function clearErr(){ errEl.classList.remove("show"); }
+  function showStep(id){
+    ["stepSignup","stepLogin","stepSetPassword","stepProfile","stepClaim","stepDone"].forEach(s=>{
+      document.getElementById(s).hidden = (s !== id);
+    });
+    clearErr();
+  }
+
+  let TOKEN = localStorage.getItem("margolis-dj-token") || "";
+  let ACCOUNT = null;
+
+  // ---------- demo mode (Ruby's preview only, no server writes) ----------
+  const DEMO = localStorage.getItem("margolis-dj-demo") === "1";
+  function demoState(){ try{ return JSON.parse(localStorage.getItem("margolis-dj-demo-state"))||{}; }catch(e){ return {}; } }
+  function demoSave(s){ localStorage.setItem("margolis-dj-demo-state", JSON.stringify(s)); }
+  function demoRecompute(a){
+    // photos are dashboard tasks now, not part of the quick gate
+    a.quickProfileDone = !!(a.name && a.type);
+    const c = [!!(a.name&&a.type&&a.phone), !!a.hasFacePhoto, !!a.hasFullBodyPhoto,
+      (a.genres||[]).length>0||(a.venues||[]).length>0, !!(a.payableTo&&a.zelle), !!a.agreementsSigned, !!a.hasW9];
+    a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100);
+  }
+  async function demoApi(payload){
+    const s = demoState();
+    if(payload.action==="options") return {ok:true,
+      genres:["House","Afro House","Hip-Hop","R&B","Afrobeats","Amapiano","Jersey Club","Techno","Disco","Jazz","Soul / Funk","Reggae / Dancehall","Latin","Open-format","Other"],
+      venues:["Fabrika","The Winston","Winston on the Water","The Foundry","Blind Barber","Bastet","The Barbary","The Saint","La Chinesca","Stratus Lounge","Savu","Prestige","Reserve","Concourse","Liberty Point","Other"]};
+    if(payload.action==="login"){
+      if(!s.account) s.account = {id:"demo1", email:payload.email, name:"", type:"", phone:"", instagram:"",
+        genres:[], venues:[], venuesOther:"", hasFacePhoto:false, hasFullBodyPhoto:false, hasW9:false,
+        mustSetPassword:true, quickProfileDone:false};
+      demoSave(s);
+      return {ok:true, token:"DEMO", account:s.account};
+    }
+    if(payload.action==="signup"){
+      s.account = {id:"demo1", email:payload.email, name:payload.name, phone:payload.phone, type:payload.type,
+        instagram:"", genres:[], venues:[], venuesOther:"", hasFacePhoto:false, hasFullBodyPhoto:false, hasW9:false,
+        approved:false, claimedResidency:null, payableTo:"", zelle:"", agreementsSigned:false,
+        mustSetPassword:false, quickProfileDone:false, profilePercent:14};
+      demoSave(s); return {ok:true, token:"DEMO", account:s.account};
+    }
+    if(payload.action==="listResidencies") return {ok:true, residencies:[
+      {title:"Kingspy Rhythm Nation", nextDate:"2026-07-25", start:"9:00 PM", count:8},
+      {title:"Sunday Cleaning with Mike O'Leary", nextDate:"2026-07-26", start:"1:00 PM", count:6},
+      {title:"Strictly Amapiano", nextDate:"2026-07-26", start:"6:00 PM", count:7}]};
+    if(!s.account) throw "Please log in again.";
+    if(payload.action==="me"){ return {ok:true, account:s.account}; }
+    if(payload.action==="setPassword"){ s.account.mustSetPassword=false; demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="savePhoto"){
+      if(payload.kind==="face") s.account.hasFacePhoto=true; else s.account.hasFullBodyPhoto=true;
+      demoRecompute(s.account); demoSave(s); return {ok:true, account:s.account};
+    }
+    if(payload.action==="updateProfile"){
+      Object.assign(s.account, {name:payload.name, phone:payload.phone, instagram:payload.instagram,
+        type:payload.type, genres:payload.genres, venues:payload.venues});
+      demoRecompute(s.account); demoSave(s); return {ok:true, account:s.account};
+    }
+    if(payload.action==="forgotPassword") return {ok:true};
+    if(payload.action==="claimResidency"){
+      s.account.claimedResidency = {title:payload.title, status:"pending", claimedAt:new Date().toISOString()};
+      demoSave(s); return {ok:true, account:s.account};
+    }
+    throw "Demo: unsupported action " + payload.action;
+  }
+
+  // presale policy modal — delegated, since the wizard re-renders its slides
+  document.addEventListener("click", e=>{
+    const open = e.target.closest("[data-presale-open]");
+    const modal = document.getElementById("presaleModal");
+    if(open){ e.preventDefault(); modal.classList.add("show"); return; }
+    if(e.target===modal || e.target.closest("[data-presale-close]")) modal.classList.remove("show");
+  });
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape") document.getElementById("presaleModal").classList.remove("show"); });
+  let profileType = "";
+  let profileGenres = [];
+  let profileVenues = [];
+
+  async function api(payload){
+    if(DEMO) return demoApi(payload);
+    const r = await fetch(AUTH_URL, {method:"POST", body: JSON.stringify(payload)});
+    const out = await r.json().catch(()=>({}));
+    if(!r.ok) throw (out.error || "Something went wrong — try again.");
+    return out;
+  }
+
+  function afterAuth(account){
+    ACCOUNT = account;
+    if(account.mustSetPassword){ showStep("stepSetPassword"); return; }
+    if(!account.quickProfileDone){ openProfileStep(account); return; }
+    location.href = "/margolis-dashboard";
+  }
+
+  async function openProfileStep(account){
+    showStep("stepProfile");
+    document.getElementById("pName").value = account.name || "";
+    document.getElementById("pPhone").value = account.phone || "";
+    document.getElementById("pInstagram").value = account.instagram || "";
+    profileType = account.type || "";
+    syncGenresLabel();
+    profileGenres = account.genres || [];
+    profileVenues = account.venues || [];
+    document.querySelectorAll(".dj-chiprow [data-type]").forEach(b=>b.classList.toggle("on", b.dataset.type===profileType));
+    try{
+      const opts = await api({action:"options"});
+      renderMulti("genreOpts", opts.genres, profileGenres, v=>{ toggleIn(profileGenres, v); });
+      renderMulti("venueOpts", opts.venues, profileVenues, v=>{ toggleIn(profileVenues, v); });
+    }catch(e){ /* dropdowns just stay empty if this fails — not fatal */ }
+  }
+  function toggleIn(arr, val){
+    const i = arr.indexOf(val);
+    if(i>=0) arr.splice(i,1); else arr.push(val);
+  }
+  function renderMulti(hostId, options, current, onToggle){
+    const host = document.getElementById(hostId);
+    host.innerHTML = (options||[]).map(o=>`<button type="button" class="${current.includes(o)?"on":""}" data-val="${esc(o)}">${esc(o)}</button>`).join("");
+    host.querySelectorAll("button").forEach(b=>b.addEventListener("click", ()=>{
+      onToggle(b.dataset.val);
+      b.classList.toggle("on");
+    }));
+  }
+
+  document.getElementById("btnLogin").addEventListener("click", async ()=>{
+    clearErr();
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    if(!emailOk(email)) return showErr("Please add a valid email.");
+    if(!password) return showErr("Please add your password.");
+    const btn = document.getElementById("btnLogin");
+    btn.disabled = true; btn.textContent = "Logging in…";
+    try{
+      const out = await api({action:"login", email, password});
+      TOKEN = out.token; localStorage.setItem("margolis-dj-token", TOKEN);
+      afterAuth(out.account);
+    }catch(e){ showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection."); }
+    btn.disabled = false; btn.textContent = "Log in >";
+  });
+
+  document.getElementById("btnSetPassword").addEventListener("click", async ()=>{
+    clearErr();
+    const p1 = document.getElementById("newPassword").value;
+    const p2 = document.getElementById("newPassword2").value;
+    if(p1.length < 8) return showErr("Password needs to be at least 8 characters.");
+    if(p1 !== p2) return showErr("Those passwords don't match.");
+    const btn = document.getElementById("btnSetPassword");
+    btn.disabled = true; btn.textContent = "Saving…";
+    try{
+      const out = await api({action:"setPassword", token: TOKEN, newPassword: p1});
+      afterAuth(out.account);
+    }catch(e){ showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection."); }
+    btn.disabled = false; btn.textContent = "Save password >";
+  });
+
+  function syncGenresLabel(){
+    document.getElementById("genresLabel").textContent =
+      profileType === "host" ? "Genres your events play" : "Genres you play";
+  }
+  document.querySelectorAll(".dj-chiprow [data-type]").forEach(b=>b.addEventListener("click", ()=>{
+    profileType = b.dataset.type;
+    document.querySelectorAll(".dj-chiprow [data-type]").forEach(x=>x.classList.toggle("on", x===b));
+    syncGenresLabel();
+  }));
+
+  document.getElementById("btnProfile").addEventListener("click", async ()=>{
+    clearErr();
+    const name = document.getElementById("pName").value.trim();
+    const pPhoneVal = document.getElementById("pPhone").value.trim();
+    if(!name) return showErr("Please add your name.");
+    if(pPhoneVal && !phoneValid(pPhoneVal)) return showErr("Please add a phone number formatted like (215)-771-4222.");
+    if(!profileType) return showErr("Let us know if you're a DJ or an event host.");
+    const btn = document.getElementById("btnProfile");
+    btn.disabled = true; btn.textContent = "Saving…";
+    try{
+      const out = await api({action:"updateProfile", token: TOKEN,
+        name, phone: document.getElementById("pPhone").value.trim(),
+        instagram: document.getElementById("pInstagram").value.trim().replace(/^@/,""),
+        type: profileType, genres: profileGenres, venues: profileVenues});
+      ACCOUNT = out.account;
+      // fresh profile save flows into claiming a residency; anyone whose
+      // claim already exists just heads to the dashboard
+      if(!out.account.claimedResidency){ openClaimStep(); }
+      else afterAuth(out.account);
+    }catch(e){ showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection."); }
+    btn.disabled = false; btn.textContent = "Save profile >";
+  });
+
+  // ---------- sign up ----------
+  let signupType = "";
+  document.querySelectorAll("#suTypeRow [data-sutype]").forEach(b=>b.addEventListener("click", ()=>{
+    signupType = b.dataset.sutype;
+    document.querySelectorAll("#suTypeRow [data-sutype]").forEach(x=>x.classList.toggle("on", x===b));
+  }));
+  document.getElementById("toLogin").addEventListener("click", e=>{ e.preventDefault(); showStep("stepLogin"); });
+  document.getElementById("toSignup").addEventListener("click", e=>{ e.preventDefault(); showStep("stepSignup"); });
+  document.getElementById("btnSignup").addEventListener("click", async ()=>{
+    clearErr();
+    const firstName = document.getElementById("suFirstName").value.trim();
+    const lastName = document.getElementById("suLastName").value.trim();
+    const name = (firstName + " " + lastName).trim();
+    const email = document.getElementById("suEmail").value.trim();
+    const phone = document.getElementById("suPhone").value.trim();
+    const p1 = document.getElementById("suPassword").value;
+    const p2 = document.getElementById("suPassword2").value;
+    if(!firstName) return showErr("Please add your first name.");
+    if(!lastName) return showErr("Please add your last name.");
+    if(!emailOk(email)) return showErr("Please add a valid email.");
+    if(!phoneValid(phone)) return showErr("Please add a phone number formatted like (215)-771-4222.");
+    if(!signupType) return showErr("Let us know if you're a DJ or an event host.");
+    if(p1.length < 8) return showErr("Password needs to be at least 8 characters.");
+    if(p1 !== p2) return showErr("Those passwords don't match.");
+    if(!document.getElementById("suConsent").checked) return showErr("Please agree to be contacted — it's how approvals, reminders, and payouts reach you.");
+    const btn = document.getElementById("btnSignup");
+    btn.disabled = true; btn.textContent = "Creating your account…";
+    try{
+      const out = await api({action:"signup", name, email, phone, type:signupType, password:p1, contactConsent:"Yes, I agree"});
+      TOKEN = out.token; localStorage.setItem("margolis-dj-token", TOKEN);
+      afterAuth(out.account);   // routes into the profile step
+    }catch(e){ showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection."); }
+    btn.disabled = false; btn.innerHTML = `Create my account <span class="arw" aria-hidden="true">&gt;</span>`;
+  });
+
+  // ---------- residency claim ----------
+  async function openClaimStep(){
+    showStep("stepClaim");
+    const host = document.getElementById("claimList");
+    try{
+      const out = await api({action:"listResidencies", token: TOKEN});
+      const list = out.residencies || [];
+      if(!list.length){ host.innerHTML = `<p class="dj-note">No recurring nights found on the calendar right now — you can skip ahead.</p>`; return; }
+      host.innerHTML = list.map(r=>`<button type="button" class="claim-card" data-claim="${esc(r.title)}" style="display:block;width:100%;text-align:left;border:1px dashed var(--line);background:#fff;padding:16px 18px;margin-bottom:10px;cursor:pointer">
+        <strong style="display:block;font-size:16px;margin-bottom:4px">${esc(r.title)}</strong>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted)">Next: ${esc(r.nextDate)} &middot; ${esc(r.start)} &middot; ${r.count} upcoming dates</span>
+      </button>`).join("");
+      host.querySelectorAll("[data-claim]").forEach(b=>b.addEventListener("click", async ()=>{
+        b.disabled = true; b.style.opacity = ".6";
+        try{
+          const res = await api({action:"claimResidency", token: TOKEN, title: b.dataset.claim});
+          ACCOUNT = res.account;
+          showStep("stepDone");
+          document.getElementById("doneHeading").textContent = "Claim received.";
+          document.getElementById("doneBody").innerHTML = `You claimed <strong>${esc(b.dataset.claim)}</strong>. Margolis reviews every claim — it locks in once your profile is complete and the claim is approved. <a href="/margolis-dashboard">Head to your dashboard</a>.`;
+        }catch(e){ b.disabled=false; b.style.opacity="1"; showErr(typeof e==="string"?e:"Couldn't reach the server — try again."); }
+      }));
+    }catch(e){ host.innerHTML = `<p class="dj-note">Couldn't load the calendar — you can skip ahead and claim later.</p>`; }
+  }
+  document.getElementById("claimSkip").addEventListener("click", e=>{
+    e.preventDefault();
+    location.href = "/margolis-dashboard";
+  });
+
+  // ---------- full-screen intro wizard ----------
+  // First visit walks through the whole process one screen at a time.
+  // Once finished (or skipped), this device goes straight to login.
+  const INTRO_KEY = "margolis-dj-intro-done";
+  const SLIDES = [
+    { kicker:"Margolis · Jubyr LLC", step:"", title:"Welcome to the new DJ & host platform.",
+      html:`<p>One login now runs everything for your nights at Margolis: your <strong>event lineup</strong>, your <strong>flyer</strong>, your <strong>ticket link</strong>, and your <strong>RSVP counts</strong> — for one-off bookings and residencies alike. It replaces the old flyer and RSVP forms entirely.</p>
+      <p>Click through the next steps — the whole process, start to finish, takes two minutes to read.</p>` },
+    { kicker:"How it works", step:"Step 1 of 6", title:"Booking your night.",
+      html:`<ul class="wiz__list">
+        <li><strong>Check the calendar and submit the booking form</strong> at jubyr.com/bookings — availability, payouts, and policies are all there.</li>
+        <li><strong>Margolis reviews and confirms your date.</strong> Bookings confirm in the order forms are received.</li>
+        <li><strong>Your confirmation email arrives</strong> with every detail of your night in writing.</li>
+      </ul>` },
+    { kicker:"How it works", step:"Step 2 of 6", title:"Your account makes it official.",
+      html:`<p>The moment your first booking is confirmed, your account is created automatically — your login and a temporary password land in your inbox. Log in, set your own password, and complete your quick profile: DJ or host, your genres, and the other venues you play. Then, from your dashboard, add <strong>two photos</strong> when you have good ones — a high-quality color shot of your face (your profile icon; professional if you have one) and a full-body shot we keep on hand for promo. No rush on the photos — we would rather wait for a great one.</p>
+      <p><strong>Your night is not officially in the books until your profile is complete.</strong></p>
+      <p>Already have a residency with us? Your account works the same way — check your email for credentials, or write <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a> and we'll set you up.</p>` },
+    { kicker:"How it works", step:"Step 3 of 6", title:"Hosting with a partner?",
+      html:`<p><strong>Every partner on a night needs their own Margolis profile</strong> — residency or one-off, the night isn't official until everyone running it has one.</p>
+      <ul class="wiz__list">
+        <li><strong>Partner already has a profile?</strong> Type their name and Instagram handle on that night's Partners tab and they're linked automatically.</li>
+        <li><strong>Partner is new?</strong> Add their email too — a profile is created for them on the spot and their login is sent straight to their inbox.</li>
+        <li><strong>Solo nights and partnered nights stay separate</strong> on your dashboard, so a residency with a partner never mixes with your own events.</li>
+      </ul>` },
+    { kicker:"How it works", step:"Step 4 of 6", title:"Before every night.",
+      html:`<p>Fresh for every event — residencies included — you submit three things:</p>
+      <ul class="wiz__list">
+        <li><strong>Your DJ lineup</strong> for that night — this is what we promote.</li>
+        <li><strong>Your event flyer</strong> — PDF, JPG, or PNG.</li>
+        <li><strong>Your ticket link</strong> — Posh, Eventbrite, wherever you sell.</li>
+      </ul>
+      <p>Each one gets a quick Margolis approval so promo stays clean. Swapping something already approved sends it back for re-approval.</p>
+      <p><strong>All three are due at least 10 days before your night</strong> — you can submit them any time earlier. And no AI-generated flyers — they will not be approved.</p>` },
+    { kicker:"How it works", step:"Step 5 of 6", title:"The presale rule.",
+      html:`<p>Until your lineup, flyer, and ticket link are <strong>all approved</strong>, our $20 presale stays live for your night — so no guest who wants to be there misses out while things are pending.</p>
+      <p>The moment all three clear, guests are sent to your ticket link instead. <strong>You keep 100% of your ticket and door sales, always.</strong></p>
+      <p><button type="button" class="wiz__more" data-presale-open>Read the full presale policy &gt;</button></p>` },
+    { kicker:"How it works", step:"Step 6 of 6", title:"Counting down — and rebooking.",
+      html:`<p><strong>Leading up to your night:</strong> update your free RSVP and tickets-sold counts 3 days out, 2 days out, and day of — we remind you each time. Straight numbers only; the Posh scanner shows us exact ticket sales anyway.</p>
+      <p><strong>Rebooking is even easier:</strong> residency dates appear on your dashboard automatically. Booking another one-off night? Submit the booking form again — the new night attaches to your existing account the moment it's confirmed.</p>
+      <p><strong>Getting paid:</strong> your door payment or bar check is not processed until your W9 is on your profile — upload it once on your dashboard and it covers every event.</p>` },
+    { kicker:"That's the whole system", step:"", title:"You're ready.",
+      html:`<p>Questions at any point, just reply to any of our emails or write <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>. See you in the booth.</p>` },
+  ];
+  let wizIndex = 0;
+  const wizBox = document.getElementById("wizBox");
+  const loginSection = document.getElementById("loginSection");
+
+  function renderWiz(){
+    const s = SLIDES[wizIndex];
+    document.getElementById("wizSlide").innerHTML =
+      `<span class="wiz__kicker">${s.kicker}</span>` +
+      (s.step ? `<span class="wiz__step">${s.step}</span>` : "") +
+      `<h2>${s.title}</h2>` + s.html;
+    document.getElementById("wizDots").innerHTML =
+      SLIDES.map((_,i)=>`<span class="wiz__dot ${i<=wizIndex?"on":""}"></span>`).join("");
+    document.getElementById("wizBack").hidden = wizIndex === 0;
+    document.getElementById("wizNext").innerHTML =
+      wizIndex === 0 ? `Next steps <span class="arw" aria-hidden="true">&gt;</span>`
+      : wizIndex === SLIDES.length-1 ? `Sign up <span class="arw" aria-hidden="true">&gt;</span>`
+      : `Next <span class="arw" aria-hidden="true">&gt;</span>`;
+    window.scrollTo(0, 0);
+  }
+  function finishWiz(){
+    try{ localStorage.setItem(INTRO_KEY, "1"); }catch(e){}
+    wizBox.hidden = true;
+    loginSection.hidden = false;
+    window.scrollTo(0, 0);
+  }
+  document.getElementById("wizNext").addEventListener("click", ()=>{
+    if(wizIndex >= SLIDES.length-1){ finishWiz(); return; }
+    wizIndex++; renderWiz();
+  });
+  document.getElementById("wizBack").addEventListener("click", ()=>{
+    if(wizIndex > 0){ wizIndex--; renderWiz(); }
+  });
+  document.getElementById("wizSkip").addEventListener("click", ()=>{ finishWiz(); showStep("stepLogin"); });
+
+  // Returning visitors (finished the intro before, or holding a session)
+  // go straight to the login side; brand-new visitors get the walkthrough.
+  if(localStorage.getItem(INTRO_KEY) || TOKEN){
+    wizBox.hidden = true;
+    loginSection.hidden = false;
+  } else {
+    renderWiz();
+  }
+
+  // Already have a saved session? Skip straight past the login form.
+  (async function init(){
+    if(!TOKEN) return;
+    try{
+      const out = await api({action:"me", token: TOKEN});
+      afterAuth(out.account);
+    }catch(e){ localStorage.removeItem("margolis-dj-token"); TOKEN=""; }
+  })();
+</script>
+</body>
+</html>
