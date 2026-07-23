@@ -117,10 +117,15 @@
 
   const EVENTS_URL = "https://jubyr.tools/margolis-events.php";
   const ENDPOINT = "https://jubyr.tools/margolis-booking.php";
-  // Optional: a Square payment link for the $20 reservation. When set,
-  // guests are sent here right after reserving. Until then the receipt
-  // tells them a payment request is on the way.
-  const SQUARE_LINK = "";
+  // Fixed-price Square Payment Links, one per ticket count 1-4 (the only
+  // counts with a flat total: $20/$30/$40/$50). 5+ tickets has no single
+  // price, so those guests get a manual payment request instead of a link.
+  const SQUARE_LINKS = {
+    1: "https://square.link/u/9TpL4IWx",
+    2: "https://square.link/u/oiCONlhO",
+    3: "https://square.link/u/7b05Cwr4",
+    4: "https://square.link/u/ZfnDqKW2",
+  };
 
   const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   const emailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e||"").trim());
@@ -289,9 +294,10 @@
         const calDates = gcalDatesFor(ev.date, ev.start, ev.end);
         const calUrl = gcalAddUrl(ev.title, calDates, "Margolis, 9 W Wildey St, Philadelphia, PA", "Reserved through jubyr.com/reservations");
         const calLink = calUrl ? ` <a href="${calUrl}" target="_blank" rel="noopener" style="white-space:nowrap">Add to Google Calendar &gt;</a>` : "";
-        d.innerHTML = (SQUARE_LINK
-          ? `You're on the list for ${tix} ticket${tix>1?"s":""} — one last step: <a href="${SQUARE_LINK}" target="_blank" rel="noopener"><strong>pay your $${total} here</strong></a> to lock it in. A confirmation is on its way to your inbox. ${policy}`
-          : `You're on the list for ${tix} ticket${tix>1?"s":""} — we'll text or email your $${total} payment request shortly to lock it in. A confirmation is on its way to your inbox. ${policy}`) + calLink;
+        const squareLink = SQUARE_LINKS[tix];
+        d.innerHTML = (squareLink
+          ? `You're on the list for ${tix} ticket${tix>1?"s":""} — one last step: <a href="${squareLink}" target="_blank" rel="noopener"><strong>pay your $${total} here</strong></a> to lock it in. A confirmation is on its way to your inbox. ${policy}`
+          : `You're on the list for ${tix} ticket${tix>1?"s":""} — for groups this size we'll text or email your $${total} payment request directly to lock it in. A confirmation is on its way to your inbox. ${policy}`) + calLink;
       }catch(e){ restore(); err("Couldn't reach the server — check your connection."); }
     }));
   }

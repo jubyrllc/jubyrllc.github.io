@@ -1094,7 +1094,7 @@
           {key:"genres", label:"Music genres for the night", type:"checks", required:true, truncateTo:6, options:["Hip-Hop","R&B","House","Afrobeats","Amapiano","Open-format","Afro House","Jersey Club","Techno","Disco","Jazz","Soul / Funk","Reggae / Dancehall","Latin","Other"], help:"Pick all that apply."},
           {key:"genresOther", label:"What's the sound?", type:"text", when:()=>Array.isArray(data.genres)&&data.genres.includes("Other"), required:true},
           {key:"eventDescription", label:"Event description", type:"textarea", required:true, help:"Tell us what the event is, who it is for, what guests should expect, and what makes it distinct. We may use your response in Margolis promotional materials."},
-          {key:"guestCount", label:"Anticipated guest count", type:"range", required:true, min:50, max:250, step:10, def:100, help:"Slide in steps of 10 — the readout below updates against your actual applicable minimum."},
+          {key:"guestCount", label:"Anticipated guest count", type:"range", required:true, min:50, max:patio?150:250, step:10, def:100, help:"Slide in steps of 10 — the readout below updates against your actual applicable minimum."},
           {key:"__capacityNote", type:"static", html:`<div class="mg-agree-recap"><p>Margolis holds approximately 150 guests at one time. Larger attendance estimates depend on guest turnover and do not increase legal capacity.</p></div>`}
         ]},
         { title:"Operations", sub:"Talent, equipment, promotion, and contact.", fields:[
@@ -1179,7 +1179,7 @@
           {key:"email", label:"Email", type:"email", required:true, autocomplete:"email", placeholder:"you@email.com", help:"Your confirmation goes here."},
           {key:"resDate", label:"Date of reservation", type:"date", required:true, help:"Check the calendar above to see what's happening that night."},
           {key:"guestCount", label:"Guest count", type:"text", required:true, placeholder:"e.g. 6", help:"Each couch includes admission for up to 5 guests. Guests beyond your allotment pay the regular door charge — we keep a tally of your party at check-in and only start charging once your included spots are used."},
-          {key:"couches", label:"Number of couches", type:"radio", required:true, options:["1","2","3","4+"], help:"$200 VIP reservation fee per couch — each couch seats up to 5 guests, admission included. Bottle service is optional and billed separately."},
+          {key:"couches", label:"Number of couches", type:"radio", required:true, options:["1","2","3","4","5+"], help:"$200 VIP reservation fee per couch — each couch seats up to 5 guests, admission included. Bottle service is optional and billed separately."},
           {key:"eta", label:"Estimated time of arrival", type:"radio", required:true, options:["9pm–10pm","10pm–11pm","11pm–12am","12am–1am","1am–2am"]},
           {key:"contactConsent", label:"Do you agree that Jubyr LLC may contact you about this booking and future events by email, phone, and text message?", type:"radio", required:true, options:["Yes, I agree"], help:"Booking reminders, flyer and RSVP check-ins, day-of coordination, and updates on future events all come through Jubyr LLC. You can opt out at any time, and your information is never sold."},
           {key:"notes", label:"Anything we should know?", type:"textarea", help:"Celebrating something? Interested in bottle service? Tell us."}
@@ -1275,11 +1275,11 @@
           {key:"foodInterest", label:"Are you interested in food service?", type:"radio", required:true, options:["Yes","No","Not sure yet"], help:"Food offerings must be confirmed before contract issuance."},
           {key:"bottleService", label:"Are you interested in bottle service?", type:"radio", required:true, options:["Yes","No","Not sure yet"]},
           {key:"micNeeded", label:"Will you need a microphone?", type:"radio", required:true, options:["Yes","No"]},
-          {key:"djSource", label:"DJ", type:"radio", required:true, options:["Need a Fabrika DJ","Providing our own"], help:"Bring your own controller or mixer, laptop, adapters, and two XLR cables — Fabrika provides the house sound system."},
-          {key:"performerSource", label:"Performers", type:"radio", required:true, options:["Need Fabrika performers","Providing our own","No performers"]},
+          {key:"djSource", label:"DJ", type:"radio", required:true, options:["Need a Fabrika DJ (additional fee)","Providing our own"], help:"Bring your own controller or mixer, laptop, adapters, and two XLR cables — Fabrika provides the house sound system."},
+          {key:"performerSource", label:"Performers", type:"radio", required:true, options:["Need Fabrika performers (additional fee)","Providing our own","No performers"]},
           {key:"performanceDetails", label:"Performance details for your event", type:"textarea", help:"Sets, timing, genres, anything the technical team should know."},
           {key:"talentRequests", label:"Special talent requests or restrictions", type:"text"},
-          {key:"hostMC", label:"Host or MC", type:"radio", required:true, options:["Required from Fabrika","Providing our own","Not needed"]},
+          {key:"hostMC", label:"Host or MC", type:"radio", required:true, options:["Required from Fabrika (additional fee)","Providing our own","Not needed"]},
           {key:"outsideVendors", label:"Are you bringing outside vendors?", type:"radio", required:true, options:["Yes","No"]},
           {key:"vendorList", label:"List them (videographer, photographer, planner, etc.)", type:"textarea", when:()=>is("outsideVendors","Yes"), required:true},
           {key:"__fack", type:"static", html:`<div class="mg-agree-recap">${FABRIKA_ACK_HTML}</div>`},
