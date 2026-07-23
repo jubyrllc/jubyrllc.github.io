@@ -73,22 +73,22 @@
       <div class="paths mg-pad mg-chooser mg-chooser--top" id="categoryCards">
         <button type="button" class="path" data-mode="margolis">
           <span class="path__kicker">Public event</span>
-          <h3>Host a DJ night, showcase, listening session, or community event at Margolis.</h3>
+          <h3>Host a Public Event for up to 250 people in Margolis.</h3>
           <span class="path__go">View terms &gt;</span>
         </button>
         <button type="button" class="path" data-mode="private">
           <span class="path__kicker">Private event</span>
-          <h3>Book the full Margolis room for up to approximately 150 guests.</h3>
+          <h3>Reserve entire space for up to approximately 150 guests.</h3>
           <span class="path__go">Plan an event &gt;</span>
         </button>
         <button type="button" class="path" data-mode="patio">
           <span class="path__kicker">Patio event</span>
-          <h3>Host an open-air public event ending by 9 PM.</h3>
+          <h3>Host a Public Event for up to 150 people at the Patio (outdoors).</h3>
           <span class="path__go">View terms &gt;</span>
         </button>
         <button type="button" class="path" data-mode="fabrika">
           <span class="path__kicker">Fabrika event</span>
-          <h3>Keep your ticket revenue and earn commission on qualifying sales.</h3>
+          <h3>Host a public event for up to 850 people at Fabrika.</h3>
           <span class="path__go">View terms &gt;</span>
         </button>
         <button type="button" class="path" data-mode="media">
@@ -97,6 +97,10 @@
           <span class="path__go">Browse media &gt;</span>
         </button>
       </div>
+      <p class="mg-fine mg-pad" style="padding-top:0">Guest figures for
+      public events reflect total attendance over the course of the night,
+      not everyone in the room at once &mdash; guests come and go
+      throughout the event.</p>
       <p class="mg-fine mg-pad" style="padding-top:0">Need help choosing?
       Email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>
       or <a href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">schedule a call</a>.</p>
@@ -354,13 +358,20 @@
           card-processing fees for door admission. Refunds, disputes, and
           chargebacks are deducted from admission revenue.</p>
         </details>
-        <details class="mg-more" id="ticketing-policy" style="margin-top:16px">
+        <details class="mg-more" id="ticketing-policy" data-modes="margolis" style="margin-top:16px">
           <summary>Ticketing and capacity</summary>
           <p class="mg-fine" style="margin-top:12px">Advance ticket sales
           are capped at 200. Additional admission may be sold at the door,
           subject to capacity. Margolis holds approximately 150 guests at
           one time; the presale cap reflects guest turnover and does not
           increase legal capacity.</p>
+        </details>
+        <details class="mg-more" id="ticketing-policy-patio" data-modes="patio" style="margin-top:16px">
+          <summary>Ticketing and capacity</summary>
+          <p class="mg-fine" style="margin-top:12px">Advance ticket sales
+          are capped at 100, with total ticket sales &mdash; presale plus
+          door &mdash; capped at 120. For free events, we suggest capping
+          your RSVP list at 300.</p>
         </details>
       </div>
     </section>
@@ -456,17 +467,29 @@
             your admission revenue before payout.</p></div>
           </details>
           <p class="mg-fine" style="margin:18px 0 6px;text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono)">Ticketing</p>
-          <details>
+          <details data-modes="margolis">
             <summary>How many advance tickets may I sell?</summary>
             <div><p>Presale (advance) tickets are capped at <strong>200 per
             event</strong>. That cap applies only to presale &mdash; it
             doesn&rsquo;t limit total attendance.</p></div>
           </details>
-          <details>
+          <details data-modes="margolis">
             <summary>Can I continue selling at the door?</summary>
             <div><p>Yes. Once presale is exhausted or you&rsquo;ve hit 200,
             additional admission may be sold at the door, subject to the
             venue&rsquo;s legal capacity and real-time availability.</p></div>
+          </details>
+          <details data-modes="patio">
+            <summary>How many advance tickets may I sell?</summary>
+            <div><p>Presale (advance) tickets are capped at <strong>100 per
+            event</strong>, with total ticket sales &mdash; presale plus
+            door &mdash; capped at <strong>120</strong>.</p></div>
+          </details>
+          <details data-modes="patio">
+            <summary>Can I continue selling at the door?</summary>
+            <div><p>Yes, until total ticket sales reach 120. Once presale
+            is exhausted or you&rsquo;ve hit that combined cap, no further
+            admission may be sold.</p></div>
           </details>
           <details>
             <summary>What happens when the venue reaches capacity?</summary>
@@ -1051,14 +1074,16 @@
             </ul>
             <details class="mg-more" style="margin-top:8px"><summary>Why doors open at 9</summary>
             <p class="mg-fine" style="margin-top:8px">Early arrival helps establish traffic before featured programming begins.</p></details></div>`},
-          {key:"foodService", label:"Food plan", type:"radio", required:true, options:["Margolis kitchen service","No food service","Request outside catering","Not sure yet"]},
-          {key:"__kitchenNote", type:"static", when:()=>is("foodService","Margolis kitchen service") && !eventIsLateWindow(data.startTime, data.endTime, data.eventDate), html:patio
+          {key:"foodService", label:"Food plan", type:"radio", required:true, options:[patio?"Patio Kitchen Service":"Margolis kitchen service","No food service","Request outside catering","Not sure yet"]},
+          {key:"__kitchenNote", type:"static", when:()=>is("foodService", patio?"Patio Kitchen Service":"Margolis kitchen service") && !eventIsLateWindow(data.startTime, data.endTime, data.eventDate), html:patio
             ? `<div class="mg-agree-recap"><p><strong>Heads up:</strong> kitchen service on The Patio carries a <strong>$2,000 total minimum spend</strong> (already included during standard hours on Friday and Saturday).</p></div>`
             : `<div class="mg-agree-recap"><p><strong>Heads up:</strong> choosing kitchen service moves your night to the kitchen-open minimum.</p></div>`},
           {key:"__cateringNote", type:"static", when:()=>is("foodService","Request outside catering"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> outside catering requires advance approval and may require additional fees, licensing, insurance, or other documentation. Outside alcohol is not permitted. Choosing this option does not grant access to Margolis's kitchen.</p></div>`},
           {key:"coverCharge", label:"Admission model", type:"radio", required:true, options:["Free","Advance tickets + door admission","Door admission only"]},
-          {key:"__ticketCap", type:"static", when:()=>is("coverCharge","Advance tickets + door admission"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> you retain 100% of admission revenue. Presales are capped at 200; additional door admission is subject to capacity. <a href="#ticketing-policy" class="mg-readmore" style="display:inline">View ticketing and capacity policy</a></p></div>`},
-          {key:"__rsvpCap", type:"static", when:()=>is("coverCharge","Free"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> for free events we suggest capping your RSVP list at <strong>400</strong>.</p></div>`},
+          {key:"__ticketCap", type:"static", when:()=>is("coverCharge","Advance tickets + door admission"), html:patio
+            ? `<div class="mg-agree-recap"><p><strong>Heads up:</strong> you retain 100% of admission revenue. Presales are capped at 100, with total ticket sales &mdash; presale plus door &mdash; capped at 120. <a href="#ticketing-policy-patio" class="mg-readmore" style="display:inline">View ticketing and capacity policy</a></p></div>`
+            : `<div class="mg-agree-recap"><p><strong>Heads up:</strong> you retain 100% of admission revenue. Presales are capped at 200; additional door admission is subject to capacity. <a href="#ticketing-policy" class="mg-readmore" style="display:inline">View ticketing and capacity policy</a></p></div>`},
+          {key:"__rsvpCap", type:"static", when:()=>is("coverCharge","Free"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> for free events we suggest capping your RSVP list at <strong>${patio?300:400}</strong>.</p></div>`},
           {key:"__estimatedTerms", type:"static", when:()=>!patio,
             html:()=>{
               const m = computeMinimum(data);
