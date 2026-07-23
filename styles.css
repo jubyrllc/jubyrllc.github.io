@@ -1502,6 +1502,13 @@
 @media (max-width: 860px) {
   .paths { grid-template-columns: 1fr; }
 }
+.paths--4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1100px) {
+  .paths--4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 860px) {
+  .paths--4 { grid-template-columns: 1fr; }
+}
 
 /* ---------- contractor intake (contractors page) ---------- */
 .intake { padding: 34px 28px 44px; max-width: 760px; margin: 0 auto; }
