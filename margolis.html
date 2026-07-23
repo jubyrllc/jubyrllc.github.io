@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=43">
+<link rel="stylesheet" href="styles.css?v=51">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
@@ -41,7 +41,6 @@
       <ul class="nav__links mono">
         <li><a href="#margolis">Margolis</a></li>
         <li><a href="#patio">The Patio</a></li>
-        <li><a href="#couches">Couches</a></li>
         <li><a href="#private">Private events</a></li>
         <li><a href="#fabrika">Fabrika</a></li>
         <li><a href="#media">Media</a></li>
@@ -53,7 +52,6 @@
     <div class="mobilemenu mono" id="mobilemenu">
       <a href="#margolis">Margolis</a>
       <a href="#patio">The Patio</a>
-      <a href="#couches">Couches</a>
       <a href="#private">Private events</a>
       <a href="#fabrika">Fabrika</a>
       <a href="#media">Media</a>
@@ -62,176 +60,59 @@
 
   <main id="top">
 
-    <!-- hero -->
-    <section class="box">
-      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.65)), url('assets/bg-lounge-dark.jpg')">
-        <span class="tag">Margolis / The Patio &middot; Bookings</span>
-        <h2>Book a night at Margolis.</h2>
-        <p>Availability, payouts, policies, and every booking form &mdash;
-        all in one place, all handled through Jubyr LLC.</p>
-      </div>
-      <div class="mg-intro">
-        <p>Pick what you&rsquo;re booking below and only what applies will
-        appear. <strong>A completed form is the only way to hold a date</strong>
-        &mdash; bookings confirm in the order forms are received, and
-        submissions are final and binding. <strong>All bookings are 21+</strong>,
-        with the exception of private events.</p>
-        <p>Questions? Email
-        <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a> or
-        <a href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">schedule a call</a>.</p>
-      </div>
-    </section>
-
-    <!-- chooser -->
+    <!-- hero + chooser, merged into one compact entry point -->
     <section class="box" id="choose">
-      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-09.jpg')">
-        <span class="tag">Choose your booking</span>
-        <h2>What are we setting up?</h2>
-        <p>Pick one. The details and form appear below.</p>
+      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.65)), url('assets/bg-lounge-dark.jpg')">
+        <span class="tag">Margolis / The Patio / Fabrika &middot; Bookings</span>
+        <h2>Book Margolis, The Patio, or Fabrika.</h2>
+        <p>Choose what you are planning to see the applicable availability,
+        terms, and booking form. Public events are strictly 21+;
+        private-event age requirements depend on the event format and
+        alcohol service plan.</p>
       </div>
       <div class="paths mg-pad mg-chooser mg-chooser--top" id="categoryCards">
-        <button type="button" class="path mg-cat" data-cat="margolis">
-          <span class="path__kicker">Margolis</span>
-          <h3>Book a night inside.</h3>
-          <p>Public events, private events, couch reservations, and media
-          &mdash; everything Margolis in one place.</p>
-          <span class="path__go">View options &gt;</span>
+        <button type="button" class="path" data-mode="margolis">
+          <span class="path__kicker">Public event</span>
+          <h3>Host a DJ night, showcase, listening session, or community event at Margolis.</h3>
+          <span class="path__go">View terms &gt;</span>
         </button>
-        <button type="button" class="path mg-cat" data-cat="patio">
-          <span class="path__kicker">The Patio</span>
-          <h3>Take it outside.</h3>
-          <p>Open-air public events. Private events and media gallery
-          coming soon.</p>
-          <span class="path__go">View options &gt;</span>
+        <button type="button" class="path" data-mode="private">
+          <span class="path__kicker">Private event</span>
+          <h3>Book the full Margolis room for up to approximately 150 guests.</h3>
+          <span class="path__go">Plan an event &gt;</span>
         </button>
-        <button type="button" class="path mg-cat" data-cat="fabrika">
-          <span class="path__kicker">Fabrika</span>
-          <h3>Host at our partner venue.</h3>
-          <p>Promoter-led nights at Fabrika. Private events and media
-          gallery coming soon.</p>
-          <span class="path__go">View options &gt;</span>
+        <button type="button" class="path" data-mode="patio">
+          <span class="path__kicker">Patio event</span>
+          <h3>Host an open-air public event ending by 9 PM.</h3>
+          <span class="path__go">View terms &gt;</span>
+        </button>
+        <button type="button" class="path" data-mode="fabrika">
+          <span class="path__kicker">Fabrika event</span>
+          <h3>Keep your ticket revenue and earn commission on qualifying sales.</h3>
+          <span class="path__go">View terms &gt;</span>
+        </button>
+        <button type="button" class="path" data-mode="media">
+          <span class="path__kicker">Photos and media</span>
+          <h3>Download free photos and video for promotion.</h3>
+          <span class="path__go">Browse media &gt;</span>
         </button>
       </div>
-
-      <div class="mg-subgroup" data-cat-group="margolis" hidden>
-        <div class="mg-subgroup__label"><span aria-hidden="true">&#9662;</span> Margolis options</div>
-        <div class="paths mg-pad mg-chooser">
-          <button type="button" class="path" data-mode="margolis">
-            <span class="path__kicker">Margolis &middot; Public events</span>
-            <h3>Host a night inside.</h3>
-            <p>Public nights inside. You get paid through our partnership
-            model.</p>
-            <span class="path__go">Start here &gt;</span>
-          </button>
-          <button type="button" class="path" data-mode="couch">
-            <span class="path__kicker">Margolis &middot; Couch reservations</span>
-            <h3>Reserve a couch.</h3>
-            <p>A reserved home base for your group. $200 per couch, admission
-            included for up to 5 guests.</p>
-            <span class="path__go">Start here &gt;</span>
-          </button>
-          <button type="button" class="path" data-mode="private">
-            <span class="path__kicker">Margolis &middot; Private events</span>
-            <h3>Take the whole room.</h3>
-            <p>The whole room on your terms. Up to ~150 guests, five ways
-            to run the bar.</p>
-            <span class="path__go">Start here &gt;</span>
-          </button>
-          <button type="button" class="path" data-mode="media">
-            <span class="path__kicker">Margolis &middot; Media gallery</span>
-            <h3>Grab photos &amp; video.</h3>
-            <p>Photos and video of the space, free to download for your
-            promo.</p>
-            <span class="path__go">Start here &gt;</span>
-          </button>
-          <a class="path" href="/reservations">
-            <span class="path__kicker">Margolis Presale</span>
-            <h3>Reserve your night.</h3>
-            <p>Guests can lock in entry to an upcoming event for $20 a head
-            before tickets go live.</p>
-            <span class="path__go">Reserve &gt;</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="mg-subgroup" data-cat-group="patio" hidden>
-        <div class="mg-subgroup__label"><span aria-hidden="true">&#9662;</span> The Patio options</div>
-        <div class="paths mg-pad mg-chooser">
-          <button type="button" class="path" data-mode="patio">
-            <span class="path__kicker">The Patio &middot; Public events</span>
-            <h3>Take it outside.</h3>
-            <p>Open-air public events, same payout model. Everything wraps
-            by 9 PM.</p>
-            <span class="path__go">Start here &gt;</span>
-          </button>
-          <div class="path path--pending" aria-disabled="true">
-            <span class="path__kicker">The Patio &middot; Private events</span>
-            <h3>Coming soon.</h3>
-            <p>We&rsquo;re still finalizing the private event model for the
-            Patio. Check back soon.</p>
-            <span class="path__go path__go--pending">Pending</span>
-          </div>
-          <div class="path path--pending" aria-disabled="true">
-            <span class="path__kicker">The Patio &middot; Media gallery</span>
-            <h3>Coming soon.</h3>
-            <p>Patio photos and video are on the way.</p>
-            <span class="path__go path__go--pending">Pending</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="mg-subgroup" data-cat-group="fabrika" hidden>
-        <div class="mg-subgroup__label"><span aria-hidden="true">&#9662;</span> Fabrika options</div>
-        <div class="paths mg-pad mg-chooser">
-          <button type="button" class="path" data-mode="fabrika">
-            <span class="path__kicker">Fabrika</span>
-            <h3>Host at Fabrika.</h3>
-            <p>Promoter-led nights at our partner venue. Keep the door,
-            earn commission on the bar.</p>
-            <span class="path__go">Start here &gt;</span>
-          </button>
-          <div class="path path--pending" aria-disabled="true">
-            <span class="path__kicker">Fabrika &middot; Private events</span>
-            <h3>Coming soon.</h3>
-            <p>We&rsquo;re still finalizing the private event model for
-            Fabrika. Check back soon.</p>
-            <span class="path__go path__go--pending">Pending</span>
-          </div>
-          <div class="path path--pending" aria-disabled="true">
-            <span class="path__kicker">Fabrika &middot; Media gallery</span>
-            <h3>Coming soon.</h3>
-            <p>Fabrika photos and video are on the way.</p>
-            <span class="path__go path__go--pending">Pending</span>
-          </div>
-        </div>
+      <p class="mg-fine mg-pad" style="padding-top:0">Need help choosing?
+      Email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>
+      or <a href="https://calendly.com/johnstonruby/consultation" target="_blank" rel="noopener">schedule a call</a>.</p>
+      <div class="mg-chooser-summary mg-pad" id="chooserSummary" hidden>
+        <span id="chooserSummaryText"></span>
+        <button type="button" class="mg-readmore" id="changeBookingType">Change booking type</button>
       </div>
     </section>
 
     <!-- how it works (per path) -->
-    <section class="box" id="howitworks" data-modes="margolis patio couch private fabrika">
+    <section class="box" id="howitworks" data-modes="couch private fabrika">
       <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-24.jpg')">
         <span class="tag">How it works</span>
         <h2>From inquiry to showtime.</h2>
         <p>Every step of the process, so nothing surprises you.</p>
       </div>
-
-      <ol class="mg-steps" data-steps="margolis">
-        <li><b>Check the calendar</b><span>Find an open date below &mdash; if it looks open, it&rsquo;s open.</span></li>
-        <li><b>Submit the booking form</b><span>About 5&ndash;7 minutes. Submissions are binding and confirmed in the order received.</span></li>
-        <li><b>We review &amp; confirm</b><span>You get an official confirmation email with every detail (and any adjustments) in writing.</span></li>
-        <li><b>Submit lineup, flyer &amp; ticket link</b><span>All three due at least 10 days out &mdash; earlier is always welcome. No AI-generated flyers.</span></li>
-        <li><b>Update your counts</b><span>Free RSVPs + tickets sold at 3 days, 2 days, and day of. We remind you each time.</span></li>
-        <li><b>Show up &amp; get paid</b><span>Doors at 9 on Fri/Sat with the $10 happy hour. Payout follows your night.</span></li>
-      </ol>
-
-      <ol class="mg-steps" data-steps="patio">
-        <li><b>Check the Patio calendar</b><span>Find an open date below &mdash; if it looks open, it&rsquo;s open.</span></li>
-        <li><b>Submit the booking form</b><span>About 5&ndash;7 minutes. Submissions are binding and confirmed in the order received.</span></li>
-        <li><b>We review &amp; confirm</b><span>You get an official confirmation email with every detail (and any adjustments) in writing.</span></li>
-        <li><b>Submit lineup, flyer &amp; ticket link</b><span>All three due at least 10 days out &mdash; earlier is always welcome. No AI-generated flyers.</span></li>
-        <li><b>Update your counts</b><span>Free RSVPs + tickets sold at 3 days, 2 days, and day of. We remind you each time.</span></li>
-        <li><b>Show up &amp; get paid</b><span>Everything wraps by 9 PM, per city regulations. Payout follows your event.</span></li>
-      </ol>
 
       <ol class="mg-steps" data-steps="couch">
         <li><b>Check the calendar</b><span>See what&rsquo;s happening the night you want to come through.</span></li>
@@ -258,24 +139,25 @@
     </section>
 
 
-    <!-- calendar -->
-    <section class="box" id="calendar" data-modes="margolis couch private">
+    <!-- calendar (couch/private only — margolis's own copy of this same
+         embed now lives further down the public-event path, after the
+         financial snapshot; see #calendar-avail below) -->
+    <section class="box" id="calendar" data-modes="couch private">
       <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-22.jpg')">
         <span class="tag">Availability</span>
         <h2>The Margolis calendar.</h2>
-        <p>Live from the Margolis calendar &mdash; if a date looks open here,
-        it&rsquo;s open. All times Eastern.</p>
+        <p>Live from the Margolis calendar. All times Eastern.</p>
       </div>
             <div class="paths mg-pad mg-calgate">
         <button type="button" class="path" data-gate="confirmed">
           <span class="path__kicker">Date already set</span>
-          <h3>I&rsquo;ve confirmed my date with Ruby.</h3>
-          <p>Skip straight to the booking form.</p>
+          <h3>Discussed a date with Ruby?</h3>
+          <p>Continue to the form.</p>
           <span class="path__go">Skip ahead &gt;</span>
         </button>
         <button type="button" class="path" data-gate="check">
           <span class="path__kicker">Need a date</span>
-          <h3>Show me the calendar.</h3>
+          <h3>View the live calendar.</h3>
           <p>Search open dates or double-check yours.</p>
           <span class="path__go">Open the calendar &gt;</span>
         </button>
@@ -289,42 +171,7 @@
         <iframe title="Margolis booking calendar — list view" loading="lazy"
           data-src="https://calendar.google.com/calendar/embed?src=fd203b4db1f1a69e5493ae771400902c653efa7bc369caa6891ae48980695ff6%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
       </div>
-      <p class="mg-caption mono">Updates automatically &middot; a completed booking form is the only way to hold a date</p>
-      </div>
-    </section>
-
-    <!-- patio calendar -->
-    <section class="box" id="patiocal" data-modes="patio">
-      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-12.jpg')">
-        <span class="tag">Availability</span>
-        <h2>The Patio calendar.</h2>
-        <p>Live from the Patio calendar &mdash; if a date looks open here,
-        it&rsquo;s open. All times Eastern.</p>
-      </div>
-            <div class="paths mg-pad mg-calgate">
-        <button type="button" class="path" data-gate="confirmed">
-          <span class="path__kicker">Date already set</span>
-          <h3>I&rsquo;ve confirmed my date with Ruby.</h3>
-          <p>Skip straight to the booking form.</p>
-          <span class="path__go">Skip ahead &gt;</span>
-        </button>
-        <button type="button" class="path" data-gate="check">
-          <span class="path__kicker">Need a date</span>
-          <h3>Show me the calendar.</h3>
-          <p>Search open dates or double-check yours.</p>
-          <span class="path__go">Open the calendar &gt;</span>
-        </button>
-      </div>
-      <div class="mgcal-wrap" hidden>
-<div class="mgcal mgcal--month">
-        <iframe title="Patio booking calendar — month view" loading="lazy"
-          data-src="https://calendar.google.com/calendar/embed?src=c_db8c8657dba8090100eb89c6983a105c3a76a04fb0b3ab32b149e199cbc6e512%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
-      </div>
-      <div class="mgcal mgcal--agenda">
-        <iframe title="Patio booking calendar — list view" loading="lazy"
-          data-src="https://calendar.google.com/calendar/embed?src=c_db8c8657dba8090100eb89c6983a105c3a76a04fb0b3ab32b149e199cbc6e512%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
-      </div>
-      <p class="mg-caption mono">Updates automatically &middot; all patio events conclude by 9 PM</p>
+      <p class="mg-caption mono">An open date is not held until Jubyr accepts your booking in writing.</p>
       </div>
     </section>
 
@@ -363,239 +210,318 @@
       </div>
     </section>
 
-    <!-- ============ PUBLIC EVENTS: payouts / philosophy ============ -->
-    <section class="box" id="payouts" data-modes="margolis patio">
+    <!-- ============ PUBLIC EVENTS: philosophy (read first) ============ -->
+    <!-- ============ PUBLIC EVENTS: overview + the financial model, one header ============ -->
+    <section class="box" id="minimums-section" data-modes="margolis">
       <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-23.jpg')">
-        <span class="tag">Public events &middot; Our philosophy</span>
-        <h2>You get paid. That&rsquo;s the point.</h2>
-        <p>You are the heartbeat of the room. Every host is paid through one
-        of the most community-minded partnership models in the city.</p>
+        <span class="tag">Public events</span>
+        <h2>Host a public event at Margolis.</h2>
+        <p>Bring the concept and the crowd &mdash; Margolis provides the
+        room, staff, hospitality, and operational support. Meet the
+        applicable minimum to earn 15% of eligible net venue sales for a
+        free event, or 100% of admission revenue plus 10% of eligible net
+        venue sales for a ticketed event.</p>
       </div>
-      <div class="paths mg-pad">
-        <div class="path">
-          <span class="path__kicker">Free events</span>
-          <h3>20% of bar sales</h3>
-          <p>Proportionate compensation for bringing business into the venue
-          and helping create a successful night.</p>
+      <div class="mg-cols mg-pad" id="minimums">
+        <div class="mg-col">
+          <h3 class="mg-h3">Your minimum</h3>
+          <div class="mg-table-wrap">
+            <table class="mg-table">
+              <thead><tr><th>Booking period</th><th>Minimum</th></tr></thead>
+              <tbody>
+                <tr><td>Sunday&ndash;Thursday, kitchen closed</td><td>$1,500</td></tr>
+                <tr><td>Sunday&ndash;Thursday, kitchen open</td><td>$2,000</td></tr>
+                <tr><td>Friday&ndash;Saturday, noon&ndash;9 PM, kitchen closed</td><td>$1,500</td></tr>
+                <tr><td>Friday&ndash;Saturday, noon&ndash;9 PM, kitchen open</td><td>$2,000</td></tr>
+                <tr><td>Friday&ndash;Saturday, 9 PM&ndash;2 AM, first booking</td><td>$5,000</td></tr>
+                <tr><td>Friday&ndash;Saturday, 9 PM&ndash;2 AM, returning host</td><td>$3,500</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="mg-fine" style="margin-top:10px">Kitchen service is
+          unavailable Friday and Saturday from 9 PM&ndash;2 AM. Only one
+          minimum applies &mdash; your date, hours, kitchen selection, and
+          booking history determine the amount shown in the form.</p>
+          <p class="mg-fine" style="margin-top:14px">If sales fall below
+          your minimum, you cover the difference and no venue-sales
+          percentage is paid.</p>
         </div>
-        <div class="path">
-          <span class="path__kicker">Ticketed events</span>
-          <h3>100% of door + 10% of bar</h3>
-          <p>Every dollar collected at the door is yours, plus a cut of the
-          bar you helped fill. Ticket sales cap at 200 per event &mdash;
-          everyone past that pays at the door, subject to capacity.</p>
-        </div>
-        <div class="path">
-          <span class="path__kicker">Talent perk</span>
-          <h3>50% off food &amp; drinks</h3>
-          <p>DJs and performers get half off personal food and beverage
-          purchases during their event.</p>
-        </div>
-      </div>
-
-      <details class="mg-more mg-more--cards">
-        <summary>See equipment, reservations &amp; couch policy</summary>
-        <div class="paths mg-pad">
-          <div class="path">
-            <span class="path__kicker">House equipment</span>
-            <h3>What&rsquo;s in the booth</h3>
-            <p>Pioneer XDJ-RX3 &middot; Yamaha 12-channel mixer &middot; 1 sub
-            &middot; 4 corner speakers &middot; 2 projectors &middot; house
-            XLRs. No sound engineer provided, microphones can&rsquo;t be
-            guaranteed, and all other cables are on you.</p>
+        <div class="mg-col" id="payouts">
+          <h3 class="mg-h3">Your earnings</h3>
+          <span class="tag">Highest per-capita payout in the city</span>
+          <div class="mg-table-wrap" style="margin-top:14px">
+            <table class="mg-table">
+              <thead><tr><th>Event model</th><th>You receive</th></tr></thead>
+              <tbody>
+                <tr><td>Free event</td><td>15% of eligible net venue sales</td></tr>
+                <tr><td>Ticketed event</td><td>100% of admission revenue + 10% of eligible net venue sales</td></tr>
+                <tr><td>Talent discount</td><td>50% off personal food and beverages during the event</td></tr>
+              </tbody>
+            </table>
           </div>
-          <div class="path">
-            <span class="path__kicker">Advance guest reservations</span>
-            <h3>We sell entry until your link is live.</h3>
-            <p>Margolis reserves the right to sell advance guest reservations
-            to your night up until the moment you provide your ticket link.
-            Guests coming to our space shouldn&rsquo;t have to wait on anyone
-            to lock in their night, and we don&rsquo;t want to miss a single
-            opportunity for guests to enjoy our establishment. The moment your
-            link is on file, every guest is sent to it instead &mdash; and you
-            keep 100% of your ticket sales and all door sales, always.
-            <button type="button" class="mg-readmore" data-presale-open>Read the full presale policy &gt;</button></p>
-          </div>
-          <div class="path">
-            <span class="path__kicker">Couches</span>
-            <h3>Couch sales stay with the house.</h3>
-            <p>Couch reservations are Margolis revenue for every event.
-            Guests who purchase a couch with us have their cover waived and
-            are added to the Margolis guest list for the night.</p>
-          </div>
-          <div class="path">
-            <span class="path__kicker">Couch guests &amp; the bar</span>
-            <h3>You still earn on their spend.</h3>
-            <p>The $200 couch fee is Margolis revenue, no exceptions &mdash;
-            but couch guests are still part of your night. Every dollar they
-            spend on bottles and drinks at the bar counts toward your
-            standard bar-sales percentage, same as any other guest.</p>
-          </div>
-        </div>
-      </details>
-
-      <div class="mg-intro">
-        <p><strong>Community is everything to us.</strong> We book people who
-        want to build something real, not just throw parties &mdash; advertise
-        thoughtfully, rally your people, and we&rsquo;ll take care of you and
-        your crowd. Open the section below for exactly when your money
-        lands, and the full thinking behind how we book.</p>
-        <details class="mg-more">
-          <summary>See when you get paid + our full philosophy</summary>
-          <div class="mg-payrows">
-            <div class="mg-payrow"><span>Bar checks</span><strong>Processed the Thursday of the week after your event &mdash; ready for pickup at the bar any time we&rsquo;re open.</strong></div>
-            <div class="mg-payrow"><span>Door sales</span><strong>Sent via Zelle within 24&ndash;48 hours of your event.</strong></div>
-          </div>
-          <p>We view this as a true partnership model &mdash; when you help us
-          grow, we help you grow. We are not simply throwing parties. We are
-          intentionally building community.</p>
-          <p>We prefer to work with DJs, hosts, promoters, and collectives who
-          genuinely want to gather people, create experiences, and build
-          moments that feel memorable, collaborative, and intentional. Our
-          strongest nights are often intimate, joyful, community driven, and
-          rooted in genuine connection.</p>
-          <p>So advertise thoughtfully. Rally your people. Build something
-          meaningful. We encourage hosts to go beyond standard social media
-          posting to make their event as intentional, impactful, and
-          successful as possible. When you bring love into the room, we will
-          take care of both you and your crowd with the same level of care and
-          hospitality. Let&rsquo;s build something real together.</p>
-        </details>
-      </div>
-
-      <div class="mg-pad">
-        <h3 class="mg-h3" style="margin-bottom:4px;">Quick answers</h3>
-        <p class="mg-fine" style="margin-bottom:8px;">The nuances hosts ask
-        about most, without digging through every section above.</p>
-        <div class="faq faq--nested">
-          <details>
-            <summary>When do I actually get paid?</summary>
-            <div><p>Bar checks are processed the Thursday of the week after
-            your event and ready for pickup at the bar &mdash; check our
-            events calendar and swing by any time we&rsquo;re open. Door
-            sales go out via Zelle within 24&ndash;48 hours of your
-            event.</p></div>
-          </details>
-          <details>
-            <summary>Do I keep 100% of my ticket and door sales?</summary>
-            <div><p>Yes, always &mdash; even if Margolis has already sold
-            advance guest reservations to your night before your ticket link
-            went live. The moment your link is on file, we send every guest
-            there instead.</p></div>
-          </details>
-          <details>
-            <summary>Why would Margolis sell entry to my event before I do?</summary>
-            <div><p>Because we&rsquo;re selling entry to people coming for
-            Margolis itself &mdash; venue-loyal guests, not your specific
-            audience. The moment your lineup, flyer, and ticket link are
-            approved, we stop the presale completely and send every guest
-            to your link instead. It doesn&rsquo;t cost you anything: you
-            still keep 100% of your own ticket and door sales. If you&rsquo;d
-            rather we never sell advance entry to your night at all,
-            that&rsquo;s available too &mdash; you&rsquo;d give up your 10%
-            cut of the bar and keep only your door sales. Nights catered to
-            strict demographics &mdash; LGBTQ-only parties, guaranteed
-            sell-outs with proof, private events, and similar &mdash; may
-            request that no presale run for their night; Margolis reserves
-            the right to deny the request within reason.
-            <button type="button" class="mg-readmore" data-presale-open>Read the full presale policy &gt;</button></p></div>
-          </details>
-          <details>
-            <summary>Do I get a cut of couch sales?</summary>
-            <div><p>Not of the $200 reservation fee itself &mdash; that&rsquo;s
-            Margolis revenue, no exceptions. But couch guests are still your
-            guests: their bottle service and bar tab count toward your
-            standard bar-sales percentage for the night.</p></div>
-          </details>
-          <details>
-            <summary>What happens if my night doesn&rsquo;t hit the bar minimum?</summary>
-            <div><p>You cover the shortage and forfeit payout for that
-            event. Minimums are calculated on gross bar sales during
-            official event hours &mdash; see the full breakdown below.</p></div>
-          </details>
-          <details>
-            <summary>Do I need to submit a W9 every time I&rsquo;m booked?</summary>
-            <div><p>No. One W9 on file covers every event we book you for
-            going forward.</p></div>
-          </details>
-          <details>
-            <summary>Is there a fee on card payments at the door?</summary>
-            <div><p>A 5% service charge applies to card transactions Jubyr
-            LLC processes at the door. It covers Square&rsquo;s processing
-            fees plus the cost of issuing W9s and payout forms during tax
-            season. It&rsquo;s waived only if you provide your own dedicated
-            door staff and use a legitimate tap-to-pay platform like Square
-            or Stripe, or mandatory pre-sale ticketing.</p>
-            <p>Cash App and Venmo are never accepted at the door &mdash;
-            they aren&rsquo;t recognized as legitimate business payment
-            tools, they don&rsquo;t offer real tap-to-pay, and they make
-            refund requests messy. In practice that means slower lines and
-            problems at the door we&rsquo;d rather avoid.</p></div>
-          </details>
         </div>
       </div>
     </section>
-
-    <!-- ============ PUBLIC EVENTS: bar minimums ============ -->
-    <section class="box" id="minimums" data-modes="margolis">
-      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-21.jpg')">
-        <span class="tag">Margolis &middot; Bar minimums</span>
-        <h2>The numbers that keep the lights on.</h2>
-        <p>Calculated on gross bar sales during official event hours, and
-        strictly enforced &mdash; minimums are what keep the room properly
-        staffed for your night.</p>
+    <section class="box" id="minimums-patio" data-modes="patio">
+      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-11.jpg')">
+        <span class="tag">Patio events</span>
+        <h2>Host a public event on The Patio.</h2>
+        <p>Bring the concept and the crowd &mdash; Margolis provides the
+        space, staff, hospitality, and operational support. Calculated on
+        eligible net venue sales during official event hours; due to city
+        regulations, all patio events conclude by 9:00 PM.</p>
       </div>
       <div class="mg-cols mg-pad">
         <div class="mg-col">
-          <h3 class="mg-h3">Margolis <span class="mono mg-sub">(inside)</span></h3>
-          <div class="mrow"><span>Kitchen-closed hours</span><strong>$1,500 minimum</strong></div>
-          <div class="mrow"><span>Kitchen-open hours</span><strong>$2,000 minimum</strong></div>
-          <div class="mrow"><span>Friday + Saturday, 9 PM&ndash;2 AM &middot; first-time bookers</span><strong>$5,000 minimum</strong></div>
-          <p class="mg-fine">If the event does not organically meet the applicable
-          minimum through guest spending during the event timeframe, the event
-          organizer covers the remaining shortage and forfeits payout. Heads
-          up: most Friday and Saturday dates are already held by our resident
-          DJs and are extremely hard to come by &mdash; the $5,000 first-time
-          minimum reflects how competitive those nights are.</p>
+          <h3 class="mg-h3">Your minimum</h3>
+          <div class="mg-table-wrap">
+            <table class="mg-table">
+              <thead><tr><th>Day</th><th>Minimum</th></tr></thead>
+              <tbody>
+                <tr><td>Monday&ndash;Wednesday (1 bartender)</td><td>$1,000</td></tr>
+                <tr><td>Monday&ndash;Wednesday (2 bartenders)</td><td>$1,500</td></tr>
+                <tr><td>Thursday / Sunday</td><td>$1,500</td></tr>
+                <tr><td>Friday</td><td>$2,000</td></tr>
+                <tr><td>Saturday</td><td>$2,500</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="mg-fine" style="margin-top:10px">Kitchen service included
+          during standard hours Friday and Saturday; available
+          Monday&ndash;Thursday and Sunday with a $2,000 total minimum
+          spend. Outside catering permitted. Additional servers available
+          with a $200 guarantee per server.</p>
+          <p class="mg-fine" style="margin-top:14px">If sales fall below
+          your minimum, you cover the difference and no venue-sales
+          percentage is paid.</p>
         </div>
         <div class="mg-col">
-          <h3 class="mg-h3">Friday &amp; Saturday nights <span class="mono mg-sub">(how to run them)</span></h3>
-          <div class="mrow"><span>Doors &middot; Margolis opens</span><strong>9 PM</strong></div>
-          <div class="mrow"><span>Happy hour &middot; select cocktails</span><strong>$10 &middot; 9&ndash;10 PM</strong></div>
-          <div class="mrow"><span>Music</span><strong>9 or 10 PM start</strong></div>
-          <p class="mg-fine">Advertise doors at 9 PM on your flyer and posts,
-          even if your music starts at 10. The $10 happy hour gives your crowd
-          a real reason to come early, and early traffic is what gets a night
-          moving.</p>
+          <h3 class="mg-h3">Your earnings</h3>
+          <span class="tag">Highest per-capita payout in the city</span>
+          <div class="mg-table-wrap" style="margin-top:14px">
+            <table class="mg-table">
+              <thead><tr><th>Event model</th><th>You receive</th></tr></thead>
+              <tbody>
+                <tr><td>Free event</td><td>15% of eligible net venue sales</td></tr>
+                <tr><td>Ticketed event</td><td>100% of admission revenue + 10% of eligible net venue sales</td></tr>
+                <tr><td>Talent discount</td><td>50% off personal food and beverages during the event</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="box" id="minimums-patio" data-modes="patio">
-      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-11.jpg')">
-        <span class="tag">The Patio &middot; Bar minimums</span>
-        <h2>The numbers that keep the lights on.</h2>
-        <p>Calculated on gross bar sales during official event hours, and
-        strictly enforced. Due to city regulations, all patio events conclude
-        by 9:00 PM.</p>
-      </div>
-      <div class="mg-cols mg-cols--1 mg-pad">
-        <div class="mg-col">
-          <h3 class="mg-h3">The Patio <span class="mono mg-sub">(events end by 9 PM, per city regulations)</span></h3>
-          <div class="mrow"><span>Monday&ndash;Wednesday</span><strong>$1,000 &middot; 1 bartender</strong></div>
-          <div class="mrow"><span>Monday&ndash;Wednesday</span><strong>$1,500 &middot; 2 bartenders</strong></div>
-          <div class="mrow"><span>Thursday</span><strong>$1,500 &middot; 2 bartenders</strong></div>
-          <div class="mrow"><span>Sunday</span><strong>$1,500 &middot; 2 bartenders</strong></div>
-          <div class="mrow"><span>Friday</span><strong>$2,000 &middot; 2 bartenders</strong></div>
-          <div class="mrow"><span>Saturday</span><strong>$2,500 &middot; 2 bartenders</strong></div>
-          <p class="mg-fine">Kitchen service: included during standard operating
-          hours Friday and Saturday; available Monday&ndash;Thursday and Sunday
-          with a $2,000 total minimum spend. Outside catering is permitted for
-          all patio rentals. Additional servers available with a $200 guarantee
-          per server.</p>
-        </div>
+    <!-- ============ PUBLIC EVENTS: how the numbers work + ticketing (compact accordions, no photo weight) ============ -->
+    <section class="box" data-modes="margolis patio">
+      <div class="mg-pad" style="padding-top:26px">
+        <details class="mg-more">
+          <summary>How sales, payouts, and shortfalls are calculated</summary>
+          <div class="mg-cols" style="padding-top:18px">
+            <div class="mg-col">
+              <h3 class="mg-h3">Included</h3>
+              <div class="mrow"><span>Guest purchases</span><strong>at the price actually paid</strong></div>
+              <div class="mrow"><span>Staff, performer &amp; owner purchases</span><strong>count toward the total</strong></div>
+            </div>
+            <div class="mg-col">
+              <h3 class="mg-h3">Excluded</h3>
+              <div class="mrow"><span>Sales &amp; alcohol taxes</span><strong>10%</strong></div>
+              <div class="mrow"><span>Gratuity</span><strong>20%</strong></div>
+              <div class="mrow"><span>Refunds &amp; chargebacks</span><strong>excluded</strong></div>
+              <div class="mrow"><span>Complimentary (comped) items</span><strong>excluded</strong></div>
+            </div>
+          </div>
+          <p class="mg-fine">Calculated after discounts, not the original
+          price &mdash; a discounted sale still counts at what was actually
+          collected. Once your minimum is reached, your percentage applies
+          to <strong>all</strong> eligible net venue sales, not only the
+          amount above the minimum.</p>
+          <p class="mg-fine" id="shortfallExample" style="margin-top:10px">For
+          example, if your minimum is $1,500 and eligible sales reach
+          $1,300, you owe the $200 difference plus applicable tax and
+          gratuity.</p>
+          <div class="mg-table-wrap" style="margin-top:18px">
+            <table class="mg-table">
+              <thead><tr><th>Revenue</th><th>Payment</th></tr></thead>
+              <tbody>
+                <tr><td>Presale tickets</td><td>Through your selected ticketing platform</td></tr>
+                <tr><td>Door admission</td><td>Zelle within 24&ndash;48 hours</td></tr>
+                <tr><td>Venue-sales percentage</td><td>Check available the following Thursday</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="mg-fine" style="margin-top:14px">Jubyr absorbs
+          card-processing fees for door admission. Refunds, disputes, and
+          chargebacks are deducted from admission revenue.</p>
+        </details>
+        <details class="mg-more" id="ticketing-policy" style="margin-top:16px">
+          <summary>Ticketing and capacity</summary>
+          <p class="mg-fine" style="margin-top:12px">Advance ticket sales
+          are capped at 200. Additional admission may be sold at the door,
+          subject to capacity. Margolis holds approximately 150 guests at
+          one time; the presale cap reflects guest turnover and does not
+          increase legal capacity.</p>
+        </details>
       </div>
     </section>
+
+    <!-- ============ PUBLIC EVENTS: availability ============ -->
+    <section class="box" id="calendar-avail" data-modes="margolis">
+      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-22.jpg')">
+        <span class="tag">Availability</span>
+        <h2>Check availability.</h2>
+        <p>Open dates are available to request. Your date is confirmed
+        only through written acceptance from Jubyr.</p>
+      </div>
+      <div class="paths mg-pad mg-calgate">
+        <button type="button" class="path" data-gate="confirmed">
+          <span class="path__kicker">Discussed a date with Ruby?</span>
+          <h3>Continue to the form.</h3>
+          <span class="path__go">Skip ahead &gt;</span>
+        </button>
+        <button type="button" class="path" data-gate="check">
+          <span class="path__kicker">Need a date?</span>
+          <h3>View the live calendar.</h3>
+          <span class="path__go">Open the calendar &gt;</span>
+        </button>
+      </div>
+      <div class="mgcal-wrap" hidden>
+        <div class="mgcal mgcal--month">
+          <iframe title="Margolis booking calendar — month view" loading="lazy"
+            data-src="https://calendar.google.com/calendar/embed?src=fd203b4db1f1a69e5493ae771400902c653efa7bc369caa6891ae48980695ff6%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
+        </div>
+        <div class="mgcal mgcal--agenda">
+          <iframe title="Margolis booking calendar — list view" loading="lazy"
+            data-src="https://calendar.google.com/calendar/embed?src=fd203b4db1f1a69e5493ae771400902c653efa7bc369caa6891ae48980695ff6%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
+        </div>
+        <p class="mg-caption mono">Your date is confirmed only through written acceptance from Jubyr.</p>
+      </div>
+    </section>
+    <section class="box" id="patiocal" data-modes="patio">
+      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.52), rgba(12,12,12,0.64)), url('assets/media/margolis/photo-12.jpg')">
+        <span class="tag">Availability</span>
+        <h2>Check availability.</h2>
+        <p>Open dates are available to request. Your date is confirmed
+        only through written acceptance from Jubyr.</p>
+      </div>
+      <div class="paths mg-pad mg-calgate">
+        <button type="button" class="path" data-gate="confirmed">
+          <span class="path__kicker">Discussed a date with Ruby?</span>
+          <h3>Continue to the form.</h3>
+          <span class="path__go">Skip ahead &gt;</span>
+        </button>
+        <button type="button" class="path" data-gate="check">
+          <span class="path__kicker">Need a date?</span>
+          <h3>View the live calendar.</h3>
+          <span class="path__go">Open the calendar &gt;</span>
+        </button>
+      </div>
+      <div class="mgcal-wrap" hidden>
+        <div class="mgcal mgcal--month">
+          <iframe title="Patio booking calendar — month view" loading="lazy"
+            data-src="https://calendar.google.com/calendar/embed?src=c_db8c8657dba8090100eb89c6983a105c3a76a04fb0b3ab32b149e199cbc6e512%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
+        </div>
+        <div class="mgcal mgcal--agenda">
+          <iframe title="Patio booking calendar — list view" loading="lazy"
+            data-src="https://calendar.google.com/calendar/embed?src=c_db8c8657dba8090100eb89c6983a105c3a76a04fb0b3ab32b149e199cbc6e512%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=AGENDA&amp;showTitle=0&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0"></iframe>
+        </div>
+        <p class="mg-caption mono">All patio events conclude by 9 PM &middot; your date is confirmed only through written acceptance from Jubyr.</p>
+      </div>
+    </section>
+
+    <!-- ============ PUBLIC EVENTS: quick answers ============ -->
+    <section class="box" id="quickanswers" data-modes="margolis patio">
+      <div class="mg-pad" style="padding-top:34px">
+        <p class="mg-fine" style="margin-bottom:6px">Equipment, catering,
+        setup, promotion, and tax questions</p>
+        <details class="mg-more">
+        <summary>View all booking FAQs</summary>
+        <div class="faq faq--nested" style="padding-top:18px">
+          <p class="mg-fine" style="margin:0 0 6px;text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono)">Money</p>
+          <details>
+            <summary>When and how am I paid?</summary>
+            <div><p>Door revenue is sent via Zelle within 24&ndash;48 hours
+            of your event. Venue-sales payouts (your 15%/10% share) are
+            processed by check the Thursday after your event and ready for
+            pickup at the bar any time we&rsquo;re open.</p></div>
+          </details>
+          <details>
+            <summary>Do I need to submit a W-9?</summary>
+            <div><p>Before your first payout &mdash; one W-9 on file covers
+            every event we book you for going forward.</p></div>
+          </details>
+          <details>
+            <summary>What happens if a payment is disputed or refunded?</summary>
+            <div><p>Refunds, disputes, and chargebacks are deducted from
+            your admission revenue before payout.</p></div>
+          </details>
+          <p class="mg-fine" style="margin:18px 0 6px;text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono)">Ticketing</p>
+          <details>
+            <summary>How many advance tickets may I sell?</summary>
+            <div><p>Presale (advance) tickets are capped at <strong>200 per
+            event</strong>. That cap applies only to presale &mdash; it
+            doesn&rsquo;t limit total attendance.</p></div>
+          </details>
+          <details>
+            <summary>Can I continue selling at the door?</summary>
+            <div><p>Yes. Once presale is exhausted or you&rsquo;ve hit 200,
+            additional admission may be sold at the door, subject to the
+            venue&rsquo;s legal capacity and real-time availability.</p></div>
+          </details>
+          <details>
+            <summary>What happens when the venue reaches capacity?</summary>
+            <div><p>Admission is handled one-in-one-out. Once we reach legal
+            capacity, admission is never guaranteed &mdash; even for guests
+            who purchased in advance.</p></div>
+          </details>
+          <p class="mg-fine" style="margin:18px 0 6px;text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono)">Planning</p>
+          <details>
+            <summary>What equipment does Margolis provide?</summary>
+            <div><p>A Pioneer XDJ-RX3, a Yamaha 12-channel mixer, one sub,
+            four corner speakers, two projectors, and house XLRs. Door and
+            security staff, bartenders, and basic furniture are included.
+            No sound engineer is provided, microphones can&rsquo;t be
+            guaranteed, and all other cables are on you.</p></div>
+          </details>
+          <details>
+            <summary>Can I use outside catering?</summary>
+            <div><p>Yes, with advance approval. It may require additional
+            fees, licensing, insurance, or other documentation, and outside
+            alcohol is never permitted. Outside catering doesn&rsquo;t grant
+            access to Margolis&rsquo;s kitchen.</p></div>
+          </details>
+          <details>
+            <summary>What promotional support does Margolis provide?</summary>
+            <div><p>One collaborative post, one weekly lineup post, and one
+            day-of story post from @margolisphilly, plus a listing on our
+            public events calendar. Flyer design, ticket sales, and the rest
+            of your promotion are on you &mdash; we look for organizers
+            prepared to go beyond posting a flyer.</p></div>
+          </details>
+          <details>
+            <summary>When can I access the space?</summary>
+            <div><p>Setup timing is arranged individually per event &mdash;
+            we&rsquo;ll confirm your access window once your booking is
+            accepted.</p></div>
+          </details>
+          <details>
+            <summary>What happens after I apply?</summary>
+            <div><p>Jubyr LLC reviews your submission and verifies
+            availability and applicable terms. You&rsquo;ll receive written
+            acceptance or follow-up questions &mdash; your date isn&rsquo;t
+            confirmed until written acceptance is issued. Once accepted, your
+            booking and the policies you acknowledged become binding.</p></div>
+          </details>
+        </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ PUBLIC EVENTS: single consent, then the form ============ -->
+    <!-- Acknowledgments moved to the final step of the form itself, per
+         Ruby: someone should acknowledge policies after entering their
+         information and seeing their calculated minimum, not before. -->
+
 
     <!-- ============ COUCH RESERVATIONS: info ============ -->
     <section class="box" id="couchinfo" data-modes="couch">
@@ -645,8 +571,9 @@
         <span class="tag">Private events &middot; How the bar works</span>
         <h2>Five ways to run the bar.</h2>
         <p>Every private event picks a bar model &mdash; not sure, we&rsquo;ll
-        help you choose. Private events are the one exception to our 21+ rule:
-        your guest list, your call.</p>
+        help you choose. Age requirements for private events depend on your
+        event format and alcohol service plan &mdash; you&rsquo;ll set that
+        on the form below.</p>
       </div>
       <div class="paths mg-pad">
         <div class="path">
@@ -804,6 +731,7 @@
           <span class="intake__count" id="stepCount"></span>
           <div class="intake__bar"><i id="barFill" style="width:0%"></i></div>
         </div>
+        <div class="mg-sticky-summary" id="stickySummary" hidden></div>
 
         <form id="intake-form" novalidate autocomplete="on">
           <!-- honeypot: real people never see or fill this -->
@@ -848,17 +776,15 @@
     <div class="footer__top">
       <div class="footer__logo">
         <img src="assets/jubyr-logo-white.png?v=2" alt="Jubyr LLC" width="97" height="30">
-        <p>Bookings for Margolis, The Patio, couch reservations, and Fabrika
-        are administered by Jubyr LLC, an experience design studio. We help
-        organizations shape how people feel — before, during, and after every
-        interaction.</p>
+        <p class="mono" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted, #999);margin-bottom:10px">Event bookings administered by Jubyr LLC</p>
+        <p>An experience design studio shaping how people feel before,
+        during, and after every interaction.</p>
       </div>
       <div>
         <h5>Book</h5>
         <ul>
           <li><a href="#margolis">Margolis events</a></li>
           <li><a href="#patio">Patio events</a></li>
-          <li><a href="#couches">Couch reservations</a></li>
           <li><a href="#private">Private events</a></li>
           <li><a href="#fabrika">Fabrika</a></li>
           <li><a href="#media">Media gallery</a></li>
@@ -881,7 +807,7 @@
     </div>
     <div class="footer__bottom">
       <span class="status"><span class="dot" aria-hidden="true"></span> Now booking &mdash; Margolis, The Patio &amp; Fabrika</span>
-      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="/privacy" style="color:inherit">Privacy</a> &middot; <a href="/terms" style="color:inherit">Terms</a></span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC</span>
     </div>
   </div>
 </footer>
@@ -1041,112 +967,203 @@
     const day = new Date(dateStr+"T12:00:00").getDay();
     return day===5 || day===6;
   }
+  // A Fri/Sat event is in the "late slot" if it starts at/after 9 PM, OR
+  // starts earlier but its chosen end time still runs past 9 PM — either
+  // way the $5,000 (first-time) / no-fixed-minimum (returning) tier applies.
+  function minutesOf(t){
+    if(!t) return null;
+    const [h,m] = t.split(":").map(Number);
+    return h*60+m;
+  }
+  function eventIsLateWindow(startTime, endTime, dateStr){
+    if(!isFriSat(dateStr) || !startTime) return false;
+    if(startTime >= "21:00") return true;
+    if(!endTime) return false;
+    let startMin = minutesOf(startTime), endMin = minutesOf(endTime);
+    if(endMin <= startMin) endMin += 1440;
+    return endMin > 21*60;
+  }
   function margolisEndTimeOptions(startTime, dateStr){
     if(!startTime) return [];
-    const [sh,sm] = startTime.split(":").map(Number);
-    const startMin = sh*60+sm;
-    const maxH = isFriSat(dateStr) ? 5 : 4;
+    const startMin = minutesOf(startTime);
+    const lateStart = isFriSat(dateStr) && startTime >= "21:00";
+    const maxH = lateStart ? 5 : 4;
+    const allowExtra = !lateStart;   // extra hour isn't offered on the Fri/Sat late slot
+    const capMin = allowExtra ? (maxH+1)*60 : maxH*60;
     const opts = [];
-    for(let add=30; add<=(maxH+1)*60; add+=30){
+    for(let add=30; add<=capMin; add+=30){
       const {value, label, crosses} = fmtTimeOpt(startMin+add);
-      const extra = add > maxH*60;
+      const extra = allowExtra && add > maxH*60;
       opts.push({value, label: (crosses?label+" (next day)":label) + (extra?" — extra hour, +$500 to your minimum":"")});
     }
     return opts;
   }
+  // The dynamic minimum calculator (Margolis public events only — the
+  // Patio table isn't day/time-conditional the same way). Needs date,
+  // both times, kitchen selection, and first-time-booker status; returns
+  // null until all of those are answered.
+  function computeMinimum(d){
+    if(!d) return null;
+    const { eventDate, startTime, endTime, foodService, firstTimeBooker } = d;
+    if(!eventDate || !startTime || !endTime || !foodService || !firstTimeBooker) return null;
+    const kitchenOpen = foodService === "Margolis kitchen service";
+    const lateWindow = eventIsLateWindow(startTime, endTime, eventDate);
+    if(lateWindow){
+      // The kitchen isn't available at all during the Fri/Sat 9 PM–2 AM
+      // slot, so the food-service answer doesn't factor into this price.
+      if(firstTimeBooker === "Yes"){
+        return { amount:3500, label:"Friday/Saturday, 9 PM–2 AM · returning booker", late:true, returning:true };
+      }
+      return { amount:5000, label:"Friday/Saturday, 9 PM–2 AM · first-time booker", late:true, returning:false };
+    }
+    let startMin = minutesOf(startTime), endMin = minutesOf(endTime);
+    if(endMin <= startMin) endMin += 1440;
+    const durationH = (endMin-startMin)/60;
+    const extraHour = durationH > 4.001;
+    let amount = kitchenOpen ? 2000 : 1500;
+    if(extraHour) amount += 500;
+    return { amount, label: kitchenOpen ? "Kitchen-open hours" : "Kitchen-closed hours", late:false, extraHour };
+  }
+  function fmtMoney(n){ return "$" + Number(n).toLocaleString("en-US"); }
 
   /* The public-event booking form, parameterized by venue. Margolis and
      The Patio share the flow; the recaps, help text, and payload venue
      differ. */
   const publicSteps = venue => {
     const patio = venue === "The Patio";
-    const minsRecap = patio
-      ? `<div class="mg-agree-recap"><p><strong>Patio bar minimums, in short:</strong> Monday&ndash;Wednesday $1,000 (1 bartender) or $1,500 (2 bartenders); Thursday and Sunday $1,500; Friday $2,000; Saturday $2,500 &mdash; kitchen service at a $2,000 total minimum where it isn't already included. All patio events end by 9 PM, per city regulations. If the minimum isn't met naturally, the organizer covers the shortage and forfeits payout. <a href="#minimums-patio">Full breakdown above.</a></p></div>`
-      : `<div class="mg-agree-recap"><p><strong>Margolis bar minimums, in short:</strong> $1,500 during kitchen-closed hours, $2,000 during kitchen-open hours, $5,000 Friday + Saturday 9 PM&ndash;2 AM for first-time bookers (most of those dates are already held by our resident DJs). If the minimum isn't met naturally, the organizer covers the shortage and forfeits payout. <a href="#minimums">Full breakdown above.</a></p></div>`;
     return [
-        { title:"The ground rules", sub:"Two quick agreements before the details.", fields:[
-          {key:"__phil", type:"static", html:`<div class="mg-agree-recap"><p><strong>The booking philosophy, in short:</strong> free events earn 20% of bar sales; ticketed events earn 100% of door plus 10% of bar; DJs and performers get 50% off personal food and drinks. We book people who want to build real community, not just throw parties. <a href="#payouts">Read the full philosophy above.</a></p></div>`},
-          {key:"agreePhilosophy", label:"Do you understand and agree to the Booking Philosophy?", type:"radio", required:true, options:["I understand and agree"]},
-          {key:"__mins", type:"static", html:minsRecap},
-          {key:"agreeMinimums", label:"Do you understand and agree to the Bar Minimum Policy?", type:"radio", required:true, options:["I understand and agree"]}
+        { title:"Date and terms", sub:"Can this event financially work? Let's find out first.", fields:[
+          {key:"eventDate", label:"Date of event", type:"date", required:true},
+          {key:"firstTimeBooker", type:"radio", required:true, when:()=>!patio,
+            label:"Have you hosted a public event at Margolis before?",
+            options:["Yes","No"],
+            help:"This may affect the minimum for Friday and Saturday late-night events."},
+          {key:"startTime", label:"Event start time", type:patio?"time":"select", required:true, options:marginStartTimeOptions, help:patio?undefined:"30-minute increments, noon to 10 PM."},
+          {key:"endTime", label:"Event end time", type:patio?"time":"select", required:true, options:patio?undefined:()=>margolisEndTimeOptions(data.startTime, data.eventDate), help:patio?"All patio events must conclude by 9 PM.":"Standard events are up to four hours. Friday and Saturday 9 PM–2 AM events may run five hours. One additional hour adds $500 to your minimum — shown as its own option below."},
+          {key:"__friSatGuidance", type:"static", when:()=>!patio && eventIsLateWindow(data.startTime, data.endTime, data.eventDate),
+            html:`<div class="mg-agree-recap"><p><strong>Friday/Saturday late-night format</strong></p>
+            <ul class="mg-fine" style="margin:8px 0 0;padding-left:18px">
+              <li>Event hours: 9 PM&ndash;2 AM</li>
+              <li>$10 cocktail hour: 9&ndash;10 PM</li>
+              <li>Advertise doors at 9 PM</li>
+              <li>Kitchen unavailable</li>
+              <li>Outside catering requires approval</li>
+            </ul>
+            <details class="mg-more" style="margin-top:8px"><summary>Why doors open at 9</summary>
+            <p class="mg-fine" style="margin-top:8px">Early arrival helps establish traffic before featured programming begins.</p></details></div>`},
+          {key:"foodService", label:"Food plan", type:"radio", required:true, options:["Margolis kitchen service","No food service","Request outside catering","Not sure yet"]},
+          {key:"__kitchenNote", type:"static", when:()=>is("foodService","Margolis kitchen service") && !eventIsLateWindow(data.startTime, data.endTime, data.eventDate), html:patio
+            ? `<div class="mg-agree-recap"><p><strong>Heads up:</strong> kitchen service on The Patio carries a <strong>$2,000 total minimum spend</strong> (already included during standard hours on Friday and Saturday).</p></div>`
+            : `<div class="mg-agree-recap"><p><strong>Heads up:</strong> choosing kitchen service moves your night to the kitchen-open minimum.</p></div>`},
+          {key:"__cateringNote", type:"static", when:()=>is("foodService","Request outside catering"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> outside catering requires advance approval and may require additional fees, licensing, insurance, or other documentation. Outside alcohol is not permitted. Choosing this option does not grant access to Margolis's kitchen.</p></div>`},
+          {key:"coverCharge", label:"Admission model", type:"radio", required:true, options:["Free","Advance tickets + door admission","Door admission only"]},
+          {key:"__ticketCap", type:"static", when:()=>is("coverCharge","Advance tickets + door admission"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> you retain 100% of admission revenue. Presales are capped at 200; additional door admission is subject to capacity. <a href="#ticketing-policy" class="mg-readmore" style="display:inline">View ticketing and capacity policy</a></p></div>`},
+          {key:"__rsvpCap", type:"static", when:()=>is("coverCharge","Free"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> for free events we suggest capping your RSVP list at <strong>400</strong>.</p></div>`},
+          {key:"__estimatedTerms", type:"static", when:()=>!patio,
+            html:()=>{
+              const m = computeMinimum(data);
+              if(!m || !data.coverCharge) return `<div class="mg-agree-recap"><p>Fill in your date, times, kitchen selection, booking history, and admission model above to see your estimated terms.</p></div>`;
+              const ticketed = data.coverCharge !== "Free";
+              const payout = ticketed ? "100% of admission revenue + 10% of eligible net venue sales" : "15% of eligible net venue sales";
+              const minLine = m.amount===null ? `No fixed minimum &mdash; ${esc(m.label)}` : `${fmtMoney(m.amount)}${m.extraHour?" (extra hour included)":""}`;
+              return `<div class="mg-agree-recap mg-agree-recap--ok" id="estimatedTermsCard">
+                <p style="margin-bottom:10px"><strong>Your estimated terms</strong></p>
+                <div class="mg-payrows" style="margin:0">
+                  <div class="mg-payrow" style="padding:6px 0"><span>Applicable minimum</span><strong style="font-size:14.5px">${minLine}</strong></div>
+                  <div class="mg-payrow" style="padding:6px 0"><span>Event model</span><strong style="font-size:14.5px">${ticketed?"Ticketed":"Free"}</strong></div>
+                  <div class="mg-payrow" style="padding:6px 0"><span>Host payout</span><strong style="font-size:14.5px">${payout}</strong></div>
+                </div>
+              </div>`;
+            }},
+          {key:"agreeMinimums", type:"radio", required:true,
+            label:()=>{
+              if(patio) return "I understand that my event carries the applicable Patio minimum shown above and that I am responsible for any shortfall.";
+              const m = computeMinimum(data);
+              if(m && m.amount!==null) return `I understand that my event carries a calculated minimum of ${fmtMoney(m.amount)} and that I am responsible for any shortfall.`;
+              if(m && m.amount===null) return `I understand that no fixed minimum applies to my event (${m.label}).`;
+              return "I understand that my event carries an applicable minimum and that I am responsible for any shortfall.";
+            },
+            options:["I understand and agree"]}
         ]},
-        { title:"Your event", sub:"What are we building together?", fields:[
-          {key:"eventName", label:"Name of anticipated event", type:"text", required:true},
-          {key:"eventDate", label:"Date of event", type:"date", required:true, help:"Check the calendar above before you pick."},
-          {key:"startTime", label:"Event start time", type:patio?"time":"select", required:true, options:marginStartTimeOptions, help:patio?undefined:"30-minute increments, noon to 10 PM. Nothing starts before noon."},
-          {key:"__startLate", type:"static", when:()=>!patio && ["21:30","22:00"].includes(data.startTime), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> since your event starts after 9 PM, you still need to advertise doors at 9 PM &mdash; see the agreement below.</p></div>`},
-          {key:"endTime", label:"Event end time", type:patio?"time":"select", required:true, options:patio?undefined:()=>margolisEndTimeOptions(data.startTime, data.eventDate), help:patio?"All patio events must conclude by 9 PM.":"Max 5 hours on Friday/Saturday nights, 4 hours any other time — one extra hour is available for +$500 on your minimum. Pick a start time first."},
-          {key:"guestCount", label:"Anticipated guest count", type:"range", required:true, min:50, max:250, step:10, def:100, help:"Slide in steps of 10. The readout shows what each guest would need to spend at the bar to hit the $1,500 minimum, and to hit $5,000 &mdash; the mark of a strong Friday or Saturday night at Margolis."},
+        { title:"Event concept", sub:"Tell us what you're building.", fields:[
+          {key:"eventName", label:"Event name", type:"text", required:true},
           {key:"frequency", label:"Frequency of event", type:"radio", required:true, options:["One time","Monthly","Weekly","Quarterly","Not sure yet"]},
           {key:"eventType", label:"What type of event best describes this?", type:"radio", required:true, options:["Dance party / DJ night","Live music / concert","Listening session","Comedy / open mic","Art show / market","Community / fundraiser","Other"]},
           {key:"eventTypeOther", label:"Tell us the type", type:"text", when:()=>is("eventType","Other"), required:true},
           {key:"performers", label:"Will there be live performers or just DJs?", type:"radio", required:true, options:["Just DJs","Live performers","Both"]},
-          {key:"genres", label:"Music genres for the night", type:"checks", required:true, options:["House","Afro House","Hip-Hop","R&B","Afrobeats","Amapiano","Jersey Club","Techno","Disco","Jazz","Soul / Funk","Reggae / Dancehall","Latin","Open-format","Other"], help:"Pick all that apply."},
+          {key:"genres", label:"Music genres for the night", type:"checks", required:true, truncateTo:6, options:["Hip-Hop","R&B","House","Afrobeats","Amapiano","Open-format","Afro House","Jersey Club","Techno","Disco","Jazz","Soul / Funk","Reggae / Dancehall","Latin","Other"], help:"Pick all that apply."},
           {key:"genresOther", label:"What's the sound?", type:"text", when:()=>Array.isArray(data.genres)&&data.genres.includes("Other"), required:true},
-          {key:"eventDescription", label:"Event description", type:"textarea", required:true, help:"Please do not use AI to generate this response. Be thorough and specific — this description is used for our weekly slide post featuring your event flyer and description."},
-          {key:"coverCharge", label:"Cover charge?", type:"radio", required:true, options:["Free entry","Presale + Door Sale","Door Sale Only"]},
-          {key:"__ticketCap", type:"static", when:()=>is("coverCharge","Presale + Door Sale"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> presale ticket sales are capped at <strong>200 per event</strong>. Everyone past that pays at the door, subject to capacity.</p></div>`},
-          {key:"__rsvpCap", type:"static", when:()=>is("coverCharge","Free entry"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> for free events we suggest capping your RSVP list at <strong>400</strong>.</p></div>`},
-          {key:"foodService", label:"Interested in food service or kitchen offerings?", type:"radio", required:true, options:["Yes","No","Outside catering","Not sure yet"]},
-          {key:"__kitchenNote", type:"static", when:()=>is("foodService","Yes"), html:patio
-            ? `<div class="mg-agree-recap"><p><strong>Heads up:</strong> kitchen service on The Patio carries a <strong>$2,000 total minimum spend</strong> (already included during standard hours on Friday and Saturday).</p></div>`
-            : `<div class="mg-agree-recap"><p><strong>Heads up:</strong> choosing kitchen service moves your night to the kitchen-open bar minimum of <strong>$2,000</strong>.</p></div>`},
-          {key:"__cateringNote", type:"static", when:()=>is("foodService","Outside catering"), html:`<div class="mg-agree-recap"><p><strong>Heads up:</strong> outside catering is welcome at both Margolis and The Patio &mdash; your caterer must bring and clear all their own plates, silverware, and heating equipment (chafing dishes, warmers, etc.). We don&rsquo;t provide kitchen support for outside catering.</p></div>`}
+          {key:"eventDescription", label:"Event description", type:"textarea", required:true, help:"Tell us what the event is, who it is for, what guests should expect, and what makes it distinct. We may use your response in Margolis promotional materials."},
+          {key:"guestCount", label:"Anticipated guest count", type:"range", required:true, min:50, max:250, step:10, def:100, help:"Slide in steps of 10 — the readout below updates against your actual applicable minimum."},
+          {key:"__capacityNote", type:"static", html:`<div class="mg-agree-recap"><p>Margolis holds approximately 150 guests at one time. Larger attendance estimates depend on guest turnover and do not increase legal capacity.</p></div>`}
         ]},
-        { title:"You & your crew", sub:"Who's running the night.", fields:[
-          {key:"contactFirst", label:"Legal first name", type:"text", required:true, autocomplete:"given-name"},
-          {key:"contactMiddle", label:"Legal middle name", type:"text", autocomplete:"additional-name", help:"Optional."},
-          {key:"contactLast", label:"Legal last name", type:"text", required:true, autocomplete:"family-name"},
-          {key:"phone", label:"Primary contact phone number", type:"tel", required:true, autocomplete:"tel", placeholder:"10-digit number"},
-          {key:"email", label:"Best email", type:"email", required:true, autocomplete:"email", placeholder:"you@email.com", help:"Your confirmation copy goes here."},
-          {key:"instagramList", label:"Instagram handles", type:"taglist", required:true, prefix:"@", placeholder:"yourhandle", addLabel:"Add another handle", help:"One at a time, letters only — hit Add another handle for each one involved."},
-          {key:"businessName", label:"Business / brand / collective name", type:"text", help:"If applicable."},
-          {key:"talentList", label:"DJs, hosts, performers, collectives, or talent involved", type:"taglist", required:true, placeholder:"Name or collective", addLabel:"Add another", help:"One at a time — hit Add for each act so the lineup stays clean."},
+        { title:"Operations", sub:"Talent, equipment, promotion, and contact.", fields:[
+          {key:"talent", label:"DJs, hosts, performers, collectives, or talent involved", type:"namerows", required:true, minRows:3, namePlaceholder:"Name or collective", igPlaceholder:"Instagram (if applicable)", help:"A name for everyone involved — Instagram is optional per person. Need more than 3? Use Add another."},
           {key:"confidence", label:"How confident are you that you'll hit your attendance goals, based on previous event history?", type:"radio", required:true, options:["1","2","3","4","5","6","7","8","9","10"], help:"1 = not confident, 10 = extremely confident."},
           {key:"ownController", label:"Will you be bringing your own DJ controller?", type:"radio", required:true, options:["Yes, bringing our own","No, using the house setup","Not applicable"], help:"House: Pioneer XDJ-RX3, Yamaha 12-channel mixer, 1 sub, 4 corner speakers, 2 projectors, house XLRs. No sound engineer, microphones aren't guaranteed, and all other cables must be provided."},
           {key:"visuals", label:"Visuals", type:"radio", required:true, options:["We'll provide our own","Use the house visuals","No visuals needed"]},
           {key:"doorPerson", label:"Door person", type:"radio", required:true, options:["We need one from the venue","We'll provide our own","No door needed"]},
           {key:"collabPost", label:"Do you agree to make a collaborative promotional post with @margolisphilly? We accept ONE collab post.", type:"radio", required:true, options:["Yes, I agree"]},
           {key:"flyerAgree", label:"Do you agree to submit your DJ lineup, event flyer, and ticket link at least 10 days before the event date?", type:"radio", required:true, options:["Yes, I agree"], help:"Earlier is always welcome — you'll submit all three through your DJ dashboard once your booking is confirmed. No AI-generated flyers; they will not be approved."},
-          {key:"doorsAt9", label:"Your music starts after 9 PM: do you agree to advertise doors at 9 PM anyway?", type:"radio", required:true, options:["Yes, I agree"], when:()=>!patio && ["21:30","22:00"].includes(data.startTime), help:"Margolis opens at 9, and we run a $10 happy hour on select cocktails from 9 to 10 PM. Advertising doors at 9 drives the early traffic that gets your night moving."},
+          {key:"doorsAt9", label:"Do you agree to advertise doors at 9 PM for your Friday/Saturday late-night event?", type:"radio", required:true, options:["Yes, I agree"], when:()=>!patio && eventIsLateWindow(data.startTime, data.endTime, data.eventDate), help:"Margolis opens at 9, and we run a $10 happy hour on select cocktails from 9 to 10 PM. Advertising doors at 9 drives the early traffic that gets your night moving."},
           {key:"hearAbout", label:"How did you hear about us?", type:"radio", required:true, options:["Instagram","Word of mouth","I've attended an event here","Referred by Margolis / Jubyr","Other"]},
-          {key:"hearAboutOther", label:"Where?", type:"text", when:()=>is("hearAbout","Other"), required:true}
-        ]},
-        { title:"Payouts & tax documentation", sub:"So paying you is easy.", fields:[
+          {key:"hearAboutOther", label:"Where?", type:"text", when:()=>is("hearAbout","Other"), required:true},
+          {key:"contactFirst", label:"Legal first name", type:"text", required:true, autocomplete:"given-name"},
+          {key:"contactMiddle", label:"Legal middle name", type:"text", autocomplete:"additional-name", help:"Optional."},
+          {key:"contactLast", label:"Legal last name", type:"text", required:true, autocomplete:"family-name"},
+          {key:"phone", label:"Primary contact phone number", type:"tel", required:true, autocomplete:"tel", placeholder:"10-digit number"},
+          {key:"email", label:"Best email", type:"email", required:true, autocomplete:"email", placeholder:"you@email.com", help:"Your confirmation copy goes here."},
+          {key:"businessName", label:"Business / brand / collective name", type:"text", help:"If applicable."},
           {key:"w9OnFile", label:"Have you completed a W9 with us before?", type:"radio", required:true, options:["Yes, it's already on file","No / not sure"], help:"One W9 covers every event we book you for — if you've done one, you're set."},
           {key:"__tax", type:"static", html:`<div class="mg-agree-recap">${TAX_HTML}</div>`, when:()=>is("w9OnFile","No / not sure")},
           {key:"upload", label:"Upload your completed W9 (PDF)", type:"file", when:()=>is("w9OnFile","No / not sure"), help:"Optional now, required before payout. PDF or a clear photo, up to 8 MB. Stored securely, accessed only by the people who process payments."},
           {key:"payableTo", label:"Make check payable to (must match W9)", type:"text", required:true},
           {key:"zelle", label:"Zelle information (must match W9)", type:"text", required:true, help:"Phone number, email, or Zelle tag associated with your Zelle account. Door payments must go through Zelle. If you do not have one, please set one up."}
         ]},
-        { title:"Final agreements", sub:"The full terms, then your signature.", fields:[
+        { title:"Review", sub:"Review, acknowledge, then sign.", fields:[
+          {key:"__bookingSummary", type:"static", when:()=>!patio,
+            html:()=>{
+              const m = computeMinimum(data);
+              const minLine = m ? (m.amount===null ? `No fixed minimum &mdash; ${esc(m.label)}` : fmtMoney(m.amount)) : "&mdash;";
+              const ticketed = data.coverCharge && data.coverCharge !== "Free";
+              const payout = data.coverCharge ? (ticketed ? "100% of admission revenue + 10% of eligible net venue sales" : "15% of eligible net venue sales") : "&mdash;";
+              return `<div class="mg-agree-recap mg-agree-recap--ok">
+                <p style="margin-bottom:10px"><strong>Your booking summary</strong></p>
+                <div class="mg-payrows" style="margin:0">
+                  <div class="mg-payrow" style="padding:6px 0"><span>Event</span><strong style="font-size:14.5px">${esc(data.eventName||"—")}</strong></div>
+                  <div class="mg-payrow" style="padding:6px 0"><span>Date</span><strong style="font-size:14.5px">${esc(data.eventDate||"—")}${data.startTime&&data.endTime?` &middot; ${esc(data.startTime)}&ndash;${esc(data.endTime)}`:""}</strong></div>
+                  <div class="mg-payrow" style="padding:6px 0"><span>Minimum</span><strong style="font-size:14.5px">${minLine}</strong></div>
+                  <div class="mg-payrow" style="padding:6px 0"><span>Payout</span><strong style="font-size:14.5px">${payout}</strong></div>
+                </div>
+              </div>`;
+            }},
           {key:"__terms", type:"static", html:`<div class="mg-terms">${TERMS_HTML}</div>`},
-          {key:"ackNotGuaranteed", label:"Do you understand that submission of this form does not guarantee booking confirmation?", type:"radio", required:true, options:["Yes, I understand"]},
-          {key:"ackAll", label:"By submitting, do you acknowledge that you have read, understood, and agreed to all event policies and terms outlined above?", type:"radio", required:true, options:["Yes, I agree"]},
+          {key:"agreePhilosophy", label:"I agree to the payout structure, ticketing rules, and booking policies. I understand that submitting this form does not guarantee approval.", type:"radio", required:true, options:["I understand and agree"]},
           {key:"contactConsent", label:"Do you agree that Jubyr LLC may contact you about this booking and future events by email, phone, and text message?", type:"radio", required:true, options:["Yes, I agree"], help:"Booking reminders, flyer and RSVP check-ins, day-of coordination, and updates on future events all come through Jubyr LLC. You can opt out at any time, and your information is never sold."},
-          {key:"signature", label:"Electronic signature (full legal name)", type:"text", required:true, autocomplete:"name"}
+          {key:"signature", label:"Electronic signature (full legal name)", type:"text", required:true, autocomplete:"name"},
+          {key:"__whatHappensNext", type:"static", html:`<div class="mg-agree-recap"><p><strong>What happens next:</strong> Jubyr will verify availability and review your submission. You'll receive written acceptance or follow-up questions. Your date is not confirmed until you receive written acceptance.</p></div>`}
         ]}
     ];
   };
-  const publicDone = first => `<p>Bookings are confirmed in the order forms are received — we'll reach
-    out to confirm your date or talk through the details. A copy of your
-    responses is on its way to your inbox. In the meantime, keep an eye on
-    the calendar above.</p>`;
+  const publicDone = first => `<p><strong>What happens next:</strong> Jubyr will verify
+    availability and review your submission. You'll receive written acceptance or
+    follow-up questions. Your date is not confirmed until you receive written acceptance.
+    A copy of your responses is on its way to your inbox.</p>`;
 
   const FORMS = {
     margolis: {
       hash: "#margolis", draft: "jubyr-margolis-draft-public", fileKind: "w9",
       venue: "Margolis (inside)",
-      tag: "Margolis · Booking form", title: "Lock in your night.",
-      desc: "About 5–7 minutes, saved on this device as you go. All public events are 21+. Bookings confirm in the order forms are received.",
+      tag: "Margolis · Booking form", title: "Request your night.",
+      desc: "About 5–7 minutes. Your progress is saved on this device. Public events are strictly 21+. Requests are reviewed in the order received — your date is confirmed only through written acceptance.",
       steps: publicSteps("Margolis (inside)"), done: publicDone
     },
 
     patio: {
       hash: "#patio", draft: "jubyr-margolis-draft-patio", fileKind: "w9",
       venue: "The Patio",
-      tag: "The Patio · Booking form", title: "Lock in your patio night.",
-      desc: "About 5–7 minutes, saved on this device as you go. Patio events are 21+ and end by 9 PM; bookings confirm in the order forms are received.",
+      tag: "The Patio · Booking form", title: "Request your Patio night.",
+      desc: "About 5–7 minutes. Your progress is saved on this device. Patio events are strictly 21+ and end by 9 PM. Requests are reviewed in the order received — your date is confirmed only through written acceptance.",
       steps: publicSteps("The Patio"), done: publicDone
     },
 
@@ -1294,32 +1311,59 @@
   }
   function persist(){ if(mode==="none") return; try{ localStorage.setItem(FORMS[mode].draft, JSON.stringify(data)); }catch(e){} }
 
-  // -------- category accordion (Margolis / Patio / Fabrika) --------
-  // The chooser is two levels: pick a venue, then pick what within it.
-  // Only one venue's options are shown at a time, to keep the page short.
-  const CATEGORY_OF_MODE = {margolis:"margolis", couch:"margolis", private:"margolis", media:"margolis", patio:"patio", fabrika:"fabrika"};
-  const catCards = document.querySelectorAll(".mg-cat");
-  function openCategory(cat, scroll){
-    document.querySelectorAll(".mg-subgroup").forEach(g=>{ g.hidden = g.dataset.catGroup !== cat; });
-    catCards.forEach(b=>b.classList.toggle("on", b.dataset.cat===cat));
-    if(scroll){
-      const grp = document.querySelector(`.mg-subgroup[data-cat-group="${cat}"]`);
-      if(grp) grp.scrollIntoView({behavior:"smooth", block:"start"});
-    }
+  // -------- calendar gates --------
+  // Each calendar hides behind a quick question: already confirmed with
+  // Ruby -> skip ahead; need a date -> expand the live calendar. Embeds
+  // lazy-load on first expand. The Patio and Fabrika calendars belong to
+  // the venue account and only render once the owner makes them public,
+  // so those check jubyr.tools first and show a graceful note until then
+  // (the page heals itself the moment a calendar goes public).
+  const CAL_KEYS = { patiocal: "patio", fabrikacal: "fabrika" };
+  function loadCal(box){
+    const wrap = box.querySelector(".mgcal-wrap");
+    if(wrap.dataset.loaded) return;
+    wrap.dataset.loaded = "1";
+    const enable = ()=>box.querySelectorAll("iframe[data-src]").forEach(f=>{ f.src=f.dataset.src; });
+    const key = CAL_KEYS[box.id];
+    if(!key) return enable();
+    fetch("https://jubyr.tools/calendar-status.php?cal="+key)
+      .then(r=>r.json())
+      .then(st=>{
+        if(st.public) return enable();
+        box.querySelectorAll(".mgcal").forEach((w,i)=>{
+          if(i===0){
+            w.className = "mgcal";   // shed --month/--agenda so the note shows at every size
+            w.innerHTML = `<p class="mg-calnote">The live calendar is being connected.
+              Until it appears here, email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>
+              for current availability.</p>`;
+          } else w.remove();
+        });
+      })
+      .catch(enable);   // if the status check is unreachable, try the embed anyway
   }
-  catCards.forEach(b=>b.addEventListener("click", ()=>{
-    const cat = b.dataset.cat;
-    const grp = document.querySelector(`.mg-subgroup[data-cat-group="${cat}"]`);
-    if(grp && !grp.hidden){ grp.hidden = true; b.classList.remove("on"); }
-    else openCategory(cat, true);
-  }));
+  document.querySelectorAll(".mg-calgate").forEach(gate=>{
+    const box = gate.closest("section");
+    const wrap = box.querySelector(".mgcal-wrap");
+    gate.querySelectorAll(".path").forEach(btn=>btn.addEventListener("click", ()=>{
+      gate.querySelectorAll(".path").forEach(b=>b.classList.toggle("on", b===btn));
+      if(btn.dataset.gate==="check"){
+        wrap.hidden = false;
+        loadCal(box);
+      } else {
+        wrap.hidden = true;
+        let n = box.nextElementSibling;
+        while(n && n.style.display==="none") n = n.nextElementSibling;
+        if(n) n.scrollIntoView({behavior:"smooth", block:"start"});
+      }
+    }));
+  });
 
   // -------- mode switching --------
   const MODE_HASHES = {"#margolis":"margolis","#public":"margolis","#patio":"patio","#couches":"couch","#private":"private","#fabrika":"fabrika","#media":"media"};
   /* Deep links to sections that only exist inside a mode (the DJ
      dashboard's agreement stack links here): pick the mode first, then
      land exactly on the section instead of a blank cold screen. */
-  const SECTION_HASHES = {"#payouts":"margolis","#minimums":"margolis","#minimums-patio":"patio","#couchinfo":"couch","#privateinfo":"private","#fabrikainfo":"fabrika"};
+  const SECTION_HASHES = {"#philosophy":"margolis","#payouts":"margolis","#minimums":"margolis","#minimums-patio":"patio","#quickanswers":"margolis","#couchinfo":"couch","#privateinfo":"private","#fabrikainfo":"fabrika"};
   function gotoSectionHash(hash){
     const m = SECTION_HASHES[hash];
     if(!m) return false;
@@ -1333,7 +1377,13 @@
     return true;
   }
   const modeSections = document.querySelectorAll("[data-modes]");
-  const cards = document.querySelectorAll(".mg-subgroup .path");
+  const cards = document.querySelectorAll("#categoryCards .path");
+  const chooserSummary = document.getElementById("chooserSummary");
+  document.getElementById("changeBookingType")?.addEventListener("click", ()=>{
+    document.getElementById("categoryCards").hidden = false;
+    chooserSummary.hidden = true;
+    document.getElementById("categoryCards").scrollIntoView({behavior:"smooth", block:"start"});
+  });
 
   function setMode(m, scroll){
     mode = m;
@@ -1342,7 +1392,14 @@
     });
     cards.forEach(c=>c.classList.toggle("on", c.dataset.mode===m));
     document.querySelectorAll("[data-steps]").forEach(el=>{ el.style.display = el.dataset.steps===m ? "" : "none"; });
-    if(CATEGORY_OF_MODE[m]) openCategory(CATEGORY_OF_MODE[m], false);
+    // Collapse the chooser to a one-line summary once a type is picked —
+    // no need to keep scrolling past cards already dismissed.
+    const activeCard = [...cards].find(c=>c.dataset.mode===m);
+    if(activeCard && chooserSummary){
+      document.getElementById("categoryCards").hidden = true;
+      chooserSummary.hidden = false;
+      document.getElementById("chooserSummaryText").innerHTML = `<strong>${esc(activeCard.querySelector(".path__kicker").textContent)}</strong> selected`;
+    }
     if(m==="none") return;
     const F = FORMS[m];
     if(F){
@@ -1377,51 +1434,68 @@
     const req = f.required ? ` <span class="req">*</span>` : "";
     const help = f.help ? `<p class="help">${f.help.includes("<")?f.help:esc(f.help)}</p>` : "";
     const v = data[f.key];
-    if(f.type==="static") return f.html;
+    const flabel = typeof f.label==="function" ? f.label() : f.label;
+    if(f.type==="static") return typeof f.html==="function" ? f.html() : f.html;
     if(["text","tel","email","date","time"].includes(f.type)){
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label>
+      return `<div class="ifield"><label>${esc(flabel)}${req}</label>
         <input type="${f.type}" data-key="${f.key}" value="${esc(v||"")}" placeholder="${esc(f.placeholder||"")}"${f.autocomplete?` autocomplete="${f.autocomplete}"`:""}>${help}</div>`;
     }
     if(f.type==="select"){
       const opts = (typeof f.options==="function" ? f.options() : f.options) || [];
       const optHtml = opts.map(o=>`<option value="${esc(o.value)}"${v===o.value?" selected":""}>${esc(o.label)}</option>`).join("");
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label>
+      return `<div class="ifield"><label>${esc(flabel)}${req}</label>
         <select data-key="${f.key}"${opts.length?"":" disabled"}><option value="">${esc(f.placeholder||"Select…")}</option>${optHtml}</select>${help}</div>`;
     }
     if(f.type==="textarea"){
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label><textarea data-key="${f.key}">${esc(v||"")}</textarea>${help}</div>`;
+      return `<div class="ifield"><label>${esc(flabel)}${req}</label><textarea data-key="${f.key}">${esc(v||"")}</textarea>${help}</div>`;
     }
     if(f.type==="range"){
       if(!data[f.key]) data[f.key] = String(f.def || f.min);
       const val = parseInt(data[f.key],10);
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label>
+      return `<div class="ifield"><label>${esc(flabel)}${req}</label>
         <div class="mg-slider">
           <input type="range" min="${f.min}" max="${f.max}" step="${f.step}" value="${val}" data-range="${f.key}">
           <p class="mg-slider__out mono" id="rv_${f.key}"></p>
         </div>${help}</div>`;
     }
-    if(f.type==="taglist"){
-      const cur = Array.isArray(v)?v:[];
-      const chips = cur.map((t,i)=>`<span class="tag-item mono">${f.prefix?esc(f.prefix):""}${esc(t)}<button type="button" class="tag-x" data-tagrm="${f.key}" data-i="${i}" aria-label="Remove ${esc(t)}">&times;</button></span>`).join("");
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label>
-        ${chips?`<div class="tag-items">${chips}</div>`:""}
-        <div class="tagrow">${f.prefix?`<span class="tag-pfx mono">${esc(f.prefix)}</span>`:""}
-          <input type="text" data-taginput="${f.key}" placeholder="${esc(f.placeholder||"")}">
-          <button type="button" class="ichip" data-tagadd="${f.key}">${esc(f.addLabel||"Add")}</button>
-        </div>${help}</div>`;
+    if(f.type==="namerows"){
+      const min = f.minRows || 3;
+      if(!Array.isArray(data[f.key])) data[f.key] = [];
+      while(data[f.key].length < min) data[f.key].push({name:"", instagram:""});
+      const rows = data[f.key];
+      const rowsHtml = rows.map((r,i)=>`<div class="namerow">
+          <input type="text" data-namef="${f.key}" data-nameidx="${i}" data-namefield="name" placeholder="${esc(f.namePlaceholder||"Name")}" value="${esc(r.name||"")}">
+          <span class="tagrow"><span class="tag-pfx mono">@</span><input type="text" data-namef="${f.key}" data-nameidx="${i}" data-namefield="instagram" placeholder="${esc(f.igPlaceholder||"Instagram (optional)")}" value="${esc(r.instagram||"")}"></span>
+          ${i>=min?`<button type="button" class="tag-x" data-namerm="${f.key}" data-i="${i}" aria-label="Remove">&times;</button>`:""}
+        </div>`).join("");
+      return `<div class="ifield"><label>${esc(flabel)}${req}</label>
+        <div class="namerows">${rowsHtml}</div>
+        <button type="button" class="ichip" data-nameadd="${f.key}">+ Add another</button>
+        ${help}</div>`;
     }
     if(f.type==="radio"){
       const opts = f.options.map(o=>`<button type="button" class="ichip${v===o?" on":""}" data-radio="${f.key}" data-val="${esc(o)}">${esc(o)}</button>`).join("");
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
+      return `<div class="ifield"><label>${esc(flabel)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
     }
     if(f.type==="checks"){
       const cur = Array.isArray(v)?v:[];
-      const opts = f.options.map(o=>`<button type="button" class="ichip${cur.includes(o)?" on":""}" data-multi="${f.key}" data-val="${esc(o)}">${esc(o)}</button>`).join("");
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
+      const mkChip = o=>`<button type="button" class="ichip${cur.includes(o)?" on":""}" data-multi="${f.key}" data-val="${esc(o)}">${esc(o)}</button>`;
+      if(f.truncateTo && f.options.length > f.truncateTo){
+        const head = f.options.slice(0, f.truncateTo).map(mkChip).join("");
+        const rest = f.options.slice(f.truncateTo);
+        const restChecked = rest.some(o=>cur.includes(o));
+        return `<div class="ifield"><label>${esc(flabel)}${req}</label>
+          <div class="iopts">${head}</div>
+          <div class="iopts" data-more-for="${f.key}"${restChecked?"":" hidden"}>${rest.map(mkChip).join("")}</div>
+          <button type="button" class="mg-readmore" data-toggle-more="${f.key}">${restChecked?"Hide extra genres":"View more genres"}</button>
+          ${help}</div>`;
+      }
+      const opts = f.options.map(mkChip).join("");
+      return `<div class="ifield"><label>${esc(flabel)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
     }
     if(f.type==="file"){
       const picked = attachedFile ? esc(attachedFile.name) : "";
-      return `<div class="ifield"><label>${esc(f.label)}</label>
+      return `<div class="ifield"><label>${esc(flabel)}</label>
         <input type="file" data-file="${f.key}" accept=".pdf,.doc,.docx,image/*">
         ${picked?`<p class="help">Attached: ${picked}</p>`:""}${help}</div>`;
     }
@@ -1452,6 +1526,17 @@
       ${step.fields.map(fieldHTML).join("")}`;
     navBtns.innerHTML = `${stepIndex>0?`<button type="button" class="btn btn--ghost" id="backBtn">Back</button>`:""}
       <button type="button" class="btn btn--green" id="nextBtn">${stepIndex===steps.length-1?"Submit":"Continue"} <span class="arw" aria-hidden="true">&gt;</span></button>`;
+    const sticky = document.getElementById("stickySummary");
+    if(sticky){
+      const m = (stepIndex>0 && mode==="margolis") ? computeMinimum(data) : null;
+      if(m){
+        const minLine = m.amount===null ? esc(m.label) : fmtMoney(m.amount);
+        sticky.hidden = false;
+        sticky.innerHTML = `<span><span class="mg-sticky-label">Date</span><strong>${esc(data.eventDate||"—")}</strong></span><span><span class="mg-sticky-label">Minimum</span><strong>${minLine}</strong></span><span><span class="mg-sticky-label">Event model</span><strong>${data.coverCharge && data.coverCharge!=="Free"?"Ticketed":data.coverCharge?"Free":"—"}</strong></span>`;
+      } else {
+        sticky.hidden = true;
+      }
+    }
     bind();
     if(keepScroll) window.scrollTo(0, y);
     else document.querySelector('#book .intake').scrollIntoView({behavior:"smooth", block:"start"});
@@ -1462,28 +1547,22 @@
     if(!out) return;
     const g = parseInt(val,10) || 50;
 
-    const pp1 = 1500 / g;
-    const hue1 = Math.max(0, Math.min(120, (30-pp1)/(30-6)*120));
-    const word1 = pp1<=10 ? "very reachable" : pp1<=15 ? "reachable" : pp1<=20 ? "needs a drinking crowd" : pp1<=25 ? "a stretch" : "hard to hit";
-
-    const pp2 = 5000 / g;
-    const hue2 = Math.max(0, Math.min(120, (85-pp2)/(85-20)*120));
-    const word2 = pp2<=25 ? "very reachable" : pp2<=40 ? "reachable" : pp2<=60 ? "needs a drinking crowd" : pp2<=85 ? "a stretch" : "hard to hit";
-
+    // Compares against the organizer's ACTUAL applicable minimum, not a
+    // fixed $1,500/$5,000 pair — updates whenever guest count, the
+    // calculated minimum, kitchen selection, or date/time change, since
+    // all of those trigger a full step re-render (which re-invokes this).
+    const m = (mode==="margolis") ? computeMinimum(data) : null;
+    if(!m || m.amount===null){
+      out.innerHTML = `<b>${g} guests</b><br>
+        <span class="mg-fine">Fill in your date, times, kitchen selection, and booking history above to see a per-guest spending estimate.</span>`;
+      return;
+    }
+    const target = m.amount;
+    const pp = target / g;
+    const hue = Math.max(0, Math.min(120, (55-pp)/(55-8)*120));
+    const word = pp<20 ? "Generally attainable" : pp<=35 ? "Requires strong food and beverage participation" : "Requires a high-spending audience";
     out.innerHTML = `<b>${g} guests</b><br>
-      <span class="mg-dot" style="background:hsl(${Math.round(hue1)},65%,40%)"></span> about $${Math.ceil(pp1)} per person to hit the $1,500 minimum &middot; ${word1}<br>
-      <span class="mg-dot" style="background:hsl(${Math.round(hue2)},65%,40%)"></span> about $${Math.ceil(pp2)} per person for a $5,000 Friday/Saturday night &middot; ${word2}`;
-  }
-  function addTag(key){
-    const inp = host.querySelector(`input[data-taginput="${key}"]`);
-    if(!inp) return;
-    let val = inp.value.trim().replace(/^@+/,"");
-    if(!val) return;
-    if(!Array.isArray(data[key])) data[key]=[];
-    if(!data[key].includes(val)) data[key].push(val);
-    persist(); renderStep(true);
-    const again = host.querySelector(`input[data-taginput="${key}"]`);
-    if(again) again.focus();
+      <span class="mg-dot" style="background:hsl(${Math.round(hue)},65%,40%)"></span> Approximately $${Math.ceil(pp)} per guest is needed to meet your ${fmtMoney(target)} minimum &middot; ${word}.`;
   }
   function bind(){
     host.querySelectorAll("input[data-key],textarea[data-key]").forEach(el=>{
@@ -1500,18 +1579,35 @@
       el.addEventListener("input", ()=>{ data[k]=el.value; persist(); paintRange(k, el.value); });
       paintRange(k, el.value);
     });
-    host.querySelectorAll("[data-tagadd]").forEach(el=>{
-      el.addEventListener("click", ()=>addTag(el.dataset.tagadd));
+    host.querySelectorAll("input[data-namef]").forEach(el=>{
+      el.addEventListener("input", ()=>{
+        const key = el.dataset.namef, i = +el.dataset.nameidx, field = el.dataset.namefield;
+        if(field==="instagram") el.value = el.value.replace(/^@+/,"");
+        if(!Array.isArray(data[key])) data[key] = [];
+        while(data[key].length <= i) data[key].push({name:"", instagram:""});
+        data[key][i][field] = el.value;
+        persist();
+      });
     });
-    host.querySelectorAll("input[data-taginput]").forEach(el=>{
-      el.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); addTag(el.dataset.taginput); } });
-    });
-    host.querySelectorAll("[data-tagrm]").forEach(el=>{
+    host.querySelectorAll("[data-nameadd]").forEach(el=>{
       el.addEventListener("click", ()=>{
-        const k=el.dataset.tagrm, i=+el.dataset.i;
+        const key = el.dataset.nameadd;
+        if(!Array.isArray(data[key])) data[key] = [];
+        data[key].push({name:"", instagram:""});
+        persist(); renderStep(true);
+      });
+    });
+    host.querySelectorAll("[data-namerm]").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const k=el.dataset.namerm, i=+el.dataset.i;
         if(Array.isArray(data[k])){ data[k].splice(i,1); persist(); renderStep(true); }
       });
     });
+    // Fields that feed the dynamic minimum calculator always force a full
+    // re-render, even when the set of visible fields doesn't change —
+    // otherwise the calculator's own text (which reads `data` inside a
+    // function, not via a `when` toggle) can go stale after a click.
+    const CALC_KEYS = ["firstTimeBooker","foodService"];
     host.querySelectorAll("[data-radio]").forEach(el=>{
       el.addEventListener("click", ()=>{
         const k=el.dataset.radio;
@@ -1519,7 +1615,7 @@
         const before = visibleKeys(step);
         data[k]=(data[k]===el.dataset.val)?"":el.dataset.val;
         persist();
-        if(sameKeys(before, visibleKeys(step))){
+        if(!CALC_KEYS.includes(k) && sameKeys(before, visibleKeys(step))){
           // nothing else on the step depends on this answer — just flip the
           // chip in place instead of tearing down and rebuilding every field,
           // which is what was causing the visible lag before it turned green
@@ -1545,6 +1641,16 @@
         }
       });
     });
+    host.querySelectorAll("[data-toggle-more]").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const k = el.dataset.toggleMore;
+        const more = host.querySelector(`[data-more-for="${k}"]`);
+        if(!more) return;
+        const nowHidden = !more.hidden;
+        more.hidden = nowHidden;
+        el.textContent = nowHidden ? "View more genres" : "Hide extra genres";
+      });
+    });
     host.querySelectorAll("input[data-file]").forEach(el=>{
       el.addEventListener("change", ()=>{
         const f = el.files && el.files[0];
@@ -1564,7 +1670,7 @@
       if(!f.required) continue;
       const v=data[f.key];
       if(f.type==="checks"){ if(!Array.isArray(v)||!v.length) return "Please answer every question on this step."; continue; }
-      if(f.type==="taglist"){ if(!Array.isArray(v)||!v.length) return "Use the Add button to add at least one entry."; continue; }
+      if(f.type==="namerows"){ if(!(Array.isArray(v)&&v.some(r=>r&&String(r.name||"").trim()))) return "Add at least one name."; continue; }
       if(!v || !String(v).trim()){
         return (f.type==="radio") ? "Please answer every question on this step." : "Please fill in the required fields.";
       }
@@ -1612,12 +1718,27 @@
     const btn=document.getElementById("nextBtn");
     btn.disabled=true; btn.textContent="Sending…";
     const isPublic = mode==="margolis" || mode==="patio";
+    if(isPublic){
+      // Normally stamped when the wizard's minimums/payout consent boxes
+      // are checked, well before the form is reached — this is just a
+      // backstop for a hash deep-link path that skipped past those
+      // slides, since the backend still requires both fields and the
+      // final "Final agreements" step's ackAll already covers this ground.
+      if(!data.agreePhilosophy) data.agreePhilosophy = "I understand and agree";
+      if(!data.agreeMinimums) data.agreeMinimums = "I understand and agree";
+    }
     const payload={ formType: isPublic ? "public" : mode, company:document.querySelector('input[name="company"]').value };
     if(isPublic) payload.venue = FORMS[mode].venue;
     Object.keys(data).forEach(k=>{
       if(k.startsWith("__")) return;
-      if(k==="instagramList"){ payload.instagram = (data[k]||[]).map(h=>"@"+h).join(", "); return; }
-      if(k==="talentList"){ payload.talent = (data[k]||[]).join(", "); return; }
+      if(k==="talent"){
+        payload.talent = (data[k]||[]).filter(r=>r&&String(r.name||"").trim()).map(r=>{
+          const name = String(r.name||"").trim();
+          const ig = String(r.instagram||"").trim().replace(/^@+/,"");
+          return ig ? `${name} (@${ig})` : name;
+        }).join(", ");
+        return;
+      }
       if(k==="genres"){ payload.genres = [...(data.genres||[]).filter(g=>g!=="Other"), (data.genresOther||"").trim()].filter(Boolean).join(", "); return; }
       if(k==="genresOther") return;
       if(["contactFirst","contactMiddle","contactLast"].includes(k)) return;
@@ -1646,128 +1767,17 @@
     }
   }
 
-  // -------- "add to your calendar" link (for the person who just booked) --------
-  // A plain Google Calendar "render" link needs no auth and no calendar id —
-  // it just prefills a new-event draft on whatever account the visitor is
-  // signed into. Distinct from the admin tool's internal add-to-calendar,
-  // which targets Ruby's own business calendars.
-  const MARGOLIS_ADDR = "Margolis, 9 W Wildey St, Philadelphia, PA";
-  const FABRIKA_ADDR = "Fabrika, 1108 Frankford Ave, Philadelphia, PA";
-  function pad2(n){ return String(n).padStart(2,"0"); }
-  function shiftDateStr(ymd, n){
-    const d = new Date(ymd+"T12:00:00"); d.setDate(d.getDate()+n);
-    return d.toISOString().slice(0,10);
-  }
-  function etaStartHour(eta){
-    const m=/^(\d+)\s*(am|pm)/.exec(String(eta||"").toLowerCase());
-    if(!m) return null;
-    let h=(+m[1])%12; if(m[2]==="pm") h+=12; if(h<6) h+=24;
-    return h;
-  }
-  function gcalDatesFromParts(dateStr, startTime, endTime, eta){
-    if(!dateStr) return null;
-    const day = dateStr.replaceAll("-","");
-    if(startTime){
-      const [sh,sm]=startTime.split(":").map(Number);
-      let eh, em;
-      if(endTime){ [eh,em]=endTime.split(":").map(Number); } else { eh=sh+2; em=sm; }
-      let endDay=day;
-      if(eh<sh || (eh===sh && em<=sm)) endDay = shiftDateStr(dateStr,1).replaceAll("-","");
-      return `${day}T${pad2(sh)}${pad2(sm)}00/${endDay}T${pad2(eh)}${pad2(em)}00`;
-    }
-    const h = etaStartHour(eta);
-    if(h!==null){
-      let sd=day, sh=h;
-      if(sh>=24){ sd=shiftDateStr(dateStr,1).replaceAll("-",""); sh-=24; }
-      let ed=sd, eh=sh+1;
-      if(eh>=24){ ed=shiftDateStr(sd.slice(0,4)+"-"+sd.slice(4,6)+"-"+sd.slice(6),1).replaceAll("-",""); eh-=24; }
-      return `${sd}T${pad2(sh)}0000/${ed}T${pad2(eh)}0000`;
-    }
-    return `${day}/${shiftDateStr(dateStr,1).replaceAll("-","")}`;
-  }
-  function gcalAddUrl(title, dateStr, startTime, endTime, eta, location, details){
-    const dates = gcalDatesFromParts(dateStr, startTime, endTime, eta);
-    if(!dates) return "";
-    const p = new URLSearchParams({action:"TEMPLATE", text:title, dates, location, details, ctz:"America/New_York"});
-    return "https://calendar.google.com/calendar/render?" + p.toString();
-  }
-  function buildAddToCalendarUrl(){
-    if(mode==="margolis"||mode==="patio"){
-      return gcalAddUrl(data.eventName||"Event at Margolis", data.eventDate, data.startTime, data.endTime, null, MARGOLIS_ADDR, "Booked through jubyr.com/margolis");
-    }
-    if(mode==="private"){
-      const title = (data.reason==="Other"?data.reasonOther:data.reason) || "Private event at Margolis";
-      return gcalAddUrl(title, data.eventDate, data.startTime, data.endTime, null, MARGOLIS_ADDR, "Booked through jubyr.com/margolis");
-    }
-    if(mode==="fabrika"){
-      return gcalAddUrl(data.eventName||"Event at Fabrika", data.eventDate, data.startTime, data.endTime, null, FABRIKA_ADDR, "Booked through jubyr.com/margolis");
-    }
-    if(mode==="couch"){
-      return gcalAddUrl("Couch reservation at Margolis", data.resDate, null, null, data.eta, MARGOLIS_ADDR, "Reserved through jubyr.com/margolis");
-    }
-    return "";
-  }
-
   function done(){
     progress.hidden=true;
     const first = String(data.contactFirst||data.contactName||data.clientName||data.firstName||"").trim().split(" ")[0];
-    const calUrl = buildAddToCalendarUrl();
     host.innerHTML=`<div class="intake__done">
       <div class="mark">&#10003;</div>
       <h2>${mode==="couch"?"Reservation request received":"Your inquiry is in"}${first?`, ${esc(first)}`:""}.</h2>
       ${FORMS[mode].done(first)}
-      ${calUrl?`<a class="btn btn--ghost" style="margin-top:22px;display:inline-flex" href="${calUrl}" target="_blank" rel="noopener">Add to Google Calendar <span class="arw" aria-hidden="true">&gt;</span></a>`:""}
     </div>`;
     navBtns.innerHTML="";
     stepErr.classList.remove("show");
   }
-
-  // -------- calendar gates --------
-  // Each calendar hides behind a quick question: already confirmed with
-  // Ruby -> skip ahead; need a date -> expand the live calendar. Embeds
-  // lazy-load on first expand. The Patio and Fabrika calendars belong to
-  // the venue account and only render once the owner makes them public,
-  // so those check jubyr.tools first and show a graceful note until then
-  // (the page heals itself the moment a calendar goes public).
-  const CAL_KEYS = { patiocal: "patio", fabrikacal: "fabrika" };
-  function loadCal(box){
-    const wrap = box.querySelector(".mgcal-wrap");
-    if(wrap.dataset.loaded) return;
-    wrap.dataset.loaded = "1";
-    const enable = ()=>box.querySelectorAll("iframe[data-src]").forEach(f=>{ f.src=f.dataset.src; });
-    const key = CAL_KEYS[box.id];
-    if(!key) return enable();
-    fetch("https://jubyr.tools/calendar-status.php?cal="+key)
-      .then(r=>r.json())
-      .then(st=>{
-        if(st.public) return enable();
-        box.querySelectorAll(".mgcal").forEach((w,i)=>{
-          if(i===0){
-            w.className = "mgcal";   // shed --month/--agenda so the note shows at every size
-            w.innerHTML = `<p class="mg-calnote">The live calendar is being connected.
-              Until it appears here, email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>
-              for current availability.</p>`;
-          } else w.remove();
-        });
-      })
-      .catch(enable);   // if the status check is unreachable, try the embed anyway
-  }
-  document.querySelectorAll(".mg-calgate").forEach(gate=>{
-    const box = gate.closest("section");
-    const wrap = box.querySelector(".mgcal-wrap");
-    gate.querySelectorAll(".path").forEach(btn=>btn.addEventListener("click", ()=>{
-      gate.querySelectorAll(".path").forEach(b=>b.classList.toggle("on", b===btn));
-      if(btn.dataset.gate==="check"){
-        wrap.hidden = false;
-        loadCal(box);
-      } else {
-        wrap.hidden = true;
-        let n = box.nextElementSibling;
-        while(n && n.style.display==="none") n = n.nextElementSibling;
-        if(n) n.scrollIntoView({behavior:"smooth", block:"start"});
-      }
-    }));
-  });
 
   // -------- media gallery --------
   // Add items as {type:"image"|"video", src, thumb?, caption?, venue?}.
