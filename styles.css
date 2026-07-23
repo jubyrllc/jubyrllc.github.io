@@ -2077,8 +2077,16 @@
 .mg-table tbody tr:last-child td { border-bottom: none; }
 .mg-table td strong { color: var(--ink); }
 @media (max-width: 480px) {
-  .mg-table { min-width: 420px; }
-  .mg-table th, .mg-table td { padding: 10px 12px; font-size: 13px; }
+  /* Stack each row into a label/value block instead of a horizontally
+     scrolling table — nothing should require a scroll gesture to read. */
+  .mg-table-wrap { overflow-x: visible; }
+  .mg-table { min-width: 0; }
+  .mg-table thead { display: none; }
+  .mg-table, .mg-table tbody, .mg-table tr { display: block; width: 100%; }
+  .mg-table tr { border-bottom: 1px dashed var(--line); padding: 10px 0; }
+  .mg-table tbody tr:last-child { border-bottom: none; }
+  .mg-table th, .mg-table td { display: block; padding: 2px 0; font-size: 13px; border-bottom: none; }
+  .mg-table td:first-child { white-space: normal; margin-bottom: 2px; }
 }
 .faq--nested { padding: 0; }
 
