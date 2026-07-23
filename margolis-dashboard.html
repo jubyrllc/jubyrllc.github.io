@@ -126,10 +126,12 @@
             <div class="ifield"><label>Event description</label>
               <textarea id="dreqDesc" rows="3" placeholder="What's the concept, and who's it for?"></textarea></div>
             <div class="ifield"><label>Venue</label>
-              <div style="display:flex;gap:16px;margin-top:6px">
+              <div style="display:flex;gap:16px;margin-top:6px;flex-wrap:wrap">
                 <label style="display:flex;gap:6px;align-items:center;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="radio" name="dreqVenue" value="Margolis (inside)" checked> Margolis</label>
                 <label style="display:flex;gap:6px;align-items:center;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="radio" name="dreqVenue" value="The Patio"> The Patio</label>
+                <label style="display:flex;gap:6px;align-items:center;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="radio" name="dreqVenue" value="Fabrika"> Fabrika</label>
               </div>
+              <p class="djd-note" id="dreqVenueNote" style="margin-top:8px"></p>
             </div>
             <div style="display:flex;gap:12px;flex-wrap:wrap">
               <div class="ifield" style="flex:1;min-width:140px"><label>Usual start time</label><input type="time" id="dreqStart"></div>
@@ -609,8 +611,19 @@
         </div>
       </div>`).join("");
   }
+  const DREQ_VENUE_NOTES = {
+    "Margolis (inside)": "Standard Margolis booking policies apply — the minimum and payout you already see on this page.",
+    "The Patio": "All Patio events must conclude by 9 PM, and the minimum is based on the day of the week rather than the time slot.",
+    "Fabrika": "Fabrika runs on a separate partner agreement — approving a date starts that process, and no promotion can begin until the agreement is signed.",
+  };
+  function updateDreqVenueNote(){
+    const checked = document.querySelector('input[name="dreqVenue"]:checked');
+    document.getElementById("dreqVenueNote").textContent = checked ? (DREQ_VENUE_NOTES[checked.value]||"") : "";
+  }
   function bindDreqForm(){
     renderDreqDates();
+    updateDreqVenueNote();
+    document.querySelectorAll('input[name="dreqVenue"]').forEach(r=>r.addEventListener("change", updateDreqVenueNote));
     document.getElementById("dreqAddDate").addEventListener("click", ()=>{
       dreqDateRows.push("");
       renderDreqDates();
@@ -635,6 +648,8 @@
         document.getElementById("dreqDesc").value = "";
         document.getElementById("dreqStart").value = "";
         document.getElementById("dreqEnd").value = "";
+        document.querySelector('input[name="dreqVenue"][value="Margolis (inside)"]').checked = true;
+        updateDreqVenueNote();
         dreqDateRows = [""];
         renderDreqDates();
         renderDateRequests();
