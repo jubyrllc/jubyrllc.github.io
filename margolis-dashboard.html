@@ -114,6 +114,35 @@
         <div class="djd-w9" id="w9Box" hidden></div>
         <p class="djd-err" id="djdErr"></p>
         <div id="content"><p class="djd-note" style="margin-top:20px">Loading your nights&hellip;</p></div>
+        <div id="dateReqList"></div>
+        <details class="djd-prof" id="dateReqBox" style="margin-top:18px">
+          <summary>Request additional dates</summary>
+          <div class="djd-prof__body">
+            <p class="djd-note" style="margin:0 0 14px">Run a night regularly but it's not on the
+            calendar yet? Enter it once and list every date you'd like &mdash; Margolis reviews and
+            confirms each date individually, so approving one doesn't approve them all.</p>
+            <div class="ifield"><label>Event name <span class="req">*</span></label>
+              <input type="text" id="dreqName" placeholder="e.g. Kingspy Rhythm Nation"></div>
+            <div class="ifield"><label>Event description</label>
+              <textarea id="dreqDesc" rows="3" placeholder="What's the concept, and who's it for?"></textarea></div>
+            <div class="ifield"><label>Venue</label>
+              <div style="display:flex;gap:16px;margin-top:6px">
+                <label style="display:flex;gap:6px;align-items:center;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="radio" name="dreqVenue" value="Margolis (inside)" checked> Margolis</label>
+                <label style="display:flex;gap:6px;align-items:center;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="radio" name="dreqVenue" value="The Patio"> The Patio</label>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <div class="ifield" style="flex:1;min-width:140px"><label>Usual start time</label><input type="time" id="dreqStart"></div>
+              <div class="ifield" style="flex:1;min-width:140px"><label>Usual end time</label><input type="time" id="dreqEnd"></div>
+            </div>
+            <div class="ifield"><label>Dates you&rsquo;d like to request <span class="req">*</span></label>
+              <div id="dreqDates"></div>
+              <button type="button" class="djd-readmore" id="dreqAddDate">+ Add another date</button>
+            </div>
+            <p class="djd-err" id="dreqErr" style="margin:8px 0"></p>
+            <button type="button" class="btn btn--green" id="dreqSubmit" style="margin-top:10px">Submit request</button>
+          </div>
+        </details>
       </div>
     </section>
   </main>
@@ -147,7 +176,7 @@
   <div class="footer__inner">
     <div class="footer__bottom">
       <span class="status"><span class="dot" aria-hidden="true"></span> Margolis DJ &amp; host dashboard &mdash; Jubyr LLC</span>
-      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="mailto:ruby@margolisphilly.com" style="color:inherit">ruby@margolisphilly.com</a> &middot; <a href="/privacy" style="color:inherit">Privacy</a> &middot; <a href="/terms" style="color:inherit">Terms</a></span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="mailto:ruby@margolisphilly.com" style="color:inherit">ruby@margolisphilly.com</a></span>
     </div>
   </div>
 </footer>
@@ -214,7 +243,22 @@
     }
     if(payload.action==="savePayout"){ s.account.payableTo=payload.payableTo; s.account.zelle=payload.zelle; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="saveAgreements"){ s.account.agreementsSigned=true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
-    if(payload.action==="events"){ demoSave(s); return {ok:true, events:s.events, archive:s.archive||[]}; }
+    if(payload.action==="events"){ demoSave(s); return {ok:true, events:s.events, archive:s.archive||[], dateRequests:s.dateRequests||[]}; }
+    if(payload.action==="requestDates"){
+      const today = new Date().toISOString().slice(0,10);
+      const dates = [...new Set((payload.dates||[]).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d) && d>=today))].sort();
+      if(!(payload.eventName||"").trim()) throw "Add an event name.";
+      if(!dates.length) throw "Add at least one upcoming date.";
+      if(!s.dateRequests) s.dateRequests = [];
+      const req = {
+        id:"dreq-demo-"+Date.now(), eventName:payload.eventName, eventDescription:payload.eventDescription||"",
+        venue:payload.venue||"Margolis (inside)", startTime:payload.startTime||"", endTime:payload.endTime||"",
+        createdAt:new Date().toISOString(),
+        dates:dates.map(d=>({date:d, status:"pending", bookingId:null, reviewedAt:null})),
+      };
+      s.dateRequests.unshift(req);
+      demoSave(s); return {ok:true, request:req};
+    }
     if(payload.action==="saveLineup"){ const ev=findEv(); const sub=ensureSub(ev); sub.lineup={value:payload.lineup,status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="saveTicketLink"){ const ev=findEv(); const sub=ensureSub(ev); sub.ticketLink={value:payload.ticketLink,status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="saveFlyer"){ const ev=findEv(); const sub=ensureSub(ev); sub.flyerFile={value:payload.fileName||"flyer.png",status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
@@ -238,6 +282,8 @@
   }
   let EVENTS = [];
   let ARCHIVE = [];
+  let DATE_REQUESTS = [];
+  let dreqDateRows = [""];
   const openCards = new Set();      // date|name keys that stay expanded across re-renders
   const activeTab = {};             // date|name -> tab key
   const openEditPart = new Set();   // "date|name|part" keys currently reopened for editing despite being under review
@@ -527,6 +573,81 @@
     </div>`;
   }
 
+  // ---------- date requests: one event, several candidate dates ----------
+  function renderDreqDates(){
+    const box = document.getElementById("dreqDates");
+    box.innerHTML = dreqDateRows.map((d,i)=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+      <input type="date" data-dreq-date="${i}" value="${esc(d)}" style="flex:1">
+      ${dreqDateRows.length>1?`<button type="button" class="djd-readmore" data-dreq-rm="${i}" style="margin:0">remove</button>`:""}
+    </div>`).join("");
+    box.querySelectorAll("[data-dreq-date]").forEach(el=>el.addEventListener("input", ()=>{
+      dreqDateRows[+el.dataset.dreqDate] = el.value;
+    }));
+    box.querySelectorAll("[data-dreq-rm]").forEach(b=>b.addEventListener("click", ()=>{
+      dreqDateRows.splice(+b.dataset.dreqRm, 1);
+      renderDreqDates();
+    }));
+  }
+  function dreqStatusPill(status){
+    if(status==="approved") return `<span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--green)">Approved</span>`;
+    if(status==="declined") return `<span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#A03A2E">Declined</span>`;
+    return `<span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#8A6400">Pending review</span>`;
+  }
+  function renderDateRequests(){
+    const box = document.getElementById("dateReqList");
+    if(!DATE_REQUESTS.length){ box.innerHTML = ""; return; }
+    box.innerHTML = `<div class="djd-section">Your date requests</div>` + DATE_REQUESTS.map(r=>`
+      <div class="evt">
+        <div class="evt__head" style="cursor:default">
+          <span class="evt__date">${esc(r.venue||"")}</span>
+          <h3>${esc(r.eventName)}</h3>
+        </div>
+        <div class="evt__body" style="display:block">
+          <ul class="djd-check">
+            ${r.dates.map(d=>`<li class="${d.status==="approved"?"done":""}"><span class="mk">${d.status==="approved"?"&#10003;":d.status==="declined"?"&#10007;":"&#8226;"}</span>${esc(d.date)} &mdash; ${dreqStatusPill(d.status)}</li>`).join("")}
+          </ul>
+        </div>
+      </div>`).join("");
+  }
+  function bindDreqForm(){
+    renderDreqDates();
+    document.getElementById("dreqAddDate").addEventListener("click", ()=>{
+      dreqDateRows.push("");
+      renderDreqDates();
+    });
+    document.getElementById("dreqSubmit").addEventListener("click", async ()=>{
+      const errEl2 = document.getElementById("dreqErr");
+      errEl2.textContent = "";
+      const eventName = document.getElementById("dreqName").value.trim();
+      const eventDescription = document.getElementById("dreqDesc").value.trim();
+      const venue = document.querySelector('input[name="dreqVenue"]:checked').value;
+      const startTime = document.getElementById("dreqStart").value;
+      const endTime = document.getElementById("dreqEnd").value;
+      const dates = dreqDateRows.filter(Boolean);
+      if(!eventName){ errEl2.textContent = "Add an event name."; return; }
+      if(!dates.length){ errEl2.textContent = "Add at least one upcoming date."; return; }
+      const btn = document.getElementById("dreqSubmit");
+      btn.disabled = true; const orig = btn.textContent; btn.textContent = "Submitting…";
+      try{
+        const out = await api(DASH_URL, {action:"requestDates", eventName, eventDescription, venue, startTime, endTime, dates});
+        DATE_REQUESTS.unshift(out.request);
+        document.getElementById("dreqName").value = "";
+        document.getElementById("dreqDesc").value = "";
+        document.getElementById("dreqStart").value = "";
+        document.getElementById("dreqEnd").value = "";
+        dreqDateRows = [""];
+        renderDreqDates();
+        renderDateRequests();
+        document.getElementById("dateReqBox").open = false;
+      }catch(e){
+        btn.disabled = false; btn.textContent = orig;
+        if(e!=="auth") errEl2.textContent = typeof e==="string"?e:"Couldn't reach the server — check your connection.";
+        return;
+      }
+      btn.disabled = false; btn.textContent = orig;
+    });
+  }
+
   function render(){
     const c = document.getElementById("content");
     let html = "";
@@ -723,8 +844,11 @@
       const out = await api(DASH_URL, {action:"events"});
       EVENTS = out.events || [];
       ARCHIVE = out.archive || [];
+      DATE_REQUESTS = out.dateRequests || [];
       if(EVENTS.length) openCards.add(keyOf(EVENTS[0]));
       render();
+      renderDateRequests();
+      bindDreqForm();
     }catch(e){
       if(e!=="auth") document.getElementById("content").innerHTML = `<p class="djd-note" style="margin-top:20px">Couldn't load your nights — refresh, or email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>`;
     }
