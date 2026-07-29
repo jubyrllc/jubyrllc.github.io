@@ -17,7 +17,8 @@
   .djd-err.show{display:block}
   .djd-note{color:var(--muted);font-size:13.5px;line-height:1.55}
   .djd-topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
-  .djd-hello{font-size:15px}
+  .djd-hello{font-size:15px;display:flex;align-items:center;gap:10px}
+  .djd-avatar{width:34px;height:34px;border-radius:50%;flex:none;background-color:var(--green);background-size:cover;background-position:center;color:#fff;display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600}
   .djd-logout{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:1px dashed var(--line);padding-bottom:2px}
   .djd-logout:hover{color:var(--green);border-color:var(--green)}
   .evt{border:1px solid var(--line);border-radius:14px;background:var(--paper);margin-bottom:16px;overflow:hidden}
@@ -98,7 +99,7 @@
 
       <div class="mg-pad djd-wrap" style="padding-top:28px;padding-bottom:44px;">
         <div class="djd-topbar">
-          <span class="djd-hello" id="hello"></span>
+          <span class="djd-hello" id="hello"><span class="djd-avatar" id="djdAvatar" hidden></span><span id="helloText"></span></span>
           <button class="djd-logout" id="logout">Log out</button>
         </div>
         <p class="djd-note">Each part needs Margolis approval before it counts, and your lineup,
@@ -194,6 +195,7 @@
   const AUTH_URL = "https://jubyr.tools/margolis-dj-auth.php";
   const DASH_URL = "https://jubyr.tools/margolis-dj-dashboard.php";
   const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  const money = n => Number(n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 
   let TOKEN = localStorage.getItem("margolis-dj-token") || "";
 
@@ -301,6 +303,25 @@
     if(r.status===401){ localStorage.removeItem("margolis-dj-token"); location.href="/margolis-login"; throw "auth"; }
     if(!r.ok) throw (out.error || "Something went wrong — try again.");
     return out;
+  }
+
+  // ---------- avatar (little circle, top of dashboard) ----------
+  // Falls back to a colored initial until (if ever) a photo is on file.
+  // getPhoto is a POST-only endpoint (token in the body, not the URL),
+  // so this fetches the raw image and hands it to the <span> as a blob URL.
+  function avatarInitial(name){ return (name||"").trim().charAt(0).toUpperCase() || "?"; }
+  async function loadAvatar(account){
+    const el = document.getElementById("djdAvatar");
+    el.hidden = false;
+    el.textContent = avatarInitial(account.name);
+    if(!account.hasFacePhoto || DEMO) return;
+    try{
+      const r = await fetch(AUTH_URL, {method:"POST", body: JSON.stringify({action:"getPhoto", token: TOKEN})});
+      if(!r.ok) return;
+      const blob = await r.blob();
+      el.style.backgroundImage = `url(${URL.createObjectURL(blob)})`;
+      el.textContent = "";
+    }catch(e){ /* fallback initial stays */ }
   }
 
   // ---------- W9 upload (gates payouts, not bookings) ----------
@@ -424,7 +445,7 @@
       try{
         savePhotosBtn.textContent = "Uploading photo…";
         const acct = (await api(AUTH_URL, {action:"savePhoto", kind:"face", fileB64: await readFileB64(facePick)})).account;
-        clearErr(); renderProfilePanel(acct);
+        clearErr(); renderProfilePanel(acct); loadAvatar(acct);
       }catch(e){
         savePhotosBtn.disabled = false;
         savePhotosBtn.innerHTML = `Upload photo <span class="arw" aria-hidden="true">&gt;</span>`;
@@ -510,6 +531,7 @@
         ${withLine}
         <div class="evt__chips">${chips}</div>
         ${s.fullyApproved?`<div class="evt__ok" style="width:100%">All approved — the presale is off and guests go straight to your ticket link.</div>`:""}
+        ${(s.payout||[]).map(p=>`<div class="evt__ok" style="width:100%">Net bar sales: $${esc(money(p.netSales))} · ${esc(p.percent)}% · Your check: $${esc(money(p.totalPay))} — ${p.paid?"paid":"pending"}</div>`).join("")}
       </div>
       ${archived?"":`<div class="evt__body">
         <div class="evt__tabs">
@@ -850,7 +872,8 @@
     try{
       const me = await api(AUTH_URL, {action:"me"});
       const first = (me.account.name||"").split(" ")[0] || "there";
-      document.getElementById("hello").innerHTML = `Good to see you, <strong>${esc(first)}</strong>.`;
+      document.getElementById("helloText").innerHTML = `Good to see you, <strong>${esc(first)}</strong>.`;
+      loadAvatar(me.account);
       if(me.account.mustSetPassword || !me.account.quickProfileDone){ location.href = "/margolis-login"; return; }
       renderProfilePanel(me.account);
       renderW9(me.account);
