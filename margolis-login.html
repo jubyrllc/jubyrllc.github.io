@@ -169,8 +169,8 @@
             <div class="dj-multi" id="venueOpts"></div>
             <p class="help">Pick all that apply — we're always adding more to this list.</p>
           </div>
-          <p class="dj-note" style="margin:0 0 18px">Your two profile photos (face + full body) are
-          waiting on your dashboard — no rush, we want a good one, not a hurried one.</p>
+          <p class="dj-note" style="margin:0 0 18px">Your profile photo is waiting on your dashboard.
+          Upload a high quality, professional photo of just you (no group shots). No rush, we want a good one, not a hurried one.</p>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="btnProfile">Save profile <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </form>
 
@@ -265,15 +265,16 @@
 
   let TOKEN = localStorage.getItem("margolis-dj-token") || "";
   let ACCOUNT = null;
+  const WANTS_CLAIM = new URLSearchParams(location.search).get("claim") === "1";
 
   // ---------- demo mode (Ruby's preview only, no server writes) ----------
   const DEMO = localStorage.getItem("margolis-dj-demo") === "1";
   function demoState(){ try{ return JSON.parse(localStorage.getItem("margolis-dj-demo-state"))||{}; }catch(e){ return {}; } }
   function demoSave(s){ localStorage.setItem("margolis-dj-demo-state", JSON.stringify(s)); }
   function demoRecompute(a){
-    // photos are dashboard tasks now, not part of the quick gate
+    // photo is a dashboard task now, not part of the quick gate
     a.quickProfileDone = !!(a.name && a.type);
-    const c = [!!(a.name&&a.type&&a.phone), !!a.hasFacePhoto, !!a.hasFullBodyPhoto,
+    const c = [!!(a.name&&a.type&&a.phone), !!a.hasFacePhoto,
       (a.genres||[]).length>0||(a.venues||[]).length>0, !!(a.payableTo&&a.zelle), !!a.agreementsSigned, !!a.hasW9];
     a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100);
   }
@@ -284,16 +285,16 @@
       venues:["Fabrika","The Winston","Winston on the Water","The Foundry","Blind Barber","Bastet","The Barbary","The Saint","La Chinesca","Stratus Lounge","Savu","Prestige","Reserve","Concourse","Liberty Point","Other"]};
     if(payload.action==="login"){
       if(!s.account) s.account = {id:"demo1", email:payload.email, name:"", type:"", phone:"", instagram:"",
-        genres:[], venues:[], venuesOther:"", hasFacePhoto:false, hasFullBodyPhoto:false, hasW9:false,
+        genres:[], venues:[], venuesOther:"", hasFacePhoto:false, hasW9:false,
         mustSetPassword:true, quickProfileDone:false};
       demoSave(s);
       return {ok:true, token:"DEMO", account:s.account};
     }
     if(payload.action==="signup"){
       s.account = {id:"demo1", email:payload.email, name:payload.name, phone:payload.phone, type:payload.type,
-        instagram:"", genres:[], venues:[], venuesOther:"", hasFacePhoto:false, hasFullBodyPhoto:false, hasW9:false,
+        instagram:"", genres:[], venues:[], venuesOther:"", hasFacePhoto:false, hasW9:false,
         approved:false, claimedResidency:null, payableTo:"", zelle:"", agreementsSigned:false,
-        mustSetPassword:false, quickProfileDone:false, profilePercent:14};
+        mustSetPassword:false, quickProfileDone:false, profilePercent:17};
       demoSave(s); return {ok:true, token:"DEMO", account:s.account};
     }
     if(payload.action==="listResidencies") return {ok:true, residencies:[
@@ -304,7 +305,7 @@
     if(payload.action==="me"){ return {ok:true, account:s.account}; }
     if(payload.action==="setPassword"){ s.account.mustSetPassword=false; demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="savePhoto"){
-      if(payload.kind==="face") s.account.hasFacePhoto=true; else s.account.hasFullBodyPhoto=true;
+      s.account.hasFacePhoto=true;
       demoRecompute(s.account); demoSave(s); return {ok:true, account:s.account};
     }
     if(payload.action==="updateProfile"){
@@ -344,6 +345,7 @@
     ACCOUNT = account;
     if(account.mustSetPassword){ showStep("stepSetPassword"); return; }
     if(!account.quickProfileDone){ openProfileStep(account); return; }
+    if(WANTS_CLAIM){ openClaimStep(); return; }
     location.href = "/margolis-dashboard";
   }
 
@@ -519,7 +521,7 @@
         <li><strong>Your confirmation email arrives</strong> with every detail of your night in writing.</li>
       </ul>` },
     { kicker:"How it works", step:"Step 2 of 6", title:"Your account makes it official.",
-      html:`<p>The moment your first booking is confirmed, your account is created automatically — your login and a temporary password land in your inbox. Log in, set your own password, and complete your quick profile: DJ or host, your genres, and the other venues you play. Then, from your dashboard, add <strong>two photos</strong> when you have good ones — a high-quality color shot of your face (your profile icon; professional if you have one) and a full-body shot we keep on hand for promo. No rush on the photos — we would rather wait for a great one.</p>
+      html:`<p>The moment your first booking is confirmed, your account is created automatically. Your login and a temporary password land in your inbox. Log in, set your own password, and complete your quick profile: DJ or host, your genres, and the other venues you play. Then, from your dashboard, add <strong>a profile photo</strong> when you have a good one: a high quality, professional photo of just you (your profile icon, no group shots). No rush on the photo, we would rather wait for a great one.</p>
       <p><strong>Your night is not officially in the books until your profile is complete.</strong></p>
       <p>Already have a residency with us? Your account works the same way — check your email for credentials, or write <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a> and we'll set you up.</p>` },
     { kicker:"How it works", step:"Step 3 of 6", title:"Hosting with a partner?",

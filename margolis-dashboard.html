@@ -237,10 +237,10 @@
       if(!s.account) throw "Please log in again.";
       demoSave(s); return {ok:true, account:s.account};
     }
-    const demoPct = a => { const c=[!!(a.name&&a.type&&a.phone),!!a.hasFacePhoto,!!a.hasFullBodyPhoto,(a.genres||[]).length>0||(a.venues||[]).length>0,!!(a.payableTo&&a.zelle),!!a.agreementsSigned,!!a.hasW9]; a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100); };
+    const demoPct = a => { const c=[!!(a.name&&a.type&&a.phone),!!a.hasFacePhoto,(a.genres||[]).length>0||(a.venues||[]).length>0,!!(a.payableTo&&a.zelle),!!a.agreementsSigned,!!a.hasW9]; a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100); };
     if(payload.action==="saveW9"){ s.account.hasW9 = true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="savePhoto"){
-      if(payload.kind==="face") s.account.hasFacePhoto=true; else s.account.hasFullBodyPhoto=true;
+      s.account.hasFacePhoto=true;
       demoPct(s.account); demoSave(s); return {ok:true, account:s.account};
     }
     if(payload.action==="savePayout"){ s.account.payableTo=payload.payableTo; s.account.zelle=payload.zelle; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
@@ -343,54 +343,57 @@
   // ---------- profile completion panel ----------
   // Percent bar + the "everything on the other forms" tasks: payout
   // info and the full agreement stack. W9 keeps its own banner below.
+  // Once complete, the panel collapses to a one-line badge; "Profile
+  // settings" reopens the same tasks in an always-editable state.
+  let profileEditMode = false;
   function renderProfilePanel(account){
     document.getElementById("approvalBox").hidden = !!account.approved;
     const p = account.profilePercent ?? 0;
+    const complete = p >= 100;
+    const editing = !complete || profileEditMode;
     const claim = account.claimedResidency;
     const items = [
       [!!(account.name && account.type && account.phone), "The essentials — name, DJ or host, phone"],
-      [!!account.hasFacePhoto, "Face photo (your profile icon)"],
-      [!!account.hasFullBodyPhoto, "Full body photo"],
+      [!!account.hasFacePhoto, "Profile photo"],
       [(account.genres||[]).length>0 || (account.venues||[]).length>0, "Genres and venues you play"],
       [!!(account.payableTo && account.zelle), "Payout info — checks payable to + Zelle"],
       [!!account.agreementsSigned, "The agreement stack, signed"],
       [!!account.hasW9, "W9 on file"],
     ];
     const el = document.getElementById("profilePanel");
-    el.innerHTML = `<details class="djd-prof"${p<100?" open":""}>
-      <summary>Profile completion <span class="djd-bar"><i style="width:${p}%"></i></span> <span style="font-family:'IBM Plex Mono',monospace;font-size:13px">${p}%</span></summary>
+    el.innerHTML = `<details class="djd-prof"${editing?" open":""}>
+      <summary>${complete
+        ? `Profile complete <span style="color:var(--green)">&#10003;</span> <button type="button" id="profileEditToggle" style="margin-left:auto;background:none;border:none;padding:0;cursor:pointer;color:var(--green);font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;text-decoration:underline">${profileEditMode?"Done editing":"Profile settings"}</button>`
+        : `Profile completion <span class="djd-bar"><i style="width:${p}%"></i></span> <span style="font-family:'IBM Plex Mono',monospace;font-size:13px">${p}%</span>`}</summary>
       <div class="djd-prof__body">
-        ${p<100?`<p class="djd-note" style="margin:0 0 14px"><strong>Until your profile hits 100%</strong>, your residency stays unlocked and no payout can be processed. We'll keep reminding you daily — finishing takes a few minutes.</p>`:""}
-        <ul class="djd-check">${items.map(([done,label])=>`<li class="${done?"done":""}"><span class="mk">${done?"&#10003;":"&#8226;"}</span>${label}</li>`).join("")}</ul>
+        ${!complete?`<p class="djd-note" style="margin:0 0 14px"><strong>Until your profile hits 100%</strong>, your residency stays unlocked and no payout can be processed. We'll keep reminding you daily — finishing takes a few minutes.</p>`:""}
+        ${editing?`<ul class="djd-check">${items.map(([done,label])=>`<li class="${done?"done":""}"><span class="mk">${done?"&#10003;":"&#8226;"}</span>${label}</li>`).join("")}</ul>`:""}
         <p class="djd-note" style="margin:0 0 4px"><strong>Residency:</strong> ${
           claim ? (claim.status==="locked"
             ? `${esc(claim.title)} — <span style="color:var(--green)">locked in</span>`
             : `${esc(claim.title)} — claim under review${p<100?" (complete your profile to lock it)":""}`)
           : `none claimed yet — <a href="/margolis-login?claim=1">claim your spot</a>`}</p>
-        ${!(account.hasFacePhoto && account.hasFullBodyPhoto)?`<div class="djd-task">
-          <h4>Profile photos</h4>
-          <p class="djd-note" style="margin:0 0 12px">No rush on these — we want a good photo, not a
-          hurried one. High quality, in color; a professional shot if you have one.</p>
-          ${!account.hasFacePhoto?`<div class="ifield"><label>Face photo <span class="req">*</span></label>
+        ${(!account.hasFacePhoto || profileEditMode)?`<div class="djd-task">
+          <h4>Profile photo</h4>
+          <p class="djd-note" style="margin:0 0 12px">${account.hasFacePhoto
+            ? "Your photo is on file — upload a replacement below if you'd like to update it."
+            : "No rush on this — we want a good photo, not a hurried one. A high quality, professional picture of just you, no group shots."}</p>
+          <div class="ifield"><label>Profile photo${account.hasFacePhoto?"":` <span class="req">*</span>`}</label>
             <input type="file" id="ppPhotoFace" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
-            <p class="help">Face only — this becomes your profile icon.</p></div>`:""}
-          ${!account.hasFullBodyPhoto?`<div class="ifield"><label>Full body photo <span class="req">*</span></label>
-            <input type="file" id="ppPhotoBody" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
-            <p class="help">We keep this on hand for promo.</p></div>`:""}
-          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePhotos">Upload photo${!account.hasFacePhoto&&!account.hasFullBodyPhoto?"s":""} <span class="arw" aria-hidden="true">&gt;</span></button></div>
+            <p class="help">${account.hasFacePhoto?"On file — pick a new file to replace it. ":""}This becomes your profile icon.</p></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePhotos">${account.hasFacePhoto?"Save photo":"Upload photo"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
-        ${!(account.payableTo && account.zelle)?`<div class="djd-task">
+        ${(!(account.payableTo && account.zelle) || profileEditMode)?`<div class="djd-task">
           <h4>Payout info</h4>
           <p class="djd-note" style="margin:0 0 12px"><strong>Door payments must go through Zelle.</strong>
           If you do not have one, please set one up.</p>
-          <div class="ifield"><label>Make checks payable to <span class="req">*</span></label><input type="text" id="ppPayable" value="${esc(account.payableTo||"")}" placeholder="Must match your W9"></div>
-          <div class="ifield"><label>Zelle <span class="req">*</span></label><input type="text" id="ppZelle" value="${esc(account.zelle||"")}" placeholder="Must match your W9">
-            <p class="help">Phone number, email, or Zelle tag associated with your Zelle account.</p></div>
+          <div class="ifield"><label>Make checks payable to <span class="req">*</span></label><input type="text" id="ppPayable" value="${esc(account.payableTo||"")}" placeholder="(Full Name or Business Name)"></div>
+          <div class="ifield"><label>Zelle <span class="req">*</span></label><input type="text" id="ppZelle" value="${esc(account.zelle||"")}" placeholder="Phone number, email, or Zelle tag"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePayout">Save payout info <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
-        ${!account.agreementsSigned?`<div class="djd-task">
+        ${(!account.agreementsSigned || profileEditMode)?`<div class="djd-task">
           <h4>The agreement stack</h4>
-          <p class="djd-note" style="margin:0 0 12px">The same terms every Margolis booking runs on — the
+          <p class="djd-note" style="margin:0 0 12px">${account.agreementsSigned?"Already signed and on file — resign below only if you need to update your legal name.":""} The same terms every Margolis booking runs on — the
           <a href="/margolis#payouts" target="_blank" rel="noopener">booking philosophy and payout model</a>,
           the <a href="/margolis#minimums" target="_blank" rel="noopener">bar minimum policy</a>, and the full
           event policies (sound, conduct, door operations, fees) on the
@@ -399,37 +402,32 @@
              ["agMins","I understand and agree to the Bar Minimum Policy"],
              ["agAll","I have read and agree to all event policies and terms"],
              ["agConsent","Jubyr LLC may contact me about my bookings and future events by email, phone, and text — opt out anytime, info never sold"]].map(([id,label])=>
-            `<label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="checkbox" id="${id}" style="margin-top:3px">${label}</label>`).join("")}
-          <div class="ifield" style="margin-top:6px"><label>Electronic signature (full legal name) <span class="req">*</span></label><input type="text" id="agSig" autocomplete="name"></div>
-          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSignAgreements">Sign the agreements <span class="arw" aria-hidden="true">&gt;</span></button></div>
+            `<label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="checkbox" id="${id}"${account.agreementsSigned?" checked":""} style="margin-top:3px">${label}</label>`).join("")}
+          <div class="ifield" style="margin-top:6px"><label>Electronic signature (full legal name) <span class="req">*</span></label><input type="text" id="agSig" autocomplete="name" value="${account.agreementsSigned?esc(account.name||""):""}"></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSignAgreements">${account.agreementsSigned?"Update signature":"Sign the agreements"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
       </div>
     </details>`;
+    const editToggle = document.getElementById("profileEditToggle");
+    if(editToggle) editToggle.addEventListener("click", (e)=>{
+      e.preventDefault(); e.stopPropagation();
+      profileEditMode = !profileEditMode;
+      renderProfilePanel(account);
+    });
     const savePhotosBtn = document.getElementById("ppSavePhotos");
     if(savePhotosBtn) savePhotosBtn.addEventListener("click", async ()=>{
       const faceIn = document.getElementById("ppPhotoFace");
-      const bodyIn = document.getElementById("ppPhotoBody");
       const facePick = faceIn && faceIn.files[0] || null;
-      const bodyPick = bodyIn && bodyIn.files[0] || null;
-      if(!facePick && !bodyPick) return showErr("Pick a photo first.");
-      for(const f of [facePick, bodyPick]){
-        if(f && f.size > 10*1024*1024) return showErr("One of your photos is over 10 MB — please compress it.");
-      }
+      if(!facePick) return showErr("Pick a photo first.");
+      if(facePick.size > 10*1024*1024) return showErr("That photo is over 10 MB — please compress it.");
       savePhotosBtn.disabled = true;
       try{
-        let acct = null;
-        if(facePick){
-          savePhotosBtn.textContent = "Uploading face photo…";
-          acct = (await api(AUTH_URL, {action:"savePhoto", kind:"face", fileB64: await readFileB64(facePick)})).account;
-        }
-        if(bodyPick){
-          savePhotosBtn.textContent = "Uploading full body photo…";
-          acct = (await api(AUTH_URL, {action:"savePhoto", kind:"fullBody", fileB64: await readFileB64(bodyPick)})).account;
-        }
+        savePhotosBtn.textContent = "Uploading photo…";
+        const acct = (await api(AUTH_URL, {action:"savePhoto", kind:"face", fileB64: await readFileB64(facePick)})).account;
         clearErr(); renderProfilePanel(acct);
       }catch(e){
         savePhotosBtn.disabled = false;
-        savePhotosBtn.innerHTML = `Upload photos <span class="arw" aria-hidden="true">&gt;</span>`;
+        savePhotosBtn.innerHTML = `Upload photo <span class="arw" aria-hidden="true">&gt;</span>`;
         if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
       }
     });
