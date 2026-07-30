@@ -122,6 +122,10 @@
             <p class="djd-note" style="margin:0 0 14px">Run a night regularly but it's not on the
             calendar yet? Enter it once and list every date you'd like &mdash; Margolis reviews and
             confirms each date individually, so approving one doesn't approve them all.</p>
+            <div class="ifield" id="dreqPartyWrap" hidden><label>Same party as&hellip;</label>
+              <select id="dreqParty"><option value="new">A new party</option></select>
+              <p class="djd-note" style="margin-top:6px">Picks up the name, description, times, food plan, and admission model from that night &mdash; still yours to change below.</p>
+            </div>
             <div class="ifield"><label>Event name <span class="req">*</span></label>
               <input type="text" id="dreqName" placeholder="e.g. Kingspy Rhythm Nation"></div>
             <div class="ifield"><label>Event description</label>
@@ -137,6 +141,18 @@
             <div style="display:flex;gap:12px;flex-wrap:wrap">
               <div class="ifield" style="flex:1;min-width:140px"><label>Usual start time</label><input type="time" id="dreqStart"></div>
               <div class="ifield" style="flex:1;min-width:140px"><label>Usual end time</label><input type="time" id="dreqEnd"></div>
+            </div>
+            <div id="dreqOpsWrap" style="display:flex;gap:12px;flex-wrap:wrap">
+              <div class="ifield" style="flex:1;min-width:160px"><label>Food plan</label>
+                <select id="dreqFood">
+                  <option value="">Not sure yet</option>
+                  <option value="Kitchen service">Kitchen service</option>
+                  <option value="No food service">No food service</option>
+                  <option value="Outside catering">Outside catering</option>
+                </select>
+              </div>
+              <div class="ifield" style="flex:1;min-width:160px"><label>Admission model</label><input type="text" id="dreqCover" placeholder="e.g. $20 at the door"></div>
+              <div class="ifield" style="flex:1;min-width:140px"><label>Anticipated guest count</label><input type="text" inputmode="numeric" id="dreqGuests" placeholder="e.g. 120"></div>
             </div>
             <div class="ifield"><label>Dates you&rsquo;d like to request <span class="req">*</span></label>
               <div id="dreqDates"></div>
@@ -248,6 +264,13 @@
     if(payload.action==="savePayout"){ s.account.payableTo=payload.payableTo; s.account.zelle=payload.zelle; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="saveAgreements"){ s.account.agreementsSigned=true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="events"){ demoSave(s); return {ok:true, events:s.events, archive:s.archive||[], dateRequests:s.dateRequests||[]}; }
+    if(payload.action==="myPastParties"){
+      return {ok:true, parties:[
+        {eventName:"Kingspy Rhythm Nation", eventDescription:"Open-format residency, house and afrobeats leaning.",
+         venue:"Margolis (inside)", startTime:"21:00", endTime:"02:00",
+         foodService:"Kitchen service", coverCharge:"$20 at the door", guestCount:"120"},
+      ]};
+    }
     if(payload.action==="requestDates"){
       const today = new Date().toISOString().slice(0,10);
       const dates = [...new Set((payload.dates||[]).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d) && d>=today))].sort();
@@ -257,6 +280,7 @@
       const req = {
         id:"dreq-demo-"+Date.now(), eventName:payload.eventName, eventDescription:payload.eventDescription||"",
         venue:payload.venue||"Margolis (inside)", startTime:payload.startTime||"", endTime:payload.endTime||"",
+        foodService:payload.foodService||"", coverCharge:payload.coverCharge||"", guestCount:payload.guestCount||"",
         createdAt:new Date().toISOString(),
         dates:dates.map(d=>({date:d, status:"pending", bookingId:null, reviewedAt:null})),
       };
@@ -640,10 +664,44 @@
     const checked = document.querySelector('input[name="dreqVenue"]:checked');
     document.getElementById("dreqVenueNote").textContent = checked ? (DREQ_VENUE_NOTES[checked.value]||"") : "";
   }
+  let PAST_PARTIES = null;
+  async function loadPastParties(){
+    try{
+      const out = await api(DASH_URL, {action:"myPastParties"});
+      PAST_PARTIES = out.parties || [];
+    }catch(e){ PAST_PARTIES = []; }
+    const wrap = document.getElementById("dreqPartyWrap");
+    const sel = document.getElementById("dreqParty");
+    if(!wrap || !sel) return;
+    if(PAST_PARTIES.length){
+      sel.innerHTML = `<option value="new">A new party</option>`
+        + PAST_PARTIES.map((p,i)=>`<option value="${i}">Same as: ${esc(p.eventName)}</option>`).join("");
+      wrap.hidden = false;
+    } else {
+      wrap.hidden = true;
+    }
+  }
+  function applyPartyFields(p){
+    document.getElementById("dreqName").value = p ? p.eventName : "";
+    document.getElementById("dreqDesc").value = p ? p.eventDescription : "";
+    document.querySelector(`input[name="dreqVenue"][value="${p ? p.venue : "Margolis (inside)"}"]`).checked = true;
+    document.getElementById("dreqStart").value = p ? p.startTime : "";
+    document.getElementById("dreqEnd").value = p ? p.endTime : "";
+    document.getElementById("dreqFood").value = p ? (p.foodService||"") : "";
+    document.getElementById("dreqCover").value = p ? p.coverCharge : "";
+    document.getElementById("dreqGuests").value = p ? p.guestCount : "";
+    updateDreqVenueNote();
+  }
   function bindDreqForm(){
     renderDreqDates();
     updateDreqVenueNote();
+    loadPastParties();
     document.querySelectorAll('input[name="dreqVenue"]').forEach(r=>r.addEventListener("change", updateDreqVenueNote));
+    document.getElementById("dreqParty").addEventListener("change", e=>{
+      if(e.target.value==="new"){ applyPartyFields(null); return; }
+      const p = (PAST_PARTIES||[])[+e.target.value];
+      if(p) applyPartyFields(p);
+    });
     document.getElementById("dreqAddDate").addEventListener("click", ()=>{
       dreqDateRows.push("");
       renderDreqDates();
@@ -656,20 +714,19 @@
       const venue = document.querySelector('input[name="dreqVenue"]:checked').value;
       const startTime = document.getElementById("dreqStart").value;
       const endTime = document.getElementById("dreqEnd").value;
+      const foodService = document.getElementById("dreqFood").value;
+      const coverCharge = document.getElementById("dreqCover").value.trim();
+      const guestCount = document.getElementById("dreqGuests").value.trim();
       const dates = dreqDateRows.filter(Boolean);
       if(!eventName){ errEl2.textContent = "Add an event name."; return; }
       if(!dates.length){ errEl2.textContent = "Add at least one upcoming date."; return; }
       const btn = document.getElementById("dreqSubmit");
       btn.disabled = true; const orig = btn.textContent; btn.textContent = "Submitting…";
       try{
-        const out = await api(DASH_URL, {action:"requestDates", eventName, eventDescription, venue, startTime, endTime, dates});
+        const out = await api(DASH_URL, {action:"requestDates", eventName, eventDescription, venue, startTime, endTime, foodService, coverCharge, guestCount, dates});
         DATE_REQUESTS.unshift(out.request);
-        document.getElementById("dreqName").value = "";
-        document.getElementById("dreqDesc").value = "";
-        document.getElementById("dreqStart").value = "";
-        document.getElementById("dreqEnd").value = "";
-        document.querySelector('input[name="dreqVenue"][value="Margolis (inside)"]').checked = true;
-        updateDreqVenueNote();
+        document.getElementById("dreqParty").value = "new";
+        applyPartyFields(null);
         dreqDateRows = [""];
         renderDreqDates();
         renderDateRequests();
