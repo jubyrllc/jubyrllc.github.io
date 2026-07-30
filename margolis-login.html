@@ -63,14 +63,14 @@
     <nav class="nav" aria-label="Main">
       <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
       <ul class="nav__links mono">
-        <li><a href="/margolis">Host an event</a></li>
+        <li><a href="/bookings">Host an event</a></li>
       </ul>
       <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
         <span></span><span></span><span></span>
       </button>
     </nav>
     <div class="mobilemenu mono" id="mobilemenu">
-      <a href="/margolis">Host an event</a>
+      <a href="/bookings">Host an event</a>
     </div>
   </header>
 
@@ -587,11 +587,17 @@
 
   // Returning visitors (finished the intro before, or holding a session)
   // go straight to the login side; brand-new visitors get the walkthrough.
-  if(localStorage.getItem(INTRO_KEY) || TOKEN){
+  // ?intro=1 (the "Create a profile with us" link) always forces the
+  // walkthrough back up for anyone not already logged in on this device.
+  const forceIntro = new URLSearchParams(location.search).get("intro") === "1";
+  if(TOKEN){
     wizBox.hidden = true;
     loginSection.hidden = false;
-  } else {
+  } else if(forceIntro || !localStorage.getItem(INTRO_KEY)){
     renderWiz();
+  } else {
+    wizBox.hidden = true;
+    loginSection.hidden = false;
   }
 
   // Already have a saved session? Skip straight past the login form.
