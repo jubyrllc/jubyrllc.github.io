@@ -555,7 +555,10 @@
         ${withLine}
         <div class="evt__chips">${chips}</div>
         ${s.fullyApproved?`<div class="evt__ok" style="width:100%">All approved — the presale is off and guests go straight to your ticket link.</div>`:""}
-        ${(s.payout||[]).map(p=>`<div class="evt__ok" style="width:100%">Net bar sales: $${esc(money(p.netSales))} · ${esc(p.percent)}% · Your check: $${esc(money(p.totalPay))} — ${p.paid?"paid":"pending"}</div>`).join("")}
+        ${(s.payout||[]).map(p=> p.reason
+          ? `<div class="evt__ok" style="width:100%">${p.netSales?`Net bar sales: $${esc(money(p.netSales))} · `:""}No check this time — ${esc(p.reason==="bar_minimum"?"bar minimum not met":p.reason==="no_agreement"?"no payout agreement":p.reason)}</div>`
+          : `<div class="evt__ok" style="width:100%">Net bar sales: $${esc(money(p.netSales))} · ${esc(p.percent)}% · Your check: $${esc(money(p.totalPay))} — ${p.paid?"paid":"pending"}</div>`
+        ).join("")}
       </div>
       ${archived?"":`<div class="evt__body">
         <div class="evt__tabs">
