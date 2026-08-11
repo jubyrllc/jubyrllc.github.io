@@ -1499,6 +1499,28 @@
 .path p { color: var(--muted); font-size: 14.5px; line-height: 1.55; margin-bottom: 14px; }
 .path__go { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
 .path:hover .path__go { color: var(--green); }
+
+/* Top chooser only: swap the visual weight so the category name reads
+   first, big and bold, and the longer description becomes the small
+   supporting line underneath, instead of the reverse. */
+#categoryCards .path__kicker {
+  font-family: var(--sans);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+#categoryCards .path h3 {
+  font-family: var(--sans);
+  font-size: 14.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--green);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
 @media (max-width: 860px) {
   .paths { grid-template-columns: 1fr; }
 }

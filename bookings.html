@@ -1877,8 +1877,14 @@
 
   // -------- init --------
   if(!gotoSectionHash(location.hash)){
+    // A cold-load deep link like #couches has to actually land the visitor
+    // on that section, not just switch the mode behind the scenes while
+    // they stay stranded at the hero — scroll:true only fires when a real
+    // mode hash was present (setMode no-ops on scroll for the default
+    // "none" mode, so a plain /bookings visit is unaffected).
+    const hasModeHash = !!MODE_HASHES[location.hash];
     const initMode = MODE_HASHES[location.hash] || "none";
-    setMode(initMode, false);
+    setMode(initMode, hasModeHash);
   }
 </script>
 
