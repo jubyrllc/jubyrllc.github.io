@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Book a Free Consultation — Jubyr LLC</title>
-<meta name="description" content="Pick a time on Ruby's real calendar and book a free 30 minute consultation with Jubyr LLC. Events, venues, booking, and custom tools.">
+<meta name="description" content="Pick a time on Ruby's real calendar and book a free 15 minute consultation with Jubyr LLC. Events, venues, booking, and custom tools.">
 <link rel="icon" type="image/png" href="assets/jubyr-icon.png?v=2">
 <link rel="apple-touch-icon" href="assets/jubyr-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +14,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
 <meta property="og:title" content="Book a Free Consultation — Jubyr LLC">
-<meta property="og:description" content="Pick a time on Ruby's real calendar and book a free 30 minute consultation with Jubyr LLC.">
+<meta property="og:description" content="Pick a time on Ruby's real calendar and book a free 15 minute consultation with Jubyr LLC.">
 <meta property="og:url" content="https://jubyr.com/consultation">
 <meta property="og:image" content="https://jubyr.com/assets/og-default.jpg">
 <meta property="og:image:width" content="1200">
@@ -93,14 +93,18 @@
   }
   .sched__notice strong { color: var(--ink); }
 
-  .steps { list-style: none; margin: 0; padding: 0; }
-  .steps li {
-    padding: 14px 0; border-bottom: 1px solid var(--line);
-    color: var(--muted); font-size: 15px; line-height: 1.6;
+  /* The process, one line of three, so the calendar sits near the top of
+     the page instead of below a wall of explanation. */
+  /* The topic question is a chip group, not a select, so it needs the same
+     heading treatment .ifield gives a real <label>. */
+  .ifield > .ifield__lbl {
+    display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink); margin-bottom: 9px;
   }
-  .steps li:last-child { border-bottom: none; }
-  .steps strong { color: var(--ink); display: block; margin-bottom: 2px; }
-  .steps .mono { color: var(--green); display: block; margin-bottom: 4px; }
+
+  .steps { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 28px; }
+  .steps li { display: flex; align-items: baseline; gap: 8px; color: var(--ink); font-size: 15px; }
+  .steps .mono { color: var(--green); font-size: 11px; letter-spacing: .1em; }
 </style>
 </head>
 <body>
@@ -145,30 +149,18 @@
         <span class="tag">Free consultation</span>
         <h2>Every project begins with a conversation.</h2>
         <p>Pick a time that is genuinely open on Ruby's calendar and it is
-        booked on the spot. Thirty minutes on the phone, no cost, no pitch
+        booked on the spot. Fifteen minutes on the phone, no cost, no pitch
         deck required.</p>
       </div>
 
       <div class="sched">
-        <div class="sched__cols" style="margin-bottom:34px">
-          <div>
-            <span class="sched__label">How it works</span>
-            <ul class="steps">
-              <li><span class="mono">01</span><strong>Pick a time</strong>Weekday afternoons, noon to 5 Eastern. Only times that are genuinely free on Ruby's calendar are shown, so nothing gets double booked.</li>
-              <li><span class="mono">02</span><strong>Tell us what it's about</strong>A short intake so the call starts in the middle of the conversation instead of at the beginning.</li>
-              <li><span class="mono">03</span><strong>Ruby calls you</strong>She rings the number you give us at the time you picked. Nothing to join, no link to click. The event lands on both calendars the moment you confirm.</li>
-            </ul>
-          </div>
-          <div>
-            <span class="sched__label">Good reasons to book</span>
-            <ul class="steps">
-              <li><strong>An event you want produced</strong>A single night or a full run of them.</li>
-              <li><strong>A venue that is not performing</strong>Programming, service, atmosphere, staffing.</li>
-              <li><strong>Booking and programming help</strong>Talent, residencies, calendars.</li>
-              <li><strong>A custom tool</strong>The software your operation is missing.</li>
-              <li><strong>Something you cannot name yet</strong>That is a fine place to start.</li>
-            </ul>
-          </div>
+        <div style="margin-bottom:30px">
+          <span class="sched__label">How it works</span>
+          <ul class="steps">
+            <li><span class="mono">01</span><strong>Pick a time</strong></li>
+            <li><span class="mono">02</span><strong>Tell us what it's about</strong></li>
+            <li><span class="mono">03</span><strong>Ruby calls you</strong></li>
+          </ul>
         </div>
 
         <div id="schedWrap">
@@ -252,33 +244,147 @@
   const esc = s => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const emailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e || "").trim());
 
+  // Was a dropdown. Asked as chips instead so every reason to book is
+  // visible on the page rather than hidden behind a select.
   const TOPICS = [
-    "Event production",
-    "Venue and hospitality consulting",
-    "Booking and programming",
-    "Custom tools and design",
-    "Teaching or speaking",
-    "Partnership or collaboration",
-    "Press or media",
-    "Something else",
+    "Public Event Booking",
+    "Private Event Booking",
+    "Event Production",
+    "Venue Performance Strategy",
+    "Custom Tool",
+    "Teaching or Speaking",
+    "Partnership",
+    "Press or Media",
+    "Still Figuring It Out",
   ];
-  const SHAPES = ["A single event or night", "An ongoing partnership", "A one-time consult", "Not sure yet"];
-  const TIMELINES = ["Just exploring", "In the next few months", "Soon, I have a date"];
-  const PEOPLE = ["Just me", "2 people", "3 to 5 people", "6 or more"];
   const BUDGETS = ["Not sure yet", "Under $5K", "$5K to $15K", "$15K to $50K", "$50K and up"];
+  const RANGES = ["Under 50", "50 to 100", "100 to 150", "150 to 200", "200+"];
+  const CAPACITY = ["Under 50", "50 to 100", "100 to 250", "250 to 500", "500 to 1000", "1000 to 1500", "1500+"];
+  const CROWD = ["Under 50", "50 to 100", "100 to 250", "250 to 500", "500 to 1000", "1000 to 1500"];
+  const VENUES = ["Margolis", "Fabrika", "The Patio", "Somewhere else"];
 
-  let configured = false, durationMin = 30, loadError = null;
+  /* =====================================================================
+     What we ask next depends on what they picked above. A press inquiry
+     and a private party have almost nothing in common, so asking one
+     generic set of questions wasted everybody's time and still left Ruby
+     opening the call by gathering basics.
+
+     Field shapes: chips (pick one), multi (pick any), text, date.
+     `req` blocks the submit. `reveal` asks a follow up only once the
+     answer calls for it, so nobody stares at a date picker they do not
+     need. `field` routes an answer into a column the booking endpoint
+     already understands; everything else rides along in the notes.
+     ===================================================================== */
+  const dateQ = (label) => ({
+    key: "date", label, noteLabel: "Date", type: "chips", req: true,
+    options: ["I have a date", "A rough month", "Not yet"],
+    reveal: {
+      "I have a date": { key: "dateExact", noteLabel: "Day", type: "date", label: "Which day?", req: true },
+      "A rough month": { key: "dateExact", noteLabel: "Month", type: "text", label: "Which month?", placeholder: "e.g. late October", req: true },
+    },
+  });
+  const budgetQ = { key: "budget", field: "budget", label: "Budget range", type: "chips", options: BUDGETS };
+  const briefQ = { key: "brief", label: "Brief description", type: "text",
+    placeholder: "A line on what you have in mind" };
+
+  const BRANCH = {
+    "Public Event Booking": [
+      dateQ("Do you have a date in mind?"),
+      { key: "size", label: "How many people are you expecting?", type: "chips", req: true, options: RANGES },
+      { key: "venue", label: "Where?", type: "chips", req: true, options: VENUES },
+      { key: "door", label: "Ticketed or free?", type: "chips", options: ["Ticketed", "Free entry", "Not sure yet"] },
+      briefQ,
+    ],
+    "Private Event Booking": [
+      { key: "occasion", label: "What is the occasion?", type: "chips", req: true,
+        options: ["Birthday", "Wedding or engagement", "Corporate or team", "Fundraiser", "Something else"],
+        reveal: { "Something else": { key: "occasionOther", noteLabel: "What it is", type: "text",
+          label: "What is it?", placeholder: "A few words is plenty", req: true } } },
+      dateQ("Do you have a date?"),
+      { key: "size", label: "How many guests?", type: "chips", req: true, options: RANGES },
+      { key: "venue", label: "Where?", type: "chips", req: true, options: VENUES },
+      { key: "needs", label: "What do you need from us?", type: "multi",
+        options: ["The space only", "Bar service", "Food", "Music or DJ", "Decor and design", "Full production"] },
+      budgetQ,
+      briefQ,
+    ],
+    "Event Production": [
+      { key: "scope", label: "What are we producing?", type: "chips", req: true,
+        options: ["A single night", "A recurring series", "A festival or multi-day", "A tour or run of dates"] },
+      dateQ("Do you have a date?"),
+      { key: "venueStatus", label: "Do you have a venue?", type: "chips",
+        options: ["Yes, it is booked", "A few in mind", "No, we need one"] },
+      { key: "size", label: "How many people are you expecting?", type: "chips", options: CROWD },
+      { key: "needs", label: "What do you need?", type: "multi", req: true,
+        options: ["Concept and creative", "Talent booking", "Production and staffing", "Marketing and promo", "Budget and logistics", "All of it"] },
+      budgetQ,
+      briefQ,
+    ],
+    "Venue Performance Strategy": [
+      { key: "venueName", label: "Which venue, and where?", type: "text", req: true, placeholder: "Name and city" },
+      { key: "capacity", label: "Capacity", type: "chips", options: CAPACITY },
+      { key: "trouble", label: "What is not working?", type: "multi", req: true,
+        options: ["Programming", "Attendance", "Bar or food revenue", "Staffing", "Atmosphere and design", "Marketing", "Not sure yet"] },
+      { key: "nights", label: "How many nights a week are you open?", type: "chips", options: ["1 to 2", "3 to 4", "5 to 6", "7"] },
+      { key: "timeline", field: "timeline", label: "How soon do you need to see a change?", type: "chips",
+        options: ["Yesterday", "Within a few months", "Planning ahead", "Just exploring"] },
+      briefQ,
+    ],
+    "Custom Tool": [
+      { key: "toolKind", label: "What should it do?", type: "multi", req: true,
+        options: ["Booking or scheduling", "Staff operations", "Ticketing or payments", "Client or contact tracking", "Reporting and dashboards", "A website or landing page", "Not sure yet"] },
+      { key: "users", label: "Who uses it?", type: "chips", options: ["Just me", "A small team", "The whole staff", "Our customers"] },
+      { key: "today", label: "What are you using now?", type: "chips",
+        options: ["Nothing", "Spreadsheets", "Paper and group chats", "Software that is not working"] },
+      { key: "timeline", field: "timeline", label: "When do you need it?", type: "chips",
+        options: ["Yesterday", "Next few months", "Later this year", "Just exploring"] },
+      budgetQ,
+      briefQ,
+    ],
+    "Teaching or Speaking": [
+      { key: "format", label: "What format?", type: "chips", req: true,
+        options: ["Workshop", "Panel", "Keynote", "Class or series", "Podcast or interview"] },
+      dateQ("Do you have a date?"),
+      { key: "size", label: "How big is the audience?", type: "chips", options: RANGES },
+      { key: "host", label: "Who is hosting?", type: "text", placeholder: "School, company, festival, publication" },
+      { key: "honorarium", label: "Is there an honorarium?", type: "chips", options: ["Yes", "No", "Not sure yet"] },
+      briefQ,
+    ],
+    "Partnership": [
+      { key: "partnerType", label: "What kind of partner are you?", type: "chips", req: true,
+        options: ["Brand", "Venue", "Artist or collective", "Nonprofit", "Media", "Something else"] },
+      { key: "partnerShape", label: "What are you proposing?", type: "chips",
+        options: ["A one-off collaboration", "An ongoing partnership", "Sponsorship", "Still shaping it"] },
+      { key: "timeline", field: "timeline", label: "When?", type: "chips",
+        options: ["Have a date", "Next few months", "Later this year", "Just exploring"] },
+      briefQ,
+    ],
+    "Press or Media": [
+      { key: "outlet", label: "Which outlet?", type: "text", req: true, placeholder: "Publication, station, or show" },
+      { key: "pressType", label: "What do you need?", type: "chips", req: true,
+        options: ["Interview", "Feature or profile", "A quote or comment", "Photo or video", "Event coverage"] },
+      { key: "deadline", label: "What is your deadline?", type: "text", placeholder: "A date, or how soon" },
+      briefQ,
+    ],
+    "Still Figuring It Out": [
+      { key: "where", label: "Where are you in it?", type: "chips",
+        options: ["I have an idea", "I have a problem", "I have both", "Just curious"] },
+      briefQ,
+    ],
+  };
+
+  let configured = false, durationMin = 15, loadError = null;
   let slots = [], byDay = {}, dayKeys = [];
   let selectedDay = null, selectedSlot = null;
+  let selectedTopic = "", branch = {};
   let monthCursor = new Date();
 
+  const prettyDate = v => {
+    const d = new Date(v + "T12:00:00");
+    return isNaN(d) ? v : d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+  };
   const dayLabel = iso => new Date(iso).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
   const timeLabel = iso => new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
-  // A blank first option where there is no honest default, so Ruby never
-  // reads an answer the person did not actually choose.
-  const opts = (list, blank) =>
-    (blank ? `<option value="">${esc(blank)}</option>` : "") +
-    list.map(v => `<option>${esc(v)}</option>`).join("");
 
   async function load() {
     const wrap = document.getElementById("schedWrap");
@@ -286,7 +392,7 @@
       const res = await fetch(ENDPOINT + "?action=slots");
       const out = await res.json();
       configured = !!out.configured;
-      durationMin = out.durationMinutes || 30;
+      durationMin = out.durationMinutes || 15;
       slots = Array.isArray(out.slots) ? out.slots : [];
       // "calendar_unreadable" means the endpoint refused to guess. It is a
       // different situation from a genuinely full calendar and says so.
@@ -424,24 +530,12 @@
       <div class="ifield"><label for="fOrg">Company, venue, or project</label>
         <input type="text" id="fOrg" placeholder="Optional"></div>
 
-      <div class="ifield"><label for="fTopic">What is this call about? <span class="req">*</span></label>
-        <select id="fTopic">${opts(TOPICS, "Select one…")}</select></div>
+      <div class="ifield"><span class="ifield__lbl" id="fTopicLbl">What is this call about? <span class="req">*</span></span>
+        <div class="iopts" id="fTopic" role="radiogroup" aria-labelledby="fTopicLbl">${
+          TOPICS.map(t => `<button type="button" class="ichip${selectedTopic === t ? " on" : ""}" data-val="${esc(t)}" role="radio" aria-checked="${selectedTopic === t}">${esc(t)}</button>`).join("")
+        }</div></div>
 
-      <div class="ifield"><label for="fShape">What shape should it take?</label>
-        <select id="fShape">${opts(SHAPES, "Select one…")}</select></div>
-
-      <div class="ifield"><label for="fTimeline">When do you need it?</label>
-        <select id="fTimeline">${opts(TIMELINES, "Select one…")}</select></div>
-
-      <div class="ifield"><label for="fBudget">Budget range</label>
-        <select id="fBudget">${opts(BUDGETS)}</select>
-        <p class="help">Rough is fine. It only shapes what we recommend.</p></div>
-
-      <div class="ifield"><label for="fAbout">What would you like to cover? <span class="req">*</span></label>
-        <textarea id="fAbout" rows="4" placeholder="A couple of sentences. Venue, date, the vision, the problem, whatever is on your mind."></textarea></div>
-
-      <div class="ifield"><label for="fPeople">How many people will be on the call?</label>
-        <select id="fPeople">${opts(PEOPLE)}</select></div>
+      <div id="branchWrap">${branchHtml()}</div>
 
       ${mode.manual ? `<div class="ifield"><label for="fPreferred">What times work for you? <span class="req">*</span></label>
         <input type="text" id="fPreferred" placeholder="e.g. weekday afternoons, or Tuesday the 9th after 2"></div>` : ""}
@@ -454,22 +548,123 @@
     </div>`;
   }
 
+  // Walk the fields showing for the current topic, including any follow up
+  // a chosen answer revealed. One place decides what is on screen, so the
+  // renderer, the validator and the notes can never disagree.
+  function branchFields() {
+    const out = [];
+    (BRANCH[selectedTopic] || []).forEach(function walk(f) {
+      out.push(f);
+      const rev = f.reveal && f.reveal[branch[f.key]];
+      if (rev) walk(rev);
+    });
+    return out;
+  }
+
+  const answered = f => {
+    const v = branch[f.key];
+    return Array.isArray(v) ? v.join(", ") : String(v || "").trim();
+  };
+
+  function fieldHtml(f) {
+    const v = branch[f.key];
+    let control;
+    if (f.type === "chips" || f.type === "multi") {
+      const on = o => f.type === "multi" ? (v || []).includes(o) : v === o;
+      control = `<div class="iopts">` + f.options.map(o =>
+        `<button type="button" class="ichip${on(o) ? " on" : ""}" data-key="${esc(f.key)}"` +
+        ` data-multi="${f.type === "multi"}" data-val="${esc(o)}"` +
+        ` role="${f.type === "multi" ? "checkbox" : "radio"}" aria-checked="${on(o)}">${esc(o)}</button>`
+      ).join("") + `</div>`;
+    } else {
+      control = `<input type="${f.type === "date" ? "date" : "text"}" data-key="${esc(f.key)}"` +
+        ` value="${esc(v || "")}" placeholder="${esc(f.placeholder || "")}">`;
+    }
+    return `<div class="ifield"><span class="ifield__lbl">${esc(f.label)}` +
+      (f.req ? ` <span class="req">*</span>` : "") + `</span>${control}</div>`;
+  }
+
+  function branchHtml() {
+    return branchFields().map(fieldHtml).join("");
+  }
+
+  // Redraw after any answer that changes which questions apply, and drop
+  // answers to questions that are no longer on screen so a date they
+  // backed out of never reaches Ruby.
+  function redrawBranch() {
+    const live = branchFields().map(f => f.key);
+    Object.keys(branch).forEach(k => { if (!live.includes(k)) delete branch[k]; });
+    const wrap = document.getElementById("branchWrap");
+    if (wrap) wrap.innerHTML = branchHtml();
+  }
+
   function wireForm(mode) {
+    const topics = document.getElementById("fTopic");
+    topics.querySelectorAll(".ichip").forEach(b => b.addEventListener("click", () => {
+      if (selectedTopic === b.dataset.val) return;
+      topics.querySelectorAll(".ichip").forEach(x => {
+        x.classList.remove("on");
+        x.setAttribute("aria-checked", "false");
+      });
+      b.classList.add("on");
+      b.setAttribute("aria-checked", "true");
+      selectedTopic = b.dataset.val;
+      branch = {};
+      redrawBranch();
+    }));
+
+    // Delegated, so the handlers survive every redraw.
+    const wrap = document.getElementById("branchWrap");
+    wrap.addEventListener("click", e => {
+      const b = e.target.closest(".ichip");
+      if (!b) return;
+      const key = b.dataset.key, val = b.dataset.val;
+      if (b.dataset.multi === "true") {
+        const cur = branch[key] || [];
+        branch[key] = cur.includes(val) ? cur.filter(x => x !== val) : cur.concat(val);
+        b.classList.toggle("on");
+        b.setAttribute("aria-checked", b.classList.contains("on"));
+        return;
+      }
+      // Changing the answer clears whatever the old answer revealed, so an
+      // exact date never survives as text under "a rough month".
+      const f = branchFields().filter(x => x.key === key)[0];
+      if (f && f.reveal) Object.keys(f.reveal).forEach(k => { delete branch[f.reveal[k].key]; });
+      branch[key] = val;
+      redrawBranch();
+    });
+    wrap.addEventListener("input", e => {
+      const el = e.target;
+      if (el.dataset && el.dataset.key) branch[el.dataset.key] = el.value;
+    });
+
     document.getElementById("fGo").addEventListener("click", () => submit(mode));
   }
 
+  // The endpoint already has columns for timeline and budget, so those two
+  // answers ride in them. The rest of the branch is appended to the notes,
+  // which land verbatim in the calendar invite and in both emails.
   function readForm(mode) {
+    const asked = branchFields().filter(f => answered(f));
+    const routed = f => asked.filter(x => x.field === f).map(answered)[0] || "";
+    const notes = asked.filter(f => !f.field)
+      .map(f => (f.noteLabel || f.label.replace(/\?$/, "")) + ": " +
+        (f.type === "date" ? prettyDate(answered(f)) : answered(f))).join("\n");
+
     return {
       name: document.getElementById("fName").value.trim(),
       email: document.getElementById("fEmail").value.trim(),
       phone: document.getElementById("fPhone").value.trim(),
       org: document.getElementById("fOrg").value.trim(),
-      topic: document.getElementById("fTopic").value,
-      shape: document.getElementById("fShape").value,
-      timeline: document.getElementById("fTimeline").value,
-      budget: document.getElementById("fBudget").value,
-      about: document.getElementById("fAbout").value.trim(),
-      people: document.getElementById("fPeople").value,
+      topic: selectedTopic,
+      shape: "",
+      timeline: routed("timeline"),
+      budget: routed("budget"),
+      // Never blank: the endpoint rejects an empty note, and a branch whose
+      // questions are all optional can legitimately have nothing in it.
+      about: notes || ("Booked from the site. Nothing added beyond: " + selectedTopic),
+      notes: notes,
+      people: "",
       preferred: mode.manual ? document.getElementById("fPreferred").value.trim() : "",
       contactConsent: document.getElementById("fConsent").checked,
     };
@@ -485,7 +680,8 @@
     if (!emailOk(f.email)) return err("Please add a valid email address.");
     if (f.phone.replace(/\D+/g, "").length < 7) return err("Please add a phone number. Ruby calls you at the time you pick.");
     if (!f.topic) return err("Please choose what the call is about.");
-    if (!f.about) return err("Please add a couple of sentences on what you'd like to cover.");
+    const missing = branchFields().filter(x => x.req && !answered(x))[0];
+    if (missing) return err("Still needed: " + missing.label);
     if (mode.manual && !f.preferred) return err("Please tell us which times work for you.");
 
     // Not connected: hand the intake to Ruby as a prefilled email, the same
@@ -498,13 +694,11 @@
         "Phone: " + f.phone + "\n" +
         "Company or project: " + (f.org || "Not given") + "\n\n" +
         "About: " + f.topic + "\n" +
-        "Shape: " + f.shape + "\n" +
-        "Timeline: " + f.timeline + "\n" +
-        "Budget range: " + f.budget + "\n" +
-        "People on the call: " + f.people + "\n" +
+        (f.notes ? f.notes + "\n" : "") +
+        (f.timeline ? "Timeline: " + f.timeline + "\n" : "") +
+        (f.budget ? "Budget range: " + f.budget + "\n" : "") +
         "Times that work: " + f.preferred + "\n" +
-        "Contact consent: " + (f.contactConsent ? "Yes" : "Not given") + "\n\n" +
-        "What they want to cover:\n" + f.about;
+        "Contact consent: " + (f.contactConsent ? "Yes" : "Not given");
       window.location.href = "mailto:ruby@jubyr.com?subject=" +
         encodeURIComponent("Consultation request - " + f.topic + " - " + f.name) +
         "&body=" + encodeURIComponent(body);
