@@ -145,7 +145,8 @@
         <span class="tag">Free consultation</span>
         <h2>Every project begins with a conversation.</h2>
         <p>Pick a time that is genuinely open on Ruby's calendar and it is
-        booked on the spot. Thirty minutes, no cost, no pitch deck required.</p>
+        booked on the spot. Thirty minutes on the phone, no cost, no pitch
+        deck required.</p>
       </div>
 
       <div class="sched">
@@ -155,7 +156,7 @@
             <ul class="steps">
               <li><span class="mono">01</span><strong>Pick a time</strong>Weekday afternoons, noon to 5 Eastern. Only times that are genuinely free on Ruby's calendar are shown, so nothing gets double booked.</li>
               <li><span class="mono">02</span><strong>Tell us what it's about</strong>A short intake so the call starts in the middle of the conversation instead of at the beginning.</li>
-              <li><span class="mono">03</span><strong>Both of you get the invite</strong>The event lands on Ruby's calendar and yours, with a video link attached, the moment you confirm.</li>
+              <li><span class="mono">03</span><strong>Ruby calls you</strong>She rings the number you give us at the time you picked. Nothing to join, no link to click. The event lands on both calendars the moment you confirm.</li>
             </ul>
           </div>
           <div>
@@ -416,8 +417,9 @@
       <div class="ifield"><label for="fEmail">Email <span class="req">*</span></label>
         <input type="email" id="fEmail" placeholder="you@email.com" autocomplete="email"></div>
 
-      <div class="ifield"><label for="fPhone">Phone</label>
-        <input type="tel" id="fPhone" placeholder="Optional" autocomplete="tel"></div>
+      <div class="ifield"><label for="fPhone">Phone number <span class="req">*</span></label>
+        <input type="tel" id="fPhone" placeholder="The number Ruby should call" autocomplete="tel">
+        <p class="help">This is a phone call. Ruby rings this number at the time you pick.</p></div>
 
       <div class="ifield"><label for="fOrg">Company, venue, or project</label>
         <input type="text" id="fOrg" placeholder="Optional"></div>
@@ -481,6 +483,7 @@
     const f = readForm(mode);
     if (!f.name) return err("Please add your name.");
     if (!emailOk(f.email)) return err("Please add a valid email address.");
+    if (f.phone.replace(/\D+/g, "").length < 7) return err("Please add a phone number. Ruby calls you at the time you pick.");
     if (!f.topic) return err("Please choose what the call is about.");
     if (!f.about) return err("Please add a couple of sentences on what you'd like to cover.");
     if (mode.manual && !f.preferred) return err("Please tell us which times work for you.");
@@ -492,7 +495,7 @@
         "Consultation request from jubyr.com/consultation\n\n" +
         "Name: " + f.name + "\n" +
         "Email: " + f.email + "\n" +
-        "Phone: " + (f.phone || "Not given") + "\n" +
+        "Phone: " + f.phone + "\n" +
         "Company or project: " + (f.org || "Not given") + "\n\n" +
         "About: " + f.topic + "\n" +
         "Shape: " + f.shape + "\n" +
@@ -536,10 +539,11 @@
       const when = dayLabel(selectedSlot.start) + " at " + timeLabel(selectedSlot.start);
       done({
         heading: "You're booked.",
-        body: "<strong>" + esc(when) + "</strong>, Eastern time. The calendar invite is on its way to your inbox" +
-              (out.meetUrl ? " with the video link attached" : "") + ", and it is on Ruby's calendar too. " +
-              "Need to move it? Reply to that invite or write to <a href=\"mailto:ruby@jubyr.com\" style=\"color:var(--green)\">ruby@jubyr.com</a>.",
-        meetUrl: out.meetUrl || "",
+        body: "<strong>Ruby will call you at " + esc(out.phone || f.phone) + "</strong> on " + esc(when) +
+              ", Eastern time. Nothing to join and no link to click, just have your phone with you. " +
+              "The calendar invite is on its way to your inbox and it is on Ruby's calendar too. " +
+              "Need to move it, or is a different number better? Reply to that invite or write to " +
+              "<a href=\"mailto:ruby@jubyr.com\" style=\"color:var(--green)\">ruby@jubyr.com</a>.",
       });
     } catch (e) {
       btn.disabled = false; btn.innerHTML = label;
@@ -561,7 +565,6 @@
       `<div class="sched__done">
         <h3>${esc(o.heading)}</h3>
         <p>${o.body}</p>
-        ${o.meetUrl ? `<a class="btn btn--green" href="${esc(o.meetUrl)}" target="_blank" rel="noopener">Save the video link <span class="arw" aria-hidden="true">&gt;</span></a>` : ""}
         <p style="margin-top:22px"><a class="btn btn--ghost" href="/">Back to jubyr.com <span aria-hidden="true">&gt;</span></a></p>
       </div>`;
     document.getElementById("schedWrap").scrollIntoView({ behavior: "smooth", block: "center" });
