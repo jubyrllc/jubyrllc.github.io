@@ -3,83 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Event Updates — Margolis</title>
-<meta name="description" content="Submit your event flyer and keep your RSVP count current for your night at Margolis.">
+<title>Event updates &mdash; Margolis</title>
 <meta name="robots" content="noindex, nofollow">
-<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=42">
+<link rel="canonical" href="https://jubyr.com/margolis-dashboard">
+<meta http-equiv="refresh" content="0; url=/margolis-dashboard">
+<script>
+// Retired 2026-08-20. This page wrote flyer/RSVP data straight onto the
+// booking record, while the dashboard wrote to its own submissions store
+// behind Ruby's approval. Two doors, two files, same information. The
+// dashboard is now the only door. Links already sent out land here and
+// carry through, so no emailed link breaks.
+// No deep link: flyer/lineup/tickets/counts are per-event controls inside
+// the dashboard, not a global tab, so there is nothing to anchor to.
+location.replace("/margolis-dashboard" + location.search);
+</script>
 </head>
 <body>
-
-<div class="announce">
-  <span class="mono">Margolis &middot; Event updates &middot; via Jubyr LLC</span>
-  <a class="mono" href="https://margolis.events/host-a-public-event.html">Booking page <span aria-hidden="true">&gt;</span></a>
-</div>
-
-<div class="frame">
-  <header>
-    <nav class="nav" aria-label="Main">
-      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
-      <ul class="nav__links mono">
-        <li><a href="#flyer">Submit flyer</a></li>
-        <li><a href="#rsvp">Update RSVP</a></li>
-      </ul>
-      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
-        <span></span><span></span><span></span>
-      </button>
-    </nav>
-    <div class="mobilemenu mono" id="mobilemenu">
-      <a href="#flyer">Submit flyer</a>
-      <a href="#rsvp">Update RSVP</a>
-    </div>
-  </header>
-
-  <main id="top">
-    <section class="box">
-      <div class="sechead">
-        <span class="tag">Event updates</span>
-        <h2>Which one do you need?</h2>
-        <p>Flyer and RSVP updates now live on their own pages.</p>
-      </div>
-      <div class="paths mg-pad">
-        <a class="path" href="/margolis-flyer">
-          <span class="path__kicker">Once per event</span>
-          <h3>Submit your flyer</h3>
-          <p>Due at least 10 days before your event.</p>
-          <span class="path__go">Go &gt;</span>
-        </a>
-        <a class="path" href="/margolis-rsvp">
-          <span class="path__kicker">3 days &middot; 2 days &middot; day of</span>
-          <h3>Update RSVP &amp; ticket counts</h3>
-          <p>Free RSVPs and tickets sold, both boxes.</p>
-          <span class="path__go">Go &gt;</span>
-        </a>
-      </div>
-    </section>
-  </main>
-</div>
-
-<footer class="footer">
-  <div class="footer__inner">
-    <div class="footer__bottom">
-      <span class="status"><span class="dot" aria-hidden="true"></span> Margolis event coordination &mdash; Jubyr LLC</span>
-      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="mailto:ruby@margolisphilly.com" style="color:inherit">ruby@margolisphilly.com</a> &middot; <a href="/privacy" style="color:inherit">Privacy</a> &middot; <a href="/terms" style="color:inherit">Terms</a></span>
-    </div>
-  </div>
-</footer>
-
-<script>
-  const burger = document.querySelector('.nav__burger');
-  const menu = document.getElementById('mobilemenu');
-  burger.addEventListener('click', () => {
-    const open = menu.classList.toggle('open');
-    burger.setAttribute('aria-expanded', open);
-  });
-
-</script>
-<div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
+<p>This moved into your dashboard.
+<a href="/margolis-dashboard">Open the Margolis dashboard</a>, sign in, and
+pick the night you're updating.</p>
 </body>
 </html>
