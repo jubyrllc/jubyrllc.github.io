@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Free Consultation — Jubyr LLC</title>
+<meta name="description" content="Pick a time on Ruby's real calendar and book a free 30 minute consultation with Jubyr LLC. Events, venues, booking, and custom tools.">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png?v=2">
+<link rel="apple-touch-icon" href="assets/jubyr-icon.png?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=43">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jubyr LLC">
+<meta property="og:title" content="Book a Free Consultation — Jubyr LLC">
+<meta property="og:description" content="Pick a time on Ruby's real calendar and book a free 30 minute consultation with Jubyr LLC.">
+<meta property="og:url" content="https://jubyr.com/consultation">
+<meta property="og:image" content="https://jubyr.com/assets/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jubyr.com/assets/og-default.jpg">
+<style>
+  /* ---- Scheduler. Built on the site's own tokens so it reads as part
+     of jubyr.com rather than an embedded third party widget. ---- */
+  .sched { padding: 34px 28px 44px; max-width: 860px; margin: 0 auto; }
+  .sched__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; align-items: start; }
+  @media (max-width: 760px) { .sched__cols { grid-template-columns: 1fr; gap: 26px; } }
+
+  .sched__label {
+    font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 14px;
+  }
+
+  .calnav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .calnav span { color: var(--ink); font-size: 12px; letter-spacing: .1em; }
+  .calnav button {
+    font-family: var(--mono); font-size: 14px; line-height: 1; width: 32px; height: 32px;
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+    cursor: pointer; border-radius: 999px;
+  }
+  .calnav button:hover:not(:disabled) { border-color: var(--green); color: var(--green); }
+  .calnav button:disabled { opacity: .3; cursor: default; }
+
+  .calgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .calhead {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); text-align: center; padding-bottom: 6px;
+  }
+  .calday {
+    aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: #B9B9B0; border: 1px solid transparent; border-radius: 999px;
+  }
+  .calday--avail {
+    color: var(--ink); border-color: var(--green-line); background: var(--green-tint);
+    cursor: pointer; font-weight: 600;
+  }
+  .calday--avail:hover { border-color: var(--green); }
+  .calday.on { background: var(--green); border-color: var(--green); color: #fff; }
+
+  .times { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  @media (max-width: 330px) { .times { grid-template-columns: 1fr; } }
+  .timebtn {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .06em;
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+    padding: 11px 8px; cursor: pointer; border-radius: 8px;
+  }
+  .timebtn:hover { border-color: var(--green); color: var(--green); }
+  .timebtn.on { background: var(--green); border-color: var(--green); color: #fff; }
+  .times__empty { color: var(--muted); font-size: 14px; }
+
+  .sched__form { margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--line); }
+  .sched__picked {
+    background: var(--green-tint); border: 1px solid var(--green-line);
+    padding: 16px 18px; margin-bottom: 26px;
+  }
+  .sched__picked strong { display: block; font-size: 17px; margin-top: 4px; }
+  .sched__picked .mono { color: var(--muted); }
+
+  .rcheck { display: flex; align-items: flex-start; gap: 10px; margin: 4px 0 22px; cursor: pointer; }
+  .rcheck input { margin-top: 4px; flex-shrink: 0; }
+  .rcheck span { color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+
+  .sched__done { text-align: center; padding: 10px 0 4px; }
+  .sched__done h3 { font-size: 24px; margin-bottom: 10px; }
+  .sched__done p { color: var(--muted); font-size: 15.5px; line-height: 1.65; margin-bottom: 16px; }
+  .sched__done a.btn { margin-top: 6px; }
+
+  .sched__notice {
+    border: 1px solid var(--line); background: #FBFBF8; padding: 18px 20px;
+    color: var(--muted); font-size: 14.5px; line-height: 1.6; margin-bottom: 26px;
+  }
+  .sched__notice strong { color: var(--ink); }
+
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .steps li {
+    padding: 14px 0; border-bottom: 1px solid var(--line);
+    color: var(--muted); font-size: 15px; line-height: 1.6;
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps strong { color: var(--ink); display: block; margin-bottom: 2px; }
+  .steps .mono { color: var(--green); display: block; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<!-- announcement -->
+<div class="announce">
+  <span class="mono">Jubyr LLC &middot; Experience design studio &middot; Philadelphia</span>
+  <a class="mono" href="/contact">Send an inquiry instead <span aria-hidden="true">&gt;</span></a>
+</div>
+
+<div class="frame">
+
+  <!-- nav -->
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
+      <ul class="nav__links mono">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#approach">Approach</a></li>
+        <li><a href="/#services">Services</a></li>
+        <li><a href="/#portfolio">Portfolio</a></li>
+        <li><a href="/#get-involved">Get involved</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobilemenu mono" id="mobilemenu">
+      <a href="/">Home</a>
+      <a href="/#approach">Approach</a>
+      <a href="/#services">Services</a>
+      <a href="/#portfolio">Portfolio</a>
+      <a href="/#get-involved">Get involved</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="box">
+      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.48), rgba(12,12,12,0.62)), url('assets/bg-lounge-dark.jpg')">
+        <span class="tag">Free consultation</span>
+        <h2>Every project begins with a conversation.</h2>
+        <p>Pick a time that is genuinely open on Ruby's calendar and it is
+        booked on the spot. Thirty minutes, no cost, no pitch deck required.</p>
+      </div>
+
+      <div class="sched">
+        <div class="sched__cols" style="margin-bottom:34px">
+          <div>
+            <span class="sched__label">How it works</span>
+            <ul class="steps">
+              <li><span class="mono">01</span><strong>Pick a time</strong>Weekday afternoons, noon to 5 Eastern. Only times that are genuinely free on Ruby's calendar are shown, so nothing gets double booked.</li>
+              <li><span class="mono">02</span><strong>Tell us what it's about</strong>A short intake so the call starts in the middle of the conversation instead of at the beginning.</li>
+              <li><span class="mono">03</span><strong>Both of you get the invite</strong>The event lands on Ruby's calendar and yours, with a video link attached, the moment you confirm.</li>
+            </ul>
+          </div>
+          <div>
+            <span class="sched__label">Good reasons to book</span>
+            <ul class="steps">
+              <li><strong>An event you want produced</strong>A single night or a full run of them.</li>
+              <li><strong>A venue that is not performing</strong>Programming, service, atmosphere, staffing.</li>
+              <li><strong>Booking and programming help</strong>Talent, residencies, calendars.</li>
+              <li><strong>A custom tool</strong>The software your operation is missing.</li>
+              <li><strong>Something you cannot name yet</strong>That is a fine place to start.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="schedWrap">
+          <p class="mg-calnote">Loading open times&hellip;</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- footer -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__top">
+      <div class="footer__logo">
+        <img src="assets/jubyr-logo-white.png?v=2" alt="Jubyr LLC" width="97" height="30">
+        <p>An experience design studio. We help organizations shape how people feel — before, during, and after every interaction.</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/#approach">Approach</a></li>
+          <li><a href="/#services">Services</a></li>
+          <li><a href="/#portfolio">Portfolio</a></li>
+          <li><a href="/signup">Stay in touch</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Based in</h5>
+        <address class="addr">
+          Philadelphia, PA
+        </address>
+      </div>
+      <div>
+        <h5>Say hi</h5>
+        <ul>
+          <li><a href="/consultation">Book a free consultation</a></li>
+          <li><a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a></li>
+          <li><a href="https://instagram.com/jubyrllc" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="status"><span class="dot" aria-hidden="true"></span> Now booking &mdash; consulting &amp; productions</span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="/privacy" style="color:inherit">Privacy</a> &middot; <a href="/terms" style="color:inherit">Terms</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // mobile menu
+  const burger = document.querySelector('.nav__burger');
+  const menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }));
+
+  /* =====================================================================
+     Consultation scheduler.
+
+     jubyr.com is a static GitHub Pages site, so the availability check and
+     the booking itself live on jubyr.tools, which runs PHP. The endpoint
+     reads Ruby's real Google Calendar: it only offers slots that are free,
+     re-checks the slot at the moment of booking, and creates the event with
+     both people as attendees so Google sends the calendar invite and the
+     email confirmation to Ruby and to the booker together.
+
+     If the calendar credentials are not installed yet the endpoint reports
+     configured:false. In that case this page does NOT invent times. It
+     shows the same intake and hands it off as a prefilled email, the way
+     every other form on this site already works, so nobody hits a dead end.
+     ===================================================================== */
+  const ENDPOINT = "https://jubyr.tools/jubyr-call-booking.php";
+
+  const esc = s => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const emailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e || "").trim());
+
+  const TOPICS = [
+    "Event production",
+    "Venue and hospitality consulting",
+    "Booking and programming",
+    "Custom tools and design",
+    "Teaching or speaking",
+    "Partnership or collaboration",
+    "Press or media",
+    "Something else",
+  ];
+  const SHAPES = ["A single event or night", "An ongoing partnership", "A one-time consult", "Not sure yet"];
+  const TIMELINES = ["Just exploring", "In the next few months", "Soon, I have a date"];
+  const PEOPLE = ["Just me", "2 people", "3 to 5 people", "6 or more"];
+  const BUDGETS = ["Not sure yet", "Under $5K", "$5K to $15K", "$15K to $50K", "$50K and up"];
+
+  let configured = false, durationMin = 30, loadError = null;
+  let slots = [], byDay = {}, dayKeys = [];
+  let selectedDay = null, selectedSlot = null;
+  let monthCursor = new Date();
+
+  const dayLabel = iso => new Date(iso).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+  const timeLabel = iso => new Date(iso).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  // A blank first option where there is no honest default, so Ruby never
+  // reads an answer the person did not actually choose.
+  const opts = (list, blank) =>
+    (blank ? `<option value="">${esc(blank)}</option>` : "") +
+    list.map(v => `<option>${esc(v)}</option>`).join("");
+
+  async function load() {
+    const wrap = document.getElementById("schedWrap");
+    try {
+      const res = await fetch(ENDPOINT + "?action=slots");
+      const out = await res.json();
+      configured = !!out.configured;
+      durationMin = out.durationMinutes || 30;
+      slots = Array.isArray(out.slots) ? out.slots : [];
+      // "calendar_unreadable" means the endpoint refused to guess. It is a
+      // different situation from a genuinely full calendar and says so.
+      loadError = out.error || null;
+    } catch (e) {
+      configured = false;
+      slots = [];
+      loadError = null;
+    }
+    render(wrap);
+  }
+
+  function render(wrap) {
+    byDay = {};
+    slots.forEach(s => { const k = s.start.slice(0, 10); (byDay[k] = byDay[k] || []).push(s); });
+    dayKeys = Object.keys(byDay).sort();
+
+    // Calendar not connected, or genuinely nothing open in the window:
+    // take the intake anyway and hand it off as an email rather than
+    // showing times that cannot actually be booked.
+    if (!configured || !dayKeys.length) {
+      wrap.innerHTML =
+        `<div class="sched__notice">
+          <strong>${loadError === "calendar_unreadable"
+            ? "We can't read the calendar right now, so we won't guess at times."
+            : configured ? "No open times in the next few weeks."
+            : "Live booking is being connected right now."}</strong>
+          Fill this in and it goes straight to Ruby with the times you prefer, and she will confirm one directly.
+        </div>` + formHtml({ manual: true });
+      wireForm({ manual: true });
+      return;
+    }
+
+    monthCursor = new Date(dayKeys[0] + "T12:00:00");
+    monthCursor.setDate(1);
+
+    wrap.innerHTML =
+      `<div class="sched__cols">
+        <div>
+          <span class="sched__label">01 &middot; Pick a day</span>
+          <div class="calnav">
+            <button type="button" id="calPrev" aria-label="Previous month">&lt;</button>
+            <span class="mono" id="calMonth"></span>
+            <button type="button" id="calNext" aria-label="Next month">&gt;</button>
+          </div>
+          <div class="calgrid" id="calGrid"></div>
+        </div>
+        <div>
+          <span class="sched__label">02 &middot; Pick a time <span style="text-transform:none;letter-spacing:.04em">(Eastern)</span></span>
+          <div id="timeWrap"><p class="times__empty">Pick a day and the open times show up here.</p></div>
+        </div>
+      </div>
+      <div id="formWrap"></div>`;
+
+    document.getElementById("calPrev").addEventListener("click", () => { monthCursor.setMonth(monthCursor.getMonth() - 1); renderMonth(); });
+    document.getElementById("calNext").addEventListener("click", () => { monthCursor.setMonth(monthCursor.getMonth() + 1); renderMonth(); });
+    renderMonth();
+  }
+
+  function renderMonth() {
+    const grid = document.getElementById("calGrid");
+    const y = monthCursor.getFullYear(), m = monthCursor.getMonth();
+    document.getElementById("calMonth").textContent = monthCursor.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+    // Only let people page across months that actually contain openings.
+    const firstMonth = dayKeys[0].slice(0, 7), lastMonth = dayKeys[dayKeys.length - 1].slice(0, 7);
+    const cur = `${y}-${String(m + 1).padStart(2, "0")}`;
+    document.getElementById("calPrev").disabled = cur <= firstMonth;
+    document.getElementById("calNext").disabled = cur >= lastMonth;
+
+    const startWeekday = new Date(y, m, 1).getDay();
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    let html = ["S", "M", "T", "W", "T", "F", "S"].map(d => `<div class="calhead">${d}</div>`).join("");
+    for (let i = 0; i < startWeekday; i++) html += `<div class="calday"></div>`;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const key = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      const avail = !!byDay[key];
+      html += `<div class="calday${avail ? " calday--avail" : ""}${key === selectedDay ? " on" : ""}"`
+        + `${avail ? ` data-day="${key}" role="button" tabindex="0" aria-label="${esc(dayLabel(key + "T12:00:00"))}, ${byDay[key].length} open times"` : ""}>${d}</div>`;
+    }
+    grid.innerHTML = html;
+    grid.querySelectorAll("[data-day]").forEach(c => {
+      c.addEventListener("click", () => pickDay(c.dataset.day));
+      c.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickDay(c.dataset.day); } });
+    });
+  }
+
+  function pickDay(key) {
+    selectedDay = key;
+    selectedSlot = null;
+    renderMonth();
+    renderTimes();
+    document.getElementById("formWrap").innerHTML = "";
+  }
+
+  function renderTimes() {
+    const box = document.getElementById("timeWrap");
+    const list = byDay[selectedDay] || [];
+    if (!list.length) { box.innerHTML = `<p class="times__empty">Nothing open that day.</p>`; return; }
+    box.innerHTML = `<div class="times">` + list.map(s =>
+      `<button type="button" class="timebtn" data-start="${esc(s.start)}" data-end="${esc(s.end)}">${esc(timeLabel(s.start))}</button>`
+    ).join("") + `</div>`;
+    box.querySelectorAll(".timebtn").forEach(b => b.addEventListener("click", () => {
+      box.querySelectorAll(".timebtn").forEach(x => x.classList.remove("on"));
+      b.classList.add("on");
+      selectedSlot = { start: b.dataset.start, end: b.dataset.end };
+      document.getElementById("formWrap").innerHTML = formHtml({ manual: false });
+      wireForm({ manual: false });
+      document.getElementById("formWrap").scrollIntoView({ behavior: "smooth", block: "start" });
+    }));
+  }
+
+  function formHtml(mode) {
+    const picked = (!mode.manual && selectedSlot)
+      ? `<div class="sched__picked">
+           <span class="mono">Your time</span>
+           <strong>${esc(dayLabel(selectedSlot.start))} at ${esc(timeLabel(selectedSlot.start))}</strong>
+           <span class="mono">${durationMin} minutes &middot; Eastern time</span>
+         </div>` : "";
+
+    return `<div class="sched__form">
+      ${picked}
+      <span class="sched__label">${mode.manual ? "Tell us about it" : "03 &middot; Tell us about it"}</span>
+
+      <div class="ifield"><label for="fName">Your name <span class="req">*</span></label>
+        <input type="text" id="fName" autocomplete="name"></div>
+
+      <div class="ifield"><label for="fEmail">Email <span class="req">*</span></label>
+        <input type="email" id="fEmail" placeholder="you@email.com" autocomplete="email"></div>
+
+      <div class="ifield"><label for="fPhone">Phone</label>
+        <input type="tel" id="fPhone" placeholder="Optional" autocomplete="tel"></div>
+
+      <div class="ifield"><label for="fOrg">Company, venue, or project</label>
+        <input type="text" id="fOrg" placeholder="Optional"></div>
+
+      <div class="ifield"><label for="fTopic">What is this call about? <span class="req">*</span></label>
+        <select id="fTopic">${opts(TOPICS, "Select one…")}</select></div>
+
+      <div class="ifield"><label for="fShape">What shape should it take?</label>
+        <select id="fShape">${opts(SHAPES, "Select one…")}</select></div>
+
+      <div class="ifield"><label for="fTimeline">When do you need it?</label>
+        <select id="fTimeline">${opts(TIMELINES, "Select one…")}</select></div>
+
+      <div class="ifield"><label for="fBudget">Budget range</label>
+        <select id="fBudget">${opts(BUDGETS)}</select>
+        <p class="help">Rough is fine. It only shapes what we recommend.</p></div>
+
+      <div class="ifield"><label for="fAbout">What would you like to cover? <span class="req">*</span></label>
+        <textarea id="fAbout" rows="4" placeholder="A couple of sentences. Venue, date, the vision, the problem, whatever is on your mind."></textarea></div>
+
+      <div class="ifield"><label for="fPeople">How many people will be on the call?</label>
+        <select id="fPeople">${opts(PEOPLE)}</select></div>
+
+      ${mode.manual ? `<div class="ifield"><label for="fPreferred">What times work for you? <span class="req">*</span></label>
+        <input type="text" id="fPreferred" placeholder="e.g. weekday afternoons, or Tuesday the 9th after 2"></div>` : ""}
+
+      <label class="rcheck"><input type="checkbox" id="fConsent" checked>
+        <span>You can email, call, or text me about this inquiry, and keep me on the list for what Jubyr is working on. Unsubscribe any time.</span></label>
+
+      <p class="intake__err" id="fErr"></p>
+      <button type="button" class="btn btn--green" id="fGo">${mode.manual ? "Send the request" : "Confirm my consultation"} <span class="arw" aria-hidden="true">&gt;</span></button>
+    </div>`;
+  }
+
+  function wireForm(mode) {
+    document.getElementById("fGo").addEventListener("click", () => submit(mode));
+  }
+
+  function readForm(mode) {
+    return {
+      name: document.getElementById("fName").value.trim(),
+      email: document.getElementById("fEmail").value.trim(),
+      phone: document.getElementById("fPhone").value.trim(),
+      org: document.getElementById("fOrg").value.trim(),
+      topic: document.getElementById("fTopic").value,
+      shape: document.getElementById("fShape").value,
+      timeline: document.getElementById("fTimeline").value,
+      budget: document.getElementById("fBudget").value,
+      about: document.getElementById("fAbout").value.trim(),
+      people: document.getElementById("fPeople").value,
+      preferred: mode.manual ? document.getElementById("fPreferred").value.trim() : "",
+      contactConsent: document.getElementById("fConsent").checked,
+    };
+  }
+
+  async function submit(mode) {
+    const errEl = document.getElementById("fErr");
+    const err = m => { errEl.textContent = m; errEl.classList.add("show"); };
+    errEl.classList.remove("show");
+
+    const f = readForm(mode);
+    if (!f.name) return err("Please add your name.");
+    if (!emailOk(f.email)) return err("Please add a valid email address.");
+    if (!f.topic) return err("Please choose what the call is about.");
+    if (!f.about) return err("Please add a couple of sentences on what you'd like to cover.");
+    if (mode.manual && !f.preferred) return err("Please tell us which times work for you.");
+
+    // Not connected: hand the intake to Ruby as a prefilled email, the same
+    // pattern the contact form on this site uses. Nothing is silently lost.
+    if (mode.manual) {
+      const body =
+        "Consultation request from jubyr.com/consultation\n\n" +
+        "Name: " + f.name + "\n" +
+        "Email: " + f.email + "\n" +
+        "Phone: " + (f.phone || "Not given") + "\n" +
+        "Company or project: " + (f.org || "Not given") + "\n\n" +
+        "About: " + f.topic + "\n" +
+        "Shape: " + f.shape + "\n" +
+        "Timeline: " + f.timeline + "\n" +
+        "Budget range: " + f.budget + "\n" +
+        "People on the call: " + f.people + "\n" +
+        "Times that work: " + f.preferred + "\n" +
+        "Contact consent: " + (f.contactConsent ? "Yes" : "Not given") + "\n\n" +
+        "What they want to cover:\n" + f.about;
+      window.location.href = "mailto:ruby@jubyr.com?subject=" +
+        encodeURIComponent("Consultation request - " + f.topic + " - " + f.name) +
+        "&body=" + encodeURIComponent(body);
+      done({
+        heading: "Your email app should be opening.",
+        body: "Everything is filled in already, just hit send. If nothing opened, write to " +
+              "<a href=\"mailto:ruby@jubyr.com\" style=\"color:var(--green)\">ruby@jubyr.com</a> and we will find a time.",
+      });
+      return;
+    }
+
+    const btn = document.getElementById("fGo");
+    const label = btn.innerHTML;
+    btn.disabled = true;
+    btn.textContent = "Booking…";
+    try {
+      const res = await fetch(ENDPOINT + "?action=book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...f, start: selectedSlot.start, end: selectedSlot.end }),
+      });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok || !out.ok) {
+        btn.disabled = false; btn.innerHTML = label;
+        const msg = out.error || "That did not go through, try another time.";
+        // 409 means someone took the slot between loading the page and
+        // confirming. Pull fresh availability, then say so at the top of
+        // the rebuilt scheduler, since the old form is gone by then.
+        if (res.status === 409) { selectedSlot = null; await load(); return flash(msg); }
+        return err(msg);
+      }
+      const when = dayLabel(selectedSlot.start) + " at " + timeLabel(selectedSlot.start);
+      done({
+        heading: "You're booked.",
+        body: "<strong>" + esc(when) + "</strong>, Eastern time. The calendar invite is on its way to your inbox" +
+              (out.meetUrl ? " with the video link attached" : "") + ", and it is on Ruby's calendar too. " +
+              "Need to move it? Reply to that invite or write to <a href=\"mailto:ruby@jubyr.com\" style=\"color:var(--green)\">ruby@jubyr.com</a>.",
+        meetUrl: out.meetUrl || "",
+      });
+    } catch (e) {
+      btn.disabled = false; btn.innerHTML = label;
+      err("Could not reach the server, check your connection and try again.");
+    }
+  }
+
+  function flash(msg) {
+    const wrap = document.getElementById("schedWrap");
+    const note = document.createElement("div");
+    note.className = "sched__notice";
+    note.innerHTML = `<strong>${esc(msg)}</strong> The times below are fresh, pick another one.`;
+    wrap.prepend(note);
+    note.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  function done(o) {
+    document.getElementById("schedWrap").innerHTML =
+      `<div class="sched__done">
+        <h3>${esc(o.heading)}</h3>
+        <p>${o.body}</p>
+        ${o.meetUrl ? `<a class="btn btn--green" href="${esc(o.meetUrl)}" target="_blank" rel="noopener">Save the video link <span class="arw" aria-hidden="true">&gt;</span></a>` : ""}
+        <p style="margin-top:22px"><a class="btn btn--ghost" href="/">Back to jubyr.com <span aria-hidden="true">&gt;</span></a></p>
+      </div>`;
+    document.getElementById("schedWrap").scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  load();
+</script>
+
+<div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
+</body>
+</html>
