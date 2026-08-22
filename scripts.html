@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Unlisted: no nav entry anywhere on jubyr.com, and kept out of search. -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png?v=2">
+<link rel="apple-touch-icon" href="assets/jubyr-icon.png?v=2">
+<title>Reply Scripts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* margolis.events' own tokens — these scripts go out under that brand,
+     so the page is set in the same maroon/paper/Fraunces world. */
+  :root{
+    --paper:#FAF7F2; --card:#FFFFFF; --ink:#1B1815; --muted:#8B8377;
+    --line:#E2D9C9; --maroon:#6E2A38; --rose:#C48E99; --flag:#9A3B2E;
+    --flag-bg:#FBF0EC;
+    --serif:"Fraunces",Georgia,"Times New Roman",serif;
+    --sans:"Inter","Helvetica Neue",Arial,sans-serif;
+    --mono:"IBM Plex Mono","SF Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:15px;line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:840px;margin:0 auto;padding:54px 24px 100px}
+
+  header{display:flex;flex-direction:column;gap:13px;max-width:64ch}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--maroon)}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.2vw,42px);line-height:1.1;margin:0;text-wrap:balance}
+  .lede{margin:0;color:var(--muted)}
+
+  /* ---- the "check this first" box ---- */
+  .flags{
+    margin-top:34px;border:1px solid #E8CFC6;background:var(--flag-bg);
+    padding:22px 24px;display:flex;flex-direction:column;gap:12px;
+  }
+  .flags h2{
+    font-family:var(--mono);font-size:11px;letter-spacing:0.14em;
+    text-transform:uppercase;color:var(--flag);margin:0;font-weight:500;
+  }
+  .flags ul{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:9px}
+  .flags li{font-size:14px;line-height:1.55}
+  .flags b{font-weight:600}
+
+  /* ---- link reference ---- */
+  .refs{margin-top:44px}
+  .refs h2,.scripts h2.sec{
+    font-family:var(--serif);font-size:22px;font-weight:600;margin:0 0 6px;
+  }
+  .sec-note{margin:0 0 20px;color:var(--muted);font-size:14px}
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);background:var(--card)}
+  table{border-collapse:collapse;width:100%;min-width:520px}
+  th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:top}
+  th{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:0.12em;
+    text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--paper);
+  }
+  tr:last-child td{border-bottom:none}
+  td code{font-family:var(--mono);font-size:12px;color:var(--maroon);word-break:break-all}
+
+  /* ---- scripts ---- */
+  .scripts{margin-top:52px;display:flex;flex-direction:column;gap:26px}
+  .script{border:1px solid var(--line);background:var(--card)}
+  .script__head{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:15px 20px;border-bottom:1px solid var(--line);background:var(--paper);
+  }
+  .script__name{font-family:var(--serif);font-size:17px;font-weight:600}
+  .copy{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;
+    color:var(--maroon);background:none;border:1px solid var(--line);
+    padding:7px 13px;cursor:pointer;white-space:nowrap;transition:background .15s ease;
+  }
+  .copy:hover{background:var(--paper);border-color:var(--maroon)}
+  .copy:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+  .copy[data-state="ok"]{color:#2F6B45;border-color:#2F6B45}
+  .copy[data-state="fail"]{color:var(--flag);border-color:var(--flag)}
+
+  .script__body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:13px}
+  .script__body p{margin:0;font-size:14.5px}
+  .script__body ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:5px}
+  .script__body li{font-size:14.5px}
+  .script__body a{color:var(--maroon);text-decoration:underline;text-underline-offset:2px}
+  .script__body a:hover{color:var(--ink)}
+  .sign{color:var(--muted)}
+
+  .changed{
+    margin:0;padding:11px 14px;background:var(--paper);border-left:2px solid var(--rose);
+    font-size:12.5px;color:var(--muted);line-height:1.55;
+  }
+  .changed b{color:var(--ink);font-weight:600}
+
+  footer{margin-top:54px;border-top:1px solid var(--line);padding-top:22px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Canned replies &middot; August 2026</span>
+    <h1>Reply scripts, linked up</h1>
+    <p class="lede">Every script with its links live and its numbers reconciled against the site. Copy one straight into an email and the formatting and links come with it.</p>
+  </header>
+
+  <section class="flags">
+    <h2>What I changed, and why</h2>
+    <ul>
+      <li><b>Couches: $150 &rarr; $200.</b> margolis.events charges $200 per couch and now takes it at the moment of booking, so the script matched neither the price nor the timing.</li>
+      <li><b>Couch capacity: &ldquo;6&ndash;8 people&rdquo; &rarr; up to 6.</b> The site says 6 with admission included, and the booking form rejects a party larger than 6 per couch &mdash; a guest promised 8 would have been turned away at the door.</li>
+      <li><b>Live Music now matches the payout page.</b> It promised every act 100% of the door; the real structure is presale 100%, door 50/50 until you are a returning recurring host, venue sales 15%/10%. Rewritten in full.</li>
+      <li><b>The Patio script no longer says Margolis.</b> It told Patio clients that &ldquo;Margolis does not hold dates,&rdquo; and every link went to Margolis pages.</li>
+      <li><b>Fabrika inquiries stay with Fabrika.</b> The pass-through wording and the Margolis call link are gone.</li>
+      <li><b>Every Margolis link now uses /margolis.</b> The site split the cold screen onto its own page today, so a link to the bare domain lands on the venue picker instead of the calendar.</li>
+    </ul>
+  </section>
+
+  <section class="refs">
+    <h2>Where each link goes</h2>
+    <p class="sec-note">Margolis moved to its own URL today &mdash; margolis.events on its own is now just the venue picker, so every Margolis link needs <code>/margolis</code>.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>What you say</th><th>Where it goes</th></tr></thead>
+        <tbody>
+          <tr><td>Upcoming Events calendar</td><td><code>margolis.events/margolis#events</code></td></tr>
+          <tr><td>Public event booking form</td><td><code>margolis.events/host-a-public-event#intake-form</code></td></tr>
+          <tr><td>Payout structure</td><td><code>margolis.events/host-a-public-event#book</code></td></tr>
+          <tr><td>Private event form</td><td><code>margolis.events/private-events#intake-form</code></td></tr>
+          <tr><td>Reserve a couch</td><td><code>margolis.events/margolis#reserveCouch</code></td></tr>
+          <tr><td>Bottles</td><td><code>margolis.events/menu#bottles</code></td></tr>
+          <tr><td>Schedule a call</td><td><code>margolis.events/margolis#pathScheduleCall</code></td></tr>
+          <tr><td>Patio &mdash; form / payouts / call</td><td><code>margolis.events/patio-host-a-public-event</code>, <code>#book</code>, <code>/patio#pathScheduleCall</code></td></tr>
+          <tr><td>Fabrika &mdash; form / payouts / call</td><td><code>margolis.events/fabrika-host-a-public-event</code>, <code>#book</code>, <code>/fabrika#pathScheduleCall</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="scripts">
+    <h2 class="sec">The scripts</h2>
+
+    <article class="script">
+      <div class="script__head"><span class="script__name">Margolis Public Event Inquiry</span><button class="copy" type="button">Copy</button></div>
+      <div class="script__body" data-copy>
+        <p>Thanks for considering us for your event! If you are still exploring potential dates, the best way to view our availability is through our website. Under <a href="https://margolis.events/margolis#events">Upcoming Events</a>, you&rsquo;ll find a fully integrated calendar displaying all dates, whether booked or available, along with event details.</p>
+        <p>When you&rsquo;re ready to move forward, please complete our <a href="https://margolis.events/host-a-public-event#intake-form">booking form</a>. The form covers event details, logistics, technical needs, staffing, and promotion so we can fully align with your vision.</p>
+        <p>Please note that Margolis does not hold dates without a completed form. Bookings are confirmed in the order the forms are received to ensure fairness, given the volume of inquiries. Before submitting, please review our <a href="https://margolis.events/host-a-public-event#book">payout structure for DJs and event hosts</a>.</p>
+        <p>Once submitted, your responses are final and binding. If you have any questions before or after submitting your booking inquiry, feel free to reach out via <a href="mailto:ruby@margolisphilly.com">email</a> or <a href="https://margolis.events/margolis#pathScheduleCall">schedule a call</a> at any time.</p>
+        <p class="sign">Best,</p>
+      </div>
+    </article>
+
+    <article class="script">
+      <div class="script__head"><span class="script__name">Margolis Private Event Details</span><button class="copy" type="button">Copy</button></div>
+      <div class="script__body" data-copy>
+        <p>Hey hey,</p>
+        <p>Thank you for considering booking with us at Margolis! We&rsquo;re excited to learn more about your event. To ensure everything runs smoothly, we&rsquo;ve created a <a href="https://margolis.events/private-events#intake-form">short form</a> for you to complete. It covers the basics of the event, your intended vibe, logistics, technical needs, staffing, etc. This helps us fully align with your vision and ensure all details are in place.</p>
+        <p>Please note that your spot will not be secured until this form and the attached Credit Card Authorization Form are completed.</p>
+        <p>Once submitted, your responses will be considered. If you have any outstanding questions or would like to discuss changes, please reach out before completing the form by <a href="mailto:ruby@margolisphilly.com">emailing me</a> or <a href="https://margolis.events/margolis#pathScheduleCall">scheduling a call</a> at your convenience. You can reach me directly at the number below or by replying to this email.</p>
+        <p>We look forward to collaborating with you and making your event a success!</p>
+        <p class="sign">Much anticipation,</p>
+        <p class="changed"><b>Note:</b> the Credit Card Authorization Form has no link &mdash; it stays an attachment unless you want it hosted somewhere.</p>
+      </div>
+    </article>
+
+    <article class="script">
+      <div class="script__head"><span class="script__name">Patio Public Event Inquiry</span><button class="copy" type="button">Copy</button></div>
+      <div class="script__body" data-copy>
+        <p>Thanks for considering us for your event!</p>
+        <p>When you&rsquo;re ready to move forward, please complete our <a href="https://margolis.events/patio-host-a-public-event#intake-form">booking form</a>. The form covers event details, logistics, technical needs, staffing, and promotion so we can fully align with your vision.</p>
+        <p>Please note that The Patio does not hold dates without a completed form. Bookings are confirmed in the order the forms are received to ensure fairness, given the volume of inquiries. Before submitting, please review our <a href="https://margolis.events/patio-host-a-public-event#book">payout structure for DJs and event hosts</a>.</p>
+        <p>Once submitted, your responses are final and binding. If you have any questions before or after submitting your booking inquiry, feel free to reach out via <a href="mailto:ruby@margolisphilly.com">email</a> or <a href="https://margolis.events/patio#pathScheduleCall">schedule a call</a> at any time.</p>
+        <p class="sign">Best,</p>
+        <p class="changed"><b>Changed:</b> this said &ldquo;Margolis does not hold dates&rdquo; in a Patio email. Now says The Patio, and every link points at the Patio pages.</p>
+      </div>
+    </article>
+
+    <article class="script">
+      <div class="script__head"><span class="script__name">Schedule a Call</span><button class="copy" type="button">Copy</button></div>
+      <div class="script__body" data-copy>
+        <p>Hey hey,</p>
+        <p>This sounds great! I&rsquo;d love to hear more about what you&rsquo;re thinking. Would you please <a href="https://margolis.events/margolis#pathScheduleCall">schedule a call</a>, and I&rsquo;ll reach out to you then. I look forward to chatting about how to bring your vision to life.</p>
+        <p class="sign">Best,</p>
+      </div>
+    </article>
+
+    <article class="script">
+      <div class="script__head"><span class="script__name">Fabrika Inquiry</span><button class="copy" type="button">Copy</button></div>
+      <div class="script__body" data-copy>
+        <p>Hey hey,</p>
+        <p>We received your inquiry for a private event at Fabrika &mdash; thank you for considering us! We&rsquo;re excited to learn more about your event.</p>
+        <p>We&rsquo;d love to hear more about what you&rsquo;re thinking. Would you please <a href="https://margolis.events/fabrika#pathScheduleCall">schedule a call</a>? I&rsquo;ll reach out to discuss packaging, pricing, and overall vision. I look forward to chatting about how to bring your event to life.</p>
+        <p>If you&rsquo;d rather get the details down first, you can start with our <a href="https://margolis.events/fabrika-private-events#book">private event form</a>.</p>
+        <p class="sign">Best,</p>
+        <p class="changed"><b>Now a Fabrika email throughout.</b> It used to thank them for considering Margolis and send them to the Margolis booker; the venue name and every link now stay with Fabrika. Retitled &ldquo;Fabrika Inquiry&rdquo; &mdash; nothing passes through any more.</p>
+      </div>
+    </article>
+
+    <article class="script">
+      <div class="script__head"><span class="script__name">DJ Intrigue</span><button class="copy" type="button">Copy</button></div>
+      <div class="script__body" data-copy>
+        <p>Thank you for reaching out and for your interest in playing at Margolis. Our space operates a little differently from a traditional bar. We function more as an event and community venue rather than a place that regularly books talent to fill time slots.</p>
+        <p>Instead of standard bookings, we invite talent and collectives to <a href="https://margolis.events/host-a-public-event">host their own events or parties</a> at Margolis. This allows for full creative direction from curation and theme to lineup, visuals, and atmosphere, with our team providing venue support, bar service, and production coordination.</p>
+        <p>Were you reaching out with a specific party concept or collaboration idea in mind, or were you mainly looking for a place to spin? Either way, I would love to learn more about what you do and see if there is a good fit. If you want the numbers up front, our <a href="https://margolis.events/host-a-public-event#book">payout structure for hosts</a> is on the site.</p>
+        <p class="sign">Looking forward to hearing from you,</p>
+      </div>
+    </article>
+
+    <article class="script">
+      <div class="script__head"><span class="script__name">Event Date</span><button class="copy" type="button">Copy</button></div>
+      <div class="script__body" data-copy>
+        <p>The best way to view our availability is through our website.</p>
+        <p>Under <a href="https://margolis.events/margolis#events">Upcoming Events</a>, you&rsquo;ll find a fully integrated calendar displaying all dates, whether booked or available, along with event details.</p>
+        <p>If you&rsquo;re interested in booking a specific date or have any further questions, please let me know which date you&rsquo;re considering.</p>
+        <p>When you&rsquo;re ready to move forward with your date selection, you can complete the <a href="https://margolis.events/host-a-public-event#intake-form">booking form</a>, and I&rsquo;ll follow up to confirm the event once I receive it.</p>
+      </div>
+    </article>
+
+    <article class="script">
+      <div class="script__head"><span class="script__name">Live Music</span><button class="copy" type="button">Copy</button></div>
+      <div class="script__body" data-copy>
+        <p>Hi there,</p>
+        <p>Thank you so much for reaching out about performing at Margolis.</p>
+        <p>I want to be fully transparent about how we operate, so expectations are clear from the start. Margolis primarily functions as a venue, not a traditional promoter. As a result, artists who perform here are responsible for attracting nearly 100% of their audience and shouldering the burden of advertising and promotion for their event.</p>
+        <p>In return, we structure compensation in a way that directly rewards you for bringing people through our doors:</p>
+        <ul>
+          <li>You keep <b>100% of your presale revenue</b> &mdash; every artist, every time, never split</li>
+          <li>Door revenue is <b>split 50/50</b> for a first booking or a one-off night; once your event returns on a recurring basis, you receive <b>100% of the door</b></li>
+          <li>You receive <b>10% of eligible net venue sales</b> on a ticketed event, or <b>15%</b> on a free event</li>
+          <li>50% off your own food and drink during the event</li>
+          <li>All food and beverage sales count toward your minimum, and we offer <a href="https://margolis.events/menu">craft cocktails and bar food</a> that help drive guest spend</li>
+        </ul>
+        <p>Every booking carries a sales minimum set by your date, your hours, and whether the kitchen is open &mdash; from $1,500 for a Sunday&ndash;Thursday night up to $5,000 for a first Friday or Saturday 9 PM&ndash;2 AM slot. If sales fall below your minimum, you cover the difference and no venue-sales percentage is paid, so we can still fairly pay bartenders, security, and support staff. The exact minimum for your date is calculated in the form.</p>
+        <p>The full breakdown of <a href="https://margolis.events/host-a-public-event#book">minimums and payouts</a> is on our site, so nothing here is a surprise later.</p>
+        <p>If this structure works for you, please complete our <a href="https://margolis.events/host-a-public-event#intake-form">booking form</a>. Once the form is received, I&rsquo;ll give you a call to walk through the additional details and ensure everything is aligned. You can also <a href="https://margolis.events/margolis#pathScheduleCall">schedule a call</a> anytime, and I will reach out when you are available.</p>
+        <p>Looking forward to learning more about your vision.</p>
+        <p class="sign">Best,</p>
+        <p class="changed"><b>Rewritten</b> to the terms actually on the payout page: presale 100%, door 50/50 until you are recurring, venue sales 15%/10%, plus the real minimums. The old version promised 100% of the door to everyone, which the site contradicted.</p>
+      </div>
+    </article>
+
+    <article class="script">
+      <div class="script__head"><span class="script__name">Couch Reservation</span><button class="copy" type="button">Copy</button></div>
+      <div class="script__body" data-copy>
+        <p>Margolis is very much a pull-up-and-party type of place, no frills, just great vibes and ambiance. The closest we come to traditional &ldquo;sections&rdquo; is our couches, though we intentionally steer clear of exclusivity-driven party culture.</p>
+        <p>Couches are $200 each, available on a first-come basis, and seat up to 6 people with admission included. If you&rsquo;d like to guarantee one for the night, you can <a href="https://margolis.events/margolis#reserveCouch">reserve one in advance</a> &mdash; the fee is paid at the time of booking, and the couch is held once payment goes through.</p>
+        <p>Please note that a couch reservation provides priority, comfortable seating in our lounge, but does not include a dedicated server. All orders are placed directly at the bar. You&rsquo;ll simply have your own cozy space to enjoy throughout the evening.</p>
+        <p>Alternatively, we do sell <a href="https://margolis.events/menu#bottles">bottles</a>, and any bottle purchase includes a complimentary couch for your group. Please note that this is not traditional &lsquo;bottle service,&rsquo; but an option to purchase a bottle as a cost-effective alternative to ordering individual shots and cocktails.</p>
+        <p>Let me know how you&rsquo;d like to proceed or if you have any questions. I&rsquo;m happy to help.</p>
+        <p class="sign">Best,</p>
+        <p class="changed"><b>Changed:</b> $150 &rarr; $200 and &ldquo;6&ndash;8 people&rdquo; &rarr; up to 6, to match the site and the booking form. Added that the fee is now charged at booking. Revert if $150 is right.</p>
+      </div>
+    </article>
+
+    <article class="script">
+      <div class="script__head"><span class="script__name">Fabrika Event</span><button class="copy" type="button">Copy</button></div>
+      <div class="script__body" data-copy>
+        <p>Thanks for considering us for your event! If you are still exploring potential dates, the best way to get our availability is to <a href="https://margolis.events/fabrika#pathScheduleCall">schedule a call</a>.</p>
+        <p>When you&rsquo;re ready to move forward, please complete our <a href="https://margolis.events/fabrika-host-a-public-event#intake-form">booking form</a>. The form covers event details, logistics, technical needs, staffing, and promotion so we can fully align with your vision.</p>
+        <p>Please note that Fabrika does not hold dates without a completed form. Bookings are confirmed in the order the forms are received to ensure fairness, given the volume of inquiries. Before submitting, please review our <a href="https://margolis.events/fabrika-host-a-public-event#book">payout structure for DJs and event hosts</a>.</p>
+        <p>Once submitted, your responses are binding. If you have any questions before or after submitting your booking inquiry, feel free to reach out via <a href="mailto:ruby@margolisphilly.com">email</a>.</p>
+        <p class="sign">Best,</p>
+      </div>
+    </article>
+  </section>
+
+  <footer>Every link checked against the live site. The italic notes are mine and are not part of the script &mdash; Copy leaves them out.</footer>
+</div>
+
+<script>
+(function(){
+  var buttons = document.querySelectorAll('.copy');
+
+  function scriptHTML(body){
+    var clone = body.cloneNode(true);
+    // my notes are commentary, not part of the reply
+    var notes = clone.querySelectorAll('.changed');
+    for (var i = 0; i < notes.length; i++) notes[i].remove();
+    return clone.innerHTML;
+  }
+
+  function plainText(body){
+    var clone = body.cloneNode(true);
+    var notes = clone.querySelectorAll('.changed');
+    for (var i = 0; i < notes.length; i++) notes[i].remove();
+    // keep the URL visible in the plain-text fallback, since a bare
+    // paste into a plain composer would otherwise drop it entirely
+    var links = clone.querySelectorAll('a');
+    for (var j = 0; j < links.length; j++) {
+      var href = links[j].getAttribute('href') || '';
+      if (href.indexOf('mailto:') === 0) continue;
+      links[j].textContent = links[j].textContent + ' (' + href + ')';
+    }
+    var blocks = clone.querySelectorAll('p, li');
+    var out = [];
+    for (var k = 0; k < blocks.length; k++) out.push(blocks[k].textContent.trim());
+    return out.join('\n\n');
+  }
+
+  function flash(btn, state, label){
+    btn.setAttribute('data-state', state);
+    btn.textContent = label;
+    window.setTimeout(function(){
+      btn.removeAttribute('data-state');
+      btn.textContent = 'Copy';
+    }, 2200);
+  }
+
+  for (var i = 0; i < buttons.length; i++) {
+    (function(btn){
+      btn.addEventListener('click', function(){
+        var body = btn.closest('.script').querySelector('[data-copy]');
+        var html = scriptHTML(body);
+        var text = plainText(body);
+
+        if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+          var item = new ClipboardItem({
+            'text/html': new Blob([html], {type: 'text/html'}),
+            'text/plain': new Blob([text], {type: 'text/plain'})
+          });
+          navigator.clipboard.write([item]).then(function(){
+            flash(btn, 'ok', 'Copied');
+          }).catch(function(){ fallback(btn, text); });
+        } else {
+          fallback(btn, text);
+        }
+      });
+    })(buttons[i]);
+  }
+
+  // Last resort when the async clipboard is unavailable or the browser has
+  // denied clipboard-write: select the live nodes and let execCommand copy
+  // them. This keeps the rich formatting and the live links, so it degrades
+  // better than the plain-text path above rather than worse.
+  function selectAndCopy(btn){
+    var script = btn.closest('.script');
+    var body = script.querySelector('[data-copy]');
+    if (!body || !document.queryCommandSupported) return false;
+
+    // Detach my notes outright rather than hiding them with CSS. What the
+    // copy command serializes out of a display:none node is not consistent
+    // across browsers, and a note landing in a client's email is not
+    // something you can take back.
+    var notes = [];
+    var found = body.querySelectorAll('.changed');
+    for (var n = 0; n < found.length; n++) {
+      notes.push({node: found[n], parent: found[n].parentNode, next: found[n].nextSibling});
+      found[n].parentNode.removeChild(found[n]);
+    }
+
+    var sel = window.getSelection();
+    var saved = sel.rangeCount ? sel.getRangeAt(0).cloneRange() : null;
+    var range = document.createRange();
+    range.selectNodeContents(body);
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+
+    sel.removeAllRanges();
+    if (saved) sel.addRange(saved);
+    for (var m = 0; m < notes.length; m++) {
+      notes[m].parent.insertBefore(notes[m].node, notes[m].next);
+    }
+    return ok;
+  }
+
+  function lastResort(btn){
+    if (selectAndCopy(btn)) flash(btn, 'ok', 'Copied');
+    else flash(btn, 'fail', 'Select & copy');
+  }
+
+  function fallback(btn, text){
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function(){
+        flash(btn, 'ok', 'Copied as text');
+      }).catch(function(){ lastResort(btn); });
+    } else {
+      lastResort(btn);
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
