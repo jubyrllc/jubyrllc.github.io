@@ -281,7 +281,7 @@
       demoPct(s.account); demoSave(s); return {ok:true, account:s.account};
     }
     if(payload.action==="savePayout"){ s.account.payableTo=payload.payableTo; s.account.zelle=payload.zelle; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
-    if(payload.action==="saveAgreements"){ s.account.agreementsSigned=true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="saveAgreements"){ s.account.agreementsSigned=true; s.account.smsConsent=!!payload.contactConsent; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="events"){ demoSave(s); return {ok:true, events:s.events, archive:s.archive||[], dateRequests:s.dateRequests||[]}; }
     if(payload.action==="myPastParties"){
       return {ok:true, parties:[
@@ -462,11 +462,16 @@
           the <a href="/margolis#minimums" target="_blank" rel="noopener">bar minimum policy</a>, and the full
           event policies (sound, conduct, door operations, fees) on the
           <a href="https://margolis.events/host-a-public-event.html" target="_blank" rel="noopener">booking page</a>.</p>
+          <!-- The three policy boxes tick from agreementsSigned because that
+               is what signing them means. agConsent must tick from the host's
+               own stored answer instead: sharing the flag re-ticked marketing
+               consent for anyone who had signed but declined it, so returning
+               to update a signature would silently opt them back in. -->
           ${[["agPhil","I understand and agree to the Booking Philosophy"],
              ["agMins","I understand and agree to the Bar Minimum Policy"],
              ["agAll","I have read and agree to all event policies and terms"],
              ["agConsent","Optional: Jubyr LLC may contact me about my bookings and future events by email, phone, and text. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. Opt out anytime, info never sold."]].map(([id,label])=>
-            `<label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="checkbox" id="${id}"${account.agreementsSigned?" checked":""} style="margin-top:3px">${label}</label>`).join("")}
+            `<label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="checkbox" id="${id}"${(id==="agConsent" ? !!account.smsConsent : !!account.agreementsSigned)?" checked":""} style="margin-top:3px">${label}</label>`).join("")}
           <div class="ifield" style="margin-top:6px"><label>Electronic signature (full legal name) <span class="req">*</span></label><input type="text" id="agSig" autocomplete="name" value="${account.agreementsSigned?esc(account.name||""):""}"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSignAgreements">${account.agreementsSigned?"Update signature":"Sign the agreements"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
