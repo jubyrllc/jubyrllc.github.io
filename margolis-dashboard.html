@@ -215,6 +215,25 @@
 
   let TOKEN = localStorage.getItem("margolis-dj-token") || "";
 
+  /* ---------- arriving from margolis.events ----------
+     The profile icon over there signs hosts in against this same account
+     system, but margolis.events is a different origin with its own
+     localStorage, so the session is handed across in the URL fragment
+     (#t=...). A fragment is never sent to a server and never appears in
+     a Referer header, which is why it carries the token rather than a
+     query string — and it is stripped from the address bar immediately,
+     so it does not sit in history or get pasted along with the URL.
+     Added 2026-08-21 with account.js on margolis.events. */
+  (function adoptHandoff(){
+    const m = /(?:^|[#&])t=([^&]+)/.exec(location.hash || "");
+    if(!m) return;
+    try{
+      const handed = decodeURIComponent(m[1]);
+      if(handed){ TOKEN = handed; localStorage.setItem("margolis-dj-token", TOKEN); }
+    }catch(e){}
+    try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){}
+  })();
+
   // ---------- demo mode (Ruby's preview only, no server writes) ----------
   // Enabled by localStorage["margolis-dj-demo"]="1"; state persists in
   // localStorage so the login page and this page share one demo account.
@@ -446,7 +465,7 @@
           ${[["agPhil","I understand and agree to the Booking Philosophy"],
              ["agMins","I understand and agree to the Bar Minimum Policy"],
              ["agAll","I have read and agree to all event policies and terms"],
-             ["agConsent","Jubyr LLC may contact me about my bookings and future events by email, phone, and text — opt out anytime, info never sold"]].map(([id,label])=>
+             ["agConsent","Optional: Jubyr LLC may contact me about my bookings and future events by email, phone, and text. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. Opt out anytime, info never sold."]].map(([id,label])=>
             `<label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="checkbox" id="${id}"${account.agreementsSigned?" checked":""} style="margin-top:3px">${label}</label>`).join("")}
           <div class="ifield" style="margin-top:6px"><label>Electronic signature (full legal name) <span class="req">*</span></label><input type="text" id="agSig" autocomplete="name" value="${account.agreementsSigned?esc(account.name||""):""}"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSignAgreements">${account.agreementsSigned?"Update signature":"Sign the agreements"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
@@ -489,13 +508,18 @@
     });
     const signBtn = document.getElementById("ppSignAgreements");
     if(signBtn) signBtn.addEventListener("click", async ()=>{
-      const boxes = ["agPhil","agMins","agAll","agConsent"].map(id=>document.getElementById(id).checked);
+      // agConsent is NOT in this list. The three policy boxes are terms of
+      // working with the venue; agreeing to be texted is not, and requiring
+      // it made consent a condition of signing - what A2P error 30923
+      // rejects. Its real state is sent below instead of a hardcoded 1.
+      const boxes = ["agPhil","agMins","agAll"].map(id=>document.getElementById(id).checked);
       if(boxes.includes(false)) return showErr("Please agree to each policy before signing.");
+      const wantsContact = document.getElementById("agConsent").checked;
       const sig = document.getElementById("agSig").value.trim();
       if(!sig) return showErr("Sign with your full legal name.");
       signBtn.disabled = true; signBtn.textContent = "Signing…";
       try{
-        const out = await api(AUTH_URL, {action:"saveAgreements", agreePhilosophy:1, agreeMinimums:1, ackAll:1, contactConsent:1, signature:sig});
+        const out = await api(AUTH_URL, {action:"saveAgreements", agreePhilosophy:1, agreeMinimums:1, ackAll:1, contactConsent: wantsContact ? 1 : 0, signature:sig});
         clearErr(); renderProfilePanel(out.account);
       }catch(e){ signBtn.disabled=false; if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server."); }
     });

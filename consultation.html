@@ -205,7 +205,7 @@
     </div>
     <div class="footer__bottom">
       <span class="status"><span class="dot" aria-hidden="true"></span> Now booking &mdash; consulting &amp; productions</span>
-      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="/privacy" style="color:inherit">Privacy</a> &middot; <a href="/terms" style="color:inherit">Terms</a></span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="/privacy" style="color:inherit">Privacy</a> &middot; <a href="/terms" style="color:inherit">Terms</a> &middot; <a href="/sms" style="color:inherit">Messaging</a></span>
     </div>
   </div>
 </footer>
@@ -540,8 +540,8 @@
       ${mode.manual ? `<div class="ifield"><label for="fPreferred">What times work for you? <span class="req">*</span></label>
         <input type="text" id="fPreferred" placeholder="e.g. weekday afternoons, or Tuesday the 9th after 2"></div>` : ""}
 
-      <label class="rcheck"><input type="checkbox" id="fConsent" checked>
-        <span>You can email, call, or text me about this inquiry, and keep me on the list for what Jubyr is working on. Unsubscribe any time.</span></label>
+      <label class="rcheck"><input type="checkbox" id="fConsent">
+        <span>You can email, call, or text me about this inquiry, and keep me on the list for what Jubyr is working on. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. Unsubscribe any time. See our <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/terms" target="_blank" rel="noopener">Terms</a>.</span></label>
 
       <p class="intake__err" id="fErr"></p>
       <button type="button" class="btn btn--green" id="fGo">${mode.manual ? "Send the request" : "Confirm my consultation"} <span class="arw" aria-hidden="true">&gt;</span></button>

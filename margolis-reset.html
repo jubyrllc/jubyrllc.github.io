@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reset Your Password — Margolis</title>
+<meta name="description" content="Set a new password for your Margolis account.">
+<meta name="robots" content="noindex, nofollow">
+<!-- A reset link is a credential in a query string. Sending no referrer
+     means the token can't leak to any third party via a link on this
+     page (fonts, the margolis.events handoff, anything added later). -->
+<meta name="referrer" content="no-referrer">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=43">
+<style>
+  .dj-wrap{max-width:440px;margin:0 auto}
+  .dj-err{color:#A03A2E;font-size:14px;margin:0 0 14px;display:none}
+  .dj-err.show{display:block}
+  .dj-ok{color:var(--muted);font-size:14px;line-height:1.6;margin:0 0 14px;display:none}
+  .dj-ok.show{display:block}
+  .dj-note{color:var(--muted);font-size:13.5px;line-height:1.55;margin-top:14px}
+  .dj-note a{color:var(--green)}
+  .dj-done{text-align:center;padding:20px 0}
+  .dj-done .mark{width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 18px}
+</style>
+</head>
+<body>
+
+<div class="announce">
+  <span class="mono">Margolis &middot; 9 W Wildey St &middot; Fishtown, Philadelphia</span>
+  <a class="mono" href="https://margolisphilly.com" target="_blank" rel="noopener">margolisphilly.com <span aria-hidden="true">&gt;</span></a>
+</div>
+
+<div class="frame">
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
+      <ul class="nav__links mono">
+        <li><a href="https://margolis.events/host-a-public-event.html">Host an event</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobilemenu mono" id="mobilemenu">
+      <a href="https://margolis.events/host-a-public-event.html">Host an event</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="box">
+      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.65)), url('assets/bg-lounge-dark.jpg')">
+        <span class="tag">Margolis &middot; Your account</span>
+        <h2>Reset your password.</h2>
+        <p>The same account whether you come here as a guest or run nights
+        with us &mdash; one password for both.</p>
+      </div>
+
+      <div class="mg-pad dj-wrap" style="padding-top:34px;padding-bottom:44px;">
+        <p class="dj-err" id="err"></p>
+        <p class="dj-ok" id="ok"></p>
+
+        <!-- Asking for a link. This is what the "Forgot your password?"
+             links point at, so it has to stand on its own with no token
+             in the URL at all. -->
+        <form id="stepAsk" hidden>
+          <h3 style="margin-bottom:6px">Send me a reset link</h3>
+          <p class="dj-note" style="margin:0 0 18px">Enter the email on your account and we&rsquo;ll
+          email you a link. The link is good for two hours.</p>
+          <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="askEmail" autocomplete="email" placeholder="you@email.com"></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnAsk">Send the link <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          <p class="dj-note">Remembered it? <a href="/margolis-login">Log in</a>.</p>
+        </form>
+
+        <!-- Setting the new password, reached from the emailed link. -->
+        <form id="stepSet" hidden>
+          <h3 style="margin-bottom:6px">Choose a new password</h3>
+          <p class="dj-note" style="margin:0 0 18px">Once you save it, the old one stops working
+          everywhere &mdash; here and on margolis.events.</p>
+          <div class="ifield"><label>New password <span class="req">*</span></label><input type="password" id="pw1" autocomplete="new-password" placeholder="At least 8 characters"></div>
+          <div class="ifield"><label>Confirm password <span class="req">*</span></label><input type="password" id="pw2" autocomplete="new-password"></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnSet">Save my password <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        </form>
+
+        <div id="stepDone" hidden>
+          <div class="dj-done">
+            <div class="mark" aria-hidden="true">&#10003;</div>
+            <h3 style="margin-bottom:8px">Password saved.</h3>
+            <p class="dj-note" id="doneNote" style="margin-top:0"></p>
+            <p style="margin-top:22px"><a class="btn btn--green" id="doneCta" href="/margolis-dashboard">Continue <span class="arw" aria-hidden="true">&gt;</span></a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__bottom">
+      <span class="status"><span class="dot" aria-hidden="true"></span> Margolis account &mdash; Jubyr LLC</span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="mailto:ruby@margolisphilly.com" style="color:inherit">ruby@margolisphilly.com</a> &middot; <a href="/privacy" style="color:inherit">Privacy</a> &middot; <a href="/terms" style="color:inherit">Terms</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   Password reset for the shared Margolis account.
+
+   This page had been referenced from two places for months — the
+   "Forgot your password?" link on /margolis-login and the URL that
+   forgotPassword() emails (margolis-dj-auth.php builds
+   https://jubyr.com/margolis-reset?t=...) — and never existed, so
+   every reset link 404'd. Built 2026-08-21 alongside the profile icon
+   on margolis.events, which put the same link in front of guests.
+
+   Two states in one page, because both entry points land here:
+     - no ?t=  -> ask for a link (forgotPassword)
+     - ?t=...  -> set a new password (resetPassword)
+   ============================================================ */
+  const burger = document.querySelector('.nav__burger');
+  const menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+  });
+
+  const AUTH_URL = "https://jubyr.tools/margolis-dj-auth.php";
+  const errBox = document.getElementById('err');
+  const okBox  = document.getElementById('ok');
+  const stepAsk = document.getElementById('stepAsk');
+  const stepSet = document.getElementById('stepSet');
+  const stepDone = document.getElementById('stepDone');
+
+  function err(m){ okBox.classList.remove('show'); errBox.textContent = m; errBox.classList.add('show'); }
+  function ok(m){ errBox.classList.remove('show'); okBox.textContent = m; okBox.classList.add('show'); }
+  function clearMsg(){ errBox.classList.remove('show'); okBox.classList.remove('show'); }
+
+  async function api(payload){
+    const r = await fetch(AUTH_URL, {method:"POST", body: JSON.stringify(payload)});
+    const t = await r.text();
+    let out = null;
+    try{ out = JSON.parse(t); }catch(e){}
+    if(!r.ok || !out || out.error) throw new Error((out && out.error) || "Something went wrong — try again in a moment.");
+    return out;
+  }
+
+  const resetToken = new URLSearchParams(location.search).get("t") || "";
+
+  /* ---- ask for a link ---- */
+  document.getElementById('btnAsk').addEventListener('click', async () => {
+    clearMsg();
+    const email = document.getElementById('askEmail').value.trim();
+    if(!email) return err("Enter the email on your account.");
+    const btn = document.getElementById('btnAsk');
+    btn.disabled = true;
+    try{
+      await api({action:"forgotPassword", email});
+      /* The endpoint answers identically whether or not the account
+         exists, so it can't be used to probe for one. This copy has to
+         match that, or it leaks what the API refuses to. */
+      ok("If that email has an account, a reset link is on its way. It's good for two hours — check your spam folder if it doesn't land.");
+    }catch(e){ err(e.message); }
+    btn.disabled = false;
+  });
+
+  /* ---- set the new password ---- */
+  document.getElementById('btnSet').addEventListener('click', async () => {
+    clearMsg();
+    const pw1 = document.getElementById('pw1').value;
+    const pw2 = document.getElementById('pw2').value;
+    if(pw1.length < 8) return err("Password needs to be at least 8 characters.");
+    if(pw1 !== pw2) return err("Those two passwords don't match.");
+    const btn = document.getElementById('btnSet');
+    btn.disabled = true;
+    try{
+      const out = await api({action:"resetPassword", resetToken, newPassword: pw1});
+      /* resetPassword hands back a live session, so nobody has to type
+         the password they just chose. */
+      try{ localStorage.setItem("margolis-dj-token", out.token); }catch(e){}
+      stepSet.hidden = true;
+      stepDone.hidden = false;
+      /* A guest has no dashboard to be sent to — their account lives
+         behind the profile icon on margolis.events. Sending them to the
+         host dashboard would bounce them straight back out. */
+      const cta = document.getElementById('doneCta');
+      const note = document.getElementById('doneNote');
+      const label = (out.account && out.account.isGuest) ? "Back to Margolis" : "Open my dashboard";
+      cta.innerHTML = "";
+      cta.appendChild(document.createTextNode(label + " "));
+      const arw = document.createElement("span");
+      arw.className = "arw"; arw.setAttribute("aria-hidden", "true"); arw.textContent = ">";
+      cta.appendChild(arw);
+      if(out.account && out.account.isGuest){
+        cta.href = "https://margolis.events/margolis.html";
+        note.textContent = "You're signed in. Open the profile icon in the top corner of margolis.events any time.";
+      } else {
+        cta.href = "/margolis-dashboard";
+        note.textContent = "You're signed in — straight through to your nights.";
+      }
+    }catch(e){
+      err(e.message);
+      btn.disabled = false;
+    }
+  });
+
+  /* ---- which half of the page is this? ---- */
+  if(resetToken){
+    stepSet.hidden = false;
+    /* The token is a live credential. Take it out of the address bar so
+       it isn't shoulder-surfed, pasted into a chat, or kept in history
+       with the rest of the URL — it stays in memory for the one POST
+       that consumes it. */
+    try{ history.replaceState(null, "", location.pathname); }catch(e){}
+    document.getElementById('pw1').focus();
+  } else {
+    stepAsk.hidden = false;
+  }
+</script>
+</body>
+</html>
