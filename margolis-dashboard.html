@@ -64,6 +64,58 @@
   .djd-check li:not(.done) .mk{color:#A03A2E}
   .djd-task{border-top:1px dashed var(--line);padding:14px 0}
   .djd-task h4{font-size:14.5px;margin:0 0 10px}
+
+  /* ---- manager view (Ruby only) ----------------------------------
+     Same ink, same hairlines, same mono micro-labels as the host
+     dashboard it lives inside — this is one page that knows who is
+     looking, not a second tool wearing a different skin. */
+  .mgr-switch{display:flex;gap:0;margin:0 0 20px;border:1px solid var(--line);border-radius:999px;padding:3px;width:fit-content}
+  .mgr-switch__btn{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:none;background:none;color:var(--muted);padding:8px 16px;border-radius:999px;cursor:pointer}
+  .mgr-switch__btn.on{background:var(--green);color:#fff}
+  .mgr-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+  .mgr-tab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;border:1px dashed var(--line);background:#fff;color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer}
+  .mgr-tab.on{background:var(--green);border-color:var(--green);border-style:solid;color:#fff}
+  .mgr-tab b{font-weight:600;margin-left:6px;padding:1px 6px;border-radius:999px;background:#A03A2E;color:#fff;font-size:10px}
+  .mgr-tab.on b{background:rgba(255,255,255,.28)}
+  .mgr-card{border:1px solid var(--line);border-radius:14px;background:var(--paper);padding:18px 20px;margin-bottom:14px}
+  .mgr-card h3{font-size:18px;margin:0 0 2px}
+  .mgr-card--flag{border-left:3px solid #A03A2E}
+  .mgr-meta{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.04em;color:var(--muted);line-height:1.7}
+  .mgr-chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+  .mgr-chip{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:#F1F1EC;color:var(--muted)}
+  .mgr-chip--warn{background:#FCF3DC;color:#8A6400}
+  .mgr-chip--ok{background:#EAF3E4;color:#3F6B21}
+  .mgr-chip--bad{background:#FBEAE8;color:#A03A2E}
+  .mgr-chip--dark{background:var(--ink);color:#fff}
+  .mgr-part{border-top:1px dashed var(--line);padding:12px 0 4px}
+  .mgr-part__head{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .mgr-label{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+  .mgr-val{font-size:14px;line-height:1.5;margin:8px 0 0;word-break:break-word}
+  .mgr-acts{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 2px}
+  .mgr-btn{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--green);background:var(--green);color:#fff;padding:9px 14px;border-radius:8px;cursor:pointer}
+  .mgr-btn--ghost{background:#fff;color:var(--muted);border:1px solid var(--line)}
+  .mgr-btn--bad{background:#fff;color:#A03A2E;border-color:#E4BDB6}
+  .mgr-btn[disabled]{opacity:.5;cursor:default}
+  .mgr-link{color:var(--green);text-decoration:none;border-bottom:1px solid var(--green)}
+  .mgr-sect{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin:28px 0 12px}
+  .mgr-empty{color:var(--muted);font-size:14px;padding:14px 0 22px}
+  .mgr-banner{border-left:3px solid #A03A2E;background:#FBEAE8;padding:14px 16px;margin:0 0 16px;font-size:14px;line-height:1.55}
+  .mgr-stars{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 10px}
+  .mgr-stars .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);width:112px}
+  .mgr-star{width:30px;height:30px;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:7px;font-family:"IBM Plex Mono",monospace;font-size:12px;cursor:pointer}
+  .mgr-star.on{background:var(--green);border-color:var(--green);color:#fff}
+  .mgr-search{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:15px;margin-bottom:16px}
+  .mgr-flyer{max-width:100%;border:1px solid var(--line);border-radius:10px;margin-top:10px;display:block}
+  .mgr-fold{border:1px solid var(--line);border-radius:12px;background:#fff;margin-top:18px;padding:0 18px}
+  .mgr-fold summary{cursor:pointer;list-style:none;padding:15px 0;font-weight:700;font-size:15px}
+  .mgr-fold summary::-webkit-details-marker{display:none}
+  .mgr-fold[open] summary{border-bottom:1px dashed var(--line)}
+  .mgr-fold .mgr-card{border:none;border-bottom:1px dashed var(--line);border-radius:0;padding-left:0;padding-right:0;margin-bottom:0}
+  .mgr-field{margin-bottom:12px}
+  .mgr-field label{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+  .mgr-field input,.mgr-field select{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:15px;background:#fff}
+  .mgr-row2{display:flex;gap:12px;flex-wrap:wrap}
+  .mgr-row2 .mgr-field{flex:1;min-width:150px}
 </style>
 </head>
 <body>
@@ -92,9 +144,9 @@
   <main id="top">
     <section class="box">
       <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.65)), url('assets/media/margolis/photo-24.jpg')">
-        <span class="tag">DJs &amp; hosts</span>
-        <h2>Your nights.</h2>
-        <p>Lineup, flyer, ticket link, and RSVP counts &mdash; one place per event.</p>
+        <span class="tag" id="secTag">DJs &amp; hosts</span>
+        <h2 id="secTitle">Your nights.</h2>
+        <p id="secSub">Lineup, flyer, ticket link, and RSVP counts &mdash; one place per event.</p>
       </div>
 
       <div class="mg-pad djd-wrap" style="padding-top:28px;padding-bottom:44px;">
@@ -102,6 +154,13 @@
           <span class="djd-hello" id="hello"><span class="djd-avatar" id="djdAvatar" hidden></span><span id="helloText"></span></span>
           <button class="djd-logout" id="logout">Log out</button>
         </div>
+        <div class="mgr-switch mono" id="mgrSwitch" hidden>
+          <button type="button" class="mgr-switch__btn" data-view="manager">Manager</button>
+          <button type="button" class="mgr-switch__btn" data-view="host">My own nights</button>
+        </div>
+        <p class="djd-err" id="mgrErr"></p>
+        <div id="mgrView" hidden></div>
+        <div id="hostView">
         <p class="djd-note">Each part needs Margolis approval before it counts, and your lineup,
         flyer, and ticket link are due <strong>at least 10 days before your night</strong> —
         earlier is always welcome. Until all three are approved, our $20 presale stays live for
@@ -162,6 +221,7 @@
             <button type="button" class="btn btn--green" id="dreqSubmit" style="margin-top:10px">Submit request</button>
           </div>
         </details>
+        </div><!-- /#hostView -->
       </div>
     </section>
   </main>
@@ -964,6 +1024,12 @@
       document.getElementById("helloText").innerHTML = `Good to see you, <strong>${esc(first)}</strong>.`;
       loadAvatar(me.account);
       if(me.account.mustSetPassword || !me.account.quickProfileDone){ location.href = "/margolis-login"; return; }
+      /* Manager (Ruby): the same page grows a second half. The server
+         decides this — margolis-manager.php checks the account against
+         its own allowlist on every call, so flipping this flag in a
+         console buys a view with nothing behind it. The host half below
+         still loads: she has a profile and nights of her own. */
+      if(me.account.isManager && typeof window.MGR_BOOT === "function"){ window.MGR_BOOT(); }
       renderProfilePanel(me.account);
       renderW9(me.account);
       const out = await api(DASH_URL, {action:"events"});
@@ -978,6 +1044,622 @@
       if(e!=="auth") document.getElementById("content").innerHTML = `<p class="djd-note" style="margin-top:20px">Couldn't load your nights — refresh, or email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>`;
     }
   })();
+</script>
+<script>
+/* ===================================================================
+   MANAGER VIEW — Ruby's side of the DJ system, inside the same
+   dashboard every DJ logs into.
+   -------------------------------------------------------------------
+   Nothing here is a copy of jubyr.tools/dj-accounts. It talks to
+   margolis-manager.php, which includes the exact file that powers that
+   tile (margolis-dj-admin-actions.php) after checking her login
+   instead of the gate code. Approve a flyer here and it is approved
+   there; the DJ's dashboard, the reminder cron, and the public event
+   page all read the same records a moment later.
+
+   The gate code that unlocks Ledger, Clients and Bookings never comes
+   to this page. Whether the account may see any of this is decided by
+   the server (account.isManager, from an allowlist in the PHP), never
+   by anything this file can be told.
+   =================================================================== */
+(function(){
+  const MGR_URL = "https://jubyr.tools/margolis-manager.php";
+  const DIMS = [["overall","Overall"],["reach","Reach"],["professionalism","Professionalism"],["craft","Craft"],["vibe","Vibe"]];
+  const PARTS = [["lineup","DJ lineup"],["flyerFile","Event flyer"],["ticketLink","Ticket link"]];
+
+  const view = document.getElementById("mgrView");
+  const hostView = document.getElementById("hostView");
+  const switcher = document.getElementById("mgrSwitch");
+  const errEl = document.getElementById("mgrErr");
+
+  const M = {
+    me: null,
+    counts: {},
+    tab: "needs",
+    accounts: null, submissions: null, requests: null, nights: null,
+    subScope: "pending", dreqScope: "pending",
+    search: "",
+    inviteMsg: "",
+  };
+
+  /* ---------- plumbing ---------- */
+  function showErr(m){ errEl.textContent = m; errEl.classList.add("show"); }
+  function clearErr(){ errEl.classList.remove("show"); }
+
+  async function mapi(payload){
+    const r = await fetch(MGR_URL, {method:"POST", body: JSON.stringify(Object.assign({token: TOKEN}, payload))});
+    if(r.status === 401){ localStorage.removeItem("margolis-dj-token"); location.href = "/margolis-login"; throw "auth"; }
+    const out = await r.json().catch(()=>({}));
+    if(!r.ok) throw (out.error || "Something went wrong — try again.");
+    return out;
+  }
+
+  const digits = s => String(s||"").replace(/\D/g,"");
+  function fmtPhone(p){
+    const d = digits(p);
+    return d.length === 10 ? `(${d.slice(0,3)})-${d.slice(3,6)}-${d.slice(6)}` : (p||"");
+  }
+  function fmtDay(d){
+    if(!d) return "";
+    const [y,m,dd] = String(d).split("-").map(Number);
+    if(!y) return d;
+    return new Date(y, m-1, dd).toLocaleDateString("en-US",{weekday:"short", month:"short", day:"numeric"});
+  }
+  function fmtWhen(iso){
+    if(!iso) return "never";
+    const t = new Date(iso);
+    if(isNaN(t)) return "never";
+    const days = Math.round((Date.now() - t.getTime()) / 86400000);
+    if(days <= 0) return "today";
+    if(days === 1) return "yesterday";
+    if(days < 30) return days + " days ago";
+    return t.toLocaleDateString("en-US",{month:"short", day:"numeric", year:"numeric"});
+  }
+  function countdown(daysOut){
+    if(daysOut === null || daysOut === undefined) return "";
+    if(daysOut <= 0) return "Tonight";
+    if(daysOut === 1) return "Tomorrow";
+    return `In ${daysOut} days`;
+  }
+  /* Everything she might tap to reach a person, in the order she'd
+     reach for it on a phone: text first, then call, then email. */
+  function contactLinks(name, email, phone, instagram){
+    const bits = [];
+    const d = digits(phone);
+    if(d.length === 10){
+      bits.push(`<a class="mgr-link" href="sms:+1${d}">Text</a>`);
+      bits.push(`<a class="mgr-link" href="tel:+1${d}">${esc(fmtPhone(phone))}</a>`);
+    }
+    if(email) bits.push(`<a class="mgr-link" href="mailto:${esc(email)}">${esc(email)}</a>`);
+    if(instagram) bits.push(`<a class="mgr-link" href="https://instagram.com/${esc(instagram)}" target="_blank" rel="noopener">@${esc(instagram)}</a>`);
+    return bits.join(" &middot; ");
+  }
+
+  /* ---------- loading ---------- */
+  async function loadCounts(){ M.counts = await mapi({action:"counts"}); }
+  async function loadAccounts(){ M.accounts = (await mapi({action:"listAccounts"})).accounts || []; }
+  async function loadSubmissions(){ M.submissions = (await mapi({action:"listSubmissions", scope:M.subScope})).submissions || []; }
+  async function loadRequests(){ M.requests = (await mapi({action:"listDateRequests", scope:M.dreqScope})).requests || []; }
+  async function loadNights(){ M.nights = (await mapi({action:"nights", days:60})).nights || []; }
+
+  /* Each tab pulls only what it shows; "Needs you" is the one screen
+     that needs all three queues, and asks for them at once. */
+  async function ensureData(){
+    const jobs = [];
+    if(M.tab === "needs"){
+      M.subScope = "pending"; M.dreqScope = "pending";
+      jobs.push(loadSubmissions(), loadRequests(), loadNights());
+      if(!M.accounts) jobs.push(loadAccounts());
+    }
+    if(M.tab === "nights") jobs.push(loadNights());
+    if(M.tab === "requests") jobs.push(loadRequests());
+    if(M.tab === "djs" && !M.accounts) jobs.push(loadAccounts());
+    await Promise.all(jobs);
+  }
+
+  /* ---------- shared pieces ---------- */
+  function statusChip(st){
+    if(st === "approved") return `<span class="mgr-chip mgr-chip--ok">Approved</span>`;
+    if(st === "pending")  return `<span class="mgr-chip mgr-chip--warn">Waiting on you</span>`;
+    if(st === "rejected") return `<span class="mgr-chip mgr-chip--bad">Rejected</span>`;
+    return `<span class="mgr-chip">Not submitted</span>`;
+  }
+
+  function partValue(key, part){
+    const v = part && part.value;
+    if(!v || (Array.isArray(v) && !v.length)) return "";
+    if(key === "lineup"){
+      return Array.isArray(v)
+        ? `<p class="mgr-val">${v.map(a=>`${esc(a.name)}${a.instagram?` <a class="mgr-link" href="https://instagram.com/${esc(a.instagram)}" target="_blank" rel="noopener">@${esc(a.instagram)}</a>`:""}`).join("<br>")}</p>`
+        : `<p class="mgr-val">${esc(v)}</p>`;
+    }
+    if(key === "ticketLink") return `<p class="mgr-val"><a class="mgr-link" href="${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a></p>`;
+    if(key === "flyerFile") return `<div class="mgr-acts"><button class="mgr-btn mgr-btn--ghost" data-act="file" data-file="${esc(v)}">View flyer</button></div><div data-flyer="${esc(v)}"></div>`;
+    return "";
+  }
+
+  function partBlock(subId, key, label, part){
+    const st = part ? (part.status || "") : "";
+    const canReview = part && part.value && st === "pending" && subId;
+    return `<div class="mgr-part">
+      <div class="mgr-part__head"><span class="mgr-label">${label}</span>${statusChip(st)}</div>
+      ${partValue(key, part)}
+      ${canReview ? `<div class="mgr-acts">
+        <button class="mgr-btn" data-act="review" data-sub="${esc(subId)}" data-part="${key}" data-decision="approved">Approve</button>
+        <button class="mgr-btn mgr-btn--bad" data-act="review" data-sub="${esc(subId)}" data-part="${key}" data-decision="rejected">Reject</button>
+      </div>` : ""}
+    </div>`;
+  }
+
+  /* ---------- nights ---------- */
+  function nightCard(n){
+    const late = n.overdue;
+    const parts = PARTS.map(([k,label]) => partBlock(n.submissionId, k, label, n[k])).join("");
+    const rsvp = (n.rsvpFree !== "" || n.rsvpSold !== "")
+      ? `<b>${esc(n.rsvpFree||"0")}</b> free RSVP &middot; <b>${esc(n.rsvpSold||"0")}</b> sold${n.rsvpUpdatedAt?` &middot; updated ${esc(fmtWhen(n.rsvpUpdatedAt))}`:""}`
+      : `no counts from them yet`;
+    return `<div class="mgr-card ${late?"mgr-card--flag":""}">
+      <div class="mgr-chips">
+        ${n.venue?`<span class="mgr-chip mgr-chip--dark">${esc(n.venue)}</span>`:""}
+        <span class="mgr-chip ${n.daysOut<=3?"mgr-chip--bad":""}">${esc(countdown(n.daysOut))}</span>
+        ${late?`<span class="mgr-chip mgr-chip--bad">Past the 10-day deadline</span>`:""}
+        ${n.fullyApproved?`<span class="mgr-chip mgr-chip--ok">All three approved &middot; presale off</span>`:""}
+        ${n.hostUnclaimed?`<span class="mgr-chip mgr-chip--bad">Never signed in</span>`:""}
+      </div>
+      <h3>${esc(n.eventName)}</h3>
+      <div class="mgr-meta">${esc(fmtDay(n.date))} &middot; ${esc(n.hostName||"(no host on file)")}</div>
+      <div class="mgr-meta">${contactLinks(n.hostName, n.hostEmail, n.hostPhone, n.hostInstagram) || "no contact details on file"}</div>
+      ${parts}
+      <div class="mgr-part"><div class="mgr-part__head"><span class="mgr-label">RSVP counts</span></div>
+        <p class="mgr-val">${rsvp}</p></div>
+      ${n.missing.length ? `<div class="mgr-acts">
+        <button class="mgr-btn" data-act="nudge" data-key="${esc(n.nudgeKey)}" data-name="${esc(n.eventName)}" data-missing="${esc(n.missing.join(", "))}">Email them what's missing</button>
+        ${n.nudgedAt?`<span class="mgr-chip">last nudged ${esc(fmtWhen(n.nudgedAt))}</span>`:""}
+      </div>` : ""}
+    </div>`;
+  }
+
+  /* ---------- submissions waiting on review ---------- */
+  function submissionCard(s){
+    return `<div class="mgr-card">
+      <div class="mgr-chips">
+        <span class="mgr-chip mgr-chip--dark">${esc(s.accountType||"dj")}</span>
+        ${s.fullyApproved?`<span class="mgr-chip mgr-chip--ok">All three approved</span>`:""}
+      </div>
+      <h3>${esc(s.eventName)}</h3>
+      <div class="mgr-meta">${esc(fmtDay(s.date))} &middot; ${esc(s.accountName)}</div>
+      <div class="mgr-meta">${contactLinks(s.accountName, s.accountEmail, "", "")}</div>
+      ${PARTS.map(([k,label]) => partBlock(s.id, k, label, s[k])).join("")}
+    </div>`;
+  }
+
+  /* ---------- date requests ---------- */
+  function requestCard(r){
+    return `<div class="mgr-card">
+      <div class="mgr-chips">
+        <span class="mgr-chip mgr-chip--dark">${esc(r.venue||"Margolis (inside)")}</span>
+        ${r.startTime?`<span class="mgr-chip">${esc(r.startTime)}${r.endTime?`&ndash;${esc(r.endTime)}`:""}</span>`:""}
+      </div>
+      <h3>${esc(r.eventName)}</h3>
+      <div class="mgr-meta">${esc(r.accountName)} &middot; asked ${esc(fmtWhen(r.createdAt))}</div>
+      <div class="mgr-meta">${contactLinks(r.accountName, r.accountEmail, "", "")}</div>
+      ${r.eventDescription?`<p class="mgr-val">${esc(r.eventDescription)}</p>`:""}
+      ${(r.dates||[]).map(d=>`<div class="mgr-part">
+        <div class="mgr-part__head"><span class="mgr-label">${esc(fmtDay(d.date))}</span>
+          ${d.status==="approved"?`<span class="mgr-chip mgr-chip--ok">Approved</span>`:
+            d.status==="declined"?`<span class="mgr-chip mgr-chip--bad">Declined</span>`:
+            `<span class="mgr-chip mgr-chip--warn">Waiting on you</span>`}</div>
+        ${d.status==="pending"?`<div class="mgr-acts">
+          <button class="mgr-btn" data-act="dreq" data-req="${esc(r.id)}" data-date="${esc(d.date)}" data-decision="approved">Approve this date</button>
+          <button class="mgr-btn mgr-btn--bad" data-act="dreq" data-req="${esc(r.id)}" data-date="${esc(d.date)}" data-decision="declined">Decline</button>
+        </div>`:""}
+      </div>`).join("")}
+    </div>`;
+  }
+
+  /* ---------- roster ---------- */
+  function starRow(id, dim, current){
+    let out = `<div class="mgr-stars"><span class="k">${dim[1]}</span>`;
+    for(let n=1;n<=5;n++) out += `<button class="mgr-star ${current>=n?"on":""}" data-act="rate" data-id="${esc(id)}" data-dim="${dim[0]}" data-n="${n}">${n}</button>`;
+    return out + `</div>`;
+  }
+
+  function accountCard(a){
+    const payout = (a.payableTo || a.zelle)
+      ? `Pay to <b>${esc(a.payableTo||"—")}</b> &middot; Zelle <b>${esc(a.zelle||"—")}</b>`
+      : `No payout details on file`;
+    return `<div class="mgr-card ${a.approved?"":"mgr-card--flag"}">
+      <div class="mgr-chips">
+        <span class="mgr-chip mgr-chip--dark">${esc(a.type||"dj")}</span>
+        ${a.isManager?`<span class="mgr-chip mgr-chip--ok">That's you</span>`:""}
+        ${a.approved?"":`<span class="mgr-chip mgr-chip--warn">Awaiting your review</span>`}
+        ${a.mustSetPassword?`<span class="mgr-chip mgr-chip--bad">Never signed in</span>`:""}
+        <span class="mgr-chip">${a.profilePercent??0}% profile</span>
+        ${a.pendingSubmissions?`<span class="mgr-chip mgr-chip--warn">${a.pendingSubmissions} to review</span>`:""}
+        ${a.w9File?`<span class="mgr-chip mgr-chip--ok">W9 on file</span>`:`<span class="mgr-chip mgr-chip--bad">No W9 &middot; hold payouts</span>`}
+        ${a.agreementsSigned?`<span class="mgr-chip mgr-chip--ok">Agreements signed</span>`:`<span class="mgr-chip mgr-chip--warn">Agreements unsigned</span>`}
+        ${a.claimedResidency?`<span class="mgr-chip ${a.claimedResidency.status==="locked"?"mgr-chip--ok":"mgr-chip--warn"}">${a.claimedResidency.status==="locked"?"Residency locked":"Residency claim"}</span>`:""}
+      </div>
+      <h3>${esc(a.name||a.email)}</h3>
+      <div class="mgr-meta">${contactLinks(a.name, a.email, a.phone, a.instagram)}</div>
+      <div class="mgr-meta">
+        ${(a.genres||[]).length?`Plays <b>${esc(a.genres.join(", "))}</b><br>`:""}
+        ${(a.venues||[]).length?`Also at <b>${esc(a.venues.join(", "))}</b><br>`:""}
+        ${payout}<br>
+        ${a.bookingCount} booking${a.bookingCount===1?"":"s"} &middot; joined ${esc(fmtWhen(a.createdAt))} &middot; last login <b>${esc(fmtWhen(a.lastLogin))}</b>
+        ${a.claimReminderCount?`<br>Claim reminder sent <b>${a.claimReminderCount}&times;</b>, last ${esc(fmtWhen(a.claimReminderAt))}`:""}
+        ${a.claimedResidency?`<br>Claimed: <b>${esc(a.claimedResidency.title)}</b>`:""}
+      </div>
+      ${a.mustSetPassword?`<div class="mgr-banner" style="margin-top:12px">This account has never been signed into, so nothing they owe you can come through it &mdash; and no payout should go out until it is claimed. A reminder emails them a fresh one-click link, good for 7 days.</div>`:""}
+      <div class="mgr-acts">
+        ${!a.approved?`<button class="mgr-btn" data-act="acct" data-id="${esc(a.id)}" data-decision="approve">Approve account</button>
+          <button class="mgr-btn mgr-btn--bad" data-act="acct" data-id="${esc(a.id)}" data-decision="reject">Reject</button>`:""}
+        ${a.mustSetPassword?`<button class="mgr-btn mgr-btn--ghost" data-act="remind" data-id="${esc(a.id)}" data-name="${esc(a.name||a.email)}">${a.claimReminderCount?"Send another claim reminder":"Send claim reminder"}</button>`:""}
+        ${a.claimedResidency&&a.claimedResidency.status!=="locked"?`<button class="mgr-btn" data-act="claim" data-id="${esc(a.id)}" data-decision="lock">Lock residency</button>
+          <button class="mgr-btn mgr-btn--bad" data-act="claim" data-id="${esc(a.id)}" data-decision="decline">Decline claim</button>`:""}
+        ${a.photoFace?`<button class="mgr-btn mgr-btn--ghost" data-act="file" data-file="${esc(a.photoFace)}">Photo</button>`:""}
+        ${a.w9File?`<button class="mgr-btn mgr-btn--ghost" data-act="file" data-file="${esc(a.w9File)}">W9</button>`:""}
+      </div>
+      ${a.photoFace?`<div data-flyer="${esc(a.photoFace)}"></div>`:""}
+      <details class="mgr-fold" data-fold="rate-${esc(a.id)}" style="margin-top:6px">
+        <summary>Rate this ${esc(a.type||"dj")}</summary>
+        <div style="padding:14px 0">${DIMS.map(d=>starRow(a.id, d, (a.rating||{})[d[0]]||0)).join("")}</div>
+      </details>
+    </div>`;
+  }
+
+  const inviteForm = () => `<details class="mgr-fold" data-fold="invite" id="mgrInvite"${M.inviteMsg?" open":""}>
+    <summary>Add a DJ or host</summary>
+    <div style="padding:16px 0">
+      <p class="djd-note" style="margin-bottom:14px">Creates the same account a confirmed booking creates, and emails them
+      a temporary password and the walkthrough. They set their own password on first sign in. If the email already has an
+      account, nothing is sent and nothing is overwritten.</p>
+      <div class="mgr-row2">
+        <div class="mgr-field"><label>First name</label><input type="text" id="invFirst" autocomplete="off"></div>
+        <div class="mgr-field"><label>Last name</label><input type="text" id="invLast" autocomplete="off"></div>
+      </div>
+      <div class="mgr-field"><label>Email</label><input type="email" id="invEmail" autocomplete="off" inputmode="email"></div>
+      <div class="mgr-row2">
+        <div class="mgr-field"><label>Phone (optional)</label><input type="tel" id="invPhone" inputmode="tel"></div>
+        <div class="mgr-field"><label>Instagram (optional)</label><input type="text" id="invIg" autocomplete="off"></div>
+      </div>
+      <div class="mgr-field"><label>They are a</label><select id="invType"><option value="dj">DJ</option><option value="host">Event host</option></select></div>
+      <div class="mgr-acts"><button class="mgr-btn" data-act="invite">Create profile &amp; send their login</button></div>
+      <p class="mgr-meta" id="invMsg">${esc(M.inviteMsg||"")}</p>
+    </div>
+  </details>`;
+
+  /* ---------- tabs ---------- */
+  function tabsBar(){
+    const c = M.counts || {};
+    const needs = (c.pendingAccounts||0) + (c.pendingSubmissions||0) + (c.pendingDateRequests||0);
+    const defs = [
+      ["needs", "Needs you", needs],
+      ["nights", "Nights", c.margolisMissing||0],
+      ["requests", "Date requests", c.pendingDateRequests||0],
+      ["djs", "DJs &amp; hosts", c.unclaimed||0],
+    ];
+    return `<div class="mgr-tabs">${defs.map(([k,label,n])=>
+      `<button class="mgr-tab ${M.tab===k?"on":""}" data-act="tab" data-tab="${k}">${label}${n?`<b>${n}</b>`:""}</button>`).join("")}</div>`;
+  }
+
+  function renderNeeds(){
+    const waiting = (M.accounts||[]).filter(a=>!a.approved && !a.archived);
+    const reqs = M.requests || [];
+    /* Overdue nights, plus any night whose parts are all in and sitting
+       unreviewed — both are hers to act on today. */
+    const late = (M.nights||[]).filter(n=>n.overdue || (!n.missing.length && n.waiting.length));
+    /* A pending submission for one of those nights is the SAME job seen
+       twice, and the night card is the better one to keep: it carries the
+       countdown, the host's phone, and the nudge. Submissions with no
+       upcoming night behind them (a past date, a booking not confirmed)
+       still get listed below on their own. */
+    const shown = new Set(late.map(n=>n.submissionId).filter(Boolean));
+    const subs = (M.submissions || []).filter(s => !shown.has(s.id));
+    const nothing = !waiting.length && !subs.length && !reqs.length && !late.length;
+    if(nothing) return `<div class="mgr-empty">Nothing is waiting on you. Every account is reviewed, every night inside the 10-day deadline has its lineup, flyer and ticket link, and no dates are pending.</div>`;
+    let html = "";
+    if(waiting.length){
+      html += `<div class="mgr-sect">New accounts &middot; ${waiting.length}</div>` + waiting.map(accountCard).join("");
+    }
+    if(subs.length){
+      html += `<div class="mgr-sect">Submitted for approval &middot; ${subs.length}</div>` + subs.map(submissionCard).join("");
+    }
+    if(reqs.length){
+      html += `<div class="mgr-sect">Dates being asked for &middot; ${reqs.length}</div>` + reqs.map(requestCard).join("");
+    }
+    if(late.length){
+      html += `<div class="mgr-sect">Nights that need you &middot; ${late.length}</div>`
+        + `<p class="djd-note" style="margin-bottom:14px">Past the 10-day deadline and still short something, or everything is in
+           and waiting on your review. The daily reminder already chases the late ones; the button on each sends that list right now.</p>`
+        + late.map(nightCard).join("");
+    }
+    return html;
+  }
+
+  function renderNights(){
+    const nights = M.nights || [];
+    if(!nights.length) return `<div class="mgr-empty">No confirmed public nights in the next 60 days.</div>`;
+    /* Three groups, not two. A night where everything has been sent but
+       nothing reviewed is not "fully in" — it is waiting on her, and
+       folding it away with the finished ones hid exactly the work this
+       screen exists to surface. */
+    const short = nights.filter(n=>n.missing.length);
+    const waiting = nights.filter(n=>!n.missing.length && n.waiting.length);
+    const ready = nights.filter(n=>!n.missing.length && !n.waiting.length);
+    let html = `<p class="djd-note" style="margin-bottom:16px">Every confirmed public night in the next 60 days, whether or not
+      the host has uploaded anything &mdash; including the ones with nothing on file at all, which are the ones that need you.</p>`;
+    if(short.length) html += `<div class="mgr-sect">Still short something &middot; ${short.length}</div>` + short.map(nightCard).join("");
+    if(waiting.length) html += `<div class="mgr-sect">All sent, waiting on your review &middot; ${waiting.length}</div>` + waiting.map(nightCard).join("");
+    if(ready.length) html += `<details class="mgr-fold" data-fold="ready"><summary>Done and approved (${ready.length})</summary><div style="padding:8px 0">${ready.map(nightCard).join("")}</div></details>`;
+    return html;
+  }
+
+  function renderRequests(){
+    const reqs = M.requests || [];
+    return `<div class="mgr-tabs">
+        <button class="mgr-tab ${M.dreqScope==="pending"?"on":""}" data-act="dreqscope" data-scope="pending">Waiting on you</button>
+        <button class="mgr-tab ${M.dreqScope==="all"?"on":""}" data-act="dreqscope" data-scope="all">Everything asked for</button>
+      </div>
+      <p class="djd-note" style="margin-bottom:16px">Approving a date creates a booking for you to finish and confirm in
+      Bookings, exactly like an inquiry that came through the form.</p>
+      ${reqs.length ? reqs.map(requestCard).join("") : `<div class="mgr-empty">${M.dreqScope==="pending"?"No dates waiting on you.":"Nobody has asked for a date yet."}</div>`}`;
+  }
+
+  function renderDjs(){
+    const all = (M.accounts||[]);
+    const q = M.search.trim().toLowerCase();
+    const match = a => !q || [a.name,a.email,a.instagram,(a.genres||[]).join(" ")].join(" ").toLowerCase().includes(q);
+    const active = all.filter(a=>!a.archived && match(a));
+    const archived = all.filter(a=>a.archived && match(a));
+    const waiting = active.filter(a=>!a.approved);
+    const approved = active.filter(a=>a.approved);
+    const unclaimed = active.filter(a=>a.mustSetPassword && a.approved);
+
+    let html = inviteForm();
+    html += `<input class="mgr-search" type="search" id="mgrSearch" placeholder="Search name, email, handle, genre" value="${esc(M.search)}" style="margin-top:16px">`;
+    if(unclaimed.length){
+      html += `<div class="mgr-banner">
+        <b>${unclaimed.length} ${unclaimed.length===1?"account has":"accounts have"} never been claimed.</b>
+        They cannot send you a flyer, a lineup or their counts, and no payout should be processed until they sign in.
+        <div class="mgr-acts"><button class="mgr-btn" data-act="remindall" data-n="${unclaimed.length}">Email all ${unclaimed.length} a claim reminder</button></div>
+      </div>`;
+    }
+    html += `<div class="mgr-sect">Waiting on your approval${waiting.length?` &middot; ${waiting.length}`:""}</div>`;
+    html += waiting.length ? waiting.map(accountCard).join("") : `<div class="mgr-empty">Nobody is waiting on you.</div>`;
+    if(approved.length){
+      html += `<details class="mgr-fold" data-fold="approved"><summary>Everyone else (${approved.length})${unclaimed.length?` &middot; ${unclaimed.length} unclaimed`:""}</summary>
+        <div style="padding:8px 0">${approved.map(accountCard).join("")}</div></details>`;
+    }
+    if(archived.length){
+      html += `<details class="mgr-fold" data-fold="archived"><summary>Rejected (${archived.length})</summary><div style="padding:8px 0">${archived.map(a=>`
+        <div class="mgr-card" style="opacity:.75">
+          <div class="mgr-chips"><span class="mgr-chip mgr-chip--dark">${esc(a.type||"dj")}</span></div>
+          <h3>${esc(a.name||a.email)}</h3>
+          <div class="mgr-meta">${esc(a.email)} &middot; rejected ${esc(fmtWhen(a.archivedAt))}</div>
+          <div class="mgr-acts"><button class="mgr-btn mgr-btn--ghost" data-act="acct" data-id="${esc(a.id)}" data-decision="reconsider">Reconsider</button></div>
+        </div>`).join("")}</div></details>`;
+    }
+    return html;
+  }
+
+  /* innerHTML rebuilds everything, which would silently close a fold
+     she just opened (and did, on every rating tap). Keyed on data-fold
+     rather than the summary text, because that text carries a count
+     that changes under her. */
+  function render(){
+    const open = new Set();
+    view.querySelectorAll("details[open][data-fold]").forEach(d => open.add(d.dataset.fold));
+    const bodies = {needs: renderNeeds, nights: renderNights, requests: renderRequests, djs: renderDjs};
+    view.innerHTML = tabsBar() + (bodies[M.tab] || renderNeeds)();
+    view.querySelectorAll("details[data-fold]").forEach(d => { if(open.has(d.dataset.fold)) d.open = true; });
+    const s = document.getElementById("mgrSearch");
+    if(s && M.search){ s.focus(); s.setSelectionRange(s.value.length, s.value.length); }
+  }
+
+  async function reload({counts=true} = {}){
+    if(counts) await loadCounts();
+    await ensureData();
+    render();
+  }
+
+  async function setTab(tab){
+    M.tab = tab;
+    view.innerHTML = tabsBar() + `<div class="mgr-empty">Loading&hellip;</div>`;
+    try{ await ensureData(); render(); }
+    catch(e){ if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't load that — try again."); }
+  }
+
+  /* ---------- one click handler for the whole view ---------- */
+  view.addEventListener("click", async (ev) => {
+    const btn = ev.target.closest("[data-act]");
+    if(!btn) return;
+    const act = btn.dataset.act;
+    const busy = (label) => { btn.disabled = true; if(label) btn.textContent = label; };
+    const free = (label) => { btn.disabled = false; if(label) btn.textContent = label; };
+    clearErr();
+
+    try{
+      if(act === "tab"){ await setTab(btn.dataset.tab); return; }
+
+      if(act === "dreqscope"){ M.dreqScope = btn.dataset.scope; await loadRequests(); render(); return; }
+
+      if(act === "review"){
+        busy("Saving…");
+        await mapi({action:"review", submissionId:btn.dataset.sub, part:btn.dataset.part, decision:btn.dataset.decision});
+        await reload();
+        return;
+      }
+
+      if(act === "dreq"){
+        if(btn.dataset.decision === "approved" &&
+           !confirm("Approve this date?\n\nIt creates a booking for you to finish and confirm in Bookings, like any other inquiry.")) return;
+        busy("Saving…");
+        await mapi({action:"reviewDateRequest", requestId:btn.dataset.req, date:btn.dataset.date, decision:btn.dataset.decision});
+        await reload();
+        return;
+      }
+
+      if(act === "acct"){
+        if(btn.dataset.decision === "reject" && !confirm("Reject this account?\n\nIt is archived, not deleted — you can reconsider it later.")) return;
+        busy("Saving…");
+        await mapi({action:"approveAccount", accountId:btn.dataset.id, decision:btn.dataset.decision});
+        await loadAccounts();
+        await reload();
+        return;
+      }
+
+      if(act === "claim"){
+        busy("Saving…");
+        await mapi({action:"lockResidency", accountId:btn.dataset.id, decision:btn.dataset.decision});
+        await loadAccounts();
+        await reload();
+        return;
+      }
+
+      if(act === "remind"){
+        if(!confirm(`Email ${btn.dataset.name} a claim reminder?\n\nIt says their payout is on hold until they claim the account, and carries a one-click link good for 7 days.`)) return;
+        busy("Sending…");
+        const out = await mapi({action:"remindClaim", accountId:btn.dataset.id});
+        await loadAccounts();
+        render();
+        if(!out.sent) showErr("Nothing sent — that account looks claimed already.");
+        return;
+      }
+
+      if(act === "remindall"){
+        const n = btn.dataset.n;
+        if(!confirm(`Email all ${n} unclaimed accounts a claim reminder?\n\nEach gets a fresh 7-day link and the note that payouts stay on hold until they sign in.`)) return;
+        busy("Sending…");
+        const out = await mapi({action:"remindClaim", all:true});
+        await loadAccounts();
+        render();
+        alert(`Sent ${out.sent} reminder${out.sent===1?"":"s"}.` + (out.remaining
+          ? `\n\n${out.remaining} more are waiting: the sending mailbox is capped at 100 messages a day, shared with confirmations and tickets, so this goes 25 at a time. Run it again tomorrow.`
+          : ""));
+        return;
+      }
+
+      if(act === "nudge"){
+        if(!confirm(`Email the host about "${btn.dataset.name}"?\n\nIt lists what's still missing (${btn.dataset.missing}) and links their dashboard.`)) return;
+        busy("Sending…");
+        try{
+          await mapi({action:"nudgeNight", nudgeKey:btn.dataset.key});
+          await loadNights();
+          render();
+        }catch(e){
+          free("Email them what's missing");
+          showErr(typeof e==="string"?e:"Couldn't send that.");
+        }
+        return;
+      }
+
+      if(act === "rate"){
+        /* Tap the same number again to clear it. Repainted straight
+           away and saved behind it, the way the tile on jubyr.tools
+           does — a rating is never worth a spinner. */
+        const acct = (M.accounts||[]).find(x=>x.id===btn.dataset.id);
+        if(!acct) return;
+        const dim = btn.dataset.dim, n = +btn.dataset.n;
+        if(!acct.rating) acct.rating = {};
+        acct.rating[dim] = acct.rating[dim] === n ? null : n;
+        render();
+        await mapi({action:"rate", accountId:btn.dataset.id, ratings:{[dim]: acct.rating[dim]}});
+        return;
+      }
+
+      if(act === "file"){
+        const name = btn.dataset.file;
+        const holder = view.querySelector(`[data-flyer="${CSS.escape(name)}"]`);
+        if(holder && holder.firstChild){ holder.innerHTML = ""; return; }   // tap again to close
+        busy("Opening…");
+        const r = await fetch(MGR_URL, {method:"POST", body: JSON.stringify({token:TOKEN, action:"file", name})});
+        if(!r.ok){ free("View flyer"); showErr("That file isn't on the server."); return; }
+        const blob = await r.blob();
+        const url = URL.createObjectURL(blob);
+        free(btn.dataset.file.match(/\.(jpe?g|png)$/i) ? "Hide" : "Downloaded");
+        if(holder && /^image\//.test(blob.type)){
+          holder.innerHTML = `<img class="mgr-flyer" src="${url}" alt="">`;
+        }else{
+          const a = document.createElement("a");
+          a.href = url; a.download = name; a.click();
+          setTimeout(()=>URL.revokeObjectURL(url), 30000);
+        }
+        return;
+      }
+
+      if(act === "invite"){
+        const val = id => (document.getElementById(id).value || "").trim();
+        const msg = document.getElementById("invMsg");
+        const payload = {action:"inviteAccount", firstName:val("invFirst"), lastName:val("invLast"),
+                         email:val("invEmail"), phone:val("invPhone"), instagram:val("invIg"),
+                         type:document.getElementById("invType").value};
+        busy("Creating…");
+        try{
+          const out = await mapi(payload);
+          M.inviteMsg = out.isNew
+            ? `${out.account.name} now has a profile — their login is on the way to ${out.account.email}.`
+            : `${out.account.name} already had an account (${out.account.email}) — nothing was sent, nothing overwritten.`;
+          /* Repaint from the server rather than patching the list in
+             place: the new account has to appear in the roster (and in
+             the unclaimed banner) or she will invite them twice. */
+          await loadAccounts();
+          await loadCounts();
+          render();
+        }catch(e){
+          free();
+          btn.textContent = "Create profile & send their login";
+          if(e!=="auth") msg.textContent = typeof e==="string" ? e : "Couldn't create that profile.";
+        }
+        return;
+      }
+    }catch(e){
+      if(e!=="auth") showErr(typeof e==="string" ? e : "Couldn't save that — try again.");
+      try{ btn.disabled = false; }catch(_){}
+    }
+  });
+
+  view.addEventListener("input", (ev) => {
+    if(ev.target.id !== "mgrSearch") return;
+    M.search = ev.target.value;
+    render();
+  });
+
+  /* ---------- which half of the page she is looking at ---------- */
+  function setView(which){
+    const manager = which === "manager";
+    view.hidden = !manager;
+    hostView.hidden = manager;
+    switcher.querySelectorAll("[data-view]").forEach(b => b.classList.toggle("on", b.dataset.view === which));
+    document.getElementById("secTag").textContent = manager ? "Manager" : "DJs & hosts";
+    document.getElementById("secTitle").textContent = manager ? "The DJ desk." : "Your nights.";
+    document.getElementById("secSub").textContent = manager
+      ? "Approvals, the nights that still owe you something, and everyone who plays here."
+      : "Lineup, flyer, ticket link, and RSVP counts — one place per event.";
+    localStorage.setItem("margolis-mgr-view", which);
+    window.scrollTo({top:0, behavior:"instant"});
+  }
+
+  switcher.addEventListener("click", (ev) => {
+    const b = ev.target.closest("[data-view]");
+    if(b) setView(b.dataset.view);
+  });
+
+  /* Called from init() once the server says this account is a manager.
+     Nothing above runs for anyone else — a DJ's dashboard never asks
+     margolis-manager.php a single question. */
+  window.MGR_BOOT = async function(){
+    switcher.hidden = false;
+    setView(localStorage.getItem("margolis-mgr-view") === "host" ? "host" : "manager");
+    try{
+      const who = await mapi({action:"whoami"});
+      M.me = who.manager;
+      await reload();
+    }catch(e){
+      if(e!=="auth") showErr(typeof e==="string" ? e : "Couldn't load the manager view — refresh and try again.");
+    }
+  };
+})();
 </script>
 </body>
 </html>

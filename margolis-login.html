@@ -149,7 +149,8 @@
         <form id="stepProfile" hidden>
           <h3 style="margin-bottom:6px">Quick profile</h3>
           <p class="dj-note" style="margin:0 0 18px">Just the basics for now — you can add rates and equipment later if you're open to private bookings.</p>
-          <div class="ifield"><label>Name <span class="req">*</span></label><input type="text" id="pName" autocomplete="name"></div>
+          <div class="ifield"><label>First name <span class="req">*</span></label><input type="text" id="pFirstName" autocomplete="given-name"></div>
+          <div class="ifield"><label>Last name <span class="req">*</span></label><input type="text" id="pLastName" autocomplete="family-name"></div>
           <div class="ifield"><label>Phone</label><input type="tel" id="pPhone" autocomplete="tel" placeholder="10-digit number"></div>
           <div class="ifield"><label>Instagram</label><input type="text" id="pInstagram" placeholder="@yourhandle"></div>
           <div class="ifield">
@@ -284,14 +285,15 @@
       genres:["House","Afro House","Hip-Hop","R&B","Afrobeats","Amapiano","Jersey Club","Techno","Disco","Jazz","Soul / Funk","Reggae / Dancehall","Latin","Open-format","Other"],
       venues:["Fabrika","The Winston","Winston on the Water","The Foundry","Blind Barber","Bastet","The Barbary","The Saint","La Chinesca","Stratus Lounge","Savu","Prestige","Reserve","Concourse","Liberty Point","Other"]};
     if(payload.action==="login"){
-      if(!s.account) s.account = {id:"demo1", email:payload.email, name:"", type:"", phone:"", instagram:"",
+      if(!s.account) s.account = {id:"demo1", email:payload.email, name:"", firstName:"", lastName:"", type:"", phone:"", instagram:"",
         genres:[], venues:[], venuesOther:"", hasFacePhoto:false, hasW9:false,
         mustSetPassword:true, quickProfileDone:false};
       demoSave(s);
       return {ok:true, token:"DEMO", account:s.account};
     }
     if(payload.action==="signup"){
-      s.account = {id:"demo1", email:payload.email, name:payload.name, phone:payload.phone, type:payload.type,
+      s.account = {id:"demo1", email:payload.email, name:payload.name,
+        firstName:payload.firstName||"", lastName:payload.lastName||"", phone:payload.phone, type:payload.type,
         instagram:"", genres:[], venues:[], venuesOther:"", hasFacePhoto:false, hasW9:false,
         approved:false, claimedResidency:null, payableTo:"", zelle:"", agreementsSigned:false,
         mustSetPassword:false, quickProfileDone:false, profilePercent:17};
@@ -309,7 +311,9 @@
       demoRecompute(s.account); demoSave(s); return {ok:true, account:s.account};
     }
     if(payload.action==="updateProfile"){
-      Object.assign(s.account, {name:payload.name, phone:payload.phone, instagram:payload.instagram,
+      Object.assign(s.account, {firstName:payload.firstName, lastName:payload.lastName,
+        name:[payload.firstName, payload.lastName].filter(Boolean).join(" ").trim(),
+        phone:payload.phone, instagram:payload.instagram,
         type:payload.type, genres:payload.genres, venues:payload.venues});
       demoRecompute(s.account); demoSave(s); return {ok:true, account:s.account};
     }
@@ -351,7 +355,10 @@
 
   async function openProfileStep(account){
     showStep("stepProfile");
-    document.getElementById("pName").value = account.name || "";
+    // The server sends the parts, splitting an older single-field name
+    // itself, so this never has to guess where the split falls.
+    document.getElementById("pFirstName").value = account.firstName || "";
+    document.getElementById("pLastName").value = account.lastName || "";
     document.getElementById("pPhone").value = account.phone || "";
     document.getElementById("pInstagram").value = account.instagram || "";
     profileType = account.type || "";
@@ -421,16 +428,18 @@
 
   document.getElementById("btnProfile").addEventListener("click", async ()=>{
     clearErr();
-    const name = document.getElementById("pName").value.trim();
+    const pFirst = document.getElementById("pFirstName").value.trim();
+    const pLast = document.getElementById("pLastName").value.trim();
     const pPhoneVal = document.getElementById("pPhone").value.trim();
-    if(!name) return showErr("Please add your name.");
+    if(!pFirst) return showErr("Please add your first name.");
+    if(!pLast) return showErr("Please add your last name.");
     if(pPhoneVal && !phoneValid(pPhoneVal)) return showErr("Please add a phone number formatted like (215)-771-4222.");
     if(!profileType) return showErr("Let us know if you're a DJ or an event host.");
     const btn = document.getElementById("btnProfile");
     btn.disabled = true; btn.textContent = "Saving…";
     try{
       const out = await api({action:"updateProfile", token: TOKEN,
-        name, phone: document.getElementById("pPhone").value.trim(),
+        firstName: pFirst, lastName: pLast, phone: document.getElementById("pPhone").value.trim(),
         instagram: document.getElementById("pInstagram").value.trim().replace(/^@/,""),
         type: profileType, genres: profileGenres, venues: profileVenues});
       ACCOUNT = out.account;
@@ -470,7 +479,7 @@
     const btn = document.getElementById("btnSignup");
     btn.disabled = true; btn.textContent = "Creating your account…";
     try{
-      const out = await api({action:"signup", name, email, phone, type:signupType, password:p1, contactConsent:"Yes, I agree"});
+      const out = await api({action:"signup", firstName, lastName, name, email, phone, type:signupType, password:p1, contactConsent:"Yes, I agree"});
       TOKEN = out.token; localStorage.setItem("margolis-dj-token", TOKEN);
       afterAuth(out.account);   // routes into the profile step
     }catch(e){ showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection."); }
