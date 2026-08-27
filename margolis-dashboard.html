@@ -152,6 +152,8 @@
   .res-photo{margin-bottom:9px}
   .res-photo img{max-width:220px;width:100%;border-radius:9px;border:1px solid var(--line);display:block}
   .res-hidden{opacity:.55}
+  .wind-list{margin:8px 0 12px;padding-left:18px;font-size:13.5px;line-height:1.75}
+  .mgr-card--flag .mgr-label{color:#A03A2E}
   .res-cal-note{border:1px dashed var(--line);border-radius:9px;padding:13px 15px;margin:4px 0 14px;background:#FCFCFA}
   .res-check{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;margin:8px 0;cursor:pointer}
   .res-check input{width:auto;margin-top:2px;flex:0 0 auto}
@@ -1147,6 +1149,33 @@
   /* Ruby's labels, in her words: 1.5k and 3.5k are the BAR MINIMUM, 2k and 5k
      are a GOOD NIGHT. Both the chip and the tooltip name the actual number for
      that day of the week, so nobody has to guess which set they were held to. */
+  /* The thresholds ACTUALLY APPLIED to this person's nights, printed rather
+     than hardcoded. The moment The Patio got its own numbers (Ruby,
+     2026-08-27: "1500 minimum, 2k good day"), a fixed sentence about Fri/Sat
+     being $3,500 stopped being true for the people who work it. Rooms whose
+     weekend and weekday numbers are the same collapse into one clause, which
+     is what the Patio wants. */
+  function payTargetSentence(targets, fmt){
+    if(!targets || !targets.length) return "";
+    const byVenue = {};
+    targets.forEach(t => { (byVenue[t.venue] = byVenue[t.venue] || []).push(t); });
+    const parts = Object.keys(byVenue).sort().map(v => {
+      /* Distinct thresholds only. A room where every day is the same number
+         collapses to one clause (the Patio), and one where Friday and
+         Saturday differ prints all of them (Fabrika). */
+      const seen = {}, list = [];
+      byVenue[v].forEach(t => {
+        const k = t.min + "/" + t.good;
+        if(!seen[k]){ seen[k] = {min:t.min, good:t.good, days:[]}; list.push(seen[k]); }
+        seen[k].days.push(t.label);
+      });
+      const clause = c => `${fmt(c.min)} minimum, ${fmt(c.good)} a good night`;
+      if(list.length === 1) return `<strong>${esc(v)}</strong> &mdash; ${clause(list[0])}`;
+      return `<strong>${esc(v)}</strong> &mdash; ` + list.map(c => `${esc(c.days.join(" and "))} ${clause(c)}`).join("; ");
+    });
+    return "Every night is measured against the room and the day it fell on. " + parts.join(". ") + ".";
+  }
+
   const BAND_WORD = {good:"Good night", fair:"Bar minimum", under:"Under minimum"};
   function bandChip(r){
     if(!r.band) return `<span class="djd-band djd-band--none" title="No bar sales figure was recorded for this one.">Not recorded</span>`;
@@ -1187,9 +1216,7 @@
         ${f.bands.under ? `<span class="djd-band djd-band--under">${f.bands.under} under the minimum</span>` : ``}
         ${f.unrated     ? `<span class="djd-band djd-band--none">${f.unrated} with no sales figure</span>` : ``}
       </div>
-      <p class="djd-note" style="margin:0 0 16px">Every night is measured against the day it fell on:
-        <strong>Friday and Saturday</strong> the bar minimum is ${payWhole(3500)} and a good night is ${payWhole(5000)};
-        <strong>any other night</strong> it is ${payWhole(1500)} and ${payWhole(2000)}.</p>` : ``;
+      <p class="djd-note" style="margin:0 0 16px">${payTargetSentence(f.targets, payWhole)}</p>` : ``;
     el.innerHTML = `<details class="djd-prof" style="margin-top:18px">
       <summary>Your payment history
         <span class="djd-pill">${rows.length} payment${rows.length===1?"":"s"}${
@@ -1295,6 +1322,9 @@
        screen's claimable-residency list and a different shape. */
     resList: null, resPeople: [], resSuggestions: [], resOpen: null, resDirty: {},
     resMsg: {}, resScope: "active", resSearch: "",
+    /* Wind-down (2026-08-27). windPlan is the dry run she is looking at;
+       nothing can be applied until one has been fetched. */
+    windPlan: null, windMsg: "", windFrom: "2027-01-01",
   };
 
   /* ---------- plumbing ---------- */
@@ -1711,6 +1741,30 @@
     return `${esc(t.title)} <span style="opacity:.7">${t.hits}/${t.of}${t.sure?"":" &middot; unsure"}</span>`;
   }
 
+  /* Same sentence as the host dashboard's. Two copies because the two halves
+     of this page are separate IIFEs sharing no scope; if you change one,
+     change the other. */
+  function payTargetSentence(targets, fmt){
+    if(!targets || !targets.length) return "";
+    const byVenue = {};
+    targets.forEach(t => { (byVenue[t.venue] = byVenue[t.venue] || []).push(t); });
+    const parts = Object.keys(byVenue).sort().map(v => {
+      /* Distinct thresholds only. A room where every day is the same number
+         collapses to one clause (the Patio), and one where Friday and
+         Saturday differ prints all of them (Fabrika). */
+      const seen = {}, list = [];
+      byVenue[v].forEach(t => {
+        const k = t.min + "/" + t.good;
+        if(!seen[k]){ seen[k] = {min:t.min, good:t.good, days:[]}; list.push(seen[k]); }
+        seen[k].days.push(t.label);
+      });
+      const clause = c => `${fmt(c.min)} minimum, ${fmt(c.good)} a good night`;
+      if(list.length === 1) return `<b>${esc(v)}</b> &mdash; ${clause(list[0])}`;
+      return `<b>${esc(v)}</b> &mdash; ` + list.map(c => `${esc(c.days.join(" and "))} ${clause(c)}`).join("; ");
+    });
+    return parts.join(". ") + ".";
+  }
+
   const PAY_BAND_WORD = {good:"Good night", fair:"Bar minimum", under:"Under minimum"};
   function payBandChip(f){
     if(!f || !f.rated) return `<span class="pay-band pay-band--none">No sales on file</span>`;
@@ -1797,7 +1851,7 @@
       </div>
       <p class="pay-note" style="margin:-6px 0 16px">Rated over ${f.rated} night${f.rated===1?"":"s"}${
         f.unrated ? `; ${f.unrated} check${f.unrated===1?"":"s"} carry no sales figure and are not scored` : ``}.
-        Fri/Sat minimum ${usdShort(3500)}, good night ${usdShort(5000)}; any other night ${usdShort(1500)} and ${usdShort(2000)}.</p>`;
+        ${payTargetSentence(f.targets, usdShort)}</p>`;
   }
 
   /* Email addresses the server found for this name in the Client Book, the
@@ -2123,6 +2177,42 @@
     </div>`;
   }
 
+  /* Stopping the calendar. Deliberately the last thing on the screen,
+     inside a closed fold, behind a dry run and a typed confirmation.
+
+     It exists because "delete everything from January 1st forward" is
+     not something the calendar connector can do: deleting occurrences
+     one at a time does not stop a repeating series (the rule just
+     generates more), and deleting the series takes 2026 with it. The
+     only operation that means "from this date forward" is setting an
+     end date on each rule, which is what this does. */
+  function windDownBlock(){
+    const p = M.windPlan;
+    return `<details class="mgr-fold" data-fold="wind"><summary>Stop all events from a date</summary>
+      <div class="mgr-card mgr-card--flag">
+        <div class="mgr-meta">Puts an end date on every repeating Margolis night and deletes any one-off on or after the date you pick. <strong>Everything before it is left exactly as it is</strong> — 2026 stays, and so does the residencies archive built on it.
+        <br><br>Margolis Events only. The Patio and Fabrika are read-only on this login, and most of Fabrika's future nights belong to other people, so neither is touched.</div>
+        <div class="mgr-field"><label>Stop everything from</label>
+          <input type="date" id="windFrom" value="${esc(M.windFrom)}"></div>
+        <div class="mgr-acts"><button class="mgr-btn mgr-btn--ghost" data-act="windpreview">Show me what would go</button></div>
+        ${p ? `
+          <div class="mgr-part">
+            <div class="mgr-label">${p.applied ? "What was done" : "What would go"}</div>
+            <p class="mgr-meta">${p.series.length} repeating night${p.series.length===1?"":"s"} would be given an end date, ${p.singles.length} one-off${p.singles.length===1?"":"s"} deleted. ${p.nights} calendar night${p.nights===1?"":"s"} disappear from ${esc(p.from)} onward.</p>
+            <ul class="wind-list">
+              ${p.series.map(x=>`<li>${esc(x.title)} <span class="mgr-meta">— repeating, ${x.nights} night${x.nights===1?"":"s"} after the cut${x.ok===false?` · <strong>failed: ${esc(x.error||"")}</strong>`:x.ok?" · done":""}</span></li>`).join("")}
+              ${p.singles.map(x=>`<li>${esc(x.title)} <span class="mgr-meta">— one-off on ${esc(x.date)}${x.ok===false?" · <strong>failed</strong>":x.ok?" · deleted":""}</span></li>`).join("")}
+            </ul>
+            ${p.applied ? `<p class="mgr-meta"><strong>Done.</strong> ${p.seriesOk}/${p.series.length} series ended, ${p.singlesOk}/${p.singles.length} one-offs deleted.</p>` : `
+              <div class="mgr-field"><label>Type STOP EVENTS to confirm</label>
+                <input type="text" id="windConfirm" autocomplete="off" placeholder="STOP EVENTS"></div>
+              <div class="mgr-acts"><button class="mgr-btn mgr-btn--bad" data-act="windapply">Stop these events</button></div>
+              <p class="mgr-meta">This writes to Google Calendar. Undoing it means putting each series' end date back by hand.</p>`}
+          </div>` : ""}
+        ${M.windMsg ? `<p class="mgr-meta">${esc(M.windMsg)}</p>` : ""}
+      </div></details>`;
+  }
+
   function renderResidencies(){
     const all = M.resList || [];
     const q = (M.resSearch||"").trim().toLowerCase();
@@ -2173,6 +2263,7 @@
     }).join("");
 
     h += resSuggestions();
+    h += windDownBlock();
     h += `<details class="mgr-fold" data-fold="resadd"><summary>Add a residency that isn't on the calendar</summary>
       <div class="mgr-card">
         <div class="mgr-meta">For a party the Margolis calendar doesn't carry — a Patio or Fabrika night, say, since those calendars are shared free/busy and everything on them arrives titled "Busy". Its dates are typed, so they won't follow the calendar afterwards.</div>
@@ -2225,7 +2316,8 @@
     if(M.payeeScope === "oneoff"){
       h += `<p class="pay-note" style="margin:0 0 12px"><b>One night on a percentage</b> &mdash; the invite-back list,
         <b>ordered by how that night did</b>. The rating is that single night, so read it as one result and not a record:
-        a Tuesday at ${usdShort(1900)} is a good night and a Saturday at ${usdShort(3600)} is not.</p>`;
+        a Tuesday at ${usdShort(1900)} inside is a good night and a Saturday at ${usdShort(3600)} is not.
+        The Patio runs on its own targets.</p>`;
     }
     if(!rows.length){
       h += `<div class="mgr-empty">${M.payeeSearch ? "Nothing matches that." :
@@ -2456,6 +2548,25 @@
       if(act === "dreqscope"){ M.dreqScope = btn.dataset.scope; await loadRequests(); render(); return; }
 
       /* ---------- residencies ---------- */
+      if(act === "windpreview" || act === "windapply"){
+        const from = (document.getElementById("windFrom")||{}).value || M.windFrom;
+        M.windFrom = from;
+        const apply = act === "windapply";
+        const confirmEl = document.getElementById("windConfirm");
+        const typed = confirmEl ? confirmEl.value.trim() : "";
+        if(apply && typed !== "STOP EVENTS"){ M.windMsg = "Type STOP EVENTS exactly to confirm."; render(); return; }
+        if(apply && !confirm(`Stop every Margolis event from ${from} onward?
+
+Repeating nights get an end date, one-offs are deleted. Everything before ${from} is untouched.`)) return;
+        busy(apply ? "Working…" : "Checking…");
+        M.windMsg = "";
+        const out = await mapi({action:"calendarWindDown", from, apply, confirm: typed});
+        M.windPlan = out.plan;
+        if(apply) M.windMsg = "The calendar has been stopped from " + from + ". Availability and the events list follow it within about ten minutes, once the calendar cache turns over.";
+        render();
+        return;
+      }
+
       if(act === "ressugyes" || act === "ressugno"){
         busy("Saving…");
         await mapi(act === "ressugyes"
