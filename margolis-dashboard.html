@@ -57,6 +57,36 @@
   .djd-bar{flex:1;min-width:120px;height:8px;border-radius:99px;background:#F1F1EC;overflow:hidden}
   .djd-bar i{display:block;height:100%;background:var(--green);border-radius:99px}
   .djd-prof__body{border-top:1px dashed var(--line);padding:16px 0 18px}
+  /* Payment history (2026-08-27). Scrolls inside its own box rather
+     than pushing the page sideways on a phone. */
+  .djd-pill{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;background:#F1F1EC;color:var(--muted);padding:4px 9px;border-radius:999px;font-weight:400}
+  .djd-paywrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .djd-pay{border-collapse:collapse;width:100%;min-width:520px;font-size:13.5px}
+  .djd-pay th,.djd-pay td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;white-space:nowrap}
+  .djd-pay th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .djd-pay td:nth-child(n+3){font-family:"IBM Plex Mono",monospace}
+  .djd-pay .r{text-align:right}
+  /* How the bar did that night. Ruby, 2026-08-27: Fri/Sat 3.5k minimum and 5k
+     a good night; weekdays 1.5k and 2k. Colour AND a word, never colour alone. */
+  .djd-band{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;
+    font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+  .djd-band::before{content:"";width:8px;height:8px;border-radius:50%;flex:none;background:currentColor}
+  .djd-band--good{color:#3F6B21}
+  .djd-band--fair{color:#8A6400}
+  .djd-band--under{color:#A03A2E}
+  .djd-band--none{color:var(--muted)}
+  .djd-band--none::before{background:none;box-shadow:inset 0 0 0 1px currentColor}
+  .djd-scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:0 0 18px}
+  .djd-score{background:#fff;padding:15px 16px}
+  .djd-score__n{font-family:"IBM Plex Mono",monospace;font-size:22px;font-weight:500;
+    letter-spacing:-.01em;font-variant-numeric:tabular-nums;line-height:1.15}
+  .djd-score__k{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted);margin-top:6px}
+  .djd-score--good .djd-score__n{color:#3F6B21}
+  .djd-score--fair .djd-score__n{color:#8A6400}
+  .djd-score--under .djd-score__n{color:#A03A2E}
+  .djd-tally{display:flex;flex-wrap:wrap;gap:8px 16px;margin:0 0 16px}
   .djd-check{list-style:none;margin:0 0 16px;padding:0}
   .djd-check li{padding:6px 0;font-size:14px;color:var(--muted);display:flex;gap:9px;align-items:baseline}
   .djd-check li.done{color:var(--ink)}
@@ -113,9 +143,91 @@
   .mgr-fold .mgr-card{border:none;border-bottom:1px dashed var(--line);border-radius:0;padding-left:0;padding-right:0;margin-bottom:0}
   .mgr-field{margin-bottom:12px}
   .mgr-field label{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+  .mgr-field textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:14px;line-height:1.5;background:#fff;color:var(--ink);resize:vertical}
+  .mgr-field input[type=file]{padding:9px 11px;font-size:13px;background:#fff}
+  /* Residencies */
+  .res-edit{border-top:1px dashed var(--line);margin-top:14px;padding-top:16px}
+  .res-cal{margin-top:5px;opacity:.85}
+  .res-cal .res-revert{background:none;border:none;padding:0;font:inherit;cursor:pointer}
+  .res-photo{margin-bottom:9px}
+  .res-photo img{max-width:220px;width:100%;border-radius:9px;border:1px solid var(--line);display:block}
+  .res-hidden{opacity:.55}
+  .res-cal-note{border:1px dashed var(--line);border-radius:9px;padding:13px 15px;margin:4px 0 14px;background:#FCFCFA}
+  .res-check{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;margin:8px 0;cursor:pointer}
+  .res-check input{width:auto;margin-top:2px;flex:0 0 auto}
   .mgr-field input,.mgr-field select{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:15px;background:#fff}
   .mgr-row2{display:flex;gap:12px;flex-wrap:wrap}
   .mgr-row2 .mgr-field{flex:1;min-width:150px}
+
+  /* ---- Payees ------------------------------------------------------
+     Every name that has ever been paid, and the profile it belongs to.
+     A real table on a laptop, because this is a list she reads down a
+     column at a time; stacked cards under 760px, because the manager
+     view is mostly opened on a phone. Same grid drives both, so there
+     is one row template rather than two. */
+  .pay-seg{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .pay-seg button{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);background:#fff;color:var(--muted);padding:7px 11px;border-radius:999px;cursor:pointer}
+  .pay-seg button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .pay-seg button b{font-weight:600;margin-left:5px;opacity:.7}
+  .pay-sum{border:1px solid var(--line);border-radius:14px;background:#fff;padding:16px 18px;margin:0 0 16px}
+  .pay-sum__n{font-family:"IBM Plex Mono",monospace;font-size:26px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+  .pay-sum__grid{display:flex;flex-wrap:wrap;gap:26px;margin-top:4px}
+
+  /* Sized against the TABLE'S OWN width, not the window's. The manager
+     view sits in the dashboard's ~620px reading column, so a media
+     query on the viewport says "desktop, draw the table" while the
+     column it has to fit in is phone-width — which clipped the whole
+     action column off the right-hand edge with no way to scroll to it. */
+  .pay-tbl{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;container-type:inline-size}
+  .pay-hd{display:none}
+  .pay-rw{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;align-items:center;padding:16px;border-top:1px solid var(--line);font-size:14px}
+  .pay-rw:first-of-type{border-top:none}
+  .pay-rw--open{background:var(--paper)}
+  .pay-nm{font-weight:700;line-height:1.3;grid-column:1/-1}
+  .pay-nm small{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:400;letter-spacing:.04em;color:var(--muted);margin-top:3px;line-height:1.6}
+  .pay-num{font-family:"IBM Plex Mono",monospace;font-size:13.5px}
+  .pay-cell__k{display:block;font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+  .pay-act{grid-column:1/-1}
+  @container (min-width: 560px){
+    .pay-hd{display:grid}
+    .pay-hd,.pay-rw{grid-template-columns:minmax(140px,2fr) 56px 84px 66px minmax(96px,1fr) 112px;gap:10px;padding:12px 16px}
+    .pay-hd{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:var(--paper);border-bottom:1px solid var(--line)}
+    .pay-nm,.pay-act{grid-column:auto}
+    .pay-cell__k{display:none}
+    .pay-r{text-align:right}
+  }
+  .pay-open{width:100%;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:8px;padding:8px 10px;cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+  .pay-open--go{background:var(--green);border-color:var(--green);color:#fff}
+  .pay-panel{border-top:1px solid var(--line);background:var(--paper);padding:18px 16px 20px}
+  .pay-hist{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  .pay-hist th,.pay-hist td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;white-space:nowrap}
+  .pay-hist th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .pay-hist td:nth-child(n+3){font-family:"IBM Plex Mono",monospace}
+  .pay-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .pay-note{font-size:13px;line-height:1.6;color:var(--muted);margin:8px 0 0}
+  .pay-band{display:inline-flex;align-items:center;gap:5px;font-family:"IBM Plex Mono",monospace;
+    font-size:10px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+  .pay-band::before{content:"";width:7px;height:7px;border-radius:50%;flex:none;background:currentColor}
+  .pay-band--good{color:#3F6B21}
+  .pay-band--fair{color:#8A6400}
+  .pay-band--under{color:#A03A2E}
+  .pay-band--none{color:var(--muted)}
+  .pay-band--none::before{background:none;box-shadow:inset 0 0 0 1px currentColor}
+  .pay-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(126px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:2px 0 16px}
+  .pay-stat{background:#fff;padding:13px 14px}
+  .pay-stat__n{font-family:"IBM Plex Mono",monospace;font-size:19px;font-weight:500;
+    font-variant-numeric:tabular-nums;line-height:1.2}
+  .pay-stat__k{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin-top:5px}
+  .pay-sug{border:1px dashed var(--line);border-radius:9px;padding:12px 14px;margin:0 0 14px}
+  .pay-sug__row{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline;
+    padding:8px 0;border-top:1px dashed var(--line)}
+  .pay-sug__row:first-of-type{border-top:0;padding-top:2px}
+  .pay-sug__em{font-family:"IBM Plex Mono",monospace;font-size:12.5px;word-break:break-all}
+  .pay-sug__why{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--muted)}
+  .pay-sug__use{margin-left:auto}
 </style>
 </head>
 <body>
@@ -174,6 +286,7 @@
         <div class="djd-w9" id="w9Box" hidden></div>
         <p class="djd-err" id="djdErr"></p>
         <div id="content"><p class="djd-note" style="margin-top:20px">Loading your nights&hellip;</p></div>
+        <div id="payHistory"></div>
         <div id="dateReqList"></div>
         <details class="djd-prof" id="dateReqBox" style="margin-top:18px">
           <summary>Request additional dates</summary>
@@ -1016,6 +1129,93 @@
     location.href = "/margolis-login";
   });
 
+  /* ---- what you have been paid ----------------------------------
+     Every check on file for this account, newest first — including the
+     year of payouts that predates this dashboard entirely, imported
+     from Ruby's 2026 paycheck sheet and bound to the account by name
+     (margolis-payees.php). The rows are scoped to the account
+     SERVER-side, so there is nothing here that could show somebody
+     else's money by getting a filter wrong.
+
+     Folded shut, and it removes itself when there is nothing on file,
+     so a brand new host never opens their dashboard to an empty
+     "your money" heading. Loaded after the nights, and its own failure
+     is silent: this is a record of what already happened, and it must
+     never be the reason the page they came for does not appear. */
+  const payMoney = n => "$" + (Number(n)||0).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  const payWhole = n => "$" + Math.round(Number(n)||0).toLocaleString("en-US");
+  /* Ruby's labels, in her words: 1.5k and 3.5k are the BAR MINIMUM, 2k and 5k
+     are a GOOD NIGHT. Both the chip and the tooltip name the actual number for
+     that day of the week, so nobody has to guess which set they were held to. */
+  const BAND_WORD = {good:"Good night", fair:"Bar minimum", under:"Under minimum"};
+  function bandChip(r){
+    if(!r.band) return `<span class="djd-band djd-band--none" title="No bar sales figure was recorded for this one.">Not recorded</span>`;
+    const t = r.target;
+    const tip = t ? `${t.day} \u2014 bar minimum ${payWhole(t.min)}, a good night is ${payWhole(t.good)}` : "";
+    return `<span class="djd-band djd-band--${esc(r.band)}" title="${esc(tip)}">${BAND_WORD[r.band]}</span>`;
+  }
+  /* fmtDay() drops the year, which is fine for a night three weeks out
+     and wrong for a history that runs back into last year. */
+  function payDay(d){
+    try{ return new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }
+    catch(e){ return d; }
+  }
+  async function renderPayHistory(){
+    const el = document.getElementById("payHistory");
+    if(!el) return;
+    let h;
+    try{ h = await api(AUTH_URL, {action:"myPayHistory"}); }
+    catch(e){ el.innerHTML = ""; return; }
+    const rows = (h && h.rows) || [];
+    if(!rows.length){ el.innerHTML = ""; return; }
+    const legacy = rows.some(r=>r.legacy);
+    const f = h.perf || {};
+    /* The three numbers Ruby asked for, above the rows rather than under them:
+       this panel answers "how am I doing" before it answers "what was I paid
+       on the 17th". */
+    const scores = f.rated ? `<div class="djd-scores">
+        <div class="djd-score"><div class="djd-score__n">${payWhole(f.avgNet)}</div>
+          <div class="djd-score__k">Average bar sales</div></div>
+        <div class="djd-score"><div class="djd-score__n">${payWhole(f.avgCheck)}</div>
+          <div class="djd-score__k">Average check</div></div>
+        <div class="djd-score djd-score--${esc(f.band||"none")}"><div class="djd-score__n">${Math.round((f.vsGood||0)*100)}%</div>
+          <div class="djd-score__k">Of a good night</div></div>
+      </div>
+      <div class="djd-tally">
+        ${f.bands.good  ? `<span class="djd-band djd-band--good">${f.bands.good} good night${f.bands.good===1?"":"s"}</span>` : ``}
+        ${f.bands.fair  ? `<span class="djd-band djd-band--fair">${f.bands.fair} over the minimum</span>` : ``}
+        ${f.bands.under ? `<span class="djd-band djd-band--under">${f.bands.under} under the minimum</span>` : ``}
+        ${f.unrated     ? `<span class="djd-band djd-band--none">${f.unrated} with no sales figure</span>` : ``}
+      </div>
+      <p class="djd-note" style="margin:0 0 16px">Every night is measured against the day it fell on:
+        <strong>Friday and Saturday</strong> the bar minimum is ${payWhole(3500)} and a good night is ${payWhole(5000)};
+        <strong>any other night</strong> it is ${payWhole(1500)} and ${payWhole(2000)}.</p>` : ``;
+    el.innerHTML = `<details class="djd-prof" style="margin-top:18px">
+      <summary>Your payment history
+        <span class="djd-pill">${rows.length} payment${rows.length===1?"":"s"}${
+          h.nights ? ` &middot; ${h.nights} night${h.nights===1?"":"s"}` : ``} &middot; ${payMoney(h.total)}</span></summary>
+      <div class="djd-prof__body">
+        ${scores}
+        <div class="djd-paywrap">
+        <table class="djd-pay">
+          <thead><tr><th>Date</th><th>Where</th><th class="r">Net bar sales</th><th>Rate</th><th class="r">Paid</th><th>How the night did</th><th>Check</th></tr></thead>
+          <tbody>${rows.map(r=>`<tr>
+            <td>${r.date ? esc(payDay(r.date)) : "&mdash;"}</td>
+            <td>${esc(r.venue||"Margolis")}${r.eventName?` &middot; ${esc(r.eventName)}`:""}</td>
+            <td class="r">${r.netSales ? payMoney(r.netSales) : "&mdash;"}${r.netDerived?`<span title="Not written on the sheet — worked back from the percentage and the check.">*</span>`:""}</td>
+            <td>${r.percent ? esc(r.percent)+"%" : "flat"}</td>
+            <td class="r"><strong>${payMoney(r.totalPay)}</strong></td>
+            <td>${bandChip(r)}</td>
+            <td>${r.checkNumber ? "#"+esc(r.checkNumber) : (r.paid ? "paid" : "pending")}</td>
+          </tr>`).join("")}</tbody>
+        </table>
+        </div>
+        ${legacy ? `<p class="djd-note" style="margin-top:14px">Nights marked with a check number were paid before this
+          dashboard existed, and were added from Margolis&rsquo; own check records. If anything here looks wrong,
+          email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a> with the check number.</p>` : ``}
+      </div></details>`;
+  }
+
   (async function init(){
     if(!TOKEN){ location.href = "/margolis-login"; return; }
     try{
@@ -1040,6 +1240,7 @@
       render();
       renderDateRequests();
       bindDreqForm();
+      renderPayHistory();
     }catch(e){
       if(e!=="auth") document.getElementById("content").innerHTML = `<p class="djd-note" style="margin-top:20px">Couldn't load your nights — refresh, or email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>`;
     }
@@ -1080,6 +1281,20 @@
     subScope: "pending", dreqScope: "pending",
     search: "",
     inviteMsg: "",
+    /* Payees (2026-08-27). payeeOpen is the one row expanded; payeeMsg
+       is per-row feedback, so a message about one person never appears
+       under another. */
+    payees: null, payeeAccounts: [], residencies: [], payeeImport: null,
+    inviteCandidates: 0, payeeScope: "invite", payeeSearch: "",
+    payeeOpen: null, payeeMsg: {},
+    /* Residencies (2026-08-27). resList/resPeople arrive from one call.
+       resOpen is the single row expanded into its editor, resDirty the
+       unsaved edits for that row keyed by field, resMsg per-row feedback
+       so a message about one party never appears under another.
+       Deliberately NOT reusing `residencies` above, which is the payees
+       screen's claimable-residency list and a different shape. */
+    resList: null, resPeople: [], resSuggestions: [], resOpen: null, resDirty: {},
+    resMsg: {}, resScope: "active", resSearch: "",
   };
 
   /* ---------- plumbing ---------- */
@@ -1141,6 +1356,12 @@
   async function loadSubmissions(){ M.submissions = (await mapi({action:"listSubmissions", scope:M.subScope})).submissions || []; }
   async function loadRequests(){ M.requests = (await mapi({action:"listDateRequests", scope:M.dreqScope})).requests || []; }
   async function loadNights(){ M.nights = (await mapi({action:"nights", days:60})).nights || []; }
+  async function loadResidencies(){
+    const r = await mapi({action:"residencyList"});
+    M.resList = r.residencies || [];
+    M.resPeople = r.people || [];
+    M.resSuggestions = r.aliasSuggestions || [];
+  }
 
   /* Each tab pulls only what it shows; "Needs you" is the one screen
      that needs all three queues, and asks for them at once. */
@@ -1154,6 +1375,8 @@
     if(M.tab === "nights") jobs.push(loadNights());
     if(M.tab === "requests") jobs.push(loadRequests());
     if(M.tab === "djs" && !M.accounts) jobs.push(loadAccounts());
+    if(M.tab === "payees" && !M.payees) jobs.push(loadPayees());
+    if(M.tab === "res" && !M.resList) jobs.push(loadResidencies());
     await Promise.all(jobs);
   }
 
@@ -1329,6 +1552,639 @@
     </div>
   </details>`;
 
+  /* ================================================================
+     PAYEES — every name that has ever been paid, and the profile it
+     belongs to.
+
+     Ruby, 2026-08-27: a year of checks lived only on stubs in a PDF.
+     They are imported into the payout ledger as archived checks, and
+     this screen is the other half — turning a name that has been paid
+     into a login, with the residency they run attached and their whole
+     history waiting for them the moment they sign in.
+
+     The shortlist rule is hers and lives on the SERVER
+     (payee_is_invite_candidate in margolis-payees.php): two or more
+     nights, paid on a percentage, not a flat rate. It is not
+     recomputed here, so the count on the tab and the rows under it can
+     never disagree.
+
+     `pdraft` holds what she has typed but not sent. render() rebuilds
+     the whole view on every action, so without it a half-filled invite
+     form would empty itself the moment anything else on the page moved.
+     ================================================================ */
+  const PAY_SCOPES = [
+    ["invite", "To invite"],
+    ["sent",   "Invited"],
+    ["profile","Has a profile"],
+    ["other",  "Not DJs"],
+    ["all",    "Everyone"],
+  ];
+  const PAY_KINDS = [["","Not said yet"],["dj","DJ"],["host","Event host"],
+                     ["agency","Agency / LLC"],["staff","Staff"],["vendor","Vendor"],["self","Us"]];
+
+  const usd = n => "$" + (Number(n)||0).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
+  /* A payout history spans years; fmtDay() above deliberately does not
+     print one, because it exists for nights coming up. */
+  function payDay(d){
+    if(!d) return "";
+    try{ return new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }
+    catch(e){ return d; }
+  }
+  const usdShort = n => "$" + Math.round(Number(n)||0).toLocaleString("en-US");
+
+  async function loadPayees(){
+    const out = await mapi({action:"payees"});
+    M.payees = out.payees || [];
+    M.payeeAccounts = out.accounts || [];
+    M.residencies = out.residencies || [];
+    M.payeeImport = out.imported || null;
+    M.inviteCandidates = out.inviteCandidates || 0;
+  }
+
+  /* An LLC on a check stub is a payable-to name, not a person, so its
+     name must never be pushed into the first/last fields of a profile.
+     Ruby's call, 2026-08-27: the profile is the human, the LLC stays on
+     the account as payableTo. */
+  const PAY_ORG = /\b(llc|inc|l\.l\.c|corp|co|company|group|agency|productions?|studios?|marketing|security|talent)\b|,/i;
+  function payeeIsOrg(p){
+    return (p.kind === "agency") || PAY_ORG.test(p.name || "");
+  }
+  function paySplitName(p){
+    if(payeeIsOrg(p)) return {first:"", last:""};
+    const bits = String(p.name||"").replace(/\s*\(.*?\)\s*/g," ").trim().split(/\s+/);
+    return {first: bits[0]||"", last: bits.slice(1).join(" ")};
+  }
+
+  /* What she has typed, keyed on payee, seeded once from the record and
+     from the check stub. Seeded lazily so a value she cleared on
+     purpose is not helpfully refilled on the next keystroke elsewhere. */
+  const pdraft = {};
+  function payDraft(p){
+    if(!pdraft[p.key]){
+      const n = paySplitName(p);
+      pdraft[p.key] = {
+        firstName: p.firstName || n.first,
+        lastName:  p.lastName  || n.last,
+        email:     p.email || (p.account ? p.account.email : ""),
+        phone:     p.phone || "",
+        instagram: p.instagram || "",
+        payableTo: p.payableTo || p.name || "",
+        residency: p.residency || "",
+        type:      (p.kind === "host" ? "host" : "dj"),
+        note:      p.note || "",
+        kind:      p.kind || "",
+        link:      "",
+      };
+    }
+    return pdraft[p.key];
+  }
+  function payScoped(){
+    const q = (M.payeeSearch||"").trim().toLowerCase();
+    let rows = (M.payees||[]).filter(p=>{
+      if(!q) return true;
+      return (p.name||"").toLowerCase().includes(q)
+          || (p.email||"").toLowerCase().includes(q)
+          || (p.residency||"").toLowerCase().includes(q)
+          || (p.account && (p.account.name||"").toLowerCase().includes(q));
+    });
+    const scope = M.payeeScope;
+    if(scope === "all") return rows;
+    if(scope === "profile") return rows.filter(p=>p.accountId);
+    if(scope === "sent")    return rows.filter(p=>!p.accountId && p.invitedAt);
+    if(scope === "other")   return rows.filter(p=>!p.accountId && (p.skipped || ["staff","vendor","self"].includes(p.kind)));
+    /* "To invite" is the server's own shortlist, minus anyone already
+       sent one — those move to Invited rather than sitting here looking
+       undone. */
+    return rows.filter(p=>payCandidate(p) && !p.invitedAt);
+  }
+  /* Mirrors payee_is_invite_candidate() server-side. Kept in step by
+     hand; if the rule changes, change both. */
+  function payCandidate(p){
+    if(p.accountId || p.skipped) return false;
+    if(["staff","vendor","self"].includes(p.kind)) return false;
+    return (p.stats.nights||0) >= 2;
+  }
+  function payScopeCount(k){
+    const save = M.payeeScope, saveQ = M.payeeSearch;
+    M.payeeScope = k; M.payeeSearch = "";
+    const n = payScoped().length;
+    M.payeeScope = save; M.payeeSearch = saveQ;
+    return n;
+  }
+
+  /* Ruby's own words for the thresholds: 1.5k / 3.5k are the BAR MINIMUM,
+     2k / 5k are a GOOD NIGHT, and which pair applies comes off the day of the
+     week the night fell on. Colour is never the only signal. */
+  const PAY_BAND_WORD = {good:"Good night", fair:"Bar minimum", under:"Under minimum"};
+  function payBandChip(f){
+    if(!f || !f.rated) return `<span class="pay-band pay-band--none">No sales on file</span>`;
+    return `<span class="pay-band pay-band--${esc(f.band)}" title="Averages ${
+      Math.round((f.vsGood||0)*100)}% of a good night across ${f.rated} night${f.rated===1?"":"s"}">${
+      PAY_BAND_WORD[f.band]} &middot; ${Math.round((f.vsGood||0)*100)}%</span>`;
+  }
+  function payCheckBand(c){
+    if(!c.band) return `<span class="pay-band pay-band--none">Not recorded</span>`;
+    const t = c.target;
+    return `<span class="pay-band pay-band--${esc(c.band)}" title="${t?esc(t.day+" — minimum "+usdShort(t.min)+", good night "+usdShort(t.good)):""}">${PAY_BAND_WORD[c.band]}</span>`;
+  }
+
+  function payRate(p){
+    const ps = p.stats.percents || [];
+    if(!ps.length) return "flat";
+    return ps.length === 1 ? ps[0]+"%" : ps[0]+"–"+ps[ps.length-1]+"%";
+  }
+  function payStatusChip(p){
+    if(p.account){
+      return p.account.claimed
+        ? `<span class="mgr-chip mgr-chip--ok">Signed in</span>`
+        : `<span class="mgr-chip mgr-chip--warn">Login sent, not used</span>`;
+    }
+    if(p.invitedAt) return `<span class="mgr-chip mgr-chip--warn">Invited</span>`;
+    if(p.skipped)   return `<span class="mgr-chip">Set aside</span>`;
+    if(["staff","vendor","self"].includes(p.kind)) return `<span class="mgr-chip">${esc(payKindLabel(p.kind))}</span>`;
+    return `<span class="mgr-chip mgr-chip--bad">No profile</span>`;
+  }
+  function payKindLabel(k){ const f = PAY_KINDS.find(x=>x[0]===k); return f ? f[1] : ""; }
+
+  function payHeaderBlock(){
+    const imp = M.payeeImport;
+    let h = "";
+    if(imp && imp.remaining > 0){
+      h += `<div class="mgr-banner">
+        <strong>${imp.remaining} check${imp.remaining===1?"":"s"} from the 2026 paycheck sheet ${imp.remaining===1?"is":"are"} not in the ledger yet.</strong><br>
+        They land in <em>Archived payroll</em> under Bookings &rarr; Payouts, filed by the month each check was written,
+        already marked paid. Nothing goes into the live "checks to write" list, and running this twice imports nothing the second time.
+        <div class="mgr-acts"><button class="mgr-btn" data-act="payimport">Import ${imp.remaining} check${imp.remaining===1?"":"s"}</button></div>
+      </div>`;
+    }
+    const all = M.payees || [];
+    const paid = all.reduce((a,p)=>a+(p.stats.total||0),0);
+    const withProfile = all.filter(p=>p.accountId).length;
+    const signedIn = all.filter(p=>p.account && p.account.claimed).length;
+    h += `<div class="pay-sum"><div class="pay-sum__grid">
+        <div><div class="pay-sum__n">${all.length}</div><div class="mgr-meta">people paid</div></div>
+        <div><div class="pay-sum__n">${usdShort(paid)}</div><div class="mgr-meta">paid out on file</div></div>
+        <div><div class="pay-sum__n">${withProfile}</div><div class="mgr-meta">have a profile &middot; ${signedIn} signed in</div></div>
+        <div><div class="pay-sum__n">${M.inviteCandidates||0}</div><div class="mgr-meta">still to invite</div></div>
+      </div></div>`;
+    return h;
+  }
+
+  function payRowHtml(p){
+    const open = M.payeeOpen === p.key;
+    const st = p.stats;
+    const last = st.last ? payDay(st.last) : "—";
+    return `<div class="pay-rw ${open?"pay-rw--open":""}">
+      <div class="pay-nm">${esc(p.name)}
+        <small>${payStatusChip(p)}${p.residency?` &middot; ${esc(p.residency)}`:""}${
+          p.account && p.account.name && p.account.name !== p.name ? ` &middot; profile: ${esc(p.account.name)}` : ""}</small></div>
+      <div><span class="pay-cell__k">Nights</span><span class="pay-num">${st.nights||"—"}</span></div>
+      <div class="pay-r"><span class="pay-cell__k">Paid</span><span class="pay-num">${usdShort(st.total)}</span></div>
+      <div><span class="pay-cell__k">Avg bar</span><span class="pay-num">${st.perf && st.perf.avgNet ? usdShort(st.perf.avgNet) : "—"}</span></div>
+      <div><span class="pay-cell__k">Rating</span>${payBandChip(st.perf)}</div>
+      <div class="pay-act"><button class="pay-open ${!p.accountId && payCandidate(p) ? "pay-open--go":""}" data-act="payopen" data-key="${esc(p.key)}">${
+        open ? "Close" : (p.accountId ? "Open" : "Set up login")}</button></div>
+    </div>${open ? payPanelHtml(p) : ""}`;
+  }
+
+  /* The same three numbers the DJ sees on their own dashboard, from the same
+     server-side calculation, so the two screens cannot disagree about how
+     somebody is doing. */
+  function payStatsBlock(p){
+    const f = p.stats.perf;
+    if(!f || !f.rated) return `<p class="pay-note" style="margin-bottom:14px">No night on file carries a bar sales figure, so there is nothing to rate yet.</p>`;
+    return `<div class="pay-stats">
+        <div class="pay-stat"><div class="pay-stat__n">${usdShort(f.avgNet)}</div><div class="pay-stat__k">Avg bar sales</div></div>
+        <div class="pay-stat"><div class="pay-stat__n">${usdShort(f.avgCheck)}</div><div class="pay-stat__k">Avg check</div></div>
+        <div class="pay-stat"><div class="pay-stat__n">${Math.round((f.vsGood||0)*100)}%</div><div class="pay-stat__k">Of a good night</div></div>
+        <div class="pay-stat"><div class="pay-stat__n" style="font-size:13px;padding-top:5px">${f.bands.good}&thinsp;/&thinsp;${f.bands.fair}&thinsp;/&thinsp;${f.bands.under}</div><div class="pay-stat__k">Good / min / under</div></div>
+      </div>
+      <p class="pay-note" style="margin:-6px 0 16px">Rated over ${f.rated} night${f.rated===1?"":"s"}${
+        f.unrated ? `; ${f.unrated} check${f.unrated===1?"":"s"} carry no sales figure and are not scored` : ``}.
+        Fri/Sat minimum ${usdShort(3500)}, good night ${usdShort(5000)}; any other night ${usdShort(1500)} and ${usdShort(2000)}.</p>`;
+  }
+
+  /* Email addresses the server found for this name in the Client Book, the
+     booking forms and the existing logins. Suggestions only — tapping Use
+     fills the field, it does not send anything. A shared surname is the
+     dangerous near-miss, so every row prints WHY it matched. */
+  function paySuggestBlock(p){
+    const sug = p.suggest || [];
+    if(!sug.length) return "";
+    return `<div class="pay-sug">
+      <p class="mgr-label" style="margin:0 0 4px">Found for this name</p>
+      <p class="pay-note" style="margin:0 0 6px">From your Client Book, past booking forms and existing logins. Check the reason before using one.</p>
+      ${sug.map((c,i)=>`<div class="pay-sug__row">
+        <span class="pay-sug__em">${esc(c.email)}</span>
+        <span class="pay-sug__why">${esc(c.name||"no name on file")}${
+          c.note?" · "+esc(c.note):""} · ${esc(c.from)} · ${esc(c.why)}${c.sure?"":" · NOT SURE"}</span>
+        <button class="mgr-btn mgr-btn--ghost pay-sug__use" data-act="paysuggest" data-key="${esc(p.key)}" data-i="${i}">Use</button>
+      </div>`).join("")}
+    </div>`;
+  }
+
+  function payPanelHtml(p){
+    const d = payDraft(p);
+    const org = payeeIsOrg(p);
+    const msg = (M.payeeMsg||{})[p.key] || "";
+    let h = `<div class="pay-panel">`;
+
+    if(p.account){
+      h += `<p class="mgr-label">Profile</p>
+        <p class="mgr-val"><strong>${esc(p.account.name)}</strong> &middot; ${esc(p.account.type)}${
+          p.account.claimed ? "" : " &middot; has not signed in yet"}</p>
+        <div class="mgr-meta">${contactLinks(p.account.name, p.account.email, p.phone, p.instagram)}</div>
+        <div class="mgr-meta" style="margin-top:6px">${p.stats.checks} check${p.stats.checks===1?"":"s"} worth ${usd(p.stats.total)}
+          ${p.account.claimed ? "are" : "will be"} on their dashboard.${
+          p.account.w9 ? " W9 on file." : " <strong>No W9 &mdash; hold payouts.</strong>"}</div>
+        ` + payStatsBlock(p) + `
+        <div class="mgr-acts">
+          <button class="mgr-btn mgr-btn--ghost" data-act="payunlink" data-key="${esc(p.key)}">Unlink this history</button>
+        </div>
+        <p class="pay-note">Unlinking takes the imported checks back off their dashboard. The checks themselves,
+          and anything logged against a real event, are untouched.</p>`;
+    } else {
+      h += payStatsBlock(p) + paySuggestBlock(p);
+      h += `<p class="mgr-label">Set up their login</p>`;
+      if(org) h += `<p class="pay-note" style="margin-bottom:10px"><strong>${esc(p.name)}</strong> is who the check is made out to.
+        The profile belongs to the person behind it &mdash; their name and email below; the business stays on the account as the payout name.</p>`;
+      h += `<div class="mgr-row2">
+          <div class="mgr-field"><label>First name</label><input type="text" data-pf="firstName" data-key="${esc(p.key)}" value="${esc(d.firstName)}" placeholder="${org?"the person, not the LLC":""}"></div>
+          <div class="mgr-field"><label>Last name</label><input type="text" data-pf="lastName" data-key="${esc(p.key)}" value="${esc(d.lastName)}"></div>
+        </div>
+        <div class="mgr-field"><label>Email &mdash; where the login goes</label><input type="email" inputmode="email" autocomplete="off" data-pf="email" data-key="${esc(p.key)}" value="${esc(d.email)}" placeholder="name@example.com"></div>
+        <div class="mgr-row2">
+          <div class="mgr-field"><label>Mobile</label><input type="tel" inputmode="tel" data-pf="phone" data-key="${esc(p.key)}" value="${esc(d.phone)}" placeholder="(215) 555 0100"></div>
+          <div class="mgr-field"><label>Instagram</label><input type="text" data-pf="instagram" data-key="${esc(p.key)}" value="${esc(d.instagram)}" placeholder="handle"></div>
+        </div>
+        <div class="mgr-row2">
+          <div class="mgr-field"><label>Make checks out to</label><input type="text" data-pf="payableTo" data-key="${esc(p.key)}" value="${esc(d.payableTo)}"></div>
+          <div class="mgr-field"><label>They are a</label><select data-pf="type" data-key="${esc(p.key)}">
+            <option value="dj" ${d.type==="dj"?"selected":""}>DJ</option>
+            <option value="host" ${d.type==="host"?"selected":""}>Event host</option>
+          </select></div>
+        </div>
+        <div class="mgr-field"><label>Residency they run</label>
+          <select data-pf="residency" data-key="${esc(p.key)}">
+            <option value="">Not assigned</option>
+            ${payResidencyOptions(d.residency)}
+          </select>
+          <p class="pay-note">Assigning it links the party to their new profile, so
+            margolis.events/residencies starts crediting them. A party that already has a host is
+            marked &mdash; that one has to be changed on the Residencies screen, where you can see
+            who is on it.</p></div>
+        <div class="mgr-acts">
+          <button class="mgr-btn" data-act="payinvite" data-key="${esc(p.key)}">Create profile &amp; send their login</button>
+          <button class="mgr-btn mgr-btn--ghost" data-act="paysave" data-key="${esc(p.key)}">Save without sending</button>
+        </div>
+        <p class="pay-note">Sending mails them a temporary password and the walkthrough, exactly like every other invite.
+          ${p.stats.checks} check${p.stats.checks===1?"":"s"} worth ${usd(p.stats.total)} bind to that profile as it is made.</p>`;
+
+      if((M.payeeAccounts||[]).length){
+        h += `<p class="mgr-label" style="margin-top:20px">Or point this at a profile that already exists</p>
+          <div class="mgr-row2">
+            <div class="mgr-field"><select data-pf="link" data-key="${esc(p.key)}">
+              <option value="">Choose a profile…</option>
+              ${(M.payeeAccounts||[]).map(a=>`<option value="${esc(a.id)}" ${d.link===a.id?"selected":""}>${esc(a.name)} &mdash; ${esc(a.email)}</option>`).join("")}
+            </select></div>
+            <div class="mgr-field" style="flex:0 0 auto"><label>&nbsp;</label>
+              <button class="mgr-btn mgr-btn--ghost" data-act="paylink" data-key="${esc(p.key)}">Link</button></div>
+          </div>
+          <p class="pay-note">For a stage name, a married name, or an LLC whose owner already signed up under their own name.</p>`;
+      }
+    }
+
+    h += `<p class="mgr-label" style="margin-top:22px">Filed as</p>
+      <div class="mgr-row2">
+        <div class="mgr-field"><select data-pf="kind" data-key="${esc(p.key)}">
+          ${PAY_KINDS.map(([v,l])=>`<option value="${v}" ${d.kind===v?"selected":""}>${esc(l)}</option>`).join("")}
+        </select></div>
+        <div class="mgr-field"><input type="text" data-pf="note" data-key="${esc(p.key)}" value="${esc(d.note)}" placeholder="A note to yourself"></div>
+      </div>
+      <div class="mgr-acts">
+        <button class="mgr-btn mgr-btn--ghost" data-act="paysave" data-key="${esc(p.key)}">Save</button>
+        ${!p.accountId ? `<button class="mgr-btn mgr-btn--ghost" data-act="payskip" data-key="${esc(p.key)}" data-on="${p.skipped?"0":"1"}">${
+          p.skipped ? "Put back on the list" : "Not someone to invite"}</button>` : ""}
+      </div>
+      ${msg ? `<p class="mgr-meta" style="margin-top:4px">${esc(msg)}</p>` : ""}`;
+
+    /* Their checks. The reason to trust any of the numbers above. */
+    const ch = p.checks || [];
+    if(ch.length){
+      h += `<details class="mgr-fold" data-fold="payhist-${esc(p.key)}">
+        <summary>Every check &mdash; ${ch.length} worth ${usd(p.stats.total)}</summary>
+        <div class="pay-scroll" style="padding:10px 0 16px">
+        <table class="pay-hist"><thead><tr><th>Date</th><th>Where</th><th class="pay-r">Net sales</th><th>Rate</th><th class="pay-r">Paid</th><th>How it did</th><th>Check #</th></tr></thead>
+        <tbody>${ch.map(c=>`<tr>
+          <td>${c.date?esc(payDay(c.date)):"—"}${c.dateEstimated?`<span title="No date on the original sheet — filed by check number.">~</span>`:""}</td>
+          <td>${esc(c.venue||"—")}${c.eventName?` &middot; ${esc(c.eventName)}`:""}</td>
+          <td class="pay-r">${c.netSales?usd(c.netSales):""}</td>
+          <td>${c.percent?esc(c.percent)+"%":"flat"}</td>
+          <td class="pay-r">${usd(c.totalPay)}</td>
+          <td>${payCheckBand(c)}</td>
+          <td>${esc(c.checkNumber||"")}</td>
+        </tr>`).join("")}</tbody></table></div></details>`;
+    }
+    return h + `</div>`;
+  }
+
+  /* ============================================================
+     RESIDENCIES
+     ------------------------------------------------------------
+     Ruby, 2026-08-27: "everything i need to control the residencies
+     from my manager margolis.events profile."
+
+     The list is DERIVED from the calendar and is not stored (see
+     margolis-residencies-lib.php). This screen only writes the diff:
+     an override per field, a link to a profile, a photo, a hidden
+     flag. So every field shows what the calendar says underneath and
+     "Use the calendar's" is always available — clearing a field is
+     the undo, and it has to be one click.
+
+     Linking a profile is the headline feature. Once linked, the host
+     name and Instagram are read through to that account on every
+     request rather than copied, so a DJ fixing their own handle fixes
+     the public page and Ruby never retypes anything.
+     ============================================================ */
+
+  const RES_SCOPES = [["active","Running now"],["past","Finished"],["all","Everything"]];
+
+  function resHostLine(r){
+    const h = r.host || {};
+    if(h.source === "profile") return `<span class="mgr-chip mgr-chip--ok">Profile</span> ${esc(h.name||"")}${h.handle?` &middot; ${esc(h.handle)}`:""}`;
+    if(h.source === "typed")   return `<span class="mgr-chip">Typed</span> ${esc(h.name||"")}${h.handle?` &middot; ${esc(h.handle)}`:""}`;
+    if(h.source === "calendar")return `<span class="mgr-chip mgr-chip--warn">From the calendar</span> ${esc(h.handle||"")}`;
+    return `<span class="mgr-chip mgr-chip--bad">No host</span>`;
+  }
+
+  /* One editable field. `cal` is what the calendar says, shown as the
+     fallback so she can always see what she is overriding and put it
+     back. An empty input means "use the calendar's", which is exactly
+     what the server does with an empty string. */
+  function resField(key, label, val, cal, opts){
+    opts = opts || {};
+    /* `val` is the stored OVERRIDE, not the resolved value: an empty box
+       means "use the calendar's", which is what the server stores too.
+       Pre-filling with the resolved value would make the first Save
+       freeze every field and quietly stop the party following the
+       calendar. The calendar's own text is the placeholder instead. */
+    const over = (val||"") !== "";
+    const input = opts.area
+      ? `<textarea rows="4" data-res-field="${key}" placeholder="${esc(opts.ph||cal||"")}">${esc(val||"")}</textarea>`
+      : `<input type="text" data-res-field="${key}" value="${esc(val||"")}" placeholder="${esc(opts.ph||cal||"")}">`;
+    return `<div class="mgr-field">
+      <label>${label}${over?` <span class="mgr-chip">edited</span>`:""}</label>
+      ${input}
+      ${cal ? `<p class="mgr-meta res-cal">Calendar says: ${esc(cal.length>140?cal.slice(0,140)+"…":cal)}
+        ${over?` <button class="mgr-link res-revert" data-act="resrevert" data-field="${key}" type="button">go back to this</button>`:""}</p>` : ""}
+    </div>`;
+  }
+
+  /* What a save will touch on Google Calendar.
+
+     Ruby, 2026-08-27: a residency is a TITLE, not a Google recurring
+     series — "for the ones that are typed as individual events every
+     month, they're still residencies", and she enters some by hand
+     "if they don't always fall on the same day of the week". So every
+     event under the title is updated.
+
+     What is listed here is the group's own titles. A group with more
+     than one title only has one because a merge was accepted, and that
+     is the single way an unrelated event could be in it — so it is
+     spelled out before she ticks anything, not after. */
+  function resCalBlock(r){
+    var events = r.events || [], titles = r.titles || [];
+    if(r.manual || !events.length){
+      return `<div class="res-cal-note">
+        <span class="mgr-label">Google Calendar</span>
+        <p class="mgr-meta">${r.manual ? "Added by hand, so there is nothing on the calendar to update." : "No calendar events found for this one."} Your changes here still show on the website.</p>
+      </div>`;
+    }
+    var rec = r.recurringEvents || 0, single = r.singleEvents || 0;
+    var what = [];
+    if(rec) what.push(rec + " repeating event" + (rec===1?"":"s"));
+    if(single) what.push(single + " individual event" + (single===1?"":"s"));
+    /* Only warn about titles that differ by real WORDS. Case and
+       punctuation variants ("ONLY THE HITS" / "Only The Hits") merge
+       on their own and always did; flagging those trains her to
+       ignore the warning that matters. Same normalisation as
+       mres_key() on the server. */
+    var norm = function(t){ return String(t||"").toLowerCase().replace(/[^a-z0-9]/g,""); };
+    var distinct = [];
+    titles.forEach(function(t){ if(!distinct.some(function(d){ return norm(d) === norm(t); })) distinct.push(t); });
+
+    return `<div class="res-cal-note">
+      <span class="mgr-label">Google Calendar</span>
+      <label class="res-check"><input type="checkbox" data-res-push="1"> Also write this description onto the calendar</label>
+      <label class="res-check"><input type="checkbox" data-res-pushtitle="1"> …and rename the calendar events to match</label>
+      <p class="mgr-meta">Updates ${what.join(" and ")}, covering all ${r.editions} night${r.editions===1?"":"s"}.
+      ${distinct.length > 1
+        ? `<strong>Careful:</strong> this group covers ${distinct.length} different calendar titles — ${distinct.map(esc).join(", ")} — so all of them get rewritten. If one of those is a separate event, unmerge it first.`
+        : `Only nights titled “${esc(distinct[0] || r.title)}” are touched.`}</p>
+    </div>`;
+  }
+
+  /* Merges this code thinks are one party renamed, offered rather than
+     applied. Ruby's own rule is that a separate title is a separate
+     event, so guessing here overrules the one signal she maintains —
+     and it guessed wrong: "Kingspy" and "Rhythm Nation (KingSpy)" are
+     one-off sets that were being counted as residency editions. */
+  function resSuggestions(){
+    var sug = M.resSuggestions || [];
+    if(!sug.length) return "";
+    return `<details class="mgr-fold" data-fold="ressug"><summary>Possible duplicates (${sug.length})</summary>
+      <div class="mgr-card">
+        <div class="mgr-meta">These titles look like the same party under two names. Nothing is merged until you say so — a separate title stays a separate residency, which is what keeps a DJ's other events out of their residency.</div>
+        ${sug.map(function(x){
+          return `<div class="mgr-part"><div class="mgr-part__head">
+            <span class="mgr-label">${esc(x.from)}</span>
+            <span class="mgr-meta">&rarr; ${esc(x.into)}</span></div>
+            <div class="mgr-acts">
+              <button class="mgr-btn" data-act="ressugyes" data-from="${esc(x.from)}" data-into="${esc(x.into)}">Same party, merge</button>
+              <button class="mgr-btn mgr-btn--ghost" data-act="ressugno" data-from="${esc(x.from)}">Different event, keep apart</button>
+            </div></div>`;
+        }).join("")}
+      </div></details>`;
+  }
+
+  function resEditor(r){
+    const c = r.fromCalendar || {};
+    const o = r.overrides || {};          // what SHE has set, not the resolved value
+    const people = M.resPeople || [];
+    const linked = (r.host||{}).accountId || "";
+    const msg = M.resMsg[r.key] || "";
+    return `<div class="res-edit">
+
+      <div class="mgr-field">
+        <label>Host profile</label>
+        <select data-res-field="accountId">
+          <option value="">${linked?"— unlink —":"— nobody linked —"}</option>
+          ${people.map(p=>`<option value="${esc(p.id)}"${p.id===linked?" selected":""}>${esc(p.name)}${p.instagram?" · "+esc(p.instagram):""}</option>`).join("")}
+        </select>
+        <p class="mgr-meta">Linking reads the name and Instagram straight off their profile from then on. If they fix their handle, the website fixes itself. Leave it unlinked to type a host by hand below.</p>
+      </div>
+
+      ${linked ? "" : `<div class="mgr-row2">
+        ${resField("hostName","Host name (if not linked)", o.hostName, "", {ph:"Who runs it"})}
+        ${resField("hostHandle","Their Instagram", o.hostHandle, (c.handles||[])[0]||"", {ph:"@handle"})}
+      </div>`}
+
+      ${resField("title","Name on the site", o.title, c.title)}
+      ${resField("blurb","What the night is", o.blurb, c.blurb, {area:true, ph:c.blurb||"Two or three sentences on what it actually feels like."})}
+      <div class="mgr-row2">
+        ${resField("cadence","When it runs", o.cadence, c.cadence)}
+        ${resField("tickets","Tickets", o.tickets, c.tickets, {ph:c.tickets||"$10, Free, sliding scale…"})}
+      </div>
+      <div class="mgr-row2">
+        ${resField("start","Doors open", o.start, c.start)}
+        ${resField("end","Ends", o.end, c.end)}
+      </div>
+
+      <div class="mgr-field">
+        <label>Photo</label>
+        ${r.photo ? `<div class="res-photo"><img src="${esc(r.photoUrl||"")}" alt=""></div>` : ""}
+        <input type="file" accept="image/jpeg,image/png,image/webp" data-res-photo="${esc(r.key)}">
+        <p class="mgr-meta">JPG, PNG or WebP, up to 6 MB.${r.photo?` <button class="mgr-link" data-act="resphotoclear" type="button">Remove it</button>`:""}</p>
+      </div>
+
+      ${resCalBlock(r)}
+
+      <div class="mgr-acts">
+        <button class="mgr-btn" data-act="ressave">Save changes</button>
+        <button class="mgr-btn mgr-btn--ghost" data-act="resfeature">${r.featured?"Unfeature":"Feature at the top"}</button>
+        <button class="mgr-btn mgr-btn--ghost" data-act="reshide">${r.hidden?"Show on the site":"Hide from the site"}</button>
+        ${r.manual?`<button class="mgr-btn mgr-btn--bad" data-act="resdel">Delete</button>`:""}
+      </div>
+      ${msg?`<p class="mgr-meta">${esc(msg)}</p>`:""}
+      ${r.manual?`<p class="mgr-meta">Added by hand, so its dates were typed rather than read from the calendar.</p>`
+                :`<p class="mgr-meta">Comes from the calendar, so its dates and edition count follow it. To take it off the site, hide it — deleting it means deleting it from Google Calendar.</p>`}
+    </div>`;
+  }
+
+  function renderResidencies(){
+    const all = M.resList || [];
+    const q = (M.resSearch||"").trim().toLowerCase();
+    let rows = all.filter(r => M.resScope === "all" ? true : (M.resScope === "active" ? r.active : !r.active));
+    if(q) rows = rows.filter(r => (r.title||"").toLowerCase().includes(q));
+
+    const needCopy = all.filter(r => r.active && !r.blurb).length;
+    const needHost = all.filter(r => r.active && (r.host||{}).source !== "profile").length;
+
+    let h = `<div class="mgr-card">
+      <h3>Residencies</h3>
+      <div class="mgr-meta">${all.length} parties have run here more than once. ${all.filter(r=>r.active).length} still have dates on the calendar.
+      Everything you change here is live on <a class="mgr-link" href="https://margolis.events/residencies" target="_blank" rel="noopener">margolis.events/residencies</a> on the next page load.</div>
+      ${(needCopy||needHost)?`<div class="mgr-chips" style="margin-top:10px">
+        ${needCopy?`<span class="mgr-chip mgr-chip--warn">${needCopy} running with no description</span>`:""}
+        ${needHost?`<span class="mgr-chip mgr-chip--warn">${needHost} running with no linked profile</span>`:""}
+      </div>`:""}
+    </div>`;
+
+    h += `<div class="pay-seg">${RES_SCOPES.map(([k,l])=>
+      `<button class="${M.resScope===k?"on":""}" data-act="resscope" data-scope="${k}">${l}</button>`).join("")}</div>`;
+    h += `<input class="mgr-search" id="resSearch" type="search" placeholder="Find a party" value="${esc(M.resSearch||"")}">`;
+
+    if(!rows.length) return h + `<div class="mgr-empty">Nothing here.</div>`;
+
+    h += rows.map(r => {
+      const open = M.resOpen === r.key;
+      const when = r.active
+        ? `Next ${esc(fmtDate(r.upcoming[0]))}${r.upcoming.length>1?` &middot; ${r.upcoming.length} to come`:""}`
+        : `Ran until ${esc(fmtDate(r.last))}`;
+      return `<div class="mgr-card${r.hidden?" res-hidden":""}">
+        <div class="mgr-chips">
+          <span class="mgr-chip mgr-chip--dark">${esc(r.cadence)}</span>
+          <span class="mgr-chip">${r.editions} edition${r.editions===1?"":"s"}</span>
+          ${r.featured?`<span class="mgr-chip mgr-chip--ok">Featured</span>`:""}
+          ${r.hidden?`<span class="mgr-chip mgr-chip--bad">Hidden</span>`:""}
+          ${r.manual?`<span class="mgr-chip">Added by hand</span>`:""}
+          ${r.active && !r.blurb?`<span class="mgr-chip mgr-chip--warn">No description</span>`:""}
+        </div>
+        <h3>${esc(r.title)}</h3>
+        <div class="mgr-meta">${when} &middot; ${esc(r.start||"?")}–${esc(r.end||"?")}</div>
+        <div class="mgr-meta">${resHostLine(r)}</div>
+        <div class="mgr-acts">
+          <button class="mgr-btn ${open?"mgr-btn--ghost":""}" data-act="resopen" data-key="${esc(r.key)}">${open?"Close":"Edit"}</button>
+        </div>
+        ${open?resEditor(r):""}
+      </div>`;
+    }).join("");
+
+    h += resSuggestions();
+    h += `<details class="mgr-fold" data-fold="resadd"><summary>Add a residency that isn't on the calendar</summary>
+      <div class="mgr-card">
+        <div class="mgr-meta">For a party the Margolis calendar doesn't carry — a Patio or Fabrika night, say, since those calendars are shared free/busy and everything on them arrives titled "Busy". Its dates are typed, so they won't follow the calendar afterwards.</div>
+        <div class="mgr-field"><label>Name</label><input id="resAddTitle" type="text"></div>
+        <div class="mgr-row2">
+          <div class="mgr-field"><label>Doors open</label><input id="resAddStart" type="text" placeholder="9:00 PM"></div>
+          <div class="mgr-field"><label>Ends</label><input id="resAddEnd" type="text" placeholder="2:00 AM"></div>
+        </div>
+        <div class="mgr-field"><label>Dates, one per line (YYYY-MM-DD)</label><textarea id="resAddDates" rows="4" placeholder="2027-01-09&#10;2027-02-13"></textarea>
+        <p class="mgr-meta">At least two — one date is a one-off, not a residency.</p></div>
+        <div class="mgr-acts"><button class="mgr-btn" data-act="resadd">Add it</button></div>
+        <p class="mgr-meta" id="resAddMsg"></p>
+      </div></details>`;
+    return h;
+  }
+
+  /* The residency list comes from mres_all() — the same one the
+     Residencies screen and the public page use, so a party can never
+     be assignable here and missing there. Still-running parties first,
+     because those are the ones a new resident is being given; the
+     finished ones sit under their own heading rather than being hidden,
+     since a lot of this check history belongs to runs that are over. */
+  function payResidencyOptions(current){
+    const all = M.residencies || [];
+    const opt = r => {
+      const taken = r.accountId && r.title !== current;
+      return `<option value="${esc(r.title)}" ${r.title===current?"selected":""}>${esc(r.title)} &middot; ${r.count} edition${r.count===1?"":"s"}${
+        taken ? " — " + esc(r.hostName || "already hosted") : ""}</option>`;
+    };
+    const live = all.filter(r=>r.active), done = all.filter(r=>!r.active);
+    let h = "";
+    if(live.length) h += `<optgroup label="Still running">${live.map(opt).join("")}</optgroup>`;
+    if(done.length) h += `<optgroup label="Run has finished">${done.map(opt).join("")}</optgroup>`;
+    if(current && !all.some(r=>r.title===current)) h += `<option value="${esc(current)}" selected>${esc(current)}</option>`;
+    return h;
+  }
+
+  function renderPayees(){
+    let h = payHeaderBlock();
+    h += `<div class="pay-seg">${PAY_SCOPES.map(([k,l])=>
+      `<button class="${M.payeeScope===k?"on":""}" data-act="payscope" data-scope="${k}">${l}<b>${payScopeCount(k)}</b></button>`).join("")}</div>`;
+    h += `<input class="mgr-search" id="paySearch" type="search" placeholder="Search a name, an email, a party…" value="${esc(M.payeeSearch||"")}">`;
+
+    const rows = payScoped();
+    if(M.payeeScope === "invite"){
+      h += `<p class="pay-note" style="margin:0 0 12px">Two or more nights, paid on a percentage &mdash; the people who work with you regularly
+        and have no login yet. Flat-rate payees, one-offs and anyone already invited are under the other tabs.</p>`;
+    }
+    if(!rows.length){
+      h += `<div class="mgr-empty">${M.payeeSearch ? "Nothing matches that." :
+        M.payeeScope==="invite" ? "Everyone who works with you regularly has a profile. Nothing to send." : "Nothing here."}</div>`;
+      return h;
+    }
+
+    h += `<div class="pay-tbl">
+      <div class="pay-hd"><div>Payee</div><div>Nights</div><div class="pay-r">Paid</div><div>Avg bar</div><div>Rating</div><div></div></div>
+      ${rows.map(payRowHtml).join("")}
+    </div>`;
+    h += `<div class="mgr-acts"><button class="mgr-btn mgr-btn--ghost" data-act="paycopy">Copy this table</button></div>
+      <p class="pay-note">Copies the ${rows.length} row${rows.length===1?"":"s"} above as tab-separated text, ready to paste into a spreadsheet.</p>`;
+    return h;
+  }
+
+  /* Tab-separated, because that is what pastes into Excel and Sheets
+     as columns without an import dialog. */
+  function payTsv(rows){
+    const head = ["Payee","Nights","Checks","Total paid","Rate","Venues","First paid","Last paid","Status","Profile email","Residency"];
+    const line = p => [p.name, p.stats.nights, p.stats.checks, (p.stats.total||0).toFixed(2), payRate(p),
+      (p.stats.venues||[]).join(" / "), p.stats.first||"", p.stats.last||"",
+      p.account ? (p.account.claimed ? "Signed in" : "Login sent") : (p.invitedAt ? "Invited" : "No profile"),
+      (p.account && p.account.email) || p.email || "", p.residency||""].join("\t");
+    return [head.join("\t")].concat(rows.map(line)).join("\n");
+  }
+
   /* ---------- tabs ---------- */
   function tabsBar(){
     const c = M.counts || {};
@@ -1338,6 +2194,13 @@
       ["nights", "Nights", c.margolisMissing||0],
       ["requests", "Date requests", c.pendingDateRequests||0],
       ["djs", "DJs &amp; hosts", c.unclaimed||0],
+      ["res", "Residencies", 0],
+      /* The badge is how many people are owed a login. It only has a
+         number once the tab has been opened once, because the count
+         comes back with the payee list rather than from `counts` —
+         rolling up a whole ledger on every dashboard load, for a
+         number that changes a few times a year, is not worth it. */
+      ["payees", "Payees", M.payees ? (M.inviteCandidates||0) : 0],
     ];
     return `<div class="mgr-tabs">${defs.map(([k,label,n])=>
       `<button class="mgr-tab ${M.tab===k?"on":""}" data-act="tab" data-tab="${k}">${label}${n?`<b>${n}</b>`:""}</button>`).join("")}</div>`;
@@ -1450,12 +2313,52 @@
   function render(){
     const open = new Set();
     view.querySelectorAll("details[open][data-fold]").forEach(d => open.add(d.dataset.fold));
-    const bodies = {needs: renderNeeds, nights: renderNights, requests: renderRequests, djs: renderDjs};
+    const bodies = {needs: renderNeeds, nights: renderNights, requests: renderRequests,
+                    djs: renderDjs, payees: renderPayees, res: renderResidencies};
     view.innerHTML = tabsBar() + (bodies[M.tab] || renderNeeds)();
     view.querySelectorAll("details[data-fold]").forEach(d => { if(open.has(d.dataset.fold)) d.open = true; });
     const s = document.getElementById("mgrSearch");
     if(s && M.search){ s.focus(); s.setSelectionRange(s.value.length, s.value.length); }
+    const ps = document.getElementById("paySearch");
+    if(ps && M.payeeSearch){ ps.focus(); ps.setSelectionRange(ps.value.length, ps.value.length); }
+    const rs = document.getElementById("resSearch");
+    if(rs && M.resSearch){ rs.focus(); rs.setSelectionRange(rs.value.length, rs.value.length); }
   }
+
+  /* A file input and a search box never reach the click handler, so
+     they get their own listeners on the same delegated element. */
+  view.addEventListener("change", async (ev) => {
+    const el = ev.target.closest("[data-res-photo]");
+    if(!el || !el.files || !el.files[0]) return;
+    const key = el.dataset.resPhoto;
+    const file = el.files[0];
+    if(file.size > 6 * 1024 * 1024){ showErr("That photo is over 6 MB. Shrink it and try again."); el.value = ""; return; }
+    clearErr();
+    M.resMsg[key] = "Uploading…"; render();
+    try{
+      const data = await new Promise((res, rej) => {
+        const fr = new FileReader();
+        fr.onload = () => res(fr.result);
+        fr.onerror = () => rej("Could not read that file.");
+        fr.readAsDataURL(file);
+      });
+      await mapi({action:"residencyPhoto", key, data});
+      await loadResidencies();
+      M.resMsg[key] = "Photo saved.";
+      render();
+    }catch(e){
+      M.resMsg[key] = "";
+      render();
+      if(e !== "auth") showErr(typeof e === "string" ? e : "Could not upload that photo.");
+    }
+  });
+
+  view.addEventListener("input", (ev) => {
+    if(ev.target.id !== "resSearch") return;
+    M.resSearch = ev.target.value;
+    M.resOpen = null;
+    render();
+  });
 
   async function reload({counts=true} = {}){
     if(counts) await loadCounts();
@@ -1483,6 +2386,117 @@
       if(act === "tab"){ await setTab(btn.dataset.tab); return; }
 
       if(act === "dreqscope"){ M.dreqScope = btn.dataset.scope; await loadRequests(); render(); return; }
+
+      /* ---------- residencies ---------- */
+      if(act === "ressugyes" || act === "ressugno"){
+        busy("Saving…");
+        await mapi(act === "ressugyes"
+          ? {action:"residencyAlias", from:btn.dataset.from, canonical:btn.dataset.into}
+          : {action:"residencyAlias", from:btn.dataset.from, decision:"no"});
+        M.resOpen = null;
+        await loadResidencies();
+        render();
+        return;
+      }
+
+      if(act === "resscope"){ M.resScope = btn.dataset.scope; M.resOpen = null; render(); return; }
+
+      if(act === "resopen"){
+        const k = btn.dataset.key;
+        /* Collect nothing on close: an open editor holds unsaved edits
+           in the DOM, and silently keeping them after she closes the
+           row would show "edited" for changes that were never saved. */
+        M.resOpen = (M.resOpen === k) ? null : k;
+        M.resDirty = {};
+        render();
+        return;
+      }
+
+      if(act === "resrevert"){
+        const card = btn.closest(".mgr-card");
+        const el = card.querySelector(`[data-res-field="${btn.dataset.field}"]`);
+        if(el){ el.value = ""; el.dispatchEvent(new Event("input", {bubbles:true})); }
+        return;
+      }
+
+      if(act === "ressave"){
+        const r = (M.resList||[]).find(x => x.key === M.resOpen);
+        if(!r) return;
+        const card = btn.closest(".mgr-card");
+        const payload = {action:"residencySave", key:r.key};
+        card.querySelectorAll("[data-res-field]").forEach(el => { payload[el.dataset.resField] = el.value; });
+        const push = card.querySelector("[data-res-push]");
+        const pushT = card.querySelector("[data-res-pushtitle]");
+        if(push && push.checked) payload.pushToCalendar = true;
+        if(pushT && pushT.checked) payload.pushTitle = true;
+        busy("Saving…");
+        try{
+          const out = await mapi(payload);
+          await loadResidencies();
+          /* Report the calendar result separately from the save. They
+             can genuinely differ — the override always lands, the
+             Google write can fail on its own — and collapsing them into
+             one "Saved" is how somebody ends up believing the calendar
+             changed when it did not. */
+          let msg = "Saved. It is live on the site now.";
+          if(out && out.push){
+            msg += " " + (out.push.message || "");
+            if(out.push.results && out.push.results.some(x=>!x.ok))
+              msg += " Failed: " + out.push.results.filter(x=>!x.ok).map(x=>x.title).join(", ") + ".";
+          }
+          M.resMsg[r.key] = msg;
+          render();
+        }catch(e){ free("Save changes"); throw e; }
+        return;
+      }
+
+      if(act === "reshide" || act === "resfeature"){
+        const r = (M.resList||[]).find(x => x.key === M.resOpen);
+        if(!r) return;
+        const field = act === "reshide" ? "hidden" : "featured";
+        busy("Saving…");
+        await mapi({action:"residencySave", key:r.key, [field]: !r[field]});
+        await loadResidencies();
+        render();
+        return;
+      }
+
+      if(act === "resphotoclear"){
+        const r = (M.resList||[]).find(x => x.key === M.resOpen);
+        if(!r || !confirm("Remove this photo from the site?")) return;
+        busy("Removing…");
+        await mapi({action:"residencyPhoto", key:r.key, data:""});
+        await loadResidencies();
+        render();
+        return;
+      }
+
+      if(act === "resdel"){
+        const r = (M.resList||[]).find(x => x.key === M.resOpen);
+        if(!r) return;
+        if(!confirm(`Delete "${r.title}"?\n\nIt was added by hand, so this removes it and its dates for good.`)) return;
+        busy("Deleting…");
+        await mapi({action:"residencyDelete", key:r.key});
+        M.resOpen = null;
+        await loadResidencies();
+        render();
+        return;
+      }
+
+      if(act === "resadd"){
+        const title = (document.getElementById("resAddTitle").value||"").trim();
+        const dates = (document.getElementById("resAddDates").value||"").split(/[\s,]+/).map(x=>x.trim()).filter(Boolean);
+        const msg = document.getElementById("resAddMsg");
+        busy("Adding…");
+        try{
+          await mapi({action:"residencyAdd", title, dates,
+                      start:(document.getElementById("resAddStart").value||"").trim(),
+                      end:(document.getElementById("resAddEnd").value||"").trim()});
+          await loadResidencies();
+          render();
+        }catch(e){ free("Add it"); if(msg) msg.textContent = typeof e==="string"?e:"Could not add that."; return; }
+        return;
+      }
 
       if(act === "review"){
         busy("Saving…");
@@ -1588,6 +2602,153 @@
         return;
       }
 
+      /* ---- payees ---- */
+      if(act === "payscope"){ M.payeeScope = btn.dataset.scope; M.payeeOpen = null; render(); return; }
+
+      if(act === "payopen"){
+        M.payeeOpen = (M.payeeOpen === btn.dataset.key) ? null : btn.dataset.key;
+        render();
+        /* Scroll the row she just opened back under her thumb: on a
+           phone the panel is taller than the viewport and expanding a
+           row halfway down the table otherwise lands her mid-form. */
+        if(M.payeeOpen){
+          const row = view.querySelector(`[data-act="payopen"][data-key="${CSS.escape(M.payeeOpen)}"]`);
+          if(row) row.scrollIntoView({block:"center", behavior:"smooth"});
+        }
+        return;
+      }
+
+      if(act === "payimport"){
+        if(!confirm("Import the 2026 paycheck sheet into the ledger?\n\nEvery check lands archived and already marked paid, filed by the month it was written. Nothing goes into the live list of checks to write, and running this again imports nothing.")) return;
+        busy("Importing…");
+        try{
+          const out = await mapi({action:"importPayoutHistory"});
+          M.payees = null;
+          await loadPayees();
+          render();
+          showErr(`${out.added} check${out.added===1?"":"s"} imported. ${out.bound} profile${out.bound===1?"":"s"} picked up their history. Find them under Bookings → Payouts → Archived payroll.`);
+          errEl.style.color = "";
+        }catch(e){ free("Import"); if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't import — try again."); }
+        return;
+      }
+
+      if(act === "paysave" || act === "payskip"){
+        const key = btn.dataset.key;
+        const p = (M.payees||[]).find(x=>x.key===key); if(!p) return;
+        const d = payDraft(p);
+        const payload = {action:"payeeSave", key, name:p.name, kind:d.kind, note:d.note,
+                         firstName:d.firstName, lastName:d.lastName, payableTo:d.payableTo,
+                         email:d.email, phone:d.phone, instagram:d.instagram, residency:d.residency};
+        if(act === "payskip") payload.skipped = btn.dataset.on === "1";
+        busy("Saving…");
+        try{
+          await mapi(payload);
+          M.payeeMsg[key] = "Saved.";
+          await loadPayees();
+          render();
+        }catch(e){ free("Save"); if(e!=="auth"){ M.payeeMsg[key] = typeof e==="string"?e:"Couldn't save that."; render(); } }
+        return;
+      }
+
+      if(act === "paysuggest"){
+        const key = btn.dataset.key;
+        const p = (M.payees||[]).find(x=>x.key===key); if(!p) return;
+        const c = (p.suggest||[])[+btn.dataset.i]; if(!c) return;
+        const d = payDraft(p);
+        d.email = c.email;
+        if(c.phone && !d.phone) d.phone = c.phone;
+        if(c.instagram && !d.instagram) d.instagram = c.instagram;
+        /* Never overwrite a name she has already typed, and never push a
+           contact's name over one taken off the check. */
+        render();
+        return;
+      }
+
+      if(act === "paylink"){
+        const key = btn.dataset.key;
+        const p = (M.payees||[]).find(x=>x.key===key); if(!p) return;
+        const accountId = payDraft(p).link;
+        if(!accountId){ M.payeeMsg[key] = "Choose a profile first."; render(); return; }
+        const a = (M.payeeAccounts||[]).find(x=>x.id===accountId);
+        if(!confirm(`Give ${a?a.name:"that profile"} the ${p.stats.checks} check${p.stats.checks===1?"":"s"} written to ${p.name}?\n\nThey will see all of it on their dashboard. You can unlink it again.`)) return;
+        busy("Linking…");
+        try{
+          await mapi({action:"payeeLink", key, accountId});
+          M.payeeMsg[key] = "Linked.";
+          await loadPayees(); await loadAccounts(); render();
+        }catch(e){ free("Link"); if(e!=="auth"){ M.payeeMsg[key] = typeof e==="string"?e:"Couldn't link that."; render(); } }
+        return;
+      }
+
+      if(act === "payunlink"){
+        const key = btn.dataset.key;
+        const p = (M.payees||[]).find(x=>x.key===key); if(!p) return;
+        if(!confirm(`Take the imported checks written to ${p.name} back off ${p.account?p.account.name:"that profile"}?\n\nThe checks stay in your ledger. Anything logged against a real event stays attached.`)) return;
+        busy("Unlinking…");
+        try{
+          await mapi({action:"payeeUnlink", key});
+          M.payeeMsg[key] = "Unlinked.";
+          await loadPayees(); render();
+        }catch(e){ free("Unlink this history"); if(e!=="auth"){ M.payeeMsg[key] = typeof e==="string"?e:"Couldn't unlink that."; render(); } }
+        return;
+      }
+
+      if(act === "payinvite"){
+        const key = btn.dataset.key;
+        const p = (M.payees||[]).find(x=>x.key===key); if(!p) return;
+        const d = payDraft(p);
+        if(!d.email || !d.firstName || !d.lastName){
+          M.payeeMsg[key] = "A first name, a last name and an email — that is everything the login needs.";
+          render(); return;
+        }
+        if(!confirm(`Create a profile for ${d.firstName} ${d.lastName} and email the login to ${d.email}?\n\n${p.stats.checks} check${p.stats.checks===1?"":"s"} worth ${usd(p.stats.total)} will be waiting on their dashboard.`)) return;
+        busy("Creating…");
+        try{
+          const out = await mapi({action:"payeeInvite", key, firstName:d.firstName, lastName:d.lastName,
+                                  email:d.email, phone:d.phone, instagram:d.instagram,
+                                  payableTo:d.payableTo, residency:d.residency, type:d.type});
+          M.payeeMsg[key] = out.isNew
+            ? `${out.account.name} has a profile — the login is on its way to ${out.account.email}, with ${out.history.checks} check${out.history.checks===1?"":"s"} already on it.`
+            : `${out.account.name} already had an account (${out.account.email}) — nothing was sent and nothing overwritten, but the history is now theirs.`;
+          /* Say so when the residency did NOT attach, rather than
+             letting her believe an assignment happened. */
+          if(out.residency){
+            M.payeeMsg[key] += out.residency.linked
+              ? ` ${out.residency.title} is now credited to them.`
+              : out.residency.reason === "taken"
+                ? ` ${out.residency.title} already has a host, so it was left alone — change it on the Residencies screen.`
+                : ` ${out.residency.title} isn't a party on the calendar, so nothing was linked.`;
+          }
+          M.payeeOpen = null;
+          await loadPayees(); await loadAccounts(); await loadCounts(); render();
+        }catch(e){
+          free("Create profile & send their login");
+          if(e!=="auth"){ M.payeeMsg[key] = typeof e==="string"?e:"Couldn't create that profile."; render(); }
+        }
+        return;
+      }
+
+      if(act === "paycopy"){
+        const tsv = payTsv(payScoped());
+        try{
+          await navigator.clipboard.writeText(tsv);
+          free("Copied");
+          setTimeout(()=>{ try{ btn.textContent = "Copy this table"; }catch(_){} }, 1600);
+        }catch(e){
+          /* Clipboard is blocked on some phone browsers without a
+             secure-context gesture. Falling back to a selection means
+             she can still long-press → copy rather than hitting a dead
+             button. */
+          const ta = document.createElement("textarea");
+          ta.value = tsv; ta.style.cssText = "position:fixed;left:0;top:0;width:100%;height:40vh;z-index:9999";
+          document.body.appendChild(ta); ta.select();
+          free("Copy this table");
+          alert("Copy the selected text, then tap OK.");
+          ta.remove();
+        }
+        return;
+      }
+
       if(act === "invite"){
         const val = id => (document.getElementById(id).value || "").trim();
         const msg = document.getElementById("invMsg");
@@ -1620,9 +2781,23 @@
   });
 
   view.addEventListener("input", (ev) => {
-    if(ev.target.id !== "mgrSearch") return;
-    M.search = ev.target.value;
-    render();
+    if(ev.target.id === "mgrSearch"){ M.search = ev.target.value; render(); return; }
+    if(ev.target.id === "paySearch"){ M.payeeSearch = ev.target.value; render(); return; }
+    /* Every field in a payee panel writes straight into its draft, so
+       an unfinished invite form survives the next full re-render
+       (which is every action on this page). */
+    const f = ev.target.dataset && ev.target.dataset.pf;
+    if(f){
+      const p = (M.payees||[]).find(x=>x.key===ev.target.dataset.key);
+      if(p) payDraft(p)[f] = ev.target.value;
+    }
+  });
+  /* <select> fires change, not input, in older Safari. */
+  view.addEventListener("change", (ev) => {
+    const f = ev.target.dataset && ev.target.dataset.pf;
+    if(!f) return;
+    const p = (M.payees||[]).find(x=>x.key===ev.target.dataset.key);
+    if(p) payDraft(p)[f] = ev.target.value;
   });
 
   /* ---------- which half of the page she is looking at ---------- */
