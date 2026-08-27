@@ -1305,7 +1305,12 @@
     const r = await fetch(MGR_URL, {method:"POST", body: JSON.stringify(Object.assign({token: TOKEN}, payload))});
     if(r.status === 401){ localStorage.removeItem("margolis-dj-token"); location.href = "/margolis-login"; throw "auth"; }
     const out = await r.json().catch(()=>({}));
-    if(!r.ok) throw (out.error || "Something went wrong — try again.");
+    /* Show the server's own message when it sends one. A bare
+       "Something went wrong" is the same string for a bad action, a
+       fatal and a dead network, which makes the one screenshot Ruby
+       sends back worth nothing. */
+    if(!r.ok) throw ((out.error || ("Something went wrong (HTTP " + r.status + ") — try again.")) +
+                     (out.where ? "  [" + out.where + "]" : ""));
     return out;
   }
 
@@ -1572,8 +1577,18 @@
      the whole view on every action, so without it a half-filled invite
      form would empty itself the moment anything else on the page moved.
      ================================================================ */
+  /* Ruby, 2026-08-27: "categorize all of this as residencies. now do the same
+     for all of the singular events. this tool will be helpful for deciding who
+     to invite back based on performance."
+
+     So the list splits on how somebody works with the venue, not on what they
+     are: a RESIDENCY is two or more nights and the decision is "hand them a
+     login"; a SINGULAR EVENT is one night and the decision is "have them back?"
+     Both are answered by the same rating, which is why they are two scopes of
+     one table rather than two screens. */
   const PAY_SCOPES = [
-    ["invite", "To invite"],
+    ["invite", "Residencies"],
+    ["oneoff", "Singular events"],
     ["sent",   "Invited"],
     ["profile","Has a profile"],
     ["other",  "Not DJs"],
@@ -1629,7 +1644,11 @@
         phone:     p.phone || "",
         instagram: p.instagram || "",
         payableTo: p.payableTo || p.name || "",
-        residency: p.residency || "",
+        /* A confident calendar match pre-fills the residency, because it is
+           almost always right and she can change it in one tap. An unsure one
+           does not: a wrong party sitting in the field would go out attached
+           to a real profile if she pressed straight through. */
+        residency: p.residency || ((p.parties && p.parties.top && p.parties.top.sure) ? p.parties.top.title : ""),
         type:      (p.kind === "host" ? "host" : "dj"),
         note:      p.note || "",
         kind:      p.kind || "",
@@ -1652,9 +1671,12 @@
     if(scope === "profile") return rows.filter(p=>p.accountId);
     if(scope === "sent")    return rows.filter(p=>!p.accountId && p.invitedAt);
     if(scope === "other")   return rows.filter(p=>!p.accountId && (p.skipped || ["staff","vendor","self"].includes(p.kind)));
-    /* "To invite" is the server's own shortlist, minus anyone already
-       sent one — those move to Invited rather than sitting here looking
-       undone. */
+    /* One night on a percentage. Ordered by how that night did, best first,
+       because the whole question here is whether it earned a second one. */
+    if(scope === "oneoff") return rows.filter(p=>p.tier==="oneoff" && !p.accountId && !p.invitedAt)
+      .slice().sort((a,b)=>((b.stats.perf||{}).vsGood||0)-((a.stats.perf||{}).vsGood||0));
+    /* Residencies: the server's own shortlist, minus anyone already sent an
+       invite — those move to Invited rather than sitting here looking undone. */
     return rows.filter(p=>payCandidate(p) && !p.invitedAt);
   }
   /* Mirrors payee_is_invite_candidate() server-side. Kept in step by
@@ -1675,6 +1697,20 @@
   /* Ruby's own words for the thresholds: 1.5k / 3.5k are the BAR MINIMUM,
      2k / 5k are a GOOD NIGHT, and which pair applies comes off the day of the
      week the night fell on. Colour is never the only signal. */
+  /* What the calendar says they were paid for. A residency she has already
+     assigned wins over a guess; otherwise the party their nights land on,
+     with the hit count so a thin match reads as thin. */
+  function payPartyLine(p){
+    if(p.residency) return `<b>${esc(p.residency)}</b>`;
+    const m = p.parties || {};
+    const t = m.top;
+    if(!t){
+      if(m.offsite) return `${m.offsite} night${m.offsite===1?"":"s"} off site &mdash; no party name to find`;
+      return `not on the calendar`;
+    }
+    return `${esc(t.title)} <span style="opacity:.7">${t.hits}/${t.of}${t.sure?"":" &middot; unsure"}</span>`;
+  }
+
   const PAY_BAND_WORD = {good:"Good night", fair:"Bar minimum", under:"Under minimum"};
   function payBandChip(f){
     if(!f || !f.rated) return `<span class="pay-band pay-band--none">No sales on file</span>`;
@@ -1736,7 +1772,7 @@
     const last = st.last ? payDay(st.last) : "—";
     return `<div class="pay-rw ${open?"pay-rw--open":""}">
       <div class="pay-nm">${esc(p.name)}
-        <small>${payStatusChip(p)}${p.residency?` &middot; ${esc(p.residency)}`:""}${
+        <small>${payStatusChip(p)} &middot; ${payPartyLine(p)}${
           p.account && p.account.name && p.account.name !== p.name ? ` &middot; profile: ${esc(p.account.name)}` : ""}</small></div>
       <div><span class="pay-cell__k">Nights</span><span class="pay-num">${st.nights||"—"}</span></div>
       <div class="pay-r"><span class="pay-cell__k">Paid</span><span class="pay-num">${usdShort(st.total)}</span></div>
@@ -1783,6 +1819,32 @@
     </div>`;
   }
 
+  /* Which party the calendar says they were paid for. Every candidate is
+     listed with its hit count rather than just the winner, because a night
+     with two parties on it produces a real second answer and she is the one
+     who knows which. "Use this" only fills the residency field. */
+  function payPartyBlock(p){
+    const m = p.parties || {};
+    if(!m.nights){
+      return m.offsite
+        ? `<p class="pay-note" style="margin:0 0 14px">Their ${m.offsite} night${m.offsite===1?"":"s"} ${
+            m.offsite===1?"was":"were"} at The Patio or Fabrika. Those calendars publish as free/busy, so every event
+            on them reads &ldquo;Busy&rdquo; and there is no party name to match.</p>`
+        : "";
+    }
+    if(!m.parties.length) return `<p class="pay-note" style="margin:0 0 14px">None of their nights matches an event on the Margolis calendar.</p>`;
+    return `<p class="mgr-label" style="margin:0 0 4px">What the calendar says they ran</p>
+      <p class="pay-note" style="margin:0 0 8px">Matched on the dates you paid them. About one Margolis night in four has
+        two parties on it, so a second answer here is normal.</p>
+      <div class="pay-sug" style="margin-bottom:14px">
+        ${m.parties.map(c=>`<div class="pay-sug__row">
+          <span><b>${esc(c.title)}</b></span>
+          <span class="pay-sug__why">${c.hits} of their ${m.nights} night${m.nights===1?"":"s"} &middot; ${c.editions} edition${c.editions===1?"":"s"} on the calendar</span>
+          <button class="mgr-btn mgr-btn--ghost pay-sug__use" data-act="payparty" data-key="${esc(p.key)}" data-title="${esc(c.title)}">Use this</button>
+        </div>`).join("")}
+      </div>`;
+  }
+
   function payPanelHtml(p){
     const d = payDraft(p);
     const org = payeeIsOrg(p);
@@ -1797,14 +1859,14 @@
         <div class="mgr-meta" style="margin-top:6px">${p.stats.checks} check${p.stats.checks===1?"":"s"} worth ${usd(p.stats.total)}
           ${p.account.claimed ? "are" : "will be"} on their dashboard.${
           p.account.w9 ? " W9 on file." : " <strong>No W9 &mdash; hold payouts.</strong>"}</div>
-        ` + payStatsBlock(p) + `
+        ` + payStatsBlock(p) + payPartyBlock(p) + `
         <div class="mgr-acts">
           <button class="mgr-btn mgr-btn--ghost" data-act="payunlink" data-key="${esc(p.key)}">Unlink this history</button>
         </div>
         <p class="pay-note">Unlinking takes the imported checks back off their dashboard. The checks themselves,
           and anything logged against a real event, are untouched.</p>`;
     } else {
-      h += payStatsBlock(p) + paySuggestBlock(p);
+      h += payStatsBlock(p) + payPartyBlock(p) + paySuggestBlock(p);
       h += `<p class="mgr-label">Set up their login</p>`;
       if(org) h += `<p class="pay-note" style="margin-bottom:10px"><strong>${esc(p.name)}</strong> is who the check is made out to.
         The profile belongs to the person behind it &mdash; their name and email below; the business stays on the account as the payout name.</p>`;
@@ -2156,8 +2218,14 @@
 
     const rows = payScoped();
     if(M.payeeScope === "invite"){
-      h += `<p class="pay-note" style="margin:0 0 12px">Two or more nights, paid on a percentage &mdash; the people who work with you regularly
-        and have no login yet. Flat-rate payees, one-offs and anyone already invited are under the other tabs.</p>`;
+      h += `<p class="pay-note" style="margin:0 0 12px"><b>Two or more nights on a percentage</b> &mdash; a residency, and
+        somebody to hand a login to. The party is read off the calendar for the dates you paid them, so most of these
+        already know which night they run. Ordered by nights worked.</p>`;
+    }
+    if(M.payeeScope === "oneoff"){
+      h += `<p class="pay-note" style="margin:0 0 12px"><b>One night on a percentage</b> &mdash; the invite-back list,
+        <b>ordered by how that night did</b>. The rating is that single night, so read it as one result and not a record:
+        a Tuesday at ${usdShort(1900)} is a good night and a Saturday at ${usdShort(3600)} is not.</p>`;
     }
     if(!rows.length){
       h += `<div class="mgr-empty">${M.payeeSearch ? "Nothing matches that." :
@@ -2647,6 +2715,13 @@
           await loadPayees();
           render();
         }catch(e){ free("Save"); if(e!=="auth"){ M.payeeMsg[key] = typeof e==="string"?e:"Couldn't save that."; render(); } }
+        return;
+      }
+
+      if(act === "payparty"){
+        const p = (M.payees||[]).find(x=>x.key===btn.dataset.key); if(!p) return;
+        payDraft(p).residency = btn.dataset.title;
+        render();
         return;
       }
 
