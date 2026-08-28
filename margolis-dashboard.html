@@ -2394,8 +2394,8 @@
     h += rows.map(r => {
       const open = M.resOpen === r.key;
       const when = r.active
-        ? `Next ${esc(fmtDate(r.upcoming[0]))}${r.upcoming.length>1?` &middot; ${r.upcoming.length} to come`:""}`
-        : `Ran until ${esc(fmtDate(r.last))}`;
+        ? `Next ${esc(fmtDay(r.upcoming[0]))}${r.upcoming.length>1?` &middot; ${r.upcoming.length} to come`:""}`
+        : `Ran until ${esc(fmtDay(r.last))}`;
       return `<div class="mgr-card${r.hidden?" res-hidden":""}">
         <div class="mgr-chips">
           <span class="mgr-chip mgr-chip--dark">${esc(r.cadence)}</span>
