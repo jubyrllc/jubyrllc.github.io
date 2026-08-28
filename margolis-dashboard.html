@@ -1170,17 +1170,26 @@
         seen[k].days.push(t.label);
       });
       const clause = c => `${fmt(c.min)} minimum, ${fmt(c.good)} a good night`;
-      if(list.length === 1) return `<strong>${esc(v)}</strong> &mdash; ${clause(list[0])}`;
-      return `<strong>${esc(v)}</strong> &mdash; ` + list.map(c => `${esc(c.days.join(" and "))} ${clause(c)}`).join("; ");
+      if(list.length === 1) return `<strong>${esc(v)}</strong>: ${clause(list[0])}`;
+      return `<strong>${esc(v)}</strong>: ` + list.map(c => `${esc(c.days.join(" and "))} ${clause(c)}`).join("; ");
     });
     return "Every night is measured against the room and the day it fell on. " + parts.join(". ") + ".";
   }
 
+  /* Same words as the manager side's. Two copies because the two halves of
+     this page are separate IIFEs sharing no scope; change both. */
+  const PAY_CAVEAT = `These numbers are put together from the calendar and the register after the fact,
+    not recorded night by night as it happened, so read them as close rather than exact. A night is
+    measured against the times on the calendar, so if something went down as 9 PM and the room did not
+    really fill until 10, part of the evening can land in the wrong column. And before 2026 some payouts
+    included door money as well as the bar. Everything here is bar sales only, worked out as carefully
+    as we can.`;
+
   const BAND_WORD = {good:"Good night", fair:"Bar minimum", under:"Under minimum"};
   function bandChip(r){
-    if(!r.band) return `<span class="djd-band djd-band--none" title="No bar sales figure was recorded for this one.">Not recorded</span>`;
+    if(!r.band) return `<span class="djd-band djd-band--none" title="No register figure for this night.">Not rated</span>`;
     const t = r.target;
-    const tip = t ? `${t.day} \u2014 bar minimum ${payWhole(t.min)}, a good night is ${payWhole(t.good)}` : "";
+    const tip = t ? `${t.venue} ${t.day}: bar minimum ${payWhole(t.min)}, a good night is ${payWhole(t.good)}` : "";
     return `<span class="djd-band djd-band--${esc(r.band)}" title="${esc(tip)}">${BAND_WORD[r.band]}</span>`;
   }
   /* fmtDay() drops the year, which is fine for a night three weeks out
@@ -1190,6 +1199,9 @@
     catch(e){ return d; }
   }
   async function renderPayHistory(){
+    /* Their own record: the nights, what the bar took, and whether each one
+       cleared. Ruby, 2026-08-27: no payout information anywhere, and a note
+       saying plainly how exact these figures are. */
     const el = document.getElementById("payHistory");
     if(!el) return;
     let h;
@@ -1197,49 +1209,39 @@
     catch(e){ el.innerHTML = ""; return; }
     const rows = (h && h.rows) || [];
     if(!rows.length){ el.innerHTML = ""; return; }
-    const legacy = rows.some(r=>r.legacy);
     const f = h.perf || {};
-    /* The three numbers Ruby asked for, above the rows rather than under them:
-       this panel answers "how am I doing" before it answers "what was I paid
-       on the 17th". */
     const scores = f.rated ? `<div class="djd-scores">
+        <div class="djd-score"><div class="djd-score__n">${f.events}</div>
+          <div class="djd-score__k">Nights</div></div>
         <div class="djd-score"><div class="djd-score__n">${payWhole(f.avgNet)}</div>
           <div class="djd-score__k">Average bar sales</div></div>
-        <div class="djd-score"><div class="djd-score__n">${payWhole(f.avgCheck)}</div>
-          <div class="djd-score__k">Average check</div></div>
         <div class="djd-score djd-score--${esc(f.band||"none")}"><div class="djd-score__n">${Math.round((f.vsGood||0)*100)}%</div>
           <div class="djd-score__k">Of a good night</div></div>
       </div>
       <div class="djd-tally">
-        ${f.bands.good  ? `<span class="djd-band djd-band--good">${f.bands.good} good night${f.bands.good===1?"":"s"}</span>` : ``}
-        ${f.bands.fair  ? `<span class="djd-band djd-band--fair">${f.bands.fair} over the minimum</span>` : ``}
-        ${f.bands.under ? `<span class="djd-band djd-band--under">${f.bands.under} under the minimum</span>` : ``}
-        ${f.unrated     ? `<span class="djd-band djd-band--none">${f.unrated} with no sales figure</span>` : ``}
+        ${f.cleared ? `<span class="djd-band djd-band--good">${f.cleared} cleared the minimum</span>` : ``}
+        ${f.missed  ? `<span class="djd-band djd-band--under">${f.missed} did not</span>` : ``}
+        ${f.unrated ? `<span class="djd-band djd-band--none">${f.unrated} with no figure</span>` : ``}
       </div>
       <p class="djd-note" style="margin:0 0 16px">${payTargetSentence(f.targets, payWhole)}</p>` : ``;
     el.innerHTML = `<details class="djd-prof" style="margin-top:18px">
-      <summary>Your payment history
-        <span class="djd-pill">${rows.length} payment${rows.length===1?"":"s"}${
-          h.nights ? ` &middot; ${h.nights} night${h.nights===1?"":"s"}` : ``} &middot; ${payMoney(h.total)}</span></summary>
+      <summary>Your nights${h.party?` at ${esc(h.party)}`:``}
+        <span class="djd-pill">${rows.length} night${rows.length===1?"":"s"}${
+          f.avgNet?` &middot; ${payWhole(f.avgNet)} average bar`:``}</span></summary>
       <div class="djd-prof__body">
         ${scores}
         <div class="djd-paywrap">
         <table class="djd-pay">
-          <thead><tr><th>Date</th><th>Where</th><th class="r">Net bar sales</th><th>Rate</th><th class="r">Paid</th><th>How the night did</th><th>Check</th></tr></thead>
+          <thead><tr><th>Date</th><th>Where</th><th class="r">Bar sales</th><th>How the night did</th></tr></thead>
           <tbody>${rows.map(r=>`<tr>
             <td>${r.date ? esc(payDay(r.date)) : "&mdash;"}</td>
-            <td>${esc(r.venue||"Margolis")}${r.eventName?` &middot; ${esc(r.eventName)}`:""}</td>
-            <td class="r">${r.netSales ? payMoney(r.netSales) : "&mdash;"}${r.netDerived?`<span title="Not written on the sheet — worked back from the percentage and the check.">*</span>`:""}</td>
-            <td>${r.percent ? esc(r.percent)+"%" : "flat"}</td>
-            <td class="r"><strong>${payMoney(r.totalPay)}</strong></td>
+            <td>${esc(r.venue||"Margolis")}${(r.onCalendar||[]).length?` &middot; ${esc(r.onCalendar[0])}`:""}</td>
+            <td class="r">${r.net ? payMoney(r.net) : "&mdash;"}</td>
             <td>${bandChip(r)}</td>
-            <td>${r.checkNumber ? "#"+esc(r.checkNumber) : (r.paid ? "paid" : "pending")}</td>
           </tr>`).join("")}</tbody>
         </table>
         </div>
-        ${legacy ? `<p class="djd-note" style="margin-top:14px">Nights marked with a check number were paid before this
-          dashboard existed, and were added from Margolis&rsquo; own check records. If anything here looks wrong,
-          email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a> with the check number.</p>` : ``}
+        <p class="djd-note" style="margin-top:14px"><strong>About these numbers.</strong> ${PAY_CAVEAT}</p>
       </div></details>`;
   }
 
@@ -1311,8 +1313,8 @@
     /* Payees (2026-08-27). payeeOpen is the one row expanded; payeeMsg
        is per-row feedback, so a message about one person never appears
        under another. */
-    payees: null, payeeAccounts: [], residencies: [], payeeImport: null,
-    inviteCandidates: 0, payeeScope: "invite", payeeSearch: "",
+    payees: null, payeeAccounts: [], residencies: [], allParties: [], payeeImport: null,
+    inviteCandidates: 0, payeeScope: "invite", payeeSearch: "", payeeSort: "",
     payeeOpen: null, payeeMsg: {},
     /* Residencies (2026-08-27). resList/resPeople arrive from one call.
        resOpen is the single row expanded into its editor, resDirty the
@@ -1332,7 +1334,17 @@
   function clearErr(){ errEl.classList.remove("show"); }
 
   async function mapi(payload){
-    const r = await fetch(MGR_URL, {method:"POST", body: JSON.stringify(Object.assign({token: TOKEN}, payload))});
+    /* A fetch that never produced a response rejects with a TypeError,
+       which fell through every handler below and surfaced as the same
+       "Couldn't load that" as a server error. They need different
+       fixes, so they need different messages. */
+    let r;
+    try{
+      r = await fetch(MGR_URL, {method:"POST", body: JSON.stringify(Object.assign({token: TOKEN}, payload))});
+    }catch(netErr){
+      throw "Couldn't reach jubyr.tools at all — the request was blocked or the connection failed (" +
+            (netErr && netErr.message ? netErr.message : "no detail") + ").";
+    }
     if(r.status === 401){ localStorage.removeItem("margolis-dj-token"); location.href = "/margolis-login"; throw "auth"; }
     const out = await r.json().catch(()=>({}));
     /* Show the server's own message when it sends one. A bare
@@ -1621,6 +1633,7 @@
     ["oneoff", "Singular events"],
     ["sent",   "Invited"],
     ["profile","Has a profile"],
+    ["gaps",   "Needs info"],
     ["other",  "Not DJs"],
     ["all",    "Everyone"],
   ];
@@ -1642,6 +1655,7 @@
     M.payees = out.payees || [];
     M.payeeAccounts = out.accounts || [];
     M.residencies = out.residencies || [];
+    M.allParties = out.allParties || [];
     M.payeeImport = out.imported || null;
     M.inviteCandidates = out.inviteCandidates || 0;
   }
@@ -1687,6 +1701,44 @@
     }
     return pdraft[p.key];
   }
+  /* Ruby, 2026-08-27: "give me various ways to sort the calendar."
+
+     Each of these answers a different question she actually asks of this list,
+     which is why they are named after the question and not the column: who is
+     slipping, who is carrying the room, who has gone quiet, who is owed a
+     login. Blank keeps each scope's own order, which is already the right one
+     for that scope (residencies by nights worked, one-offs by rating). */
+  const PAY_SORTS = [
+    ["",         "This tab's order"],
+    ["rating",   "Best rating"],
+    ["worst",    "Worst rating"],
+    ["bar",      "Biggest average bar"],
+    ["total",    "Most bar taken overall"],
+    ["events",   "Most events"],
+    ["missed",   "Most nights under the minimum"],
+    ["cleared",  "Most nights cleared"],
+    ["recent",   "Worked most recently"],
+    ["stale",    "Longest since they worked"],
+    ["name",     "A to Z"],
+  ];
+  function paySortRows(rows){
+    const f = p => p.stats.perf || {};
+    const r = p => p.run || {};
+    const by = {
+      rating:  (a,b) => (f(b).vsGood||0) - (f(a).vsGood||0),
+      worst:   (a,b) => (f(a).vsGood||99) - (f(b).vsGood||99),
+      bar:     (a,b) => (f(b).avgNet||0) - (f(a).avgNet||0),
+      total:   (a,b) => (f(b).totalNet||0) - (f(a).totalNet||0),
+      events:  (a,b) => (f(b).events||0) - (f(a).events||0),
+      missed:  (a,b) => (f(b).missed||0) - (f(a).missed||0),
+      cleared: (a,b) => (f(b).cleared||0) - (f(a).cleared||0),
+      recent:  (a,b) => (b.stats.last||"").localeCompare(a.stats.last||""),
+      stale:   (a,b) => (a.stats.last||"9999").localeCompare(b.stats.last||"9999"),
+      name:    (a,b) => a.name.localeCompare(b.name),
+    }[M.payeeSort];
+    return by ? rows.slice().sort(by) : rows;
+  }
+
   function payScoped(){
     const q = (M.payeeSearch||"").trim().toLowerCase();
     let rows = (M.payees||[]).filter(p=>{
@@ -1697,17 +1749,24 @@
           || (p.account && (p.account.name||"").toLowerCase().includes(q));
     });
     const scope = M.payeeScope;
-    if(scope === "all") return rows;
-    if(scope === "profile") return rows.filter(p=>p.accountId);
-    if(scope === "sent")    return rows.filter(p=>!p.accountId && p.invitedAt);
-    if(scope === "other")   return rows.filter(p=>!p.accountId && (p.skipped || ["staff","vendor","self"].includes(p.kind)));
+    if(scope === "all") return paySortRows(rows);
+    if(scope === "profile") return paySortRows(rows.filter(p=>p.accountId));
+    if(scope === "sent")    return paySortRows(rows.filter(p=>!p.accountId && p.invitedAt));
+    if(scope === "other")   return paySortRows(rows.filter(p=>!p.accountId && (p.skipped || ["staff","vendor","self"].includes(p.kind))));
+    /* Anything still missing something you would need before inviting them:
+       no email, or no party against their nights. Ruby, 2026-08-27: "let me
+       edit these fields for the people with missing information." */
+    if(scope === "gaps") return paySortRows(rows.filter(p=>!p.skipped && payGaps(p).length));
     /* One night on a percentage. Ordered by how that night did, best first,
        because the whole question here is whether it earned a second one. */
-    if(scope === "oneoff") return rows.filter(p=>p.tier==="oneoff" && !p.accountId && !p.invitedAt)
-      .slice().sort((a,b)=>((b.stats.perf||{}).vsGood||0)-((a.stats.perf||{}).vsGood||0));
+    if(scope === "oneoff"){
+      const r = rows.filter(p=>p.tier==="oneoff" && !p.accountId && !p.invitedAt);
+      return M.payeeSort ? paySortRows(r)
+        : r.slice().sort((a,b)=>((b.stats.perf||{}).vsGood||0)-((a.stats.perf||{}).vsGood||0));
+    }
     /* Residencies: the server's own shortlist, minus anyone already sent an
        invite — those move to Invited rather than sitting here looking undone. */
-    return rows.filter(p=>payCandidate(p) && !p.invitedAt);
+    return paySortRows(rows.filter(p=>payCandidate(p) && !p.invitedAt));
   }
   /* Mirrors payee_is_invite_candidate() server-side. Kept in step by
      hand; if the rule changes, change both. */
@@ -1731,14 +1790,15 @@
      assigned wins over a guess; otherwise the party their nights land on,
      with the hit count so a thin match reads as thin. */
   function payPartyLine(p){
-    if(p.residency) return `<b>${esc(p.residency)}</b>`;
-    const m = p.parties || {};
-    const t = m.top;
-    if(!t){
-      if(m.offsite) return `${m.offsite} night${m.offsite===1?"":"s"} off site &mdash; no party name to find`;
-      return `not on the calendar`;
-    }
-    return `${esc(t.title)} <span style="opacity:.7">${t.hits}/${t.of}${t.sure?"":" &middot; unsure"}</span>`;
+    const m = p.parties || {}, t = m.top, r = p.run;
+    const name = p.residency ? `<b>${esc(p.residency)}</b>`
+      : t ? `${esc(t.title)}${t.sure?"":` <span style="opacity:.7">unsure</span>`}`
+      : m.offsite ? `${m.offsite} night${m.offsite===1?"":"s"} off site, no party name to find`
+      : `not on the calendar`;
+    if(!r) return name;
+    /* Ran vs paid, on the row, because it is the number that decides whether
+       one check means a one-off or a night that kept missing the minimum. */
+    return `${name} <span style="opacity:.7">${r.ran} on the calendar</span>`;
   }
 
   /* Same sentence as the host dashboard's. Two copies because the two halves
@@ -1759,11 +1819,38 @@
         seen[k].days.push(t.label);
       });
       const clause = c => `${fmt(c.min)} minimum, ${fmt(c.good)} a good night`;
-      if(list.length === 1) return `<b>${esc(v)}</b> &mdash; ${clause(list[0])}`;
-      return `<b>${esc(v)}</b> &mdash; ` + list.map(c => `${esc(c.days.join(" and "))} ${clause(c)}`).join("; ");
+      if(list.length === 1) return `<b>${esc(v)}</b>: ${clause(list[0])}`;
+      return `<b>${esc(v)}</b>: ` + list.map(c => `${esc(c.days.join(" and "))} ${clause(c)}`).join("; ");
     });
     return parts.join(". ") + ".";
   }
+
+  /* What is still blank on somebody, in the order it matters. */
+  function payGaps(p){
+    const g = [];
+    if(!p.accountId && !p.email && !(p.suggest||[]).length) g.push("email");
+    if(!p.residency && !((p.parties||{}).top)) g.push("party");
+    if(payeeIsOrg(p) && !p.accountId && !(p.firstName||p.lastName)) g.push("who it is");
+    return g;
+  }
+  function payDayFull(d){
+    if(!d) return "";
+    try{ return new Date(d+"T12:00:00").toLocaleDateString("en-US",
+      {weekday:"short", month:"short", day:"numeric", year:"numeric"}); }
+    catch(e){ return d; }
+  }
+
+  /* Ruby, 2026-08-27, asked for this on the profile in as many words: the data
+     is aggregated after the fact, calendar times are not always when the room
+     really filled, and pre-2026 payouts sometimes included door money while
+     everything here is bar only. It appears on her side and on the DJ's, from
+     one string, so the two cannot drift. */
+  const PAY_CAVEAT = `These numbers are put together from the calendar and the register after the fact,
+    not recorded night by night as it happened, so read them as close rather than exact. A night is
+    measured against the times on the calendar, so if something went down as 9 PM and the room did not
+    really fill until 10, part of the evening can land in the wrong column. And before 2026 some payouts
+    included door money as well as the bar. Everything here is bar sales only, worked out as carefully
+    as we can.`;
 
   const PAY_BAND_WORD = {good:"Good night", fair:"Bar minimum", under:"Under minimum"};
   function payBandChip(f){
@@ -1772,17 +1859,7 @@
       Math.round((f.vsGood||0)*100)}% of a good night across ${f.rated} night${f.rated===1?"":"s"}">${
       PAY_BAND_WORD[f.band]} &middot; ${Math.round((f.vsGood||0)*100)}%</span>`;
   }
-  function payCheckBand(c){
-    if(!c.band) return `<span class="pay-band pay-band--none">Not recorded</span>`;
-    const t = c.target;
-    return `<span class="pay-band pay-band--${esc(c.band)}" title="${t?esc(t.day+" — minimum "+usdShort(t.min)+", good night "+usdShort(t.good)):""}">${PAY_BAND_WORD[c.band]}</span>`;
-  }
 
-  function payRate(p){
-    const ps = p.stats.percents || [];
-    if(!ps.length) return "flat";
-    return ps.length === 1 ? ps[0]+"%" : ps[0]+"–"+ps[ps.length-1]+"%";
-  }
   function payStatusChip(p){
     if(p.account){
       return p.account.claimed
@@ -1808,12 +1885,13 @@
       </div>`;
     }
     const all = M.payees || [];
-    const paid = all.reduce((a,p)=>a+(p.stats.total||0),0);
+    const bar = all.reduce((a,p)=>a+((p.stats.perf||{}).totalNet||0),0);
+    const evs = all.reduce((a,p)=>a+((p.stats.perf||{}).events||0),0);
     const withProfile = all.filter(p=>p.accountId).length;
     const signedIn = all.filter(p=>p.account && p.account.claimed).length;
     h += `<div class="pay-sum"><div class="pay-sum__grid">
         <div><div class="pay-sum__n">${all.length}</div><div class="mgr-meta">people paid</div></div>
-        <div><div class="pay-sum__n">${usdShort(paid)}</div><div class="mgr-meta">paid out on file</div></div>
+        <div><div class="pay-sum__n">${usdShort(bar)}</div><div class="mgr-meta">bar across ${evs} events</div></div>
         <div><div class="pay-sum__n">${withProfile}</div><div class="mgr-meta">have a profile &middot; ${signedIn} signed in</div></div>
         <div><div class="pay-sum__n">${M.inviteCandidates||0}</div><div class="mgr-meta">still to invite</div></div>
       </div></div>`;
@@ -1826,11 +1904,12 @@
     const last = st.last ? payDay(st.last) : "—";
     return `<div class="pay-rw ${open?"pay-rw--open":""}">
       <div class="pay-nm">${esc(p.name)}
-        <small>${payStatusChip(p)} &middot; ${payPartyLine(p)}${
+        <small>${payStatusChip(p)}${(()=>{const g=payGaps(p);return g.length?` &middot; <b style="color:#A03A2E">needs ${g.join(", ")}</b>`:"";})()} &middot; ${payPartyLine(p)}${
           p.account && p.account.name && p.account.name !== p.name ? ` &middot; profile: ${esc(p.account.name)}` : ""}</small></div>
-      <div><span class="pay-cell__k">Nights</span><span class="pay-num">${st.nights||"—"}</span></div>
-      <div class="pay-r"><span class="pay-cell__k">Paid</span><span class="pay-num">${usdShort(st.total)}</span></div>
-      <div><span class="pay-cell__k">Avg bar</span><span class="pay-num">${st.perf && st.perf.avgNet ? usdShort(st.perf.avgNet) : "—"}</span></div>
+      <div><span class="pay-cell__k">Events</span><span class="pay-num">${(st.perf&&st.perf.events)||"—"}</span></div>
+      <div class="pay-r"><span class="pay-cell__k">Avg bar</span><span class="pay-num">${st.perf && st.perf.avgNet ? usdShort(st.perf.avgNet) : "—"}</span></div>
+      <div><span class="pay-cell__k">Cleared</span><span class="pay-num">${
+        st.perf && st.perf.rated ? `${st.perf.cleared}<span style="opacity:.5"> / ${st.perf.rated}</span>` : "—"}</span></div>
       <div><span class="pay-cell__k">Rating</span>${payBandChip(st.perf)}</div>
       <div class="pay-act"><button class="pay-open ${!p.accountId && payCandidate(p) ? "pay-open--go":""}" data-act="payopen" data-key="${esc(p.key)}">${
         open ? "Close" : (p.accountId ? "Open" : "Set up login")}</button></div>
@@ -1842,15 +1921,16 @@
      somebody is doing. */
   function payStatsBlock(p){
     const f = p.stats.perf;
-    if(!f || !f.rated) return `<p class="pay-note" style="margin-bottom:14px">No night on file carries a bar sales figure, so there is nothing to rate yet.</p>`;
+    if(!f || !f.rated) return `<p class="pay-note" style="margin-bottom:14px">No night on file carries a bar figure, so there is nothing to rate yet.</p>`;
     return `<div class="pay-stats">
+        <div class="pay-stat"><div class="pay-stat__n">${f.events}</div><div class="pay-stat__k">Events</div></div>
         <div class="pay-stat"><div class="pay-stat__n">${usdShort(f.avgNet)}</div><div class="pay-stat__k">Avg bar sales</div></div>
-        <div class="pay-stat"><div class="pay-stat__n">${usdShort(f.avgCheck)}</div><div class="pay-stat__k">Avg check</div></div>
+        <div class="pay-stat"><div class="pay-stat__n" style="color:#3F6B21">${f.cleared}</div><div class="pay-stat__k">Cleared the minimum</div></div>
+        <div class="pay-stat"><div class="pay-stat__n" style="color:${f.missed?"#A03A2E":"inherit"}">${f.missed}</div><div class="pay-stat__k">Did not</div></div>
         <div class="pay-stat"><div class="pay-stat__n">${Math.round((f.vsGood||0)*100)}%</div><div class="pay-stat__k">Of a good night</div></div>
-        <div class="pay-stat"><div class="pay-stat__n" style="font-size:13px;padding-top:5px">${f.bands.good}&thinsp;/&thinsp;${f.bands.fair}&thinsp;/&thinsp;${f.bands.under}</div><div class="pay-stat__k">Good / min / under</div></div>
       </div>
-      <p class="pay-note" style="margin:-6px 0 16px">Rated over ${f.rated} night${f.rated===1?"":"s"}${
-        f.unrated ? `; ${f.unrated} check${f.unrated===1?"":"s"} carry no sales figure and are not scored` : ``}.
+      <p class="pay-note" style="margin:-6px 0 14px">${usdShort(f.totalNet)} across ${f.rated} rated night${f.rated===1?"":"s"}${
+        f.unrated ? `; ${f.unrated} with no register figure` : ``}.
         ${payTargetSentence(f.targets, usdShort)}</p>`;
   }
 
@@ -1877,6 +1957,93 @@
      listed with its hit count rather than just the winner, because a night
      with two parties on it produces a real second answer and she is the one
      who knows which. "Use this" only fills the residency field. */
+  /* Ruby, 2026-08-27: "let me add title to the party for the ones that say
+     not in calendar." So this is a TEXT field, not a picker: she can type a
+     party the calendar never carried and it is kept on the payee either way.
+     The datalist offers all 209 titles the calendar has ever had, one-offs
+     included, so the common case is still one tap.
+
+     A title the calendar does not know is stored as a label and nothing more.
+     It does NOT create a residency — hand-adding one of those is its own act
+     on the Residencies screen — and the note says so rather than letting her
+     think a party appeared somewhere. */
+  /* Ruby, 2026-08-27: "please provide the date for all events so i can look
+     for them." Every night they were paid for, newest first, with the day of
+     the week, the room, what the bar did, and what the calendar had on that
+     date. A night with nothing on the calendar says so plainly, because that
+     is the one she has to go and look up, and the date beside it is the whole
+     point of the row. */
+  /* Ruby, 2026-08-27: "tell me how many times they did their event vs how many
+     times they met the minimum so i can keep track of this and use it as
+     guidance based on who might try to return next year."
+
+     The split between the two reasons a night produced no check is the whole
+     value here, so it is stated rather than left to be inferred: nobody paid
+     means the night ran and did not clear the bar, somebody else paid means it
+     was not their night. */
+  function payRunBlock(p){
+    /* How much of their party they were on record for. Kept because it still
+       answers "is this their night or did they guest", which is a different
+       question from how the bar did. */
+    const r = p.run;
+    if(!r) return "";
+    const bits = [];
+    if(r.others.length) bits.push(`${r.others.map(o=>`<b>${esc(o.name)}</b> is on record for ${o.nights}`).join(", ")} of the others.`);
+    if(r.elsewhere) bits.push(`${r.elsewhere} of their night${r.elsewhere===1?" is":"s are"} not this party at all.`);
+    const span = [];
+    if(r.before) span.push(`${r.before} before`);
+    if(r.after) span.push(`${r.after} after`);
+    if(span.length) bits.push(`It also ran ${span.join(" and ")} the period covered here.`);
+    if(!bits.length) return "";
+    return `<p class="pay-note" style="margin:0 0 14px"><b>${esc(r.title)}</b> ran ${r.ran} time${r.ran===1?"":"s"} here and
+      they are on record for ${r.paid}. ${bits.join(" ")}</p>`;
+  }
+
+  function payNightsBlock(p){
+    /* Every event, newest first: the date, the room, what the bar took and
+       whether that cleared the minimum. No money paid anywhere, per Ruby
+       2026-08-27. A night they are personally on record for is marked, so a
+       guest slot does not read as an edition of their own party. */
+    const ev = p.events || [];
+    if(!ev.length) return "";
+    const rows = ev.map(e=>`<div class="pay-sug__row">
+      <span><b>${esc(payDayFull(e.date))}</b>${e.venue && e.venue!=="Margolis"?` <span class="pay-sug__why">${esc(e.venue)}</span>`:""}${
+        e.dateEstimated?` <span class="pay-sug__why" title="No date on the original sheet; filed by check number.">approx</span>`:""}</span>
+      <span class="pay-sug__why">${
+        e.net ? usd(e.net) + (e.orders?` &middot; ${e.orders} orders`:"")
+        : (e.venue && e.venue!=="Margolis") ? "different register, no figure"
+        : "no register figure"}${
+        e.basis==="nightOfSeveral" ? " &middot; whole night, several events" : ""}</span>
+      <span style="margin-left:auto;display:flex;gap:10px;align-items:baseline">
+        ${e.band ? `<span class="pay-band pay-band--${esc(e.band)}" title="${
+          e.target?esc(e.target.venue+" "+e.target.day+": minimum "+usdShort(e.target.min)+", good night "+usdShort(e.target.good)):""}">${
+          PAY_BAND_WORD[e.band]}</span>` : `<span class="pay-band pay-band--none">Not rated</span>`}
+        <span class="pay-sug__why">${
+          (e.onCalendar||[]).length ? esc(e.onCalendar.join(" / "))
+          : (e.venue && e.venue!=="Margolis") ? "that calendar has no titles"
+          : "<b style=\"color:#A03A2E\">nothing on the calendar</b>"}${
+          e.onRecord && !e.onParty ? ` &middot; <b>they were on this one</b>` : ""}</span>
+      </span>
+    </div>`).join("");
+    const f = p.stats.perf || {};
+    return `<p class="mgr-label" style="margin:0 0 4px">Every event, and what the bar took</p>
+      <p class="pay-note" style="margin:0 0 8px">${ev.length} event${ev.length===1?"":"s"}: ${
+        f.cleared||0} cleared the minimum, ${f.missed||0} did not${
+        f.unrated?`, ${f.unrated} with no register figure`:``}.</p>
+      <div class="pay-sug" style="margin-bottom:14px">${rows}</div>`;
+  }
+
+  function payPartyField(p, d){
+    const known = (M.allParties||[]).some(x=>x.title === d.residency);
+    return `<div class="mgr-field"><label>Party they run</label>
+      <input type="text" list="payPartyList" data-pf="residency" data-key="${esc(p.key)}"
+        value="${esc(d.residency)}" placeholder="Type it, or pick one off the calendar" autocomplete="off">
+      <p class="pay-note">${
+        d.residency && !known
+          ? `<b>${esc(d.residency)}</b> is not on the calendar, so it is kept as a label here only. It will not appear on margolis.events/residencies until you add it on the Residencies screen.`
+          : `A party the calendar knows gets linked to their new profile, so margolis.events/residencies starts crediting them. One that already has a host is left alone and you will be told.`}</p></div>`;
+  }
+
   function payPartyBlock(p){
     const m = p.parties || {};
     if(!m.nights){
@@ -1910,25 +2077,34 @@
         <p class="mgr-val"><strong>${esc(p.account.name)}</strong> &middot; ${esc(p.account.type)}${
           p.account.claimed ? "" : " &middot; has not signed in yet"}</p>
         <div class="mgr-meta">${contactLinks(p.account.name, p.account.email, p.phone, p.instagram)}</div>
-        <div class="mgr-meta" style="margin-top:6px">${p.stats.checks} check${p.stats.checks===1?"":"s"} worth ${usd(p.stats.total)}
+        <div class="mgr-meta" style="margin-top:6px">${(p.stats.perf||{}).events||0} night${((p.stats.perf||{}).events||0)===1?"":"s"}
           ${p.account.claimed ? "are" : "will be"} on their dashboard.${
-          p.account.w9 ? " W9 on file." : " <strong>No W9 &mdash; hold payouts.</strong>"}</div>
-        ` + payStatsBlock(p) + payPartyBlock(p) + `
+          p.account.w9 ? " W9 on file." : " <strong>No W9 on file, so hold payouts.</strong>"}</div>
+        ` + payStatsBlock(p) + payRunBlock(p) + payNightsBlock(p) + payPartyBlock(p) + `
+        <p class="mgr-label" style="margin-top:18px">Details you keep on them</p>
+        <p class="pay-note" style="margin:0 0 10px">These are your own notes on the payee. They do not change the
+          profile itself, which is theirs to edit.</p>
+        <div class="mgr-row2">
+          <div class="mgr-field"><label>Mobile</label><input type="tel" inputmode="tel" data-pf="phone" data-key="${esc(p.key)}" value="${esc(payDraft(p).phone)}"></div>
+          <div class="mgr-field"><label>Instagram</label><input type="text" data-pf="instagram" data-key="${esc(p.key)}" value="${esc(payDraft(p).instagram)}"></div>
+        </div>
+        <div class="mgr-field"><label>Make checks out to</label><input type="text" data-pf="payableTo" data-key="${esc(p.key)}" value="${esc(payDraft(p).payableTo)}"></div>
         <div class="mgr-acts">
+          <button class="mgr-btn mgr-btn--ghost" data-act="paysave" data-key="${esc(p.key)}">Save</button>
           <button class="mgr-btn mgr-btn--ghost" data-act="payunlink" data-key="${esc(p.key)}">Unlink this history</button>
         </div>
         <p class="pay-note">Unlinking takes the imported checks back off their dashboard. The checks themselves,
           and anything logged against a real event, are untouched.</p>`;
     } else {
-      h += payStatsBlock(p) + payPartyBlock(p) + paySuggestBlock(p);
+      h += payStatsBlock(p) + payRunBlock(p) + payNightsBlock(p) + payPartyBlock(p) + paySuggestBlock(p);
       h += `<p class="mgr-label">Set up their login</p>`;
       if(org) h += `<p class="pay-note" style="margin-bottom:10px"><strong>${esc(p.name)}</strong> is who the check is made out to.
-        The profile belongs to the person behind it &mdash; their name and email below; the business stays on the account as the payout name.</p>`;
+        The profile belongs to the person behind it. Their name and email go below; the business stays on the account as the payout name.</p>`;
       h += `<div class="mgr-row2">
           <div class="mgr-field"><label>First name</label><input type="text" data-pf="firstName" data-key="${esc(p.key)}" value="${esc(d.firstName)}" placeholder="${org?"the person, not the LLC":""}"></div>
           <div class="mgr-field"><label>Last name</label><input type="text" data-pf="lastName" data-key="${esc(p.key)}" value="${esc(d.lastName)}"></div>
         </div>
-        <div class="mgr-field"><label>Email &mdash; where the login goes</label><input type="email" inputmode="email" autocomplete="off" data-pf="email" data-key="${esc(p.key)}" value="${esc(d.email)}" placeholder="name@example.com"></div>
+        <div class="mgr-field"><label>Email, where the login goes</label><input type="email" inputmode="email" autocomplete="off" data-pf="email" data-key="${esc(p.key)}" value="${esc(d.email)}" placeholder="name@example.com"></div>
         <div class="mgr-row2">
           <div class="mgr-field"><label>Mobile</label><input type="tel" inputmode="tel" data-pf="phone" data-key="${esc(p.key)}" value="${esc(d.phone)}" placeholder="(215) 555 0100"></div>
           <div class="mgr-field"><label>Instagram</label><input type="text" data-pf="instagram" data-key="${esc(p.key)}" value="${esc(d.instagram)}" placeholder="handle"></div>
@@ -1940,28 +2116,20 @@
             <option value="host" ${d.type==="host"?"selected":""}>Event host</option>
           </select></div>
         </div>
-        <div class="mgr-field"><label>Residency they run</label>
-          <select data-pf="residency" data-key="${esc(p.key)}">
-            <option value="">Not assigned</option>
-            ${payResidencyOptions(d.residency)}
-          </select>
-          <p class="pay-note">Assigning it links the party to their new profile, so
-            margolis.events/residencies starts crediting them. A party that already has a host is
-            marked &mdash; that one has to be changed on the Residencies screen, where you can see
-            who is on it.</p></div>
+        ${payPartyField(p, d)}
         <div class="mgr-acts">
           <button class="mgr-btn" data-act="payinvite" data-key="${esc(p.key)}">Create profile &amp; send their login</button>
           <button class="mgr-btn mgr-btn--ghost" data-act="paysave" data-key="${esc(p.key)}">Save without sending</button>
         </div>
         <p class="pay-note">Sending mails them a temporary password and the walkthrough, exactly like every other invite.
-          ${p.stats.checks} check${p.stats.checks===1?"":"s"} worth ${usd(p.stats.total)} bind to that profile as it is made.</p>`;
+          ${(p.stats.perf||{}).events||0} night${((p.stats.perf||{}).events||0)===1?"":"s"} bind to that profile as it is made.</p>`;
 
       if((M.payeeAccounts||[]).length){
         h += `<p class="mgr-label" style="margin-top:20px">Or point this at a profile that already exists</p>
           <div class="mgr-row2">
             <div class="mgr-field"><select data-pf="link" data-key="${esc(p.key)}">
               <option value="">Choose a profile…</option>
-              ${(M.payeeAccounts||[]).map(a=>`<option value="${esc(a.id)}" ${d.link===a.id?"selected":""}>${esc(a.name)} &mdash; ${esc(a.email)}</option>`).join("")}
+              ${(M.payeeAccounts||[]).map(a=>`<option value="${esc(a.id)}" ${d.link===a.id?"selected":""}>${esc(a.name)} &middot; ${esc(a.email)}</option>`).join("")}
             </select></div>
             <div class="mgr-field" style="flex:0 0 auto"><label>&nbsp;</label>
               <button class="mgr-btn mgr-btn--ghost" data-act="paylink" data-key="${esc(p.key)}">Link</button></div>
@@ -1970,6 +2138,8 @@
       }
     }
 
+    h += `<p class="pay-note" style="margin-top:18px;padding:10px 12px;border:1px dashed var(--line);border-radius:8px">
+      <b>About these numbers.</b> ${PAY_CAVEAT}</p>`;
     h += `<p class="mgr-label" style="margin-top:22px">Filed as</p>
       <div class="mgr-row2">
         <div class="mgr-field"><select data-pf="kind" data-key="${esc(p.key)}">
@@ -1984,23 +2154,6 @@
       </div>
       ${msg ? `<p class="mgr-meta" style="margin-top:4px">${esc(msg)}</p>` : ""}`;
 
-    /* Their checks. The reason to trust any of the numbers above. */
-    const ch = p.checks || [];
-    if(ch.length){
-      h += `<details class="mgr-fold" data-fold="payhist-${esc(p.key)}">
-        <summary>Every check &mdash; ${ch.length} worth ${usd(p.stats.total)}</summary>
-        <div class="pay-scroll" style="padding:10px 0 16px">
-        <table class="pay-hist"><thead><tr><th>Date</th><th>Where</th><th class="pay-r">Net sales</th><th>Rate</th><th class="pay-r">Paid</th><th>How it did</th><th>Check #</th></tr></thead>
-        <tbody>${ch.map(c=>`<tr>
-          <td>${c.date?esc(payDay(c.date)):"—"}${c.dateEstimated?`<span title="No date on the original sheet — filed by check number.">~</span>`:""}</td>
-          <td>${esc(c.venue||"—")}${c.eventName?` &middot; ${esc(c.eventName)}`:""}</td>
-          <td class="pay-r">${c.netSales?usd(c.netSales):""}</td>
-          <td>${c.percent?esc(c.percent)+"%":"flat"}</td>
-          <td class="pay-r">${usd(c.totalPay)}</td>
-          <td>${payCheckBand(c)}</td>
-          <td>${esc(c.checkNumber||"")}</td>
-        </tr>`).join("")}</tbody></table></div></details>`;
-    }
     return h + `</div>`;
   }
 
@@ -2305,16 +2458,25 @@
     let h = payHeaderBlock();
     h += `<div class="pay-seg">${PAY_SCOPES.map(([k,l])=>
       `<button class="${M.payeeScope===k?"on":""}" data-act="payscope" data-scope="${k}">${l}<b>${payScopeCount(k)}</b></button>`).join("")}</div>`;
-    h += `<input class="mgr-search" id="paySearch" type="search" placeholder="Search a name, an email, a party…" value="${esc(M.payeeSearch||"")}">`;
+    h += `<div class="mgr-row2" style="align-items:flex-end">
+      <div class="mgr-field" style="margin-bottom:0"><input class="mgr-search" id="paySearch" type="search" style="margin-bottom:0" placeholder="Search a name, an email, a party…" value="${esc(M.payeeSearch||"")}"></div>
+      <div class="mgr-field" style="margin-bottom:0;flex:0 0 auto;min-width:190px"><label>Sort by</label>
+        <select id="paySort">${PAY_SORTS.map(([v,l])=>
+          `<option value="${v}" ${M.payeeSort===v?"selected":""}>${esc(l)}</option>`).join("")}</select></div>
+    </div>`;
+    /* Built once for the whole table rather than per open panel: 209 options
+       repeated down every row is a lot of DOM for one text field. */
+    h += `<datalist id="payPartyList">${(M.allParties||[]).map(x=>
+      `<option value="${esc(x.title)}">${x.editions} on the calendar</option>`).join("")}</datalist>`;
 
     const rows = payScoped();
     if(M.payeeScope === "invite"){
-      h += `<p class="pay-note" style="margin:0 0 12px"><b>Two or more nights on a percentage</b> &mdash; a residency, and
+      h += `<p class="pay-note" style="margin:0 0 12px"><b>Two or more nights on a percentage.</b> A residency, and
         somebody to hand a login to. The party is read off the calendar for the dates you paid them, so most of these
         already know which night they run. Ordered by nights worked.</p>`;
     }
     if(M.payeeScope === "oneoff"){
-      h += `<p class="pay-note" style="margin:0 0 12px"><b>One night on a percentage</b> &mdash; the invite-back list,
+      h += `<p class="pay-note" style="margin:0 0 12px"><b>One night on a percentage.</b> The invite-back list,
         <b>ordered by how that night did</b>. The rating is that single night, so read it as one result and not a record:
         a Tuesday at ${usdShort(1900)} inside is a good night and a Saturday at ${usdShort(3600)} is not.
         The Patio runs on its own targets.</p>`;
@@ -2326,7 +2488,7 @@
     }
 
     h += `<div class="pay-tbl">
-      <div class="pay-hd"><div>Payee</div><div>Nights</div><div class="pay-r">Paid</div><div>Avg bar</div><div>Rating</div><div></div></div>
+      <div class="pay-hd"><div>Payee</div><div>Events</div><div class="pay-r">Avg bar</div><div>Cleared</div><div>Rating</div><div></div></div>
       ${rows.map(payRowHtml).join("")}
     </div>`;
     h += `<div class="mgr-acts"><button class="mgr-btn mgr-btn--ghost" data-act="paycopy">Copy this table</button></div>
@@ -2337,11 +2499,14 @@
   /* Tab-separated, because that is what pastes into Excel and Sheets
      as columns without an import dialog. */
   function payTsv(rows){
-    const head = ["Payee","Nights","Checks","Total paid","Rate","Venues","First paid","Last paid","Status","Profile email","Residency"];
-    const line = p => [p.name, p.stats.nights, p.stats.checks, (p.stats.total||0).toFixed(2), payRate(p),
+    const head = ["Payee","Party","Events","Rated","Avg bar","Bar total","Cleared","Under","Rating","Venues","First","Last","Status","Email"];
+    const line = p => { const f = p.stats.perf||{}; return [p.name,
+      p.residency || ((p.parties||{}).top||{}).title || "",
+      f.events||0, f.rated||0, (f.avgNet||0).toFixed(2), (f.totalNet||0).toFixed(2),
+      f.cleared||0, f.missed||0, f.vsGood!=null ? Math.round(f.vsGood*100)+"%" : "",
       (p.stats.venues||[]).join(" / "), p.stats.first||"", p.stats.last||"",
       p.account ? (p.account.claimed ? "Signed in" : "Login sent") : (p.invitedAt ? "Invited" : "No profile"),
-      (p.account && p.account.email) || p.email || "", p.residency||""].join("\t");
+      (p.account && p.account.email) || p.email || ""].join("\t"); };
     return [head.join("\t")].concat(rows.map(line)).join("\n");
   }
 
@@ -2856,7 +3021,7 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
         const accountId = payDraft(p).link;
         if(!accountId){ M.payeeMsg[key] = "Choose a profile first."; render(); return; }
         const a = (M.payeeAccounts||[]).find(x=>x.id===accountId);
-        if(!confirm(`Give ${a?a.name:"that profile"} the ${p.stats.checks} check${p.stats.checks===1?"":"s"} written to ${p.name}?\n\nThey will see all of it on their dashboard. You can unlink it again.`)) return;
+        if(!confirm(`Give ${a?a.name:"that profile"} the ${(p.stats.perf||{}).events||0} night${((p.stats.perf||{}).events||0)===1?"":"s"} recorded against ${p.name}?\n\nThey will see all of it on their dashboard. You can unlink it again.`)) return;
         busy("Linking…");
         try{
           await mapi({action:"payeeLink", key, accountId});
@@ -2887,7 +3052,7 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
           M.payeeMsg[key] = "A first name, a last name and an email — that is everything the login needs.";
           render(); return;
         }
-        if(!confirm(`Create a profile for ${d.firstName} ${d.lastName} and email the login to ${d.email}?\n\n${p.stats.checks} check${p.stats.checks===1?"":"s"} worth ${usd(p.stats.total)} will be waiting on their dashboard.`)) return;
+        if(!confirm(`Create a profile for ${d.firstName} ${d.lastName} and email the login to ${d.email}?\n\n${(p.stats.perf||{}).events||0} night${((p.stats.perf||{}).events||0)===1?"":"s"} will be waiting on their dashboard.`)) return;
         busy("Creating…");
         try{
           const out = await mapi({action:"payeeInvite", key, firstName:d.firstName, lastName:d.lastName,
@@ -2969,6 +3134,7 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
   view.addEventListener("input", (ev) => {
     if(ev.target.id === "mgrSearch"){ M.search = ev.target.value; render(); return; }
     if(ev.target.id === "paySearch"){ M.payeeSearch = ev.target.value; render(); return; }
+    if(ev.target.id === "paySort"){ M.payeeSort = ev.target.value; render(); return; }
     /* Every field in a payee panel writes straight into its draft, so
        an unfinished invite form survives the next full re-render
        (which is every action on this page). */
@@ -2980,6 +3146,7 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
   });
   /* <select> fires change, not input, in older Safari. */
   view.addEventListener("change", (ev) => {
+    if(ev.target.id === "paySort"){ M.payeeSort = ev.target.value; render(); return; }
     const f = ev.target.dataset && ev.target.dataset.pf;
     if(!f) return;
     const p = (M.payees||[]).find(x=>x.key===ev.target.dataset.key);
