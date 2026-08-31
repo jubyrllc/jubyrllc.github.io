@@ -386,6 +386,19 @@
   const AUTH_URL = "https://jubyr.tools/margolis-dj-auth.php";
   const DASH_URL = "https://jubyr.tools/margolis-dj-dashboard.php";
   const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  /* 24-hour clock -> the way people say it. Mirrors mgl_time12() in
+     margolis-email-lib.php and t12() in the jubyr.tools pages. Display
+     only: the stored value stays the 24-hour HH:MM that
+     <input type="time"> hands back and that the API validates. */
+  function t12(v){
+    const m = /^\s*(\d{1,2}):([0-5]\d)\s*$/.exec(String(v??""));
+    if(!m) return v;
+    const h = +m[1];
+    if(h > 23) return v;
+    const h12 = (h % 12) || 12;
+    return m[2] === "00" ? `${h12} ${h<12?"AM":"PM"}` : `${h12}:${m[2]} ${h<12?"AM":"PM"}`;
+  }
+
   const money = n => Number(n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 
   let TOKEN = localStorage.getItem("margolis-dj-token") || "";
@@ -1508,7 +1521,7 @@
     return `<div class="mgr-card">
       <div class="mgr-chips">
         <span class="mgr-chip mgr-chip--dark">${esc(r.venue||"Margolis (inside)")}</span>
-        ${r.startTime?`<span class="mgr-chip">${esc(r.startTime)}${r.endTime?`&ndash;${esc(r.endTime)}`:""}</span>`:""}
+        ${r.startTime?`<span class="mgr-chip">${esc(t12(r.startTime))}${r.endTime?`&ndash;${esc(t12(r.endTime))}`:""}</span>`:""}
       </div>
       <h3>${esc(r.eventName)}</h3>
       <div class="mgr-meta">${esc(r.accountName)} &middot; asked ${esc(fmtWhen(r.createdAt))}</div>
