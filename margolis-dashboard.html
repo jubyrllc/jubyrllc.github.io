@@ -42,6 +42,21 @@
   .evt__ok{border-left:3px solid var(--green);background:var(--green-tint,#F2F5E8);padding:10px 14px;margin:14px 0 0;font-size:13.5px;line-height:1.5}
   .evt__collapse{border:1px dashed var(--line);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
   .evt__collapse .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8A6400}
+  /* Door counts (2026-09-05). One block, rendered by DOOR in the script
+     below, dropped into a host's event card and Ruby's night card alike. */
+  .door{width:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
+  .door__chip{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:#EAF3E4;color:#3F6B21}
+  .door__chip--none{background:#F1F1EC;color:var(--muted)}
+  .door__chip--live{background:#FCF3DC;color:#8A6400}
+  .door__more{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:none;border:none;border-bottom:1px dashed var(--line);cursor:pointer;padding:0 0 2px}
+  .door__more:hover{color:var(--green);border-color:var(--green)}
+  .door__list{width:100%}
+  .door__list:empty{display:none}
+  .door__sect{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 0 2px}
+  .door__row{display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline;padding:7px 0;border-top:1px dashed var(--line);font-size:14px}
+  .door__meta{color:var(--muted);font-size:12.5px}
+  .door__party{width:100%;color:var(--muted);font-size:12.5px}
+  .door__note{color:var(--muted);font-size:12px;line-height:1.5;margin:10px 0 0}
   .arch{opacity:.75}
   .arch .evt__head{cursor:default}
   .djd-section{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin:30px 0 14px}
@@ -401,6 +416,75 @@
 
   const money = n => Number(n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 
+  /* ---------- who is booked for a night ----------
+     Ruby, 2026-09-05: "list amount of priority reservations and couches
+     for the night ... and have a way to click on each and see the names
+     of who booked", visible to everyone on the dashboard because the bar
+     preps against these numbers.
+
+     Deliberately ONE renderer shared by both halves of this page, unlike
+     PAY_CAVEAT below it. The chips are what a host, Ruby and whoever is
+     working the door all read, and the moment there are two copies of
+     this the two of them start disagreeing on a Friday night. It lives
+     out here at the top level for the same reason esc() and t12() do:
+     the two IIFEs share no scope but they do share this script.
+
+     `door` is the shape margolis_night_door() returns in
+     margolis-reservation-lib.php. Counts come down with the night;
+     `list` only arrives once somebody opens it. */
+  const DOOR = {
+    /* Nothing booked yet is worth saying out loud — an empty row reads
+       as "not loaded" otherwise, and on a quiet Tuesday it is the
+       answer. */
+    chips(d){
+      if(!d) return "";
+      const r = d.reserve || {}, c = d.couch || {};
+      const heads = (r.guests||0) + (c.guests||0);
+      if(!(r.parties||0) && !(c.parties||0)){
+        return `<span class="door__chip door__chip--none">Nothing booked yet</span>`;
+      }
+      const out = [];
+      if(r.parties) out.push(`<span class="door__chip">${r.guests} priority guest${r.guests===1?"":"s"} &middot; ${r.parties} reservation${r.parties===1?"":"s"}</span>`);
+      if(c.parties) out.push(`<span class="door__chip">${c.couches} of 5 couches &middot; ${c.guests} guest${c.guests===1?"":"s"}</span>`);
+      if(r.parties && c.parties) out.push(`<span class="door__chip door__chip--none">${heads} expected</span>`);
+      const inDoor = (r.checkedIn||0) + (c.checkedIn||0);
+      if(inDoor) out.push(`<span class="door__chip door__chip--live">${inDoor} checked in</span>`);
+      return out.join("");
+    },
+
+    any(d){ return !!d && (((d.reserve||{}).parties||0) + ((d.couch||{}).parties||0)) > 0; },
+
+    /* Names, party sizes and arrival windows. No emails or phone
+       numbers: those stay in Bookings and the Door Scanner, which is
+       also where a guest gets contacted from. */
+    list(d){
+      if(!d) return "";
+      const r = d.reserve || {}, c = d.couch || {};
+      let h = "";
+      if((r.list||[]).length){
+        h += `<div class="door__sect">Priority Reservations &middot; ${r.guests} guest${r.guests===1?"":"s"}</div>`;
+        h += r.list.map(g => `<div class="door__row">
+          <b>${esc(g.name)}</b>
+          <span class="door__meta">${g.guests} guest${g.guests===1?"":"s"}${g.tier?` &middot; ${esc(g.tier)}`:""}${g.comp?" &middot; Passport night":""}${g.member?" &middot; member":""}${g.checkedIn?` &middot; ${g.checkedIn} in`:""}</span>
+          ${(g.party||[]).length>1?`<span class="door__party">${g.party.map(esc).join(", ")}</span>`:""}
+        </div>`).join("");
+      }
+      if((c.list||[]).length){
+        h += `<div class="door__sect">Couches &middot; ${c.couches} of 5</div>`;
+        h += c.list.map(g => `<div class="door__row">
+          <b>${esc(g.name)}</b>
+          <span class="door__meta">${g.couches} couch${g.couches===1?"":"es"} &middot; ${g.guests} guest${g.guests===1?"":"s"}${g.eta?` &middot; arriving ${esc(g.eta)}`:""}${g.member?" &middot; member":""}${g.checkedIn?` &middot; ${g.checkedIn} in`:""}</span>
+          ${g.held?`<span class="door__party">Still at the payment screen &mdash; this one can still fall through.</span>`:""}
+        </div>`).join("");
+      }
+      /* Couches belong to the DATE, not the listing: five couches serve
+         whatever is on that night. Said here so nobody reads another
+         party's couch as their own booking. */
+      if((c.list||[]).length) h += `<p class="door__note">The five couches are the room's, not this event's &mdash; on a night with two things on, both share them.</p>`;
+      return h || `<div class="door__sect">Nothing booked for this night yet</div>`;
+    }
+  };
+
   let TOKEN = localStorage.getItem("margolis-dj-token") || "";
 
   /* ---------- arriving from margolis.events ----------
@@ -432,23 +516,45 @@
     // v2: nothing seeds as approved — everything a DJ submits sits in
     // "pending" until Ruby reviews it on the admin tile, and the demo
     // has to show exactly that.
-    if(s.events && s.eventsSeedV === 2) return s;
+    if(s.events && s.eventsSeedV === 3) return s;
     const d = n => { const t=new Date(); t.setDate(t.getDate()+n); return t.toISOString().slice(0,10); };
     const blank = (date,name) => ({date, eventName:name, lineup:{value:"",status:""}, flyerFile:{value:"",status:""}, ticketLink:{value:"",status:""}, rsvpFree:"", rsvpSold:"", partners:[], solo:false, fullyApproved:false});
     const submitted = blank(d(8), "Kingspy Rhythm Nation");
     submitted.lineup = {value:[{name:"Kingspy", instagram:"kingspy"},{name:"DJ Aura", instagram:"djaura"}], status:"pending"};
     submitted.flyerFile = {value:"flyer-demo.png", status:"pending"};
     submitted.ticketLink = {value:"https://posh.vip/e/demo", status:"pending"};
+    /* v3 (2026-09-05): the door counts, so the preview shows the block
+       hosts now see. Three shapes on purpose — a night filling up, a
+       night with only couches, and one with nothing on it yet. */
+    const doorNear = {
+      reserve:{parties:4, guests:9, sold:9, checkedIn:0, cap:20, left:11, list:[
+        {id:"d1", name:"Amara Reyes", guests:3, party:["Amara Reyes","Ken Osei","Lila Fritz"], tier:"Early Reservation", comp:false, member:false, checkedIn:0},
+        {id:"d2", name:"Dana Whitlock", guests:2, party:[], tier:"Early Reservation", comp:false, member:true, checkedIn:0},
+        {id:"d3", name:"Priya Raman", guests:2, party:[], tier:"Standard Reservation", comp:false, member:false, checkedIn:0},
+        {id:"d4", name:"Tomas Ilg", guests:2, party:[], tier:"Reservation", comp:true, member:false, checkedIn:0}]},
+      couch:{parties:2, couches:3, guests:14, checkedIn:0, left:2, list:[
+        {id:"d5", name:"Nia Park", couches:2, guests:9, eta:"10pm–11pm", held:false, member:false, checkedIn:0},
+        {id:"d6", name:"Sam Ortiz", couches:1, guests:5, eta:"11pm–12am", held:true, member:false, checkedIn:0}]}
+    };
+    const doorCouchOnly = {
+      reserve:{parties:0, guests:0, sold:0, checkedIn:0, cap:20, left:20, list:[]},
+      couch:{parties:1, couches:1, guests:6, checkedIn:0, left:4, list:[
+        {id:"d7", name:"Rae Mbeki", couches:1, guests:6, eta:"9pm–10pm", held:false, member:true, checkedIn:0}]}
+    };
+    const doorEmpty = {
+      reserve:{parties:0, guests:0, sold:0, checkedIn:0, cap:20, left:20, list:[]},
+      couch:{parties:0, couches:0, guests:0, checkedIn:0, left:5, list:[]}
+    };
     s.events = [
-      {date:d(8), eventName:"Kingspy Rhythm Nation", start:"9:00 PM", end:"2:00 AM", partnered:false, withNames:[], submission:submitted},
-      {date:d(15), eventName:"Kingspy Rhythm Nation", start:"9:00 PM", end:"2:00 AM", partnered:false, withNames:[], submission:null},
-      {date:d(22), eventName:"Kingspy Rhythm Nation", start:"9:00 PM", end:"2:00 AM", partnered:false, withNames:[], submission:null},
+      {date:d(8), eventName:"Kingspy Rhythm Nation", start:"9:00 PM", end:"2:00 AM", partnered:false, withNames:[], submission:submitted, door:doorNear},
+      {date:d(15), eventName:"Kingspy Rhythm Nation", start:"9:00 PM", end:"2:00 AM", partnered:false, withNames:[], submission:null, door:doorCouchOnly},
+      {date:d(22), eventName:"Kingspy Rhythm Nation", start:"9:00 PM", end:"2:00 AM", partnered:false, withNames:[], submission:null, door:doorEmpty},
     ];
     const past = blank("2026-07-04", "Kingspy Rhythm Nation");
     past.lineup = {value:[{name:"Kingspy", instagram:"kingspy"}], status:"pending"};
     past.fullyApproved = false;
     s.archive = [Object.assign(past, {withNames:[]})];
-    s.eventsSeedV = 2;
+    s.eventsSeedV = 3;
     return s;
   }
   async function demoApi(payload){
@@ -463,6 +569,11 @@
       demoSave(s); return {ok:true, account:s.account};
     }
     const demoPct = a => { const c=[!!(a.name&&a.type&&a.phone),!!a.hasFacePhoto,(a.genres||[]).length>0||(a.venues||[]).length>0,!!(a.payableTo&&a.zelle),!!a.agreementsSigned,!!a.hasW9]; a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100); };
+    if(payload.action==="nightGuests"){
+      const ev = s.events.find(e => e.date === payload.date);
+      if(!ev || !ev.door) throw "That is not one of your nights.";
+      return {ok:true, door: ev.door};
+    }
     if(payload.action==="saveW9"){ s.account.hasW9 = true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="savePhoto"){
       s.account.hasFacePhoto=true;
@@ -521,6 +632,8 @@
   let dreqDateRows = [""];
   const openCards = new Set();      // date|name keys that stay expanded across re-renders
   const activeTab = {};             // date|name -> tab key
+  const doorOpen = new Set();       // date|name keys whose guest list is showing
+  const doorData = {};              // date|name -> the night's guest lists, once fetched
   const openEditPart = new Set();   // "date|name|part" keys currently reopened for editing despite being under review
 
   const errEl = document.getElementById("djdErr");
@@ -771,6 +884,8 @@
         <h3>${esc(ev.eventName)}</h3>
         ${withLine}
         <div class="evt__chips">${chips}</div>
+        ${archived?"":`<div class="door" data-door-for="${esc(k)}">${DOOR.chips(ev.door)}${DOOR.any(ev.door)?`<button type="button" class="door__more" data-door="${esc(k)}" data-i="${i}">${doorOpen.has(k)?"Hide names":"See who booked"}</button>`:""}</div>
+        <div class="door__list" data-door-list="${esc(k)}">${doorOpen.has(k)?(doorData[k]?DOOR.list(doorData[k]):`<div class="door__sect">Loading&hellip;</div>`):""}</div>`}
         ${s.fullyApproved?`<div class="evt__ok" style="width:100%">All approved — the presale is off and guests go straight to your ticket link.</div>`:""}
         ${(s.payout||[]).map(p=> p.reason
           ? `<div class="evt__ok" style="width:100%">${p.netSales?`Net bar sales: $${esc(money(p.netSales))} · `:""}No check this time — ${esc(p.reason==="bar_minimum"?"bar minimum not met":p.reason==="no_agreement"?"no payout agreement":p.reason)}</div>`
@@ -991,7 +1106,10 @@
   function bind(){
     const c = document.getElementById("content");
     c.querySelectorAll("[data-toggle]").forEach(h=>h.addEventListener("click", e=>{
-      if(e.target.closest("button,a,input,textarea")) return;
+      /* .door__list lives in the head so the numbers show whether or not
+         the card is open; without it here, reading a guest name would
+         collapse the card under your finger. */
+      if(e.target.closest("button,a,input,textarea,.door__list")) return;
       const k = h.dataset.toggle;
       if(openCards.has(k)) openCards.delete(k); else openCards.add(k);
       render();
@@ -1001,6 +1119,13 @@
       const card = t.closest(".evt");
       card.querySelectorAll(".evt__tab").forEach(x=>x.classList.toggle("on", x===t));
       card.querySelectorAll(".evt__pane").forEach(p=>p.classList.toggle("on", p.dataset.pane===t.dataset.tab));
+    }));
+    c.querySelectorAll("[data-door]").forEach(b=>b.addEventListener("click", async ()=>{
+      const k = b.dataset.door;
+      if(doorOpen.has(k)){ doorOpen.delete(k); paintDoor(k); return; }
+      doorOpen.add(k);
+      paintDoor(k);
+      if(!doorData[k]) await loadDoor(EVENTS[+b.dataset.i]);
     }));
     c.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click", ()=>save(b)));
     c.querySelectorAll("[data-lu-rm]").forEach(b=>b.addEventListener("click", ()=>{
@@ -1258,6 +1383,81 @@
       </div></details>`;
   }
 
+  /* ---------- door counts, kept current ----------
+     Patched into the DOM rather than run through render(), which
+     rebuilds every card: a poll landing while somebody is halfway
+     through typing a lineup must not wipe the box they are typing in,
+     and re-rendering would also snap shut any list they have open. */
+  function doorEls(k){
+    const c = document.getElementById("content");
+    const find = (sel, prop) => Array.from(c.querySelectorAll(sel)).find(el => el.dataset[prop] === k);
+    return { box: find("[data-door-for]", "doorFor"), list: find("[data-door-list]", "doorList") };
+  }
+
+  function paintDoor(k){
+    const ev = EVENTS.find(e => keyOf(e) === k);
+    const { box, list } = doorEls(k);
+    if(box && ev){
+      const i = EVENTS.indexOf(ev);
+      box.innerHTML = DOOR.chips(ev.door) + (DOOR.any(ev.door)
+        ? `<button type="button" class="door__more" data-door="${esc(k)}" data-i="${i}">${doorOpen.has(k)?"Hide names":"See who booked"}</button>` : "");
+      const btn = box.querySelector("[data-door]");
+      if(btn) btn.addEventListener("click", async ()=>{
+        if(doorOpen.has(k)){ doorOpen.delete(k); paintDoor(k); return; }
+        doorOpen.add(k); paintDoor(k);
+        if(!doorData[k]) await loadDoor(ev);
+      });
+    }
+    if(list){
+      list.innerHTML = doorOpen.has(k)
+        ? (doorData[k] ? DOOR.list(doorData[k]) : `<div class="door__sect">Loading&hellip;</div>`)
+        : "";
+    }
+  }
+
+  async function loadDoor(ev){
+    if(!ev) return;
+    const k = keyOf(ev);
+    try{
+      const out = await api(DASH_URL, {action:"nightGuests", date:ev.date, eventName:ev.eventName});
+      doorData[k] = out.door;
+    }catch(e){
+      if(e === "auth") return;
+      doorData[k] = null;
+      doorOpen.delete(k);
+      showErr(typeof e === "string" ? e : "Couldn't load who's booked for that night.");
+    }
+    paintDoor(k);
+  }
+
+  /* Ruby asked for these to update themselves. Every 60 seconds while
+     the tab is actually being looked at, plus immediately on coming
+     back to it — a phone left face-down on the bar should not be
+     refetching all night, and the numbers that matter are the ones
+     somebody is reading right now. */
+  function startDoorPoll(){
+    let busy = false;
+    const tick = async () => {
+      if(busy || document.hidden || !TOKEN || !EVENTS.length) return;
+      busy = true;
+      try{
+        const out = await api(DASH_URL, {action:"events"});
+        (out.events || []).forEach(fresh => {
+          const ev = EVENTS.find(e => keyOf(e) === keyOf(fresh));
+          if(ev) ev.door = fresh.door;
+        });
+        EVENTS.forEach(ev => {
+          const k = keyOf(ev);
+          paintDoor(k);
+          if(doorOpen.has(k)) loadDoor(ev);
+        });
+      }catch(e){ /* a dropped poll is not worth an error banner */ }
+      busy = false;
+    };
+    setInterval(tick, 60000);
+    document.addEventListener("visibilitychange", () => { if(!document.hidden) tick(); });
+  }
+
   (async function init(){
     if(!TOKEN){ location.href = "/margolis-login"; return; }
     try{
@@ -1280,6 +1480,7 @@
       DATE_REQUESTS = out.dateRequests || [];
       if(EVENTS.length) openCards.add(keyOf(EVENTS[0]));
       render();
+      startDoorPoll();
       renderDateRequests();
       bindDreqForm();
       renderPayHistory();
@@ -1321,6 +1522,10 @@
     tab: "needs",
     accounts: null, submissions: null, requests: null, nights: null,
     subScope: "pending", dreqScope: "pending",
+    /* Door (2026-09-05). doorOpen is the set of nights whose guest list
+       is showing, keyed date|lowername exactly like the host half;
+       doorData is what came back for each. */
+    doorOpen: {}, doorData: {},
     search: "",
     inviteMsg: "",
     /* Payees (2026-08-27). payeeOpen is the one row expanded; payeeMsg
@@ -1477,6 +1682,7 @@
   /* ---------- nights ---------- */
   function nightCard(n){
     const late = n.overdue;
+    const dk = n.date + "|" + (n.eventName||"").toLowerCase();
     const parts = PARTS.map(([k,label]) => partBlock(n.submissionId, k, label, n[k])).join("");
     const rsvp = (n.rsvpFree !== "" || n.rsvpSold !== "")
       ? `<b>${esc(n.rsvpFree||"0")}</b> free RSVP &middot; <b>${esc(n.rsvpSold||"0")}</b> sold${n.rsvpUpdatedAt?` &middot; updated ${esc(fmtWhen(n.rsvpUpdatedAt))}`:""}`
@@ -1493,6 +1699,9 @@
       <div class="mgr-meta">${esc(fmtDay(n.date))} &middot; ${esc(n.hostName||"(no host on file)")}</div>
       <div class="mgr-meta">${contactLinks(n.hostName, n.hostEmail, n.hostPhone, n.hostInstagram) || "no contact details on file"}</div>
       ${parts}
+      <div class="mgr-part"><div class="mgr-part__head"><span class="mgr-label">At the door</span></div>
+        <div class="door" data-door-for="${esc(dk)}">${DOOR.chips(n.door)}${DOOR.any(n.door)?`<button type="button" class="door__more" data-act="door" data-key="${esc(dk)}" data-date="${esc(n.date)}" data-name="${esc(n.doorTitle || n.eventName)}">${M.doorOpen[dk]?"Hide names":"See who booked"}</button>`:""}</div>
+        <div class="door__list" data-door-list="${esc(dk)}">${M.doorOpen[dk]?(M.doorData[dk]?DOOR.list(M.doorData[dk]):`<div class="door__sect">Loading&hellip;</div>`):""}</div></div>
       <div class="mgr-part"><div class="mgr-part__head"><span class="mgr-label">RSVP counts</span></div>
         <p class="mgr-val">${rsvp}</p></div>
       ${n.missing.length ? `<div class="mgr-acts">
@@ -2704,6 +2913,65 @@
     render();
   }
 
+  /* ---------- door counts, kept current ----------
+     Patched in place rather than through render(), which rebuilds the
+     whole view: a poll landing mid-typing must not empty her search box
+     or close a list she is reading. Mirrors the host half above, which
+     is a separate IIFE — the renderer itself (DOOR) is genuinely shared,
+     this plumbing is not. */
+  function doorEls(k){
+    const find = (sel, prop) => Array.from(view.querySelectorAll(sel)).find(el => el.dataset[prop] === k);
+    return { box: find("[data-door-for]", "doorFor"), list: find("[data-door-list]", "doorList") };
+  }
+
+  function paintDoor(k){
+    const n = (M.nights || []).find(x => (x.date + "|" + (x.eventName||"").toLowerCase()) === k);
+    const { box, list } = doorEls(k);
+    if(box && n){
+      box.innerHTML = DOOR.chips(n.door) + (DOOR.any(n.door)
+        ? `<button type="button" class="door__more" data-act="door" data-key="${esc(k)}" data-date="${esc(n.date)}" data-name="${esc(n.doorTitle || n.eventName)}">${M.doorOpen[k]?"Hide names":"See who booked"}</button>` : "");
+    }
+    if(list){
+      list.innerHTML = M.doorOpen[k]
+        ? (M.doorData[k] ? DOOR.list(M.doorData[k]) : `<div class="door__sect">Loading&hellip;</div>`)
+        : "";
+    }
+  }
+
+  async function loadDoor(k, date, name){
+    try{
+      const out = await mapi({action:"nightGuests", date, eventName:name});
+      M.doorData[k] = out.door;
+    }catch(e){
+      if(e === "auth") return;
+      delete M.doorOpen[k];
+      showErr(typeof e === "string" ? e : "Couldn't load who's booked for that night.");
+    }
+    paintDoor(k);
+  }
+
+  /* Only while the Nights tab is the one on screen and the screen is
+     actually being looked at. Anything else is a phone in a pocket
+     refetching sixty nights all evening. */
+  function startDoorPoll(){
+    let busy = false;
+    const tick = async () => {
+      if(busy || document.hidden || M.tab !== "nights" || !(M.nights||[]).length) return;
+      busy = true;
+      try{
+        await loadNights();
+        (M.nights || []).forEach(n => {
+          const k = n.date + "|" + (n.eventName||"").toLowerCase();
+          paintDoor(k);
+          if(M.doorOpen[k]) loadDoor(k, n.date, n.doorTitle || n.eventName);
+        });
+      }catch(e){ /* a dropped poll is not worth an error banner */ }
+      busy = false;
+    };
+    setInterval(tick, 60000);
+    document.addEventListener("visibilitychange", () => { if(!document.hidden) tick(); });
+  }
+
   async function setTab(tab){
     M.tab = tab;
     view.innerHTML = tabsBar() + `<div class="mgr-empty">Loading&hellip;</div>`;
@@ -2722,6 +2990,15 @@
 
     try{
       if(act === "tab"){ await setTab(btn.dataset.tab); return; }
+
+      if(act === "door"){
+        const k = btn.dataset.key;
+        if(M.doorOpen[k]){ delete M.doorOpen[k]; paintDoor(k); return; }
+        M.doorOpen[k] = true;
+        paintDoor(k);
+        if(!M.doorData[k]) await loadDoor(k, btn.dataset.date, btn.dataset.name);
+        return;
+      }
 
       if(act === "dreqscope"){ M.dreqScope = btn.dataset.scope; await loadRequests(); render(); return; }
 
@@ -3196,6 +3473,7 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
       const who = await mapi({action:"whoami"});
       M.me = who.manager;
       await reload();
+      startDoorPoll();
     }catch(e){
       if(e!=="auth") showErr(typeof e==="string" ? e : "Couldn't load the manager view — refresh and try again.");
     }
