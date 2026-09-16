@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Intake — Jubyr LLC</title>
+<meta name="description" content="The deep-dive intake form Jubyr LLC sends after a first consultation. Goals, audience, history, budget, fears, and taste — everything needed to build the right plan.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="apple-touch-icon" href="assets/jubyr-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=32">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jubyr LLC">
+<meta property="og:title" content="Client Intake — Jubyr LLC">
+<meta property="og:description" content="The deep-dive intake form Jubyr LLC sends after a first consultation.">
+<meta property="og:url" content="https://jubyr.com/intakeform">
+<meta property="og:image" content="https://jubyr.com/assets/og-default.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jubyr.com/assets/og-default.jpg">
+<style>
+  /* This form is long by design, so it gets two small additions on top of
+     the shared intake styles: lettered dividers inside a step, and a save
+     indicator that proves the draft is being kept. Everything else reuses
+     styles.css so the page can never drift from the rest of the site. */
+  .intake .divider {
+    font-family: 'IBM Plex Mono','SF Mono',Menlo,monospace;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); border-top: 1px solid var(--line);
+    padding-top: 16px; margin: 32px 0 20px;
+  }
+  .intake__saved {
+    font-family: 'IBM Plex Mono','SF Mono',Menlo,monospace;
+    font-size: 11px; letter-spacing: 0.06em; color: var(--muted);
+    margin-top: 10px; opacity: 0; transition: opacity 0.4s ease;
+  }
+  .intake__saved.show { opacity: 1; }
+  .scale { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .scale .end {
+    font-family: 'IBM Plex Mono','SF Mono',Menlo,monospace;
+    font-size: 11px; letter-spacing: 0.06em; color: var(--muted); max-width: 13ch; line-height: 1.4;
+  }
+  .ifield select { width: 100%; }
+  .intake__legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<!-- announcement -->
+<div class="announce">
+  <span class="mono">Jubyr LLC &middot; Experience design studio &middot; Philadelphia</span>
+  <a class="mono" href="mailto:ruby@jubyr.com">Questions? Email me <span aria-hidden="true">&gt;</span></a>
+</div>
+
+<div class="frame">
+
+  <!-- nav -->
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
+      <ul class="nav__links mono">
+        <li><a href="/">Home</a></li>
+        <li><a href="/#approach">Approach</a></li>
+        <li><a href="/#services">Services</a></li>
+        <li><a href="/#portfolio">Portfolio</a></li>
+        <li><a href="/#get-involved">Get involved</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+    <div class="mobilemenu mono" id="mobilemenu">
+      <a href="/">Home</a>
+      <a href="/#approach">Approach</a>
+      <a href="/#services">Services</a>
+      <a href="/#portfolio">Portfolio</a>
+      <a href="/#get-involved">Get involved</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="box">
+      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.45), rgba(12,12,12,0.62)), url('assets/bg-velvet.jpg')">
+        <span class="tag">Client intake</span>
+        <h2>Tell me everything.</h2>
+        <p>We&rsquo;ve talked. Now I need the detail underneath it &mdash; the goals,
+        the numbers, the history, and the things you&rsquo;d only say off the record.
+        The more honest this is, the better the plan I hand back.</p>
+      </div>
+
+      <div class="intake">
+        <div class="intake__progress" id="progress" hidden>
+          <span class="intake__count" id="stepCount"></span>
+          <div class="intake__bar"><i id="barFill" style="width:0%"></i></div>
+          <p class="intake__saved" id="savedNote">Draft saved</p>
+        </div>
+
+        <form id="intake-form" novalidate autocomplete="on">
+          <!-- honeypot: real people never see or fill this -->
+          <input type="text" name="hp_field" value="" tabindex="-1" autocomplete="off"
+                 style="position:absolute;left:-5000px;height:0;width:0;opacity:0" aria-hidden="true">
+          <div id="host"></div>
+          <p class="intake__err" id="stepErr"></p>
+          <div class="intake__nav" id="navBtns"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- footer -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__top">
+      <div class="footer__logo">
+        <img src="assets/jubyr-logo-white.png?v=2" alt="Jubyr LLC" width="97" height="30">
+        <p>An experience design studio. We help organizations shape how people feel — before, during, and after every interaction.</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/#approach">Approach</a></li>
+          <li><a href="/#services">Services</a></li>
+          <li><a href="/#portfolio">Portfolio</a></li>
+          <li><a href="/signup">Stay in touch</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Based in</h5>
+        <address class="addr">
+          Philadelphia, PA
+        </address>
+      </div>
+      <div>
+        <h5>Say hi</h5>
+        <ul>
+          <li><a href="/consultation">Book a free consultation</a></li>
+          <li><a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a></li>
+          <li><a href="https://instagram.com/jubyrllc" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="status"><span class="dot" aria-hidden="true"></span> Now booking &mdash; consulting &amp; productions</span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="/privacy" style="color:inherit">Privacy</a> &middot; <a href="/terms" style="color:inherit">Terms</a> &middot; <a href="/sms" style="color:inherit">Messaging</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // mobile menu
+  const burger = document.querySelector('.nav__burger');
+  const menu = document.getElementById('mobilemenu');
+  burger.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menu.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }));
+
+  // ===================================================================
+  // Consulting intake — the deep-dive form sent to a prospect AFTER the
+  // first consultation. Same step engine as /contractors, a different
+  // (much longer) question set, and its own endpoint: this is a lead
+  // dossier, not a Client Book entry, so it never touches intake.php's
+  // queue. Answers are emailed to Ruby and logged; nothing is public.
+  //
+  // Labels live here and only here. The page sends the server a list of
+  // {title, items:[{label, value}]} sections, so adding a question is a
+  // one-line edit in STEPS with no matching change on the server.
+  // ===================================================================
+  const ENDPOINT = "https://jubyr.tools/consulting-intake.php";
+  const DRAFT_KEY = "jubyr-intakeform-draft";
+
+  const data = load();
+  let stepIndex = Number.isInteger(data.__step) ? data.__step : 0;
+
+  const has = (key, val) => (Array.isArray(data[key]) ? data[key] : []).includes(val);
+  const is = (key, val) => String(data[key] || "") === val;
+  const emailOk = e => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e || "").trim());
+  const phoneDigits = p => String(p || "").replace(/\D/g, "");
+  const phoneOk = p => phoneDigits(p).length === 10;
+  const ranAny = () => !is("doneBefore", "No — this would be the first");
+  const ticketedAny = () => !is("ticketed", "No");
+
+  const STEPS = [
+
+    /* ---------------------------------------------------------------- */
+    { title: "You and your organization",
+      sub: "Start with the boring part. It goes at the top of everything I write for you.",
+      fields: [
+      {key:"firstName", label:"First name", type:"text", required:true, autocomplete:"given-name"},
+      {key:"lastName", label:"Last name", type:"text", autocomplete:"family-name"},
+      {key:"org", label:"Business, brand, or organization", type:"text", required:true, help:"If it doesn't have a name yet, say what you'd call it."},
+      {key:"role", label:"Your role there", type:"text", placeholder:"Owner, director, producer, GM…"},
+      {key:"orgType", label:"What kind of operation is this?", type:"radio", options:["Venue or bar","Restaurant","Promoter / party brand","Artist or collective","Nonprofit","Brand or agency","Corporate / internal events","Festival or market","Private individual","Something else"]},
+      {key:"orgAge", label:"How long have you been doing this?", type:"select", options:["Haven't started yet","Under a year","1–2 years","3–5 years","6–10 years","Over 10 years"]},
+      {key:"teamSize", label:"How many people work on your events?", type:"select", options:["Just me","2–3","4–10","11–25","26–50","50+"]},
+      {key:"decisionMakers", label:"Who else has a say in decisions?", type:"textarea", help:"Partners, a board, an owner, a spouse, an investor. Name them and what they control."},
+      {key:"__contact", label:"", type:"divider", text:"How to reach you"},
+      {key:"email", label:"Best email", type:"email", required:true, autocomplete:"email", placeholder:"you@email.com"},
+      {key:"phone", label:"Phone number", type:"tel", required:true, autocomplete:"tel", placeholder:"10-digit number"},
+      {key:"bestContact", label:"Best way to reach you", type:"radio", options:["Text","Call","Email","Instagram"]},
+      {key:"city", label:"City you operate in", type:"text", placeholder:"Philadelphia, PA"},
+      {key:"website", label:"Website", type:"text", placeholder:"https://"},
+      {key:"instagram", label:"Instagram", type:"text", placeholder:"@yourhandle"},
+      {key:"__morelinks", label:"", type:"reveal", revealLabel:"+ Other links worth seeing", fields:[
+        {key:"tiktok", label:"TikTok", type:"text"},
+        {key:"facebook", label:"Facebook", type:"text"},
+        {key:"linkedin", label:"LinkedIn", type:"text"},
+        {key:"ticketingLink", label:"Ticketing page", type:"text"},
+        {key:"pressLinks", label:"Press, reviews, or coverage", type:"text"},
+        {key:"otherLinks", label:"Anything else", type:"text"}
+      ]}
+    ]},
+
+    /* ---------------------------------------------------------------- */
+    { title: "What you need from me",
+      sub: "Pick generously here — I'd rather see the whole picture and narrow it with you.",
+      fields: [
+      {key:"helpWith", label:"Where do you want help?", type:"checks", required:true, options:[
+        "Concept & creative direction","Programming & booking talent","Production & run-of-show",
+        "Venue sourcing & negotiation","Budgeting & financial modeling","Ticketing & pricing strategy",
+        "Marketing & promotion","Brand & visual identity","Social media & content",
+        "Sponsorship & partnerships","Vendor sourcing","Staffing, training & culture",
+        "Guest experience & hospitality","Systems & operations","Data & post-event reporting",
+        "Permits, licensing & compliance","A second opinion / sounding board"]},
+      {key:"priorityOne", label:"If I could only fix ONE of those, which one, and why that one?", type:"textarea", required:true},
+      {key:"engagementType", label:"What shape does this take?", type:"radio", options:[
+        "One specific event","A series or residency","Ongoing advisory","A rebuild of how we run events","Honestly not sure yet"]},
+      {key:"eventKinds", label:"What kinds of events are we talking about?", type:"checks", options:[
+        "Parties & nightlife","Concerts & live music","Brand activations & pop-ups","Markets & festivals",
+        "Weddings","Private & corporate","Community & fundraisers","Art shows & exhibitions",
+        "Panels & workshops","Dinners & tastings","Conferences","Sports & recreation","Something else"]},
+      {key:"__proj", label:"", type:"divider", text:"The project itself"},
+      {key:"projectName", label:"Does it have a name?", type:"text"},
+      {key:"projectPitch", label:"Describe it to me like I've never heard of it.", type:"textarea", required:true, help:"Two or three sentences. Pretend I'm a stranger at the bar."},
+      {key:"projectStage", label:"Where is it right now?", type:"radio", options:[
+        "Just an idea","Sketched out","Planned, not announced","Announced and selling","Already running","Running, and struggling"]},
+      {key:"firstDate", label:"First (or next) event date", type:"date", help:"An approximate date is fine. Leave blank if it's open."},
+      {key:"cadence", label:"How often would it happen?", type:"select", options:[
+        "One time only","Weekly","Every other week","Monthly","Quarterly","Seasonally","A few times a year","Not decided"]},
+      {key:"venueStatus", label:"Venue situation", type:"radio", options:[
+        "Locked in","In negotiation","Shortlisted a few","No idea yet","I need help finding one","I own/run the venue"]},
+      {key:"venueDetails", label:"Which venue, and what's its capacity?", type:"text", when:()=>!is("venueStatus","No idea yet") && !is("venueStatus","I need help finding one")},
+      {key:"expectedAttendance", label:"How many people do you expect through the door?", type:"text", help:"A number or a range. Be realistic, not hopeful — I'll ask for the hopeful one later."},
+      {key:"hardDeadlines", label:"Hard deadlines I need to know about", type:"textarea", help:"Announcement dates, lease terms, grant reporting, a birthday, a season, anything fixed."}
+    ]},
+
+    /* ---------------------------------------------------------------- */
+    { title: "Goals",
+      sub: "This is the part I'll hold you to.",
+      note: "Write more than feels necessary here. Vague goals are the single most common reason an event underperforms, and I can't fix a goal I can't see.",
+      fields: [
+      {key:"successLooks", label:"It's the morning after and it worked. What actually happened?", type:"textarea", required:true, help:"Describe the night, not the metric. Who was there, what did it feel like, what are people saying?"},
+      {key:"primaryGoal", label:"If you had to name ONE primary goal", type:"radio", options:[
+        "Revenue","Attendance & growth","Brand awareness","Community building","Fundraising",
+        "Launching something new","Retention & loyalty","Cultural credibility","Filling a slow night","Something else"]},
+      {key:"secondaryGoals", label:"And the goals underneath it", type:"checks", options:[
+        "Revenue","Attendance & growth","Brand awareness","Community building","Fundraising",
+        "Launching something new","Retention & loyalty","Cultural credibility","Filling a slow night",
+        "Building an email/text list","Attracting sponsors","Press coverage","Recruiting talent","Proving a concept"]},
+      {key:"successNumbers", label:"Put numbers on it.", type:"textarea", help:"Attendance, revenue, bar spend, signups, followers, repeat rate — whatever you actually track. Targets and current numbers both."},
+      {key:"howMeasured", label:"How will you know? Who checks, and when?", type:"textarea", help:"If nobody currently checks, say that. It's common and it's fixable."},
+      {key:"oneThingRight", label:"What is the ONE thing that absolutely cannot go wrong?", type:"textarea", required:true},
+      {key:"failureLooks", label:"What would make you call it a failure — even if the room was full?", type:"textarea"},
+      {key:"whyNow", label:"Why now? What changed?", type:"textarea", help:"Something made you go looking for help this month instead of last year."},
+      {key:"twelveMonths", label:"Where do you want this in 12 months?", type:"textarea"},
+      {key:"threeYears", label:"And in three years, if everything goes right?", type:"textarea"},
+      {key:"legacy", label:"If this thing ended tomorrow, what would you want people to say it was?", type:"textarea"}
+    ]},
+
+    /* ---------------------------------------------------------------- */
+    { title: "Who it's for",
+      sub: "Your audience — the one you have, and the one you're after.",
+      fields: [
+      {key:"audienceNow", label:"Describe who actually shows up now.", type:"textarea", help:"Not the target. The real people in the room, as specifically as you can. If nobody shows up yet, say who you think will."},
+      {key:"audienceWant", label:"Now describe who you WISH was in the room.", type:"textarea", required:true},
+      {key:"audienceGap", label:"Why aren't they there yet?", type:"textarea", help:"Your honest theory. Even a guess is useful."},
+      {key:"__demo", label:"", type:"divider", text:"The demographics"},
+      {key:"ageRanges", label:"Age ranges you draw (or want to)", type:"checks", options:["Under 21","21–24","25–29","30–34","35–44","45–54","55+","All over"]},
+      {key:"genderSkew", label:"Gender skew", type:"radio", options:["Mostly women","Mostly men","Fairly even","Queer-leaning & mixed","Don't track it"]},
+      {key:"geography", label:"Where do they come from?", type:"text", help:"Neighborhoods, suburbs, other cities. Be specific — 'South Philly and Fishtown' tells me more than 'Philadelphia'."},
+      {key:"audienceIdentity", label:"What scenes, subcultures, or industries are they part of?", type:"textarea", help:"Music, art, tech, service industry, students, professionals, a diaspora, a sport — whatever is actually true."},
+      {key:"spendLevel", label:"What will they comfortably spend on a night out?", type:"radio", options:["Free events only","Under $20","$20–40","$40–75","$75–150","$150+","Varies wildly"]},
+      {key:"howTheyHear", label:"How do they find out about your events?", type:"checks", options:[
+        "Instagram","TikTok","Word of mouth","Email list","Text list","Flyers & posters","Press",
+        "Partner or host audiences","Ticketing platforms","Radio or podcasts","Paid ads","Walk-ins","Not sure"]},
+      {key:"listSizes", label:"Your actual reach, in numbers", type:"textarea", help:"Instagram followers, email list size, SMS list, typical post reach, ticketing platform followers. Estimates are fine."},
+      {key:"regulars", label:"How much of your crowd is repeat?", type:"text", help:"A rough percentage, or 'about 20 people who come to everything.'"},
+      {key:"notFor", label:"Who is this explicitly NOT for?", type:"textarea", help:"This one matters. A door policy you won't say out loud is still a door policy."},
+      {key:"audienceComplaints", label:"What do your guests complain about?", type:"textarea", help:"Lines, sound, price, temperature, bathrooms, the crowd, the music. Anything you've heard twice."}
+    ]},
+
+    /* ---------------------------------------------------------------- */
+    { title: "History",
+      sub: "What you've already tried. The wins and the wreckage.",
+      fields: [
+      {key:"doneBefore", label:"Have you run events before?", type:"radio", required:true, options:[
+        "Yes — many","Yes — a handful","Yes — one","No — this would be the first"]},
+      {key:"pastEvents", label:"Walk me through what you've run.", type:"textarea", when:ranAny, help:"What, where, when, roughly how many people. A list is fine."},
+      {key:"typicalNumbers", label:"Typical attendance, best night, worst night", type:"textarea", when:ranAny, help:"Numbers, not feelings. e.g. 'usually 120, best was 300, worst was 40.'"},
+      {key:"typicalRevenue", label:"And what those nights typically brought in", type:"textarea", when:ranAny, help:"Door, bar, F&B, merch — however you count it. Rough is fine."},
+      {key:"bestNight", label:"Describe the best night you've ever had.", type:"textarea", when:ranAny, required:false, help:"What made it work? Be specific — the answer usually contains the whole strategy."},
+      {key:"worstNight", label:"Now the worst one.", type:"textarea", when:ranAny, help:"What went wrong, and what did you decide afterward?"},
+      {key:"whatWorked", label:"What have you tried that clearly worked?", type:"textarea", when:ranAny},
+      {key:"whatFlopped", label:"What have you tried that clearly didn't?", type:"textarea", when:ranAny},
+      {key:"abandoned", label:"Anything you started and quietly dropped?", type:"textarea", when:ranAny, help:"And why you dropped it."},
+      {key:"firstTimeWorries", label:"You haven't run one before — what's making you start now?", type:"textarea", when:()=>!ranAny()},
+      {key:"__ops", label:"", type:"divider", text:"How you run today"},
+      {key:"currentTeam", label:"Who's involved now, and what do they own?", type:"textarea", help:"Including the unofficial help — the friend who always does the door, the cousin who films."},
+      {key:"vendorsUsed", label:"Vendors, venues, and partners you already work with", type:"textarea"},
+      {key:"toolsUsed", label:"What tools are you running on?", type:"checks", options:[
+        "Eventbrite","DICE","Posh","Resident Advisor","Square","Tock","Toast","Google Sheets","Notion",
+        "Airtable","Mailchimp","Canva","Instagram DMs","Paper and memory","Nothing formal","Something else"]},
+      {key:"toolsOther", label:"Anything else in the stack", type:"text"},
+      {key:"documentation", label:"How much of this is written down?", type:"radio", options:[
+        "Everything's documented","Some of it","Almost none — it's in my head"]},
+      {key:"dataHave", label:"What data do you already have that I could look at?", type:"textarea", help:"Past ticket reports, POS exports, guest lists, email stats, photos. Even messy is useful."}
+    ]},
+
+    /* ---------------------------------------------------------------- */
+    { title: "Money",
+      sub: "",
+      note: "Nobody sees this but me. I ask because a plan that ignores the budget isn't a plan — and because I'd rather tell you now if we're not a fit than after you've paid me.",
+      fields: [
+      {key:"eventBudget", label:"Budget for the event(s) themselves", type:"select", options:[
+        "Under $1,000","$1,000–5,000","$5,000–15,000","$15,000–50,000","$50,000–150,000","Over $150,000","Not set yet"]},
+      {key:"consultingBudget", label:"Budget for consulting — my side of it", type:"select", options:[
+        "Under $1,000","$1,000–2,500","$2,500–5,000","$5,000–10,000","$10,000–25,000","Over $25,000","I'd like a recommendation"]},
+      {key:"budgetNotes", label:"Anything to add about those numbers", type:"textarea", help:"If the budget is soft, or depends on something, say so here."},
+      {key:"fundingSource", label:"Where does the money come from?", type:"checks", options:[
+        "Ticket sales","Bar & F&B","Sponsorship","Grants","Personal funds","Investor or backer",
+        "Company budget","Donations","Vendor or table fees","Not funded yet"]},
+      {key:"revenueModel", label:"How does this make money?", type:"textarea", help:"Walk me through it. If it doesn't need to make money, say what it needs to do instead."},
+      {key:"ticketed", label:"Is it ticketed?", type:"radio", options:["Yes","No","Not decided"]},
+      {key:"ticketPrice", label:"Ticket price, or the price you're considering", type:"text", when:ticketedAny},
+      {key:"breakEven", label:"What's your break-even?", type:"text", when:ticketedAny, help:"Heads through the door, or dollars. If you don't know it, write 'don't know' — that's an answer too."},
+      {key:"typicalMargin", label:"What do you usually clear on a night?", type:"text", when:ranAny},
+      {key:"biggestCost", label:"What's your biggest line item?", type:"text", help:"Talent, venue, security, production, marketing…"},
+      {key:"costPain", label:"Where do you suspect you're overpaying?", type:"textarea"},
+      {key:"sponsorship", label:"Sponsorship", type:"radio", options:["Have sponsors now","Actively looking","Tried, didn't land","Never tried","Not relevant"]},
+      {key:"sponsorDetails", label:"Who, and for how much?", type:"text", when:()=>is("sponsorship","Have sponsors now")},
+      {key:"__terms", label:"", type:"divider", text:"Working terms"},
+      {key:"whoSigns", label:"Who approves spending?", type:"text", help:"If it's you, just say you."},
+      {key:"payPreference", label:"How would you want to pay me?", type:"checks", options:[
+        "Hourly","Flat project fee","Monthly retainer","Per event","Revenue share","Not sure — advise me"]},
+      {key:"decisionTimeline", label:"When do you need to decide?", type:"select", options:[
+        "Immediately","Within two weeks","This month","This quarter","Just exploring for now"]},
+      {key:"moneyTruth", label:"Anything about the money that's awkward to say out loud?", type:"textarea", help:"Debt, a bad quarter, a partner who doesn't know, a grant that might not renew. I've heard all of it, and it always comes out eventually."}
+    ]},
+
+    /* ---------------------------------------------------------------- */
+    { title: "Fears and friction",
+      sub: "The honest part. This is usually the most useful page in the whole form.",
+      fields: [
+      {key:"biggestFear", label:"What's your biggest fear about this project?", type:"textarea", required:true},
+      {key:"keepsYouUp", label:"What keeps you up at night about it — even if it sounds irrational?", type:"textarea"},
+      {key:"afraidIllSay", label:"What are you afraid I'm going to tell you?", type:"textarea"},
+      {key:"emptyRoom", label:"Picture it going badly. What does that look like?", type:"textarea", help:"Half-empty room? A fight? A bad review? Losing money? Name the specific nightmare."},
+      {key:"pastBadExperience", label:"Have you worked with a consultant, planner, promoter, or agency before?", type:"textarea", help:"What did they get right, and what went wrong? I want to avoid repeating it."},
+      {key:"riskTolerance", label:"How much risk are you willing to take?", type:"scale", lowLabel:"Play it safe", highLabel:"Swing big"},
+      {key:"changeTolerance", label:"How much are you willing to change about how you do things?", type:"scale", lowLabel:"Keep it mostly as-is", highLabel:"Tear it down, rebuild it"},
+      {key:"nonNegotiables", label:"What's absolutely off the table?", type:"textarea", help:"Ideas, partners, formats, prices, nights of the week. Tell me the walls so I don't waste your time hitting them."},
+      {key:"constraints", label:"What's actually in the way?", type:"checks", options:[
+        "Tight budget","Tight timeline","Small team","No venue","Permits & licensing","Noise or neighbors",
+        "Landlord or venue rules","Internal politics","Inexperience","Burnout","Reputation risk",
+        "Competition","Seasonality","Nothing major"]},
+      {key:"weakSpot", label:"Where do you already know you're weakest?", type:"textarea"},
+      {key:"pressure", label:"Who are you under pressure from, and what do they expect?", type:"textarea", help:"An owner, a partner, a landlord, a board, your own head."},
+      {key:"avoidingTruth", label:"Is there something about this you've been avoiding dealing with?", type:"textarea"}
+    ]},
+
+    /* ---------------------------------------------------------------- */
+    { title: "Taste",
+      sub: "What you love, what you can't stand, and what you wish existed.",
+      note: "Answer these the way you'd talk, not the way you'd write a proposal. Your taste is the thing I can't research — it has to come from you.",
+      fields: [
+      {key:"hateIndustry", label:"What do you hate about the events industry?", type:"textarea", required:true, help:"Be mean about it. Vent. This tells me more about what to build than any goal does."},
+      {key:"loveIndustry", label:"And what do you genuinely love about it?", type:"textarea"},
+      {key:"cliches", label:"What event cliché do you never want to be caught doing?", type:"textarea"},
+      {key:"neverDo", label:"Things you'd never do, even if they worked", type:"textarea"},
+      {key:"wantToSee", label:"What do you wish existed in your city that doesn't?", type:"textarea", required:true},
+      {key:"__refs", label:"", type:"divider", text:"References"},
+      {key:"admire", label:"Events, venues, or brands you admire", type:"textarea", help:"Anywhere in the world. And say WHY — that's the useful half."},
+      {key:"admireLocal", label:"And locally?", type:"text"},
+      {key:"competitors", label:"Who are you competing with for the same crowd on the same night?", type:"textarea"},
+      {key:"differentiator", label:"Why would someone pick you over them?", type:"textarea", help:"If you don't have a good answer yet, say so. Finding one is often the job."},
+      {key:"__vibe", label:"", type:"divider", text:"The feeling in the room"},
+      {key:"vibeWords", label:"Five words for how the room should feel", type:"text"},
+      {key:"vibeNotWords", label:"Five words it should never feel like", type:"text"},
+      {key:"musicDirection", label:"Music", type:"textarea", help:"Genres, artists, a reference set. Or 'not my call.'"},
+      {key:"aesthetic", label:"Visual direction", type:"textarea", help:"Lighting, decor, colors, era, references. Anything you've been collecting."},
+      {key:"moodboard", label:"Links to anything visual", type:"text", placeholder:"Pinterest, a Drive folder, an IG account"},
+      {key:"brandExists", label:"Do you already have branding?", type:"radio", options:["Yes, and I like it","Yes, but it needs work","No, starting fresh","Not sure"]},
+      {key:"tone", label:"How should your event talk to people?", type:"checks", options:[
+        "Warm & welcoming","Cool & exclusive","Funny","Understated","Loud & hype","Elegant",
+        "Underground","Polished & professional","Weird","Sincere"]}
+    ]},
+
+    /* ---------------------------------------------------------------- */
+    { title: "How we'd work together",
+      sub: "Last page. Then you're done.",
+      fields: [
+      {key:"involvement", label:"How involved do you want me?", type:"radio", options:[
+        "Take it off my plate entirely","Work alongside me","Advise — I'll execute","Audit & recommendations only"]},
+      {key:"ownVsAdvise", label:"What would you want me to own outright, versus just weigh in on?", type:"textarea"},
+      {key:"commCadence", label:"How often should we talk?", type:"radio", options:[
+        "Daily","A few times a week","Weekly check-in","Every other week","Monthly","As needed"]},
+      {key:"commChannel", label:"How do you like to communicate?", type:"checks", options:[
+        "Email","Text","Phone calls","Video calls","In person","Shared doc","Whatever's fastest"]},
+      {key:"onSite", label:"Do you need me on site during events?", type:"radio", options:[
+        "Yes, every time","Sometimes","Just the first one","Remote is fine","Not sure"]},
+      {key:"startWhen", label:"When would you want to start?", type:"date"},
+      {key:"accessGiven", label:"What could you give me access to?", type:"checks", options:[
+        "Ticketing dashboard","Social accounts","Email platform","POS / financials","Venue contacts",
+        "Vendor contracts","Past event data","Your team","Nothing yet"]},
+      {key:"howYouDecide", label:"How do you make decisions?", type:"textarea", help:"Gut, data, consensus, whoever asks last? No wrong answer — I just need to know how to bring you options."},
+      {key:"feedbackStyle", label:"How do you want feedback delivered?", type:"radio", options:[
+        "Blunt","Direct but warm","Gently","Give me options, not opinions"]},
+      {key:"dealBreaker", label:"What would make you fire me?", type:"textarea"},
+      {key:"__last", label:"", type:"divider", text:"Anything left"},
+      {key:"whoElse", label:"Who else should I talk to to understand this properly?", type:"textarea"},
+      {key:"changedSinceCall", label:"Has anything changed since our call?", type:"textarea"},
+      {key:"anythingElse", label:"What haven't I asked that I should have?", type:"textarea"},
+      {key:"contactConsent", label:"May Jubyr LLC contact you about this project by email, phone, and text message?", type:"radio", required:true, options:["Yes, I agree"], help:"You can opt out at any time, and your information is never sold or shared. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. See our <a href='https://jubyr.com/privacy' target='_blank' rel='noopener'>Privacy Policy</a> and <a href='https://jubyr.com/terms' target='_blank' rel='noopener'>Terms</a>."}
+    ]}
+  ];
+
+  /* ---- draft storage --------------------------------------------- */
+  function load(){
+    try{ const d = JSON.parse(localStorage.getItem(DRAFT_KEY)); if(d && typeof d === "object") return d; }catch(e){}
+    return {};
+  }
+  let savedTimer = null;
+  function persist(){
+    data.__step = stepIndex;
+    try{ localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); }catch(e){}
+    const note = document.getElementById("savedNote");
+    if(!note) return;
+    note.classList.add("show");
+    clearTimeout(savedTimer);
+    savedTimer = setTimeout(()=>note.classList.remove("show"), 1600);
+  }
+
+  const host = document.getElementById("host");
+  const navBtns = document.getElementById("navBtns");
+  const stepErr = document.getElementById("stepErr");
+  const progress = document.getElementById("progress");
+  const barFill = document.getElementById("barFill");
+  const stepCount = document.getElementById("stepCount");
+  document.getElementById("intake-form").addEventListener("submit", e => e.preventDefault());
+
+  function esc(s){ return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  /* ---- field rendering -------------------------------------------- */
+  function fieldHTML(f){
+    if(f.when && !f.when()) return "";
+    const req = f.required ? ` <span class="req">*</span>` : "";
+    /* help is deliberately NOT escaped: a few of these carry the privacy
+       and terms links the consent language is legally required to show. */
+    const help = f.help ? `<p class="help">${f.help}</p>` : "";
+    const v = data[f.key];
+
+    if(f.type === "divider") return `<div class="divider">${esc(f.text)}</div>`;
+
+    if(f.type === "text" || f.type === "tel" || f.type === "email" || f.type === "date"){
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label>
+        <input type="${f.type}" data-key="${f.key}" value="${esc(v || "")}" placeholder="${esc(f.placeholder || "")}"${f.autocomplete?` autocomplete="${f.autocomplete}"`:""}>${help}</div>`;
+    }
+    if(f.type === "textarea"){
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label><textarea data-key="${f.key}">${esc(v || "")}</textarea>${help}</div>`;
+    }
+    if(f.type === "select"){
+      const opts = ['<option value="">Select one…</option>']
+        .concat(f.options.map(o => `<option value="${esc(o)}"${v === o ? " selected" : ""}>${esc(o)}</option>`)).join("");
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label><select data-key="${f.key}">${opts}</select>${help}</div>`;
+    }
+    if(f.type === "checks"){
+      const cur = Array.isArray(v) ? v : [];
+      const opts = f.options.map(o => `<button type="button" class="ichip${cur.includes(o)?" on":""}" data-multi="${f.key}" data-val="${esc(o)}">${esc(o)}</button>`).join("");
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
+    }
+    if(f.type === "radio"){
+      const opts = f.options.map(o => `<button type="button" class="ichip${v === o?" on":""}" data-radio="${f.key}" data-val="${esc(o)}">${esc(o)}</button>`).join("");
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
+    }
+    if(f.type === "scale"){
+      const nums = [1,2,3,4,5].map(n => `<button type="button" class="ichip${String(v) === String(n)?" on":""}" data-radio="${f.key}" data-val="${n}">${n}</button>`).join("");
+      return `<div class="ifield"><label>${esc(f.label)}${req}</label>
+        <div class="scale"><span class="end">${esc(f.lowLabel || "")}</span>${nums}<span class="end">${esc(f.highLabel || "")}</span></div>${help}</div>`;
+    }
+    if(f.type === "reveal"){
+      const anyFilled = f.fields.some(sf => data[sf.key]);
+      if(!(data["__open_" + f.key] || anyFilled)) return `<div class="ifield"><button type="button" class="ichip" data-reveal="${f.key}">${esc(f.revealLabel)}</button></div>`;
+      return f.fields.map(fieldHTML).join("");
+    }
+    return "";
+  }
+
+  /* ---- step rendering --------------------------------------------- */
+  function renderStep(keepScroll){
+    const y = window.scrollY;
+    if(stepIndex >= STEPS.length) stepIndex = STEPS.length - 1;
+    if(stepIndex < 0) stepIndex = 0;
+    const step = STEPS[stepIndex];
+    progress.hidden = false;
+    barFill.style.width = Math.round((stepIndex / STEPS.length) * 100) + "%";
+    stepCount.textContent = `Step ${stepIndex + 1} of ${STEPS.length}`;
+    host.innerHTML = `<h2 class="step-title">${esc(step.title)}</h2>
+      ${step.sub ? `<p class="step-sub">${esc(step.sub)}</p>` : ""}
+      ${step.note ? `<div class="note">${esc(step.note)}</div>` : ""}
+      ${step.fields.map(fieldHTML).join("")}`;
+    navBtns.innerHTML = `${stepIndex > 0 ? `<button type="button" class="btn btn--ghost" id="backBtn">Back</button>` : ""}
+      <button type="button" class="btn btn--green" id="nextBtn">${stepIndex === STEPS.length - 1 ? "Submit" : "Continue"} <span class="arw" aria-hidden="true">&gt;</span></button>`;
+    bind();
+    if(keepScroll) window.scrollTo(0, y);
+    else document.querySelector('.intake').scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function bind(){
+    /* Typed fields update the draft without re-rendering, so a long answer
+       is never interrupted mid-sentence. Only choices re-render, because
+       choices are what reveal and hide other questions. */
+    host.querySelectorAll("input[data-key],textarea[data-key]").forEach(el => {
+      el.addEventListener("input", () => { data[el.dataset.key] = el.value; persist(); });
+    });
+    host.querySelectorAll("select[data-key]").forEach(el => {
+      el.addEventListener("change", () => { data[el.dataset.key] = el.value; persist(); });
+    });
+    host.querySelectorAll("[data-multi]").forEach(el => {
+      el.addEventListener("click", () => {
+        const k = el.dataset.multi, val = el.dataset.val;
+        if(!Array.isArray(data[k])) data[k] = [];
+        const i = data[k].indexOf(val);
+        if(i >= 0) data[k].splice(i, 1); else data[k].push(val);
+        persist(); renderStep(true);
+      });
+    });
+    host.querySelectorAll("[data-radio]").forEach(el => {
+      el.addEventListener("click", () => {
+        const k = el.dataset.radio;
+        data[k] = (String(data[k]) === el.dataset.val) ? "" : el.dataset.val;
+        persist(); renderStep(true);
+      });
+    });
+    host.querySelectorAll("[data-reveal]").forEach(el => {
+      el.addEventListener("click", () => { data["__open_" + el.dataset.reveal] = true; renderStep(true); });
+    });
+    const back = document.getElementById("backBtn");
+    if(back) back.addEventListener("click", () => { if(stepIndex > 0){ stepIndex--; persist(); renderStep(); } });
+    document.getElementById("nextBtn").addEventListener("click", onNext);
+  }
+
+  /* ---- validation -------------------------------------------------- */
+  function validate(step){
+    for(const f of step.fields){
+      if(f.when && !f.when()) continue;
+      if(!f.required) continue;
+      const v = data[f.key];
+      if(f.type === "checks"){ if(!Array.isArray(v) || !v.length) return `Please answer: ${f.label}`; continue; }
+      if(!v || !String(v).trim()) return `Please answer: ${f.label}`;
+    }
+    return null;
+  }
+
+  function onNext(){
+    stepErr.classList.remove("show");
+    const step = STEPS[stepIndex];
+    /* Required-field check first, so the error names the FIRST thing left
+       blank going down the page. Format checks come after: complaining
+       about the email while the name above it is still empty reads as a
+       bug, even though both are true. */
+    const msg = validate(step);
+    if(msg) return showErr(msg);
+    if(step.fields.some(f => f.key === "email")){
+      if(!emailOk(data.email)) return showErr("Please enter a valid email, with an @.");
+      if(!phoneOk(data.phone)) return showErr("Please enter a 10-digit phone number.");
+    }
+    if(stepIndex < STEPS.length - 1){ stepIndex++; persist(); return renderStep(); }
+    submit();
+  }
+
+  function showErr(m){ stepErr.textContent = m; stepErr.classList.add("show"); }
+
+  /* ---- submission -------------------------------------------------- */
+  function buildSections(){
+    /* Walk the same STEPS the person just filled in, so the email Ruby
+       reads is in the order she wrote the questions — and so a question
+       added here needs no matching change on the server. Skipped and
+       hidden questions are dropped rather than sent as blanks. */
+    const out = [];
+    const collect = (fields, items) => {
+      fields.forEach(f => {
+        if(f.type === "divider") return;
+        if(f.type === "reveal"){ collect(f.fields, items); return; }
+        if(f.when && !f.when()) return;
+        let v = data[f.key];
+        if(Array.isArray(v)) v = v.join(", ");
+        v = String(v ?? "").trim();
+        if(!v) return;
+        if(f.type === "scale") v = `${v} of 5 (${f.lowLabel} → ${f.highLabel})`;
+        items.push({label: f.label, value: v});
+      });
+    };
+    STEPS.forEach(step => {
+      const items = [];
+      collect(step.fields, items);
+      if(items.length) out.push({title: step.title, items});
+    });
+    return out;
+  }
+
+  async function submit(){
+    const btn = document.getElementById("nextBtn");
+    btn.disabled = true; btn.textContent = "Sending…";
+    const pd = phoneDigits(data.phone);
+    const payload = {
+      hp_field: document.querySelector('input[name="hp_field"]').value,
+      name: [data.firstName, data.lastName].map(s => String(s || "").trim()).filter(Boolean).join(" "),
+      email: String(data.email || "").trim(),
+      phone: pd.length === 10 ? "(" + pd.slice(0,3) + ") " + pd.slice(3,6) + "-" + pd.slice(6) : String(data.phone || ""),
+      org: String(data.org || "").trim(),
+      role: String(data.role || "").trim(),
+      consultingBudget: String(data.consultingBudget || ""),
+      decisionTimeline: String(data.decisionTimeline || ""),
+      consent: String(data.contactConsent || ""),
+      sections: buildSections()
+    };
+    try{
+      // Cross-origin to jubyr.tools: no-cors delivers the body (the endpoint
+      // parses raw JSON regardless of content type); the response is opaque,
+      // so the validation above mirrors the server's own rules.
+      await fetch(ENDPOINT, {method:"POST", mode:"no-cors", body: JSON.stringify(payload)});
+      try{ localStorage.removeItem(DRAFT_KEY); }catch(e){}
+      done();
+    }catch(e){
+      btn.disabled = false; btn.textContent = "Submit";
+      showErr("Couldn't reach the server. Check your connection and try again.");
+    }
+  }
+
+  function done(){
+    progress.hidden = true;
+    const first = String(data.firstName || "").trim();
+    host.innerHTML = `<div class="intake__done">
+      <div class="mark">&#10003;</div>
+      <h2>Got it${first ? `, ${esc(first)}` : ""}.</h2>
+      <p>That's everything I need to start. I'll read it properly, not skim it,
+      and come back to you within a few days with what I'm seeing and what I'd
+      propose. If something occurs to you in the meantime, just email me.</p>
+    </div>`;
+    navBtns.innerHTML = "";
+    stepErr.classList.remove("show");
+  }
+
+  renderStep();
+</script>
+
+<div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
+</body>
+</html>
