@@ -132,8 +132,46 @@
   .dk-cta:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
   .dk-close .dk-denote a { text-decoration: underline; text-underline-offset: 3px; }
 
+  /* ---------- the application ---------- */
+  .dk-form { margin-top: 32px; max-width: 760px; }
+  .dk-row { display: grid; gap: 16px; }
+  @media (min-width: 620px) { .dk-row { grid-template-columns: 1fr 1fr; } }
+  .dk-f { display: block; margin-top: 16px; }
+  .dk-f > span, .dk-fset legend {
+    display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .09em;
+    text-transform: uppercase; color: #E8EFC8; margin-bottom: 7px; padding: 0; }
+  .dk-f > span em, .dk-consent em { font-style: normal; opacity: .72; text-transform: none; letter-spacing: 0; font-family: var(--sans); }
+  .dk-f input, .dk-f textarea {
+    /* 16px, not 15: iOS zooms the whole page in when a focused field is
+       under 16px, which on this form would mean the page lurching on the
+       first tap of the first question. */
+    width: 100%; font: inherit; font-size: 16px; color: #fff; background: rgba(0,0,0,.22);
+    border: 1px solid rgba(255,255,255,.34); border-radius: 0; padding: 12px 13px; }
+  .dk-f textarea { resize: vertical; }
+  .dk-f input:focus, .dk-f textarea:focus { outline: 2px solid #fff; outline-offset: 1px; }
+  .dk-f input[aria-invalid="true"], .dk-f textarea[aria-invalid="true"] { border-color: #FFD9D4; background: rgba(160,30,20,.3); }
+  .dk-fset { border: 0; padding: 0; margin-top: 20px; }
+  .dk-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .dk-chip { position: relative; }
+  .dk-chip input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .dk-chip span { display: inline-block; cursor: pointer; font-size: 13.5px; line-height: 1.3;
+    padding: 9px 14px; border: 1px solid rgba(255,255,255,.38); color: #EDF2DC; }
+  .dk-chip input:checked + span { background: #fff; border-color: #fff; color: var(--ink); font-weight: 600; }
+  .dk-chip input:focus-visible + span { outline: 2px solid #fff; outline-offset: 2px; }
+  .dk-consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 24px; font-size: 14px; line-height: 1.5; color: #E8EFC8; cursor: pointer; }
+  .dk-consent input { margin-top: 3px; flex: 0 0 auto; }
+  .dk-err { margin-top: 18px; padding: 11px 14px; background: #fff; color: #8A1C10; font-size: 14px; font-weight: 600; }
+  .dk-cta { display: inline-flex; align-items: center; gap: 10px; margin-top: 24px; cursor: pointer;
+    font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    text-decoration: none; padding: 17px 28px; background: #fff; color: var(--ink); border: 1px solid #fff; }
+  .dk-cta:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .dk-cta[disabled] { opacity: .6; cursor: default; }
+  .dk-done { margin-top: 32px; max-width: 620px; }
+  .dk-done h3 { color: #fff; font-size: clamp(22px,3vw,30px); }
+  .dk-done p { margin-top: 12px; font-size: 16px; line-height: 1.6; color: #E8EFC8; }
+
   @media print {
-    .announce, .nav, .mobilemenu, .footer, .jubyr-credit, .dk-cta { display: none !important; }
+    .announce, .nav, .mobilemenu, .footer, .jubyr-credit, .dk-cta, .dk-form { display: none !important; }
     .dk-sec, .dk-cover { page-break-inside: avoid; }
   }
 </style>
@@ -481,9 +519,70 @@
       <h2>Tell us who you can reach.</h2>
       <p class="dk-lede">Ruby reads every one herself, and you will hear back
       either way.</p>
-      <a class="dk-cta" href="mailto:ruby@jubyr.com?subject=Partnership%20application&amp;body=Name%3A%0A%0AWho%20you%20can%20reach%20%28companies%2C%20groups%2C%20the%20networks%20you%20actually%20have%20a%20way%20into%29%3A%0A%0AWhich%20room%20you%20would%20start%20with%3A%0A%0AOrganizations%20you%20already%20have%20in%20mind%20%28optional%29%3A%0A%0AAnything%20else%20%28optional%29%3A%0A%0A">Apply to partner <span aria-hidden="true">&gt;</span></a>
-      <p class="dk-denote">Opens an email with the questions already in it.
-      Prefer to talk first? <a href="/consultation">Book a call</a>.</p>
+      <form id="papply" class="dk-form" novalidate>
+        <input type="text" name="hp_field" value="" tabindex="-1" autocomplete="off"
+               style="position:absolute;left:-5000px;height:0;width:0;opacity:0" aria-hidden="true">
+
+        <div class="dk-row">
+          <label class="dk-f"><span>First name</span>
+            <input name="firstName" autocomplete="given-name" required></label>
+          <label class="dk-f"><span>Last name</span>
+            <input name="lastName" autocomplete="family-name" required></label>
+        </div>
+        <div class="dk-row">
+          <label class="dk-f"><span>Email</span>
+            <input name="email" type="email" autocomplete="email" required></label>
+          <label class="dk-f"><span>Phone</span>
+            <input name="phone" type="tel" autocomplete="tel" required></label>
+        </div>
+
+        <label class="dk-f"><span>Who can you reach, and how do you know them?</span>
+          <textarea name="network" rows="4" required></textarea></label>
+
+        <fieldset class="dk-f dk-fset">
+          <legend>What kinds of groups?</legend>
+          <div class="dk-chips">
+              <label class="dk-chip"><input type="checkbox" name="groups" value="Companies and offices"><span>Companies and offices</span></label>
+              <label class="dk-chip"><input type="checkbox" name="groups" value="Agencies, studios and startups"><span>Agencies, studios and startups</span></label>
+              <label class="dk-chip"><input type="checkbox" name="groups" value="Professional groups and member clubs"><span>Professional groups and member clubs</span></label>
+              <label class="dk-chip"><input type="checkbox" name="groups" value="Alumni chapters"><span>Alumni chapters</span></label>
+              <label class="dk-chip"><input type="checkbox" name="groups" value="Brands"><span>Brands</span></label>
+              <label class="dk-chip"><input type="checkbox" name="groups" value="Nonprofits and community organizations"><span>Nonprofits and community organizations</span></label>
+              <label class="dk-chip"><input type="checkbox" name="groups" value="Something else"><span>Something else</span></label>
+          </div>
+        </fieldset>
+
+        <label class="dk-f"><span>Any organizations already in mind? <em>Optional</em></span>
+          <textarea name="targets" rows="2"></textarea></label>
+
+        <fieldset class="dk-f dk-fset">
+          <legend>Have you brought people to an event before?</legend>
+          <div class="dk-chips">
+            <label class="dk-chip"><input type="radio" name="experience" value="Yes, professionally"><span>Yes, professionally</span></label>
+            <label class="dk-chip"><input type="radio" name="experience" value="Yes, informally"><span>Yes, informally</span></label>
+            <label class="dk-chip"><input type="radio" name="experience" value="No"><span>No</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="dk-f dk-fset">
+          <legend>How much time can you give this?</legend>
+          <div class="dk-chips">
+            <label class="dk-chip"><input type="radio" name="time" value="A few hours a month"><span>A few hours a month</span></label>
+            <label class="dk-chip"><input type="radio" name="time" value="A few hours a week"><span>A few hours a week</span></label>
+            <label class="dk-chip"><input type="radio" name="time" value="It is a main focus"><span>It is a main focus</span></label>
+          </div>
+        </fieldset>
+
+        <label class="dk-consent">
+          <input type="checkbox" name="consent" value="yes">
+          <span>You can email or text me about this and about Jubyr events.
+          <em>Optional, and not needed to apply.</em></span>
+        </label>
+
+        <p class="dk-err" id="papplyErr" hidden></p>
+        <button class="dk-cta" type="submit" id="papplyBtn">Apply to partner <span aria-hidden="true">&gt;</span></button>
+        <p class="dk-denote">Prefer to talk first? <a href="/consultation">Book a call</a>.</p>
+      </form>
     </div>
   </section>
 
@@ -540,6 +639,95 @@
     menu.classList.remove('open');
     burger.setAttribute('aria-expanded', 'false');
   }));
+</script>
+
+<script>
+  // ===================================================================
+  // The partnership application.
+  //
+  // Posts to the SAME endpoint contractors.html uses, with the same
+  // no-cors call: intake.php parses raw JSON whatever the content type,
+  // and the response is opaque, so everything below has to mirror the
+  // server's own rules rather than read its answer.
+  //
+  // role is what routes it. intake.php tests for "Partnership" to pick
+  // the partners tag over clients (the clients tag fires a "you're in
+  // the book" welcome, which is the wrong letter for an applicant),
+  // to title the notification, and to send the acknowledgement.
+  // Change that string here and the whole server branch stops firing.
+  // ===================================================================
+  (function(){
+    var ENDPOINT = "https://jubyr.tools/intake.php";
+    var form = document.getElementById("papply");
+    if(!form) return;
+    var btn = document.getElementById("papplyBtn");
+    var err = document.getElementById("papplyErr");
+
+    function val(n){ var e = form.elements[n]; return e ? String(e.value||"").trim() : ""; }
+    function picked(n){
+      return Array.prototype.slice.call(form.querySelectorAll('[name="'+n+'"]:checked'))
+        .map(function(i){ return i.value; });
+    }
+    function digits(v){ return String(v||"").replace(/\D/g,""); }
+    function mark(name, bad){
+      var e = form.elements[name];
+      if(e && e.setAttribute) e.setAttribute("aria-invalid", bad ? "true" : "false");
+    }
+    function fail(msg, name){
+      err.textContent = msg; err.hidden = false;
+      if(name){ mark(name, true); var e = form.elements[name]; if(e && e.focus) e.focus(); }
+      err.scrollIntoView({block:"center"});
+      return false;
+    }
+
+    form.addEventListener("submit", function(ev){
+      ev.preventDefault();
+      err.hidden = true;
+      ["firstName","lastName","email","phone","network"].forEach(function(n){ mark(n, false); });
+
+      if(!val("firstName")) return fail("Please add your first name.", "firstName");
+      if(!val("lastName"))  return fail("Please add your last name.", "lastName");
+      // the server's own email test, character for character
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(val("email")))
+        return fail("That email doesn't look right.", "email");
+      if(digits(val("phone")).length !== 10)
+        return fail("Please add a 10 digit phone number.", "phone");
+      if(val("network").length < 15)
+        return fail("Tell us a little about who you can reach. A sentence is plenty.", "network");
+
+      var pd = digits(val("phone"));
+      var payload = {
+        mode: "client",
+        hp_field: val("hp_field"),
+        role: "Partnership Applicant",
+        segs: ["events"],
+        name: val("firstName") + " " + val("lastName"),
+        email: val("email"),
+        phone: "(" + pd.slice(0,3) + ") " + pd.slice(3,6) + "-" + pd.slice(6),
+        partnerNetwork: val("network"),
+        partnerAudiences: picked("groups").join(", "),
+        partnerTargets: val("targets"),
+        partnerExperience: picked("experience")[0] || "",
+        availability: picked("time")[0] || "",
+        contactConsent: form.elements["consent"].checked ? "yes" : "no"
+      };
+
+      btn.disabled = true; btn.textContent = "Sending\u2026";
+      fetch(ENDPOINT, {method:"POST", mode:"no-cors", body: JSON.stringify(payload)})
+        .then(function(){
+          var first = val("firstName");
+          form.innerHTML = '<div class="dk-done"><h3>Thank you' +
+            (first ? ", " + first.replace(/[<>&]/g,"") : "") + '.</h3>' +
+            '<p>Your application is in, and Ruby reads every one herself. ' +
+            'You will hear back either way. If it is a fit, the brand kit ' +
+            'follows with it.</p></div>';
+        })
+        .catch(function(){
+          btn.disabled = false; btn.textContent = "Apply to partner >";
+          fail("Couldn't reach the server. Check your connection and try again.");
+        });
+    });
+  })();
 </script>
 
 <div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
