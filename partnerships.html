@@ -49,6 +49,46 @@
     }
     .mg-table td:first-child[data-label]::before { margin-top: 0; }
   }
+
+  /* The shared .sechead is built for a marketing page with one or two
+     sections. This page has six, and measured against the live build the
+     headings alone were 2,086px of a 6,417px page: a third of the scroll
+     was chrome. Tightened here rather than in styles.css, which would
+     reflow every other page on the site. */
+  .sechead { padding: 48px 24px 32px; }
+  /* styles.css styles .sechead h2; this page leads with a real h1, so it
+     needs the same type and the same white on the photo. */
+  .sechead h1 {
+    font-size: clamp(32px, 4vw, 54px); line-height: 1.08;
+    letter-spacing: -0.025em; font-weight: 800; max-width: 22ch; margin: 0 auto;
+  }
+  .sechead--photo h1 { color: #fff; }
+  .sechead p { font-size: 16px; max-width: 62ch; }
+  .gap { height: 30px; }
+  .finale { padding: 64px 24px 72px; }
+
+  /* Body copy was running 83 to 99 characters a line. Reading comfortably
+     tops out around 70. */
+  .mg-intro { max-width: 640px; }
+  .mg-col p, .mg-col li, .expander__body p, .mg-fine { max-width: 66ch; }
+
+  /* The accent was on eight decorative things and not on the one button
+     that matters, so the primary action is the only filled green on the
+     page now and the mobile table captions step back to muted. */
+  .btn--apply { background: var(--green); border-color: var(--green); color: #fff; }
+  .btn--apply:hover { background: var(--ink); border-color: var(--ink); }
+  @media (max-width: 480px) {
+    .mg-table td[data-label]::before { color: var(--muted); }
+  }
+
+  /* Two columns that are read as a pair, not as two cards that happen to
+     sit together: one hairline between them, no boxes. */
+  .pair { border-top: 1px dashed var(--line); }
+  .pair .mg-col { border: 0; padding: 22px 0 4px; }
+  @media (min-width: 721px) {
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .pair .mg-col + .mg-col { border-left: 1px dashed var(--line); padding-left: 40px; }
+  }
 </style>
 </head>
 <body>
@@ -191,9 +231,10 @@
     <section class="box">
       <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.68)), url('assets/bg-lounge-dark.jpg')">
         <span class="tag">Partnership program</span>
-        <h2>You bring the booking. You get 10% of the bar.</h2>
-        <p>Research and outreach for Jubyr LLC. You bring the booking,
-        we run the night, you take 10% of the bar.</p>
+        <h1>You bring the booking. You get 10% of the bar.</h1>
+        <p>A paid outreach partnership with Jubyr LLC, for people with a
+        network and no interest in working nights. Three rooms in
+        Fishtown, midweek and early evenings.</p>
         <a class="tag tag--link" href="#apply">Apply to partner <span aria-hidden="true">&gt;</span></a>
       </div>
 
@@ -218,38 +259,73 @@
     <div class="gap"></div>
 
     <!-- ============ two ways to earn ============ -->
-    <section class="box" id="earn">
+    <!-- ============ the rooms ============ -->
+    <section class="box" id="brings">
       <div class="sechead reveal">
-        <span class="tag">Compensation</span>
-        <h2>One rate. Ten percent of the bar.</h2>
-        <p>No tiers, no sliding scale, no different deal depending on the
-        room or the night. Every event you bring pays you the same
-        percentage of what that event drinks.</p>
+        <span class="tag">The arrangement</span>
+        <h2>One rate, and what each side brings.</h2>
+        <p>You are a researcher and a salesperson, not a host. Everything
+        that happens inside the building is ours.</p>
       </div>
 
-      <div class="mg-cols mg-cols--1 mg-pad reveal" style="margin:0 auto">
-        <div class="mg-col">
-          <div class="mg-payrows" style="margin-top:0">
-            <div class="mg-payrow">
-              <span>Every event &middot; every venue</span>
-              <strong>10% of total bar sales</strong>
-              <p>On what the room rings for drinks, before tax, tip and
-              service charge. The minimum is a floor under your fee, never
-              a cap.</p>
-            </div>
+      <div class="mg-pad reveal" style="padding-bottom:4px">
+        <div class="mg-payrows" style="margin-top:0;max-width:640px">
+          <div class="mg-payrow">
+            <span>Every event you bring &middot; every venue</span>
+            <strong>10% of total bar sales</strong>
+            <p>On what the room rings for drinks, before tax, tip and
+            service charge. The minimum is a floor under your fee, never a
+            cap, and there is no limit on how many events you bring.
+            Partners are independent contractors of Jubyr LLC, not
+            employees.</p>
           </div>
-          <p class="mg-fine" style="margin-top:18px"><strong>You never work
-          the floor.</strong> You research, pitch, agree the date and
-          deliver the turnout. We do the rest. Independent contractor, not
-          an employee.</p>
         </div>
       </div>
 
+
+      <div class="pair mg-pad reveal" style="padding-bottom:30px">
+        <div class="mg-col">
+          <h3 class="mg-h3">Jubyr brings</h3>
+          <ul style="color:var(--muted);font-size:14.5px;line-height:1.7;padding-left:18px">
+            <li>A kit you can forward without editing: rates, photos,
+            floor plans, menus, capacities</li>
+            <li>Live open dates across all three rooms, held while your
+            client decides</li>
+            <li>Someone on the call when a client wants to hear it from
+            the venue</li>
+            <li>Everything after the handshake: contract, deposit,
+            planning, staffing, the event itself</li>
+            <li>A reference from Jubyr LLC</li>
+          </ul>
+        </div>
+        <div class="mg-col">
+          <h3 class="mg-h3">You bring</h3>
+          <ul style="color:var(--muted);font-size:14.5px;line-height:1.7;padding-left:18px">
+            <li>Research: the right organization, and the right person
+            inside it</li>
+            <li>The pitch, and the follow up</li>
+            <li>The date, the headcount and the shape of the evening,
+            agreed with your client</li>
+            <li>Turnout. The number you promise is the number we staff
+            for</li>
+            <li>Leads registered before you approach them, and nothing
+            quoted that is not on this page</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mg-pad reveal" style="padding-bottom:34px">
+        <p class="mg-fine"><strong>Who this works for:</strong> people
+        with a way into offices, brands, agencies, studios, professional
+        groups, alumni chapters, member clubs or nonprofits, who can write
+        a clear pitch and be trusted with our name in a stranger&rsquo;s
+        inbox. No hospitality background needed. Midweek corporate is the
+        priority.</p>
+      </div>
     </section>
 
     <div class="gap"></div>
 
-    <!-- ============ the rooms ============ -->
     <section class="box" id="rooms">
       <div class="sechead reveal">
         <span class="tag">What you can sell</span>
@@ -436,98 +512,55 @@
 
       <div class="expander reveal" aria-label="Frequently asked questions">
         <details>
-          <summary><span class="xk">01</span><span class="xt">Who we are looking for</span></summary>
-          <div class="expander__body">
-            <p>People who will do the research, have a way into offices,
-            brands, agencies or member organizations, can write a clear
-            pitch and follow it up, and can be trusted with Jubyr&rsquo;s
-            name in a stranger&rsquo;s inbox. No hospitality
-            r&eacute;sum&eacute; needed, and no interest in working nights.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">02</span><span class="xt">Where the bookings come from</span></summary>
-          <div class="expander__body">
-            <p>Companies wanting a team happy hour or offsite. Agencies,
-            studios and startups with a social budget. Professional
-            groups, alumni chapters and member clubs. Brands wanting a
-            launch with a real crowd. Nonprofits and community
-            organizations. Anyone planning a holiday party before the
-            good dates go. <strong>Midweek corporate is the priority.</strong></p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">03</span><span class="xt">What we give you to sell with</span></summary>
-          <div class="expander__body">
-            <p>A kit you can forward without editing &mdash; rates,
-            photos, floor plans, menus, capacities. Live open dates across
-            all three rooms. Dates held while your client decides. Someone
-            to sit in on the call when a client wants to hear it from the
-            venue. We take over the moment the booking is agreed:
-            contracts, deposits, planning, the event itself. And a
-            reference from Jubyr LLC.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">04</span><span class="xt">What we ask of you</span></summary>
-          <div class="expander__body">
-            <p>Real research before you pitch, not a mass email. The
-            headcount you promise is the headcount we staff for. Register
-            leads before you approach them. You represent Jubyr LLC, so
-            quote nothing that is not on this page or in the kit. And
-            never pitch a Friday or Saturday night.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">05</span><span class="xt">Is this a job?</span></summary>
+          <summary><span class="xk">01</span><span class="xt">Is this a job?</span></summary>
           <div class="expander__body">
             <p>No &mdash; and we would rather be straight about that than dress it up. There is no wage, no schedule and no guaranteed hours. You are an independent contractor of Jubyr LLC who earns 10% of the bar on events you bring in. For some people that becomes steady monthly income; for others it is one booking a year. What it is not is a salary.</p>
           </div>
         </details>
         <details>
-          <summary><span class="xk">06</span><span class="xt">Do I need hospitality experience?</span></summary>
+          <summary><span class="xk">02</span><span class="xt">Do I need hospitality experience?</span></summary>
           <div class="expander__body">
             <p>No. This is a research and outreach role. If you can identify the right organization, write a clear email and get the people you promised to actually turn up, you can do this. Everything that happens inside the venue is ours.</p>
           </div>
         </details>
         <details>
-          <summary><span class="xk">07</span><span class="xt">Do I have to be there on the night?</span></summary>
+          <summary><span class="xk">03</span><span class="xt">Do I have to be there on the night?</span></summary>
           <div class="expander__body">
             <p>Never. You are not hosting, running the room or working the floor &mdash; we do all of that. Come as a guest to your own event if you want to, but it changes nothing about what you are paid.</p>
           </div>
         </details>
         <details>
-          <summary><span class="xk">08</span><span class="xt">What if the room doesn&rsquo;t hit its minimum?</span></summary>
+          <summary><span class="xk">04</span><span class="xt">What if the room doesn&rsquo;t hit its minimum?</span></summary>
           <div class="expander__body">
             <p>The minimum is the client&rsquo;s commitment, not yours. If their guests spend less than the floor, the client covers the difference &mdash; you are never asked to make up a shortfall and you are never penalized for a quiet event. Your 10% is calculated on what the room actually spends, so the minimum is the floor under your fee and never the cap &mdash; a room that spends well past its minimum pays you on all of it.</p>
           </div>
         </details>
         <details>
-          <summary><span class="xk">09</span><span class="xt">What exactly counts as &ldquo;bar sales&rdquo;?</span></summary>
+          <summary><span class="xk">05</span><span class="xt">What exactly counts as &ldquo;bar sales&rdquo;?</span></summary>
           <div class="expander__body">
             <p>What the room rings through the register for drinks at your event, before tax, tip and service charge. Food is not included. You are shown the figure your fee was worked out from &mdash; we are not asking you to take a number on faith.</p>
           </div>
         </details>
         <details>
-          <summary><span class="xk">10</span><span class="xt">Why can&rsquo;t I book Friday or Saturday nights?</span></summary>
+          <summary><span class="xk">06</span><span class="xt">Why can&rsquo;t I book Friday or Saturday nights?</span></summary>
           <div class="expander__body">
             <p>Because those already sell out on our own programming, so there is nothing for a partner to add. The whole point of this program is to fill the windows that are genuinely quiet. At Margolis that leaves everything up to 9 PM on a Friday or Saturday plus all of Sunday and Tuesday to Thursday; at Fabrika, Monday to Thursday and Sunday after brunch; The Patio is wide open.</p>
           </div>
         </details>
         <details>
-          <summary><span class="xk">11</span><span class="xt">Can I do this alongside my actual job?</span></summary>
+          <summary><span class="xk">07</span><span class="xt">Can I do this alongside my actual job?</span></summary>
           <div class="expander__body">
             <p>Yes, and most partners will. A booking is a few emails and a phone call, with no onsite commitment at all. Plenty of the best leads are the company you already work for.</p>
           </div>
         </details>
         <details>
-          <summary><span class="xk">12</span><span class="xt">Is there a cap on how much I can book?</span></summary>
+          <summary><span class="xk">08</span><span class="xt">Is there a cap on how much I can book?</span></summary>
           <div class="expander__body">
             <p>No cap on your side. The only limit is the calendar &mdash; there are a finite number of eligible dates across three rooms, and they go first come, first confirmed. Register leads early and you will rarely be blocked.</p>
           </div>
         </details>
         <details>
-          <summary><span class="xk">13</span><span class="xt">What if my client needs a room you don&rsquo;t have?</span></summary>
+          <summary><span class="xk">09</span><span class="xt">What if my client needs a room you don&rsquo;t have?</span></summary>
           <div class="expander__body">
             <p>Ask us. Jubyr works with other venues around the city beyond these three, so if a client needs a different size, a different neighborhood or a different kind of space, there is a good chance we can place it anyway &mdash; and you are paid the same way.</p>
           </div>
@@ -537,13 +570,16 @@
 
     <!-- ============ apply ============ -->
     <section class="finale" id="apply">
-      <h2 class="reveal">Bring us a Tuesday.</h2>
-      <p class="reveal">Tell us who you can reach. If it is a fit, you
-      will have the kit the same week.</p>
+      <h2 class="reveal">Apply to partner.</h2>
+      <p class="reveal">Tell us who you can reach. Ruby reads every one
+      herself, and you will hear back either way.</p>
       <div class="finale__cta reveal">
-        <a class="btn btn--green" href="mailto:ruby@jubyr.com?subject=Hospitality%20consultant%20partnership&amp;body=Who%20I%20can%20reach%3A%0A%0AWhich%20room%20I%27d%20start%20with%3A%0A%0AA%20bit%20about%20me%3A%0A%0A">Apply by email <span class="arw" aria-hidden="true">&gt;</span></a>
-        <a class="btn btn--ghost" href="/consultation">Book a call first <span aria-hidden="true">&gt;</span></a>
+        <a class="btn btn--apply" href="mailto:ruby@jubyr.com?subject=Partnership%20application&amp;body=Name%3A%0A%0AWho%20you%20can%20reach%20%28companies%2C%20groups%2C%20the%20networks%20you%20actually%20have%20a%20way%20into%29%3A%0A%0AWhich%20room%20you%20would%20start%20with%3A%0A%0AOrganizations%20you%20already%20have%20in%20mind%20%28optional%29%3A%0A%0AAnything%20else%20%28optional%29%3A%0A%0A">Apply to partner <span class="arw" aria-hidden="true">&gt;</span></a>
       </div>
+      <p class="reveal" style="margin-top:20px;font-size:14px;color:var(--muted)">
+        Opens an email with the questions already in it. Prefer to talk
+        first? <a href="/consultation" style="color:var(--green)">Book a
+        call</a>.</p>
     </section>
 
   </main>
