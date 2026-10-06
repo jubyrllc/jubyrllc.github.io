@@ -1621,6 +1621,16 @@
   async function loadSubmissions(){ M.submissions = (await mapi({action:"listSubmissions", scope:M.subScope})).submissions || []; }
   async function loadRequests(){ M.requests = (await mapi({action:"listDateRequests", scope:M.dreqScope})).requests || []; }
   async function loadNights(){ M.nights = (await mapi({action:"nights", days:60})).nights || []; }
+  /* The 2027 applications board. Deliberately a SEPARATE load from
+     loadResidencies(): that one sweeps Google Calendar for parties that
+     already exist, this one reads applications for a year that has not
+     happened. They meet only when Confirm promotes one. */
+  async function loadResidencyApps(){
+    const r = await mapi({action:"residencyAppList"});
+    M.resApps   = r.applications || [];
+    M.resAppCnt = r.counts || {};
+    M.resAppYear = r.year || 2027;
+  }
   async function loadResidencies(){
     const r = await mapi({action:"residencyList"});
     M.resList = r.residencies || [];
@@ -1642,6 +1652,7 @@
     if(M.tab === "djs" && !M.accounts) jobs.push(loadAccounts());
     if(M.tab === "payees" && !M.payees) jobs.push(loadPayees());
     if(M.tab === "res" && !M.resList) jobs.push(loadResidencies());
+    if(M.tab === "res" && !M.resApps) jobs.push(loadResidencyApps());
     await Promise.all(jobs);
   }
 
@@ -2588,6 +2599,89 @@
       </div></details>`;
   }
 
+  /* The applications queue, above the list of parties that already run.
+     It is the thing she acts on; the list below is reference.
+
+     NOTHING HERE IS ON margolis.events UNTIL CONFIRM. Ruby, 2026-10-05:
+     while an application is pending the public site must not change. So
+     the card says so in as many words — the one fact that decides
+     whether she has to hurry. */
+  function renderResidencyApps(){
+    const apps = M.resApps || [];
+    const year = M.resAppYear || 2027;
+    const c = M.resAppCnt || {};
+    const pending = apps.filter(a => a.status === "pending");
+    const show = M.resAppScope === "all" ? apps
+               : M.resAppScope === "confirmed" ? apps.filter(a => a.status === "confirmed")
+               : pending;
+
+    const chip = (k, label, n) => `<button type="button" class="mgr-chip${(M.resAppScope||"pending")===k?" mgr-chip--dark":""}" data-act="resappscope" data-scope="${k}">${label}${n?" "+n:""}</button>`;
+
+    let h = `<div class="mgr-card">
+      <h3>${year} residency applications</h3>
+      <div class="mgr-meta">Hosts pick a night on <a class="mgr-link" href="https://margolis.events/apply-for-a-residency" target="_blank" rel="noopener">margolis.events/apply-for-a-residency</a> and apply for the slot it sits on.
+      <b>Nothing reaches the public site until you confirm it.</b></div>
+      <div class="mgr-chips" style="margin-top:10px">
+        ${chip("pending","Pending", c.pending||0)}
+        ${chip("confirmed","Confirmed", c.confirmed||0)}
+        ${chip("all","All", apps.length)}
+      </div>`;
+
+    if(!show.length){
+      h += `<p class="mgr-meta" style="margin-top:12px">${
+        (M.resAppScope||"pending")==="pending" ? "Nothing waiting on you." : "Nothing here yet."}</p></div>`;
+      return h;
+    }
+
+    h += show.map(a => {
+      const msg = (M.resAppMsg||{})[a.id] || "";
+      const open = M.resAppOpen === a.id;
+      /* Dates are shown in full on an open card and counted when shut.
+         Twelve dates is the difference between an all-year residency and
+         a seasonal one, and it is the number she is actually deciding. */
+      const dateList = (a.dates||[]).map(d => {
+        const [y,m,dd] = d.split("-").map(Number);
+        return new Date(y, m-1, dd).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});
+      });
+      const badge = a.status === "confirmed" ? `<span class="mgr-chip mgr-chip--ok">Confirmed</span>`
+                  : a.status === "declined"  ? `<span class="mgr-chip mgr-chip--bad">Declined</span>`
+                  : `<span class="mgr-chip mgr-chip--warn">Pending</span>`;
+      return `<div class="mgr-card" style="margin-top:12px">
+        <div class="mgr-chips">${badge}
+          <span class="mgr-chip">${esc(a.slotWords||"")}</span>
+          <span class="mgr-chip">${esc(a.shape||"")}</span>
+          <span class="mgr-chip">${a.dateCount||0} night${a.dateCount===1?"":"s"}</span>
+          ${a.returning?`<span class="mgr-chip mgr-chip--dark">Returning</span>`:""}
+        </div>
+        <h3 style="margin-top:8px">${esc(a.name||"Untitled")}</h3>
+        <div class="mgr-meta">${esc(a.host||"")}${a.instagram?` &middot; <a class="mgr-link" href="https://instagram.com/${esc(a.instagram)}" target="_blank" rel="noopener">@${esc(a.instagram)}</a>`:""}
+          ${a.email?` &middot; <a class="mgr-link" href="mailto:${esc(a.email)}">${esc(a.email)}</a>`:""}${a.phone?` &middot; ${esc(a.phone)}`:""}</div>
+        ${(a.rivals||[]).length?`<p class="mgr-meta" style="margin-top:6px"><b>Also applying for these nights:</b> ${a.rivals.map(r=>esc(r.name)).join(", ")}. Confirming one leaves the others pending &mdash; decline them yourself.</p>`:""}
+        ${open ? `
+          <p style="margin-top:10px;white-space:pre-wrap">${esc(a.about||"")}</p>
+          <p class="mgr-meta" style="margin-top:8px"><b>${dateList.length} night${dateList.length===1?"":"s"} in ${year}:</b> ${dateList.join(" &middot; ")}</p>
+          ${a.note?`<p class="mgr-meta" style="margin-top:6px"><b>Your note:</b> ${esc(a.note)}</p>`:""}
+          <div class="mgr-field" style="margin-top:10px">
+            <label>A line to them, in the email (optional)</label>
+            <textarea rows="2" data-resapp-note placeholder="Goes into the confirmation or the decline, above the dates."></textarea>
+          </div>
+          <label class="res-check"><input type="checkbox" data-resapp-email checked> Email them this decision</label>
+          <div class="mgr-acts" style="margin-top:10px">
+            ${a.status !== "confirmed" ? `<button class="mgr-btn" data-act="resappdecide" data-id="${esc(a.id)}" data-decision="confirm">Confirm &amp; publish</button>` : ""}
+            ${a.status !== "declined" ? `<button class="mgr-btn mgr-btn--bad" data-act="resappdecide" data-id="${esc(a.id)}" data-decision="decline">Decline</button>` : ""}
+            ${a.status !== "pending" ? `<button class="mgr-btn mgr-btn--ghost" data-act="resappdecide" data-id="${esc(a.id)}" data-decision="reopen">Put back to pending</button>` : ""}
+            <button class="mgr-btn mgr-btn--ghost" data-act="resappopen" data-id="${esc(a.id)}">Close</button>
+          </div>` : `
+          <div class="mgr-acts" style="margin-top:10px">
+            <button class="mgr-btn mgr-btn--ghost" data-act="resappopen" data-id="${esc(a.id)}">Open</button>
+          </div>`}
+        ${msg?`<p class="mgr-meta" style="margin-top:8px">${esc(msg)}</p>`:""}
+      </div>`;
+    }).join("");
+
+    return h + `</div>`;
+  }
+
   function renderResidencies(){
     const all = M.resList || [];
     const q = (M.resSearch||"").trim().toLowerCase();
@@ -2597,7 +2691,7 @@
     const needCopy = all.filter(r => r.active && !r.blurb).length;
     const needHost = all.filter(r => r.active && (r.host||{}).source !== "profile").length;
 
-    let h = `<div class="mgr-card">
+    let h = renderResidencyApps() + `<div class="mgr-card">
       <h3>Residencies</h3>
       <div class="mgr-meta">${all.length} parties have run here more than once. ${all.filter(r=>r.active).length} still have dates on the calendar.
       Everything you change here is live on <a class="mgr-link" href="https://margolis.events/residencies" target="_blank" rel="noopener">margolis.events/residencies</a> on the next page load.</div>
@@ -3043,6 +3137,53 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
         M.resOpen = (M.resOpen === k) ? null : k;
         M.resDirty = {};
         render();
+        return;
+      }
+
+      if(act === "resappscope"){ M.resAppScope = btn.dataset.scope; render(); return; }
+
+      if(act === "resappopen"){
+        M.resAppOpen = (M.resAppOpen === btn.dataset.id) ? null : btn.dataset.id;
+        render();
+        return;
+      }
+
+      /* Confirm is the only button on this dashboard that changes
+         margolis.events, so it reports the three things that can differ
+         separately: the decision landed, the public page was written,
+         the host was emailed. Collapsing them into one "Done" is how
+         somebody believes a host was told when the send failed. */
+      if(act === "resappdecide"){
+        const id = btn.dataset.id;
+        const decision = btn.dataset.decision;
+        const card = btn.closest(".mgr-card");
+        const noteEl = card.querySelector("[data-resapp-note]");
+        const mailEl = card.querySelector("[data-resapp-email]");
+        const a = (M.resApps||[]).find(x => x.id === id);
+        if(decision === "confirm" && a){
+          if(!confirm(`Confirm ${a.name} on the ${a.slotWords.toLowerCase()} — ${a.dateCount} night${a.dateCount===1?"":"s"} in ${M.resAppYear}?\n\nThis publishes them to margolis.events.`)) return;
+        }
+        if(decision === "decline" && a && !confirm(`Decline ${a.name}?`)) return;
+        M.resAppMsg = M.resAppMsg || {};
+        busy("Saving…");
+        try{
+          const out = await mapi({action:"residencyAppDecide", id, decision,
+            note: noteEl ? noteEl.value : "", email: !!(mailEl && mailEl.checked)});
+          await Promise.all([loadResidencyApps(), loadResidencies()]);
+          M.resAppMsg[id] = [
+            decision === "confirm" ? "Confirmed." : decision === "decline" ? "Declined." : "Back to pending.",
+            out.publishNote || "",
+            (mailEl && mailEl.checked) ? (out.emailed ? "Host emailed." : "The email did NOT go — tell them yourself.") : "No email sent.",
+          ].filter(Boolean).join(" ");
+          M.resAppOpen = null;
+          render();
+        }catch(e){
+          /* Re-enable rather than leaving a dead button: render() would
+             have replaced it on success, so reaching here means the row
+             is still on screen and she needs to be able to try again. */
+          free();
+          if(e !== "auth") showErr(typeof e === "string" ? e : "Could not save that decision.");
+        }
         return;
       }
 
