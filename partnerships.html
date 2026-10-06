@@ -88,6 +88,13 @@
   .dk-col li { padding: 11px 0 11px 22px; border-top: 1px solid var(--deck-line); position: relative; font-size: 15px; line-height: 1.55; color: var(--muted); }
   .dk-col li::before { content: ""; position: absolute; left: 2px; top: 20px; width: 9px; height: 1px; background: var(--green); }
 
+  /* The moment the fee attaches, which is the question the two columns
+     leave open: not at the pitch, not at the handshake, but when the
+     night is on the calendar. */
+  .dk-locked { margin-top: 32px; padding: 20px 22px; background: var(--deck-tint);
+    border-left: 3px solid var(--green); font-size: 15.5px; line-height: 1.6; max-width: 62ch; }
+  .dk-sec--tint .dk-locked { background: #fff; }
+
   /* ---------- rooms ---------- */
   .dk-rooms { display: grid; gap: 1px; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.2); margin-top: 34px; }
   @media (min-width: 860px) { .dk-rooms { grid-template-columns: repeat(3, 1fr); } }
@@ -343,14 +350,20 @@
         <div class="dk-col">
           <h3>You bring</h3>
           <ul>
-            <li>Research: the right organization, and the right person inside it</li>
-            <li>The pitch, and the follow up</li>
-            <li>The date, the headcount and the shape of the evening</li>
-            <li>Turnout. The number you promise is the number we staff for</li>
-            <li>Leads registered before you approach them</li>
+            <li>Research the organizations that would be a good fit, and get
+            in contact with them</li>
+            <li>Pitch the venue and the event</li>
+            <li>Follow up</li>
+            <li>Gather the date, the headcount and what they want from the
+            night</li>
+            <li>Hand the rest over to us</li>
           </ul>
         </div>
       </div>
+
+      <p class="dk-locked"><strong>Once it is locked into the calendar you
+      are the booking agent on that event</strong>, and you are paid 10&#37;
+      of what that room spends at the bar.</p>
     </div>
   </section>
 
