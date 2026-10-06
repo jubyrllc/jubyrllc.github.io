@@ -25,82 +25,109 @@
 <meta name="twitter:image" content="https://jubyr.com/assets/og-default.jpg">
 
 <style>
-  /* Page-scoped, deliberately NOT in styles.css so this page does not
-     force a ?v= bump across the whole site.
+  /* ==================================================================
+     Pitch deck, not a page. Ruby, 2026-10-05: "this still looks like a
+     shit ton of text ... turn it more into a pitchdeck like you did for
+     GWGI philly."
 
-     Below 480px the shared .mg-table rule hides <thead> and stacks each
-     row into a block — good, because nothing should need a sideways
-     swipe. But a stacked row then reads "$225  $300" with no column
-     headings, which on the money tables is the difference between a
-     figure and a mystery. These two rules print each cell's own label
-     from data-label, mobile only. Every <td> in a .mg-table on this
-     page must carry a data-label or it loses its heading on a phone. */
-  @media (max-width: 480px) {
-    .mg-table td[data-label]::before {
-      content: attr(data-label);
-      display: block;
-      font-family: var(--mono);
-      font-size: 9.5px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--green);
-      font-weight: 600;
-      margin-top: 8px;
-    }
-    .mg-table td:first-child[data-label]::before { margin-top: 0; }
-  }
+     Built in the same idiom as gwgiphilly.com/deck: full bleed panels
+     that alternate ground, one idea each, a mono eyebrow over a large
+     statement, and the detail underneath rather than beside it. Same
+     structure, Jubyr's own tokens: olive where that deck uses maroon.
 
-  /* The shared .sechead is built for a marketing page with one or two
-     sections. This page has six, and measured against the live build the
-     headings alone were 2,086px of a 6,417px page: a third of the scroll
-     was chrome. Tightened here rather than in styles.css, which would
-     reflow every other page on the site. */
-  .sechead { padding: 48px 24px 32px; }
-  /* styles.css styles .sechead h2; this page leads with a real h1, so it
-     needs the same type and the same white on the photo. */
-  .sechead h1 {
-    font-size: clamp(32px, 4vw, 54px); line-height: 1.08;
-    letter-spacing: -0.025em; font-weight: 800; max-width: 22ch; margin: 0 auto;
-  }
-  .sechead--photo h1 { color: #fff; }
-  /* Ruby, 2026-10-05: these ledes should run the full width rather than
-     sit pinched in a narrow column above a full-width table. They are one
-     or two sentences each, so a full-width line is one line, not a wall. */
-  .sechead p { font-size: 16px; max-width: none; }
-  .gap { height: 30px; }
-  .finale { padding: 64px 24px 72px; }
+     Self contained like that deck. styles.css is still loaded for the
+     announce bar, the nav and the footer, which keep this inside the
+     site; everything between them is here.
+     ================================================================== */
+  :root { --deck-tint: #F2F5E4; --deck-line: #C7D394; }
 
-  /* Body copy was running 83 to 99 characters a line. Reading comfortably
-     tops out around 70. */
-  .mg-intro { max-width: 640px; }
-  .mg-col p, .mg-col li, .expander__body p { max-width: 66ch; }
-  /* Wider than body copy so it does not read as pinched under a full
-     width chart, still short of the full 1,300px, which would be ~160
-     characters a line. */
-  .mg-fine { max-width: 92ch; }
+  main { display: block; }
+  .dk-wrap { max-width: 1080px; margin: 0 auto; padding: 0 clamp(18px, 4vw, 40px); }
 
-  /* The accent was on eight decorative things and not on the one button
-     that matters, so the primary action is the only filled green on the
-     page now and the mobile table captions step back to muted. */
-  .btn--apply { background: var(--green); border-color: var(--green); color: #fff; }
-  .btn--apply:hover { background: var(--ink); border-color: var(--ink); }
-  @media (max-width: 480px) {
-    .mg-table td[data-label]::before { color: var(--muted); }
-  }
+  .dk-sec { padding: clamp(54px, 8vw, 104px) 0; border-top: 1px solid var(--line); }
+  .dk-sec--dark { background: var(--ink); color: #EDEDE8; border-top-color: #2a2a27; }
+  .dk-sec--dark .dk-lede, .dk-sec--dark .dk-denote { color: #A9A9A0; }
+  .dk-sec--tint { background: var(--deck-tint); border-top-color: var(--deck-line); }
+  .dk-sec--green { background: var(--green); color: #fff; border-top-color: #4d6400; }
+  .dk-sec--green .dk-lede, .dk-sec--green .dk-denote { color: #E8EFC8; }
 
-  /* Two columns that are read as a pair, not as two cards that happen to
-     sit together: one hairline between them, no boxes. */
-  /* A prospecting list is read by scanning, so it stays a list; two up on
-     a wide screen so six lines cost three. */
-  .leads { columns: 2; column-gap: 40px; padding-left: 18px; margin-top: 10px; }
-  .leads li { break-inside: avoid; color: var(--muted); font-size: 14.5px; line-height: 1.7; }
-  @media (max-width: 720px) { .leads { columns: 1; } }
+  .dk-eyebrow { display: inline-block; padding-bottom: 14px; color: var(--green); }
+  .dk-sec--dark .dk-eyebrow, .dk-sec--green .dk-eyebrow { color: #C3D98A; }
 
-  .pair { border-top: 1px dashed var(--line); }
-  .pair .mg-col { border: 0; padding: 22px 0 4px; }
-  @media (min-width: 721px) {
-    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-    .pair .mg-col + .mg-col { border-left: 1px dashed var(--line); padding-left: 40px; }
+  main h1, main h2, main h3 { letter-spacing: -0.025em; font-weight: 800; }
+  main h2 { font-size: clamp(28px, 4.4vw, 50px); line-height: 1.06; max-width: 19ch; }
+  main h3 { font-size: clamp(18px, 2vw, 22px); line-height: 1.2; }
+  .dk-lede { font-size: clamp(16px, 1.4vw, 18.5px); line-height: 1.6; color: var(--muted); max-width: 58ch; margin-top: 20px; }
+  .dk-denote { font-family: var(--mono); font-size: 11.5px; letter-spacing: .04em; line-height: 1.8; color: var(--muted); max-width: 60ch; margin-top: 22px; padding-left: 14px; border-left: 1px solid var(--line); }
+  .dk-sec--dark .dk-denote, .dk-sec--green .dk-denote { border-left-color: rgba(255,255,255,.3); }
+  .dk-denote a { color: inherit; }
+
+  /* ---------- cover ---------- */
+  .dk-cover { position: relative; min-height: 86svh; display: flex; color: #fff; overflow: hidden; }
+  .dk-cover__bg { position: absolute; inset: 0;
+    background-image: linear-gradient(180deg, rgba(12,12,11,.55) 0%, rgba(12,12,11,.45) 45%, rgba(12,12,11,.88) 100%), url('assets/bg-lounge-dark.jpg');
+    background-size: cover; background-position: center 40%; }
+  .dk-cover__inner { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 86svh; width: 100%; max-width: 1080px; margin: 0 auto; padding: clamp(26px, 5vw, 54px) clamp(18px, 4vw, 40px); }
+  .dk-cover__top { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: #E4E4DE; }
+  .dk-cover__mid { padding: clamp(32px, 6vw, 56px) 0; }
+  .dk-cover h1 { font-size: clamp(36px, 6.6vw, 80px); line-height: 1.0; max-width: 15ch; }
+  .dk-cover__sub { margin-top: 20px; font-size: clamp(16px, 1.5vw, 20px); line-height: 1.5; max-width: 46ch; color: #E4E4DE; }
+  .dk-cover__facts { display: flex; flex-wrap: wrap; gap: 10px 28px; border-top: 1px solid rgba(255,255,255,.24); padding-top: 18px; color: #EDEDE7; }
+
+  /* ---------- the one number ---------- */
+  .dk-bignum { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-top: 30px;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 26px 0; }
+  .dk-bignum__n { font-size: clamp(56px, 11vw, 128px); line-height: .9; font-weight: 800; letter-spacing: -0.04em; color: var(--green); }
+  .dk-bignum__l { font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+  /* ---------- two columns ---------- */
+  .dk-two { display: grid; gap: 34px; margin-top: 34px; }
+  @media (min-width: 740px) { .dk-two { grid-template-columns: 1fr 1fr; gap: 48px; } }
+  .dk-col ul { list-style: none; padding: 0; margin-top: 14px; }
+  .dk-col li { padding: 11px 0 11px 22px; border-top: 1px solid var(--deck-line); position: relative; font-size: 15px; line-height: 1.55; color: var(--muted); }
+  .dk-col li::before { content: ""; position: absolute; left: 2px; top: 20px; width: 9px; height: 1px; background: var(--green); }
+
+  /* ---------- rooms ---------- */
+  .dk-rooms { display: grid; gap: 1px; background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.2); margin-top: 34px; }
+  @media (min-width: 860px) { .dk-rooms { grid-template-columns: repeat(3, 1fr); } }
+  .dk-room { background: var(--ink); padding: clamp(22px, 2.6vw, 30px); }
+  .dk-room__top { display: flex; flex-direction: column; gap: 6px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,.2); }
+  .dk-room h3 { color: #fff; }
+  .dk-room__min { color: #C3D98A; font-size: 11px; letter-spacing: .06em; }
+  .dk-room__d { margin-top: 14px; font-size: 14.5px; line-height: 1.55; color: #A9A9A0; }
+  .dk-room__meta { margin-top: 16px; }
+  .dk-room__meta dt { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #8A8A82; margin-top: 12px; }
+  .dk-room__meta dd { margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: #D4D4CC; }
+  .dk-room__meta dd strong { color: #fff; }
+
+  /* ---------- leads ---------- */
+  .dk-leads { list-style: none; padding: 0; margin-top: 30px; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  @media (min-width: 740px) { .dk-leads { grid-template-columns: 1fr 1fr; } }
+  .dk-leads li { background: var(--paper); padding: 16px 18px; font-size: 15px; line-height: 1.5; }
+
+  /* ---------- faq ---------- */
+  .dk-faq { margin-top: 30px; border-top: 1px solid var(--deck-line); }
+  .dk-faq details { border-bottom: 1px solid var(--deck-line); }
+  .dk-faq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: baseline; gap: 18px; padding: 18px 2px; }
+  .dk-faq summary::-webkit-details-marker { display: none; }
+  .dk-faq .dk-q { font-weight: 700; font-size: 16px; letter-spacing: -0.01em; }
+  .dk-faq .dk-pm { flex: 0 0 auto; color: var(--green); font-family: var(--mono); font-size: 15px; }
+  .dk-faq .dk-pm::before { content: "+"; }
+  .dk-faq details[open] .dk-pm::before { content: "\2013"; }
+  .dk-faq .dk-ans { padding: 0 2px 20px; }
+  .dk-faq .dk-ans p { font-size: 15px; line-height: 1.65; color: var(--muted); max-width: 64ch; }
+
+  /* ---------- the one button ---------- */
+  .dk-cta { display: inline-flex; align-items: center; gap: 10px; margin-top: 30px;
+    font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    text-decoration: none; padding: 17px 28px; background: #fff; color: var(--ink); border: 1px solid #fff; }
+  .dk-cta:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .dk-close .dk-denote a { text-decoration: underline; text-underline-offset: 3px; }
+
+  @media print {
+    .announce, .nav, .mobilemenu, .footer, .jubyr-credit, .dk-cta { display: none !important; }
+    .dk-sec, .dk-cover { page-break-inside: avoid; }
   }
 </style>
 </head>
@@ -215,8 +242,6 @@
 </div>
 
 <div class="frame">
-
-  <!-- nav -->
   <header>
     <nav class="nav" aria-label="Main">
       <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
@@ -241,253 +266,216 @@
       <a href="/contact">Contact</a>
     </div>
   </header>
+</div>
 
-  <main id="top">
+<main id="top">
 
-    <!-- ============ hero ============ -->
-    <section class="box">
-      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.68)), url('assets/bg-lounge-dark.jpg')">
-        <span class="tag">Partnership program</span>
-        <h1>You bring the booking. You get 10% of the bar.</h1>
-        <p>A paid outreach partnership with Jubyr LLC, for people with a
-        network and no interest in working nights. Three rooms in
-        Fishtown, midweek and early evenings.</p>
-        <a class="tag tag--link" href="#apply">Apply to partner <span aria-hidden="true">&gt;</span></a>
+  <!-- 01 cover -->
+  <section class="dk-cover">
+    <div class="dk-cover__bg"></div>
+    <div class="dk-cover__inner">
+      <div class="dk-cover__top">
+        <span class="mono">Jubyr LLC &middot; Partnership program</span>
+        <span class="mono">Philadelphia</span>
       </div>
-
-      <!-- the headline numbers -->
-      <div class="strip strip--4 reveal" aria-label="Program at a glance">
-        <div><span class="strip__k">Every event you bring</span><span class="strip__v">10% of bar sales</span></div>
-        <div><span class="strip__k">Your time on site</span><span class="strip__v">None required</span></div>
-        <div><span class="strip__k">Rooms you can sell</span><span class="strip__v">3 &mdash; plus more on ask</span></div>
-        <div><span class="strip__k">Minimum to qualify</span><span class="strip__v">From $1,500</span></div>
+      <div class="dk-cover__mid">
+        <h1>You bring the booking. You get 10&#37; of the bar.</h1>
+        <p class="dk-cover__sub">A paid outreach partnership for people with a
+        network and no interest in working nights.</p>
       </div>
-
-      <div class="mg-intro reveal">
-        <p>Late Friday and Saturday sell themselves. Everything else is
-        open &mdash; weekday evenings, Friday before nine, Saturday
-        daytime &mdash; and that is the window companies, organizations
-        and clubs want for a social mixer, a professional mixer or a
-        happy hour.</p>
-        <p><strong>We would rather pay someone with a real network than
-        spend it on advertising.</strong></p>
+      <div class="dk-cover__facts mono">
+        <span>10&#37; of bar sales</span>
+        <span>3 rooms in Fishtown</span>
+        <span>No time on site</span>
+        <span>Minimums from $1,500</span>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <div class="gap"></div>
+  <!-- 02 the gap -->
+  <section class="dk-sec dk-sec--dark">
+    <div class="dk-wrap">
+      <span class="dk-eyebrow mono">The opening</span>
+      <h2>Late Friday and Saturday sell themselves. Everything else is open.</h2>
+      <p class="dk-lede">Weekday evenings, Friday before nine, Saturday daytime.
+      That is the window companies, organizations and clubs want for a social
+      mixer, a professional mixer or a happy hour, and it is the window we are
+      not filling.</p>
+      <p class="dk-lede"><strong>We would rather pay someone with a real network
+      than spend it on advertising.</strong></p>
+    </div>
+  </section>
 
-    <!-- ============ two ways to earn ============ -->
-    <!-- ============ the rooms ============ -->
-    <section class="box" id="brings">
-      <div class="sechead reveal">
-        <span class="tag">The arrangement</span>
-        <h2>One rate, and what each side brings.</h2>
-        <p>You are a researcher and a salesperson, not a host. Everything
-        that happens inside the building is ours.</p>
+  <!-- 03 the rate -->
+  <section class="dk-sec">
+    <div class="dk-wrap">
+      <span class="dk-eyebrow mono">The rate</span>
+      <h2>One rate. Every event, every room.</h2>
+      <div class="dk-bignum">
+        <span class="dk-bignum__n">10&#37;</span>
+        <span class="dk-bignum__l">of total bar sales</span>
       </div>
+      <p class="dk-lede">On what the room rings for drinks, before tax, tip and
+      service charge. Paid once the night settles and the register is
+      reconciled, against figures you can see.</p>
+      <p class="dk-denote">The minimum is a floor under your fee, never a cap.
+      No limit on how many events you bring. Partners are independent
+      contractors of Jubyr LLC, not employees.</p>
+    </div>
+  </section>
 
-      <div class="mg-pad reveal" style="padding-bottom:4px">
-        <div class="mg-payrows" style="margin-top:0;max-width:640px">
-          <div class="mg-payrow">
-            <span>Every event you bring &middot; every venue</span>
-            <strong>10% of total bar sales</strong>
-            <p>On what the room rings for drinks, before tax, tip and
-            service charge. The minimum is a floor under your fee, never a
-            cap, and there is no limit on how many events you bring. Paid
-            once the night settles and the register is reconciled, against
-            figures you can see. Partners are independent contractors of
-            Jubyr LLC, not employees.</p>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="pair mg-pad reveal" style="padding-bottom:30px">
-        <div class="mg-col">
-          <h3 class="mg-h3">Jubyr brings</h3>
-          <ul style="color:var(--muted);font-size:14.5px;line-height:1.7;padding-left:18px">
-            <li>A kit you can forward without editing: rates, photos,
-            floor plans, menus, capacities</li>
-            <li>Live open dates across all three rooms, held while your
-            client decides</li>
-            <li>Someone on the call when a client wants to hear it from
-            the venue</li>
-            <li>Everything after the handshake: contract, deposit,
-            planning, staffing, the event itself</li>
+  <!-- 04 two sides -->
+  <section class="dk-sec dk-sec--tint">
+    <div class="dk-wrap">
+      <span class="dk-eyebrow mono">The arrangement</span>
+      <h2>You are a researcher and a salesperson, not a host.</h2>
+      <div class="dk-two">
+        <div class="dk-col">
+          <h3>Jubyr brings</h3>
+          <ul>
+            <li>A kit you can forward without editing: rates, photos, floor plans, menus, capacities</li>
+            <li>Live open dates across all three rooms, held while your client decides</li>
+            <li>Someone on the call when a client wants to hear it from the venue</li>
+            <li>Everything after the handshake: contract, deposit, planning, staffing, the event itself</li>
             <li>A reference from Jubyr LLC</li>
           </ul>
         </div>
-        <div class="mg-col">
-          <h3 class="mg-h3">You bring</h3>
-          <ul style="color:var(--muted);font-size:14.5px;line-height:1.7;padding-left:18px">
-            <li>Research: the right organization, and the right person
-            inside it</li>
+        <div class="dk-col">
+          <h3>You bring</h3>
+          <ul>
+            <li>Research: the right organization, and the right person inside it</li>
             <li>The pitch, and the follow up</li>
-            <li>The date, the headcount and the shape of the evening,
-            agreed with your client</li>
-            <li>Turnout. The number you promise is the number we staff
-            for</li>
-            <li>Leads registered before you approach them, and nothing
-            quoted that is not on this page</li>
+            <li>The date, the headcount and the shape of the evening</li>
+            <li>Turnout. The number you promise is the number we staff for</li>
+            <li>Leads registered before you approach them</li>
           </ul>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="mg-pad reveal" style="padding-bottom:34px">
-        <h3 class="mg-h3" style="margin-top:6px">Where the bookings come from</h3>
-        <ul class="leads">
-          <li>Companies wanting a team happy hour or an offsite</li>
-          <li>Agencies, studios and startups with a social budget</li>
-          <li>Professional groups, alumni chapters and member clubs</li>
-          <li>Brands wanting a launch or activation with a real crowd</li>
-          <li>Collectives, nonprofits and community organizations</li>
-          <li>Anyone planning a holiday party before the good dates go</li>
-        </ul>
-        <p class="mg-fine"><strong>Midweek corporate is the priority.</strong>
-        No hospitality background needed &mdash; what this takes is a way
-        in, a clear pitch, and being trusted with our name in a
-        stranger&rsquo;s inbox.</p>
+  <!-- 05 rooms -->
+  <section class="dk-sec dk-sec--dark">
+    <div class="dk-wrap">
+      <span class="dk-eyebrow mono">The rooms</span>
+      <h2>Three rooms, and what clearing each one pays.</h2>
+      <div class="dk-rooms">
+        <article class="dk-room">
+          <div class="dk-room__top">
+            <h3>Margolis</h3>
+            <span class="dk-room__min mono">$1,500 minimum &middot; you earn at least $150</span>
+          </div>
+          <p class="dk-room__d">Cocktail lounge, W Wildey St. Low light, real drinks, music you can talk over.</p>
+          <dl class="dk-room__meta">
+            <dt class="mono">Good for</dt><dd>Mixer 50&ndash;100 &middot; Dance party up to 150</dd>
+            <dt class="mono">When</dt><dd><strong>Sun and Tue&ndash;Thu, any hours. Fri and Sat up to 9 PM.</strong> Not Fri or Sat nights. Not Mondays.</dd>
+          </dl>
+        </article>
+        <article class="dk-room">
+          <div class="dk-room__top">
+            <h3>Fabrika</h3>
+            <span class="dk-room__min mono">$3,000 minimum &middot; you earn at least $300</span>
+          </div>
+          <p class="dk-room__d">Event hall next door. Kitchen, 10 AM&ndash;2 AM license. The room for a real party.</p>
+          <dl class="dk-room__meta">
+            <dt class="mono">Good for</dt><dd>Mixer 150 and up &middot; Dance party up to 800</dd>
+            <dt class="mono">When</dt><dd><strong>Mon&ndash;Thu, any hours. Sunday after brunch.</strong> Never Fri or Sat.</dd>
+          </dl>
+        </article>
+        <article class="dk-room">
+          <div class="dk-room__top">
+            <h3>The Patio</h3>
+            <span class="dk-room__min mono">$1,500 minimum &middot; you earn at least $150</span>
+          </div>
+          <p class="dk-room__d">Open-air bar, Frankford Ave. Fixed four-hour block. Best in good weather.</p>
+          <dl class="dk-room__meta">
+            <dt class="mono">Good for</dt><dd>Mixer 50&ndash;100 &middot; Dance party 150</dd>
+            <dt class="mono">When</dt><dd><strong>Wide open.</strong> Bring us a date and we will make it work.</dd>
+          </dl>
+        </article>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <div class="gap"></div>
+  <!-- 06 leads -->
+  <section class="dk-sec">
+    <div class="dk-wrap">
+      <span class="dk-eyebrow mono">Where to look</span>
+      <h2>Where the bookings come from.</h2>
+      <ul class="dk-leads">
+        <li>Companies wanting a team happy hour or an offsite</li>
+        <li>Agencies, studios and startups with a social budget</li>
+        <li>Professional groups, alumni chapters and member clubs</li>
+        <li>Brands wanting a launch or activation with a real crowd</li>
+        <li>Collectives, nonprofits and community organizations</li>
+        <li>Anyone planning a holiday party before the good dates go</li>
+      </ul>
+      <p class="dk-denote"><strong>Midweek corporate is the priority.</strong>
+      No hospitality background needed. What this takes is a way in, a clear
+      pitch, and being trusted with our name in a stranger&rsquo;s inbox.</p>
+    </div>
+  </section>
 
-    <section class="box" id="worth">
-      <div class="sechead reveal">
-        <span class="tag">The rooms</span>
-        <h2>What a booking is worth.</h2>
-        <p>Three rooms, when each one is open, and what clearing its bar minimum pays you.</p>
-      </div>
-
-      <div class="mg-pad reveal">
-        <div class="mg-table-wrap">
-          <table class="mg-table">
-            <thead>
-              <tr>
-                <th scope="col">Room</th>
-                <th scope="col">What it is</th>
-                <th scope="col">Suggested guest count</th>
-                <th scope="col">When you can book it</th>
-                <th scope="col">Bar minimum</th>
-                <th scope="col">Your fee</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-label="Room">Margolis</td>
-                <td data-label="What it is">Cocktail lounge, W Wildey St. Low light, real drinks, music you can talk over.</td>
-                <td data-label="Suggested guest count"><strong>Mixer</strong> 50&ndash;100<br><strong>Dance party</strong> up to 150</td>
-                <td data-label="When you can book it"><strong>Sun + Tue&ndash;Thu, any hours. Fri + Sat up to 9 PM.</strong><br>Not Fri/Sat nights. Not Mondays.</td>
-                <td data-label="Bar minimum">$1,500</td>
-                <td data-label="Your fee"><strong>At least $150</strong></td>
-              </tr>
-              <tr>
-                <td data-label="Room">Fabrika</td>
-                <td data-label="What it is">Event hall next door. Kitchen, 10 AM&ndash;2 AM license. The room for a real party.</td>
-                <td data-label="Suggested guest count"><strong>Mixer</strong> 150 and up<br><strong>Dance party</strong> up to 800</td>
-                <td data-label="When you can book it"><strong>Mon&ndash;Thu, any hours. Sunday after brunch.</strong><br>Never Fri or Sat.</td>
-                <td data-label="Bar minimum">$3,000</td>
-                <td data-label="Your fee"><strong>At least $300</strong></td>
-              </tr>
-              <tr>
-                <td data-label="Room">The Patio</td>
-                <td data-label="What it is">Open-air bar, Frankford Ave. Fixed four-hour block. Best in good weather.</td>
-                <td data-label="Suggested guest count"><strong>Mixer</strong> 50&ndash;100<br><strong>Dance party</strong> 150</td>
-                <td data-label="When you can book it"><strong>Wide open.</strong><br>Bring us a date and we will make it work.</td>
-                <td data-label="Bar minimum">$1,500</td>
-                <td data-label="Your fee"><strong>At least $150</strong></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <div class="gap"></div>
-
-    <!-- ============ how it works ============ -->
-    <!-- ============ what else you get + what we ask ============ -->
-    <!-- ============ faq ============ -->
-    <section class="box" id="faq">
-      <div class="sechead reveal">
-        <span class="tag">The detail</span>
-        <h2>Everything else, if you want it.</h2>
-      </div>
-
-      <div class="expander reveal" aria-label="Frequently asked questions">
+  <!-- 07 questions -->
+  <section class="dk-sec dk-sec--tint">
+    <div class="dk-wrap">
+      <span class="dk-eyebrow mono">Questions</span>
+      <h2>Before you apply.</h2>
+      <div class="dk-faq">
         <details>
-          <summary><span class="xk">01</span><span class="xt">Is this a job?</span></summary>
-          <div class="expander__body">
-            <p>No &mdash; and we would rather be straight about that than dress it up. There is no wage, no schedule and no guaranteed hours. You are an independent contractor of Jubyr LLC who earns 10% of the bar on events you bring in. For some people that becomes steady monthly income; for others it is one booking a year. What it is not is a salary.</p>
-          </div>
+          <summary><span class="dk-q">Is this a job?</span><span class="dk-pm" aria-hidden="true"></span></summary>
+          <div class="dk-ans"><p>No &mdash; and we would rather be straight about that than dress it up. There is no wage, no schedule and no guaranteed hours. You are an independent contractor of Jubyr LLC who earns 10% of the bar on events you bring in. For some people that becomes steady monthly income; for others it is one booking a year. What it is not is a salary.</p></div>
         </details>
         <details>
-          <summary><span class="xk">02</span><span class="xt">Do I need hospitality experience?</span></summary>
-          <div class="expander__body">
-            <p>No. This is a research and outreach role. If you can identify the right organization, write a clear email and get the people you promised to actually turn up, you can do this. Everything that happens inside the venue is ours.</p>
-          </div>
+          <summary><span class="dk-q">Do I need hospitality experience?</span><span class="dk-pm" aria-hidden="true"></span></summary>
+          <div class="dk-ans"><p>No. This is a research and outreach role. If you can identify the right organization, write a clear email and get the people you promised to actually turn up, you can do this. Everything that happens inside the venue is ours.</p></div>
         </details>
         <details>
-          <summary><span class="xk">03</span><span class="xt">Do I have to be there on the night?</span></summary>
-          <div class="expander__body">
-            <p>Never. You are not hosting, running the room or working the floor &mdash; we do all of that. Come as a guest to your own event if you want to, but it changes nothing about what you are paid.</p>
-          </div>
+          <summary><span class="dk-q">Do I have to be there on the night?</span><span class="dk-pm" aria-hidden="true"></span></summary>
+          <div class="dk-ans"><p>Never. You are not hosting, running the room or working the floor &mdash; we do all of that. Come as a guest to your own event if you want to, but it changes nothing about what you are paid.</p></div>
         </details>
         <details>
-          <summary><span class="xk">04</span><span class="xt">What if the room doesn&rsquo;t hit its minimum?</span></summary>
-          <div class="expander__body">
-            <p>The minimum is the client&rsquo;s commitment, not yours. If their guests spend less than the floor, the client covers the difference &mdash; you are never asked to make up a shortfall and you are never penalized for a quiet event. Your 10% is calculated on what the room actually spends, so the minimum is the floor under your fee and never the cap &mdash; a room that spends well past its minimum pays you on all of it.</p>
-          </div>
+          <summary><span class="dk-q">What if the room doesn&rsquo;t hit its minimum?</span><span class="dk-pm" aria-hidden="true"></span></summary>
+          <div class="dk-ans"><p>The minimum is the client&rsquo;s commitment, not yours. If their guests spend less than the floor, the client covers the difference &mdash; you are never asked to make up a shortfall and you are never penalized for a quiet event. Your 10% is calculated on what the room actually spends, so the minimum is the floor under your fee and never the cap &mdash; a room that spends well past its minimum pays you on all of it.</p></div>
         </details>
         <details>
-          <summary><span class="xk">05</span><span class="xt">What exactly counts as &ldquo;bar sales&rdquo;?</span></summary>
-          <div class="expander__body">
-            <p>What the room rings through the register for drinks at your event, before tax, tip and service charge. Food is not included. You are shown the figure your fee was worked out from &mdash; we are not asking you to take a number on faith.</p>
-          </div>
+          <summary><span class="dk-q">What exactly counts as &ldquo;bar sales&rdquo;?</span><span class="dk-pm" aria-hidden="true"></span></summary>
+          <div class="dk-ans"><p>What the room rings through the register for drinks at your event, before tax, tip and service charge. Food is not included. You are shown the figure your fee was worked out from &mdash; we are not asking you to take a number on faith.</p></div>
         </details>
         <details>
-          <summary><span class="xk">06</span><span class="xt">Why can&rsquo;t I book Friday or Saturday nights?</span></summary>
-          <div class="expander__body">
-            <p>Because those already sell out on our own programming, so there is nothing for a partner to add. The whole point of this program is to fill the windows that are genuinely quiet. At Margolis that leaves everything up to 9 PM on a Friday or Saturday plus all of Sunday and Tuesday to Thursday; at Fabrika, Monday to Thursday and Sunday after brunch; The Patio is wide open.</p>
-          </div>
+          <summary><span class="dk-q">Why can&rsquo;t I book Friday or Saturday nights?</span><span class="dk-pm" aria-hidden="true"></span></summary>
+          <div class="dk-ans"><p>Because those already sell out on our own programming, so there is nothing for a partner to add. The whole point of this program is to fill the windows that are genuinely quiet. At Margolis that leaves everything up to 9 PM on a Friday or Saturday plus all of Sunday and Tuesday to Thursday; at Fabrika, Monday to Thursday and Sunday after brunch; The Patio is wide open.</p></div>
         </details>
         <details>
-          <summary><span class="xk">07</span><span class="xt">Can I do this alongside my actual job?</span></summary>
-          <div class="expander__body">
-            <p>Yes, and most partners will. A booking is a few emails and a phone call, with no onsite commitment at all. Plenty of the best leads are the company you already work for.</p>
-          </div>
+          <summary><span class="dk-q">Can I do this alongside my actual job?</span><span class="dk-pm" aria-hidden="true"></span></summary>
+          <div class="dk-ans"><p>Yes, and most partners will. A booking is a few emails and a phone call, with no onsite commitment at all. Plenty of the best leads are the company you already work for.</p></div>
         </details>
         <details>
-          <summary><span class="xk">08</span><span class="xt">Is there a cap on how much I can book?</span></summary>
-          <div class="expander__body">
-            <p>No cap on your side. The only limit is the calendar &mdash; there are a finite number of eligible dates across three rooms, and they go first come, first confirmed. Register leads early and you will rarely be blocked.</p>
-          </div>
+          <summary><span class="dk-q">Is there a cap on how much I can book?</span><span class="dk-pm" aria-hidden="true"></span></summary>
+          <div class="dk-ans"><p>No cap on your side. The only limit is the calendar &mdash; there are a finite number of eligible dates across three rooms, and they go first come, first confirmed. Register leads early and you will rarely be blocked.</p></div>
         </details>
         <details>
-          <summary><span class="xk">09</span><span class="xt">What if my client needs a room you don&rsquo;t have?</span></summary>
-          <div class="expander__body">
-            <p>Ask us. Jubyr works with other venues around the city beyond these three, so if a client needs a different size, a different neighborhood or a different kind of space, there is a good chance we can place it anyway &mdash; and you are paid the same way.</p>
-          </div>
+          <summary><span class="dk-q">What if my client needs a room you don&rsquo;t have?</span><span class="dk-pm" aria-hidden="true"></span></summary>
+          <div class="dk-ans"><p>Ask us. Jubyr works with other venues around the city beyond these three, so if a client needs a different size, a different neighborhood or a different kind of space, there is a good chance we can place it anyway &mdash; and you are paid the same way.</p></div>
         </details>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ============ apply ============ -->
-    <section class="finale" id="apply">
-      <h2 class="reveal">Apply to partner.</h2>
-      <p class="reveal">Tell us who you can reach. Ruby reads every one
-      herself, and you will hear back either way.</p>
-      <div class="finale__cta reveal">
-        <a class="btn btn--apply" href="mailto:ruby@jubyr.com?subject=Partnership%20application&amp;body=Name%3A%0A%0AWho%20you%20can%20reach%20%28companies%2C%20groups%2C%20the%20networks%20you%20actually%20have%20a%20way%20into%29%3A%0A%0AWhich%20room%20you%20would%20start%20with%3A%0A%0AOrganizations%20you%20already%20have%20in%20mind%20%28optional%29%3A%0A%0AAnything%20else%20%28optional%29%3A%0A%0A">Apply to partner <span class="arw" aria-hidden="true">&gt;</span></a>
-      </div>
-      <p class="reveal" style="margin-top:20px;font-size:14px;color:var(--muted)">
-        Opens an email with the questions already in it. Prefer to talk
-        first? <a href="/consultation" style="color:var(--green)">Book a
-        call</a>.</p>
-    </section>
+  <!-- 08 close -->
+  <section class="dk-sec dk-sec--green dk-close">
+    <div class="dk-wrap">
+      <span class="dk-eyebrow mono">Apply</span>
+      <h2>Tell us who you can reach.</h2>
+      <p class="dk-lede">Ruby reads every one herself, and you will hear back
+      either way.</p>
+      <a class="dk-cta" href="mailto:ruby@jubyr.com?subject=Partnership%20application&amp;body=Name%3A%0A%0AWho%20you%20can%20reach%20%28companies%2C%20groups%2C%20the%20networks%20you%20actually%20have%20a%20way%20into%29%3A%0A%0AWhich%20room%20you%20would%20start%20with%3A%0A%0AOrganizations%20you%20already%20have%20in%20mind%20%28optional%29%3A%0A%0AAnything%20else%20%28optional%29%3A%0A%0A">Apply to partner <span aria-hidden="true">&gt;</span></a>
+      <p class="dk-denote">Opens an email with the questions already in it.
+      Prefer to talk first? <a href="/consultation">Book a call</a>.</p>
+    </div>
+  </section>
 
-  </main>
-</div>
+</main>
 
 <!-- footer -->
 <footer class="footer">
@@ -529,7 +517,6 @@
 </footer>
 
 <script>
-  // mobile menu
   const burger = document.querySelector('.nav__burger');
   const menu = document.getElementById('mobilemenu');
   burger.addEventListener('click', () => {
@@ -541,19 +528,6 @@
     menu.classList.remove('open');
     burger.setAttribute('aria-expanded', 'false');
   }));
-
-  // scroll reveal — same behaviour as every other page on the site
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!reducedMotion && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal, .reveal-right').forEach(el => io.observe(el));
-  } else {
-    document.querySelectorAll('.reveal, .reveal-right').forEach(el => el.classList.add('in'));
-  }
 </script>
 
 <div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
