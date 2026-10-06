@@ -63,14 +63,21 @@
     letter-spacing: -0.025em; font-weight: 800; max-width: 22ch; margin: 0 auto;
   }
   .sechead--photo h1 { color: #fff; }
-  .sechead p { font-size: 16px; max-width: 62ch; }
+  /* Ruby, 2026-10-05: these ledes should run the full width rather than
+     sit pinched in a narrow column above a full-width table. They are one
+     or two sentences each, so a full-width line is one line, not a wall. */
+  .sechead p { font-size: 16px; max-width: none; }
   .gap { height: 30px; }
   .finale { padding: 64px 24px 72px; }
 
   /* Body copy was running 83 to 99 characters a line. Reading comfortably
      tops out around 70. */
   .mg-intro { max-width: 640px; }
-  .mg-col p, .mg-col li, .expander__body p, .mg-fine { max-width: 66ch; }
+  .mg-col p, .mg-col li, .expander__body p { max-width: 66ch; }
+  /* Wider than body copy so it does not read as pinched under a full
+     width chart, still short of the full 1,300px, which would be ~160
+     characters a line. */
+  .mg-fine { max-width: 92ch; }
 
   /* The accent was on eight decorative things and not on the one button
      that matters, so the primary action is the only filled green on the
@@ -83,6 +90,12 @@
 
   /* Two columns that are read as a pair, not as two cards that happen to
      sit together: one hairline between them, no boxes. */
+  /* A prospecting list is read by scanning, so it stays a list; two up on
+     a wide screen so six lines cost three. */
+  .leads { columns: 2; column-gap: 40px; padding-left: 18px; margin-top: 10px; }
+  .leads li { break-inside: avoid; color: var(--muted); font-size: 14.5px; line-height: 1.7; }
+  @media (max-width: 720px) { .leads { columns: 1; } }
+
   .pair { border-top: 1px dashed var(--line); }
   .pair .mg-col { border: 0; padding: 22px 0 4px; }
   @media (min-width: 721px) {
@@ -143,7 +156,11 @@
          slot" (2026-10-05). So a partner-brought Friday or Saturday
          5-to-9 quotes $1,500 while the same slot booked directly
          quotes $2,000. DELIBERATE, not an oversight — do not "correct"
-         it back to the ladder. The booking form still computes $2,000
+         it back to the ladder. The on-page paragraph that explained
+         this to the reader was deleted at her request on 2026-10-05, so
+         THIS COMMENT IS NOW THE ONLY RECORD: the two live pages quote
+         different figures for one slot and nothing on either says why.
+         The booking form still computes $2,000
          for that slot, so a partner booking has to be priced by hand
          until that is reconciled. The $5,000 Fri/Sat 9 PM–2 AM band
          never applies: those nights are not sellable here at all.
@@ -249,8 +266,9 @@
       <div class="mg-intro reveal">
         <p>Late Friday and Saturday sell themselves. Everything else is
         open &mdash; weekday evenings, Friday before nine, Saturday
-        daytime &mdash; and that is the window companies want for a
-        happy hour, an offsite or a holiday party.</p>
+        daytime &mdash; and that is the window companies, organizations
+        and clubs want for a social mixer, a professional mixer or a
+        happy hour.</p>
         <p><strong>We would rather pay someone with a real network than
         spend it on advertising.</strong></p>
       </div>
@@ -315,26 +333,29 @@
       </div>
 
       <div class="mg-pad reveal" style="padding-bottom:34px">
-        <p class="mg-fine"><strong>Who this works for:</strong> people
-        with a way into offices, brands, agencies, studios, professional
-        groups, alumni chapters, member clubs or nonprofits, who can write
-        a clear pitch and be trusted with our name in a stranger&rsquo;s
-        inbox. No hospitality background needed. Midweek corporate is the
-        priority.</p>
+        <h3 class="mg-h3" style="margin-top:6px">Where the bookings come from</h3>
+        <ul class="leads">
+          <li>Companies wanting a team happy hour or an offsite</li>
+          <li>Agencies, studios and startups with a social budget</li>
+          <li>Professional groups, alumni chapters and member clubs</li>
+          <li>Brands wanting a launch or activation with a real crowd</li>
+          <li>Collectives, nonprofits and community organizations</li>
+          <li>Anyone planning a holiday party before the good dates go</li>
+        </ul>
+        <p class="mg-fine"><strong>Midweek corporate is the priority.</strong>
+        No hospitality background needed &mdash; what this takes is a way
+        in, a clear pitch, and being trusted with our name in a
+        stranger&rsquo;s inbox.</p>
       </div>
     </section>
 
     <div class="gap"></div>
 
-    <section class="box" id="rooms">
+    <section class="box" id="worth">
       <div class="sechead reveal">
-        <span class="tag">What you can sell</span>
-        <h2>Three rooms, and when each one is open.</h2>
-        <p>Late Friday and Saturday are our own programming and are not
-        yours to sell. Nearly everything else is. Every booking also has
-        to clear a bar minimum &mdash; a floor on what the room spends,
-        not a cover charge, and your client covers the difference only if
-        their guests come in under it.</p>
+        <span class="tag">The rooms</span>
+        <h2>What a booking is worth.</h2>
+        <p>Three rooms, when each one is open, and what clearing its bar minimum pays you.</p>
       </div>
 
       <div class="mg-pad reveal">
@@ -347,6 +368,7 @@
                 <th scope="col">Suggested guest count</th>
                 <th scope="col">When you can book it</th>
                 <th scope="col">Bar minimum</th>
+                <th scope="col">Your fee</th>
               </tr>
             </thead>
             <tbody>
@@ -355,90 +377,28 @@
                 <td data-label="What it is">Cocktail lounge, W Wildey St. Low light, real drinks, music you can talk over.</td>
                 <td data-label="Suggested guest count"><strong>Mixer</strong> 50&ndash;100<br><strong>Dance party</strong> up to 150</td>
                 <td data-label="When you can book it"><strong>Sun + Tue&ndash;Thu, any hours. Fri + Sat up to 9 PM.</strong><br>Not Fri/Sat nights. Not Mondays.</td>
-                <td data-label="Bar minimum"><strong>$1,500</strong></td>
+                <td data-label="Bar minimum">$1,500</td>
+                <td data-label="Your fee"><strong>At least $150</strong></td>
               </tr>
               <tr>
                 <td data-label="Room">Fabrika</td>
                 <td data-label="What it is">Event hall next door. Kitchen, 10 AM&ndash;2 AM license. The room for a real party.</td>
                 <td data-label="Suggested guest count"><strong>Mixer</strong> 150 and up<br><strong>Dance party</strong> up to 800</td>
                 <td data-label="When you can book it"><strong>Mon&ndash;Thu, any hours. Sunday after brunch.</strong><br>Never Fri or Sat.</td>
-                <td data-label="Bar minimum"><strong>$3,000</strong></td>
+                <td data-label="Bar minimum">$3,000</td>
+                <td data-label="Your fee"><strong>At least $300</strong></td>
               </tr>
               <tr>
                 <td data-label="Room">The Patio</td>
                 <td data-label="What it is">Open-air bar, Frankford Ave. Fixed four-hour block. Best in good weather.</td>
                 <td data-label="Suggested guest count"><strong>Mixer</strong> 50&ndash;100<br><strong>Dance party</strong> 150</td>
                 <td data-label="When you can book it"><strong>Wide open.</strong><br>Bring us a date and we will make it work.</td>
-                <td data-label="Bar minimum"><strong>$1,500</strong></td>
+                <td data-label="Bar minimum">$1,500</td>
+                <td data-label="Your fee"><strong>At least $150</strong></td>
               </tr>
             </tbody>
           </table>
         </div>
-        <p class="mg-fine">Every figure here is specific to this program
-        and sits below the published private-buyout rates &mdash; including
-        the Friday and Saturday 5-to-9 slot at Margolis, which is $1,500
-        for a partner booking rather than the $2,000 a direct buyout
-        would carry. A partner booking fills a quiet window rather than
-        taking the room out of service, which is what the difference pays
-        for. Full buyout rates are at
-        <a href="https://margolis.events/corporate" style="color:var(--green)">margolis.events/corporate</a>.</p>
-        <p class="mg-fine"><strong>Need a room that isn&rsquo;t one of
-        these three?</strong> Ask. Jubyr works with other venues around
-        the city, and if a client needs something these rooms
-        can&rsquo;t do &mdash; a different size, a different
-        neighborhood, a different kind of space &mdash; we can often
-        place it anyway, on the same terms to you.</p>
-      </div>
-    </section>
-
-    <div class="gap"></div>
-
-    <section class="box" id="worth">
-      <div class="sechead reveal">
-        <span class="tag">The math</span>
-        <h2>What a booking is worth.</h2>
-        <p>Every booking has to clear a bar minimum, so every fee below is
-        a floor: what you earn if the room only just gets there.</p>
-      </div>
-
-      <div class="mg-pad reveal">
-        <div class="mg-table-wrap">
-          <table class="mg-table">
-            <thead>
-              <tr>
-                <th scope="col">Room</th>
-                <th scope="col">When</th>
-                <th scope="col">Bar minimum</th>
-                <th scope="col">Your fee</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-label="Room">Margolis</td>
-                <td data-label="When">Any night you can book it</td>
-                <td data-label="Bar minimum">$1,500</td>
-                <td data-label="Your fee"><strong>At least $150</strong></td>
-              </tr>
-              <tr>
-                <td data-label="Room">The Patio</td>
-                <td data-label="When">Any night you can book it</td>
-                <td data-label="Bar minimum">$1,500</td>
-                <td data-label="Your fee"><strong>At least $150</strong></td>
-              </tr>
-              <tr>
-                <td data-label="Room">Fabrika</td>
-                <td data-label="When">Monday&ndash;Thursday, or Sunday after brunch</td>
-                <td data-label="Bar minimum">$3,000</td>
-                <td data-label="Your fee"><strong>At least $300</strong></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="mg-fine"><strong>Every one of those is the least a
-        qualifying booking can pay you, never the most.</strong> You are
-        paid on what the room actually drinks, so one that spends double
-        its minimum pays you double. There is no ceiling on a single
-        event and no limit on how many you bring.</p>
       </div>
     </section>
 
