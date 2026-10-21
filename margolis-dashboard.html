@@ -465,7 +465,7 @@
         h += `<div class="door__sect">Priority Reservations &middot; ${r.guests} guest${r.guests===1?"":"s"}</div>`;
         h += r.list.map(g => `<div class="door__row">
           <b>${esc(g.name)}</b>
-          <span class="door__meta">${g.guests} guest${g.guests===1?"":"s"}${g.tier?` &middot; ${esc(g.tier)}`:""}${g.comp?" &middot; Passport night":""}${g.member?" &middot; member":""}${g.checkedIn?` &middot; ${g.checkedIn} in`:""}</span>
+          <span class="door__meta">${g.guests} guest${g.guests===1?"":"s"}${g.tier?` &middot; ${esc(g.tier)}`:""}${g.comp?" &middot; comp night":""}${g.member?" &middot; member":""}${g.checkedIn?` &middot; ${g.checkedIn} in`:""}</span>
           ${(g.party||[]).length>1?`<span class="door__party">${g.party.map(esc).join(", ")}</span>`:""}
         </div>`).join("");
       }
