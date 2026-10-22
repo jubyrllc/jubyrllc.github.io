@@ -769,8 +769,8 @@
       return;
     }
     box.className = "djd-w9 djd-w9--warn";
-    box.innerHTML = `<strong>Your W9 is missing.</strong> Your door payment or bar check will not
-      be processed until it's on file. Fill out the IRS's own
+    box.innerHTML = `<strong>Your W9 is missing.</strong> Your door charge is not paid until your
+      profile is set up and your W9 is on file: we can't properly file our taxes without it. Fill out the IRS's own
       <a href="${IRS_W9_URL}" target="_blank" rel="noopener">blank W9 form</a> (most PDF readers let
       you type directly into it and sign), then upload the completed form here.
       <input type="file" id="w9File" accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf" style="display:block;margin-top:10px">
@@ -819,7 +819,7 @@
         ? `Profile complete <span style="color:var(--green)">&#10003;</span> <button type="button" id="profileEditToggle" style="margin-left:auto;background:none;border:none;padding:0;cursor:pointer;color:var(--green);font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;text-decoration:underline">${profileEditMode?"Done editing":"Profile settings"}</button>`
         : `Profile completion <span class="djd-bar"><i style="width:${p}%"></i></span> <span style="font-family:'IBM Plex Mono',monospace;font-size:13px">${p}%</span>`}</summary>
       <div class="djd-prof__body">
-        ${!complete?`<p class="djd-note" style="margin:0 0 14px"><strong>Until your profile hits 100%</strong>, your residency stays unlocked and no payout can be processed. We'll keep reminding you daily — finishing takes a few minutes.</p>`:""}
+        ${!complete?`<p class="djd-note" style="margin:0 0 14px"><strong>Until your profile hits 100%</strong>, your residency stays unlocked and your door charge is not paid: we can't properly file our taxes without your W9. We'll keep reminding you daily — finishing takes a few minutes.</p>`:""}
         ${editing?`<ul class="djd-check">${items.map(([done,label])=>`<li class="${done?"done":""}"><span class="mk">${done?"&#10003;":"&#8226;"}</span>${label}</li>`).join("")}</ul>`:""}
         <p class="djd-note" style="margin:0 0 4px"><strong>Residency:</strong> ${
           claim ? (claim.status==="locked"
@@ -1462,9 +1462,10 @@
           <div class="djd-ns__d">${esc(payDay(r.date))}</div>
           <div class="djd-ns__v">${nsVerdict(r)}</div>
           ${r.minimum!=null ? `<div class="djd-ns__d"></div><div class="djd-ns__m" title="${esc(NS_FROM[r.minimumFrom]||"")}">min ${payWhole(r.minimum)}</div>` : ``}
+          ${r.door!=null ? `<div class="djd-ns__d"></div><div class="djd-ns__m" title="Margolis Door Charge rung during your party">door ${payMoney(r.door)}</div>` : ``}
           ${nsHours(r.hours)}
         </li>`).join("")}</ul>
-        <p class="djd-note" style="margin-top:14px">Margolis nights. Net bar sales off the register: no tax, tips or service charge. Co-hosts see the same figure. Minimums before Aug 28, 2026 only where one was set.</p>
+        <p class="djd-note" style="margin-top:14px">Margolis nights. Net bar sales off the register: no tax, tips or service charge. Co-hosts see the same figure. Minimums before Aug 28, 2026 only where one was set. Door, from Oct 22, 2026: what was rung as the Margolis Door Charge during your party. Your door charge is not paid until your profile is set up and your W9 is on file: we can't properly file our taxes without it.</p>
       </div></details>`;
   }
 
