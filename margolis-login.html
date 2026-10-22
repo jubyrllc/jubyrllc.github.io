@@ -110,10 +110,11 @@
           <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="suEmail" autocomplete="email" placeholder="you@email.com"></div>
           <div class="ifield"><label>Phone <span class="req">*</span></label><input type="tel" id="suPhone" autocomplete="tel" placeholder="10-digit number"></div>
           <div class="ifield">
-            <label>Are you a DJ or an event host? <span class="req">*</span></label>
+            <label>DJ, event host, or both? <span class="req">*</span></label>
             <div class="dj-chiprow" id="suTypeRow">
               <button type="button" data-sutype="dj">DJ</button>
               <button type="button" data-sutype="host">Event host</button>
+              <button type="button" data-sutype="both">Both</button>
             </div>
           </div>
           <div class="ifield"><label>Password <span class="req">*</span></label><input type="password" id="suPassword" autocomplete="new-password" placeholder="At least 8 characters"></div>
@@ -154,10 +155,11 @@
           <div class="ifield"><label>Phone</label><input type="tel" id="pPhone" autocomplete="tel" placeholder="10-digit number"></div>
           <div class="ifield"><label>Instagram</label><input type="text" id="pInstagram" placeholder="@yourhandle"></div>
           <div class="ifield">
-            <label>Are you a DJ or an event host? <span class="req">*</span></label>
+            <label>DJ, event host, or both? <span class="req">*</span></label>
             <div class="dj-chiprow">
               <button type="button" data-type="dj">DJ</button>
               <button type="button" data-type="host">Event host</button>
+              <button type="button" data-type="both">Both</button>
             </div>
           </div>
           <div class="ifield">
@@ -361,7 +363,9 @@
     document.getElementById("pLastName").value = account.lastName || "";
     document.getElementById("pPhone").value = account.phone || "";
     document.getElementById("pInstagram").value = account.instagram || "";
-    profileType = account.type || "";
+    // A type a booking guessed is not an answer: nothing preselected
+    // until they pick DJ, host or both themself.
+    profileType = account.typeAsked === false ? "" : (account.type || "");
     syncGenresLabel();
     profileGenres = account.genres || [];
     profileVenues = account.venues || [];
@@ -434,7 +438,7 @@
     if(!pFirst) return showErr("Please add your first name.");
     if(!pLast) return showErr("Please add your last name.");
     if(pPhoneVal && !phoneValid(pPhoneVal)) return showErr("Please add a phone number formatted like (215)-771-4222.");
-    if(!profileType) return showErr("Let us know if you're a DJ or an event host.");
+    if(!profileType) return showErr("Pick DJ, event host, or both.");
     const btn = document.getElementById("btnProfile");
     btn.disabled = true; btn.textContent = "Saving…";
     try{
@@ -472,7 +476,7 @@
     if(!lastName) return showErr("Please add your last name.");
     if(!emailOk(email)) return showErr("Please add a valid email.");
     if(!phoneValid(phone)) return showErr("Please add a phone number formatted like (215)-771-4222.");
-    if(!signupType) return showErr("Let us know if you're a DJ or an event host.");
+    if(!signupType) return showErr("Pick DJ, event host, or both.");
     if(p1.length < 8) return showErr("Password needs to be at least 8 characters.");
     if(p1 !== p2) return showErr("Those passwords don't match.");
     if(!document.getElementById("suConsent").checked) return showErr("Please agree to be contacted — it's how approvals, reminders, and payouts reach you.");

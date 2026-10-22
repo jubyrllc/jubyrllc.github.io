@@ -102,6 +102,21 @@
   .djd-score--fair .djd-score__n{color:#8A6400}
   .djd-score--under .djd-score__n{color:#A03A2E}
   .djd-tally{display:flex;flex-wrap:wrap;gap:8px 16px;margin:0 0 16px}
+  /* More nights + net sales (2026-10-22). The list is a grid of rows, not
+     a table, so a phone wraps each night instead of scrolling sideways. */
+  .djd-acts{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0}
+  .djd-act{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--green);background:#fff;border:1px solid var(--green);border-radius:999px;padding:9px 15px;
+    cursor:pointer;text-decoration:none;line-height:1.2}
+  .djd-act:hover{background:var(--green);color:#fff}
+  .djd-ns{list-style:none;margin:0;padding:0}
+  .djd-ns li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 14px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .djd-ns__t{font-weight:600;font-size:14px;min-width:0;overflow-wrap:anywhere}
+  .djd-ns__t span{font-weight:400;color:var(--muted)}
+  .djd-ns__d{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .djd-ns__n{font-family:"IBM Plex Mono",monospace;font-size:14px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .djd-ns__v{text-align:right;white-space:nowrap}
+  .djd-ns__m{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muted);text-align:right;white-space:nowrap}
   .djd-check{list-style:none;margin:0 0 16px;padding:0}
   .djd-check li{padding:6px 0;font-size:14px;color:var(--muted);display:flex;gap:9px;align-items:baseline}
   .djd-check li.done{color:var(--ink)}
@@ -302,6 +317,13 @@
         <div id="profilePanel"></div>
         <div class="djd-w9" id="w9Box" hidden></div>
         <p class="djd-err" id="djdErr"></p>
+        <!-- More nights (2026-10-22). Two doors onto forms that already
+             exist: the date request below, and the residency application
+             on margolis.events, opened signed in. No second form. -->
+        <div class="djd-acts" id="bookMore">
+          <button type="button" class="djd-act" data-more-dates>+ Request more dates</button>
+          <a class="djd-act" id="resApply" href="https://margolis.events/apply-for-a-residency" target="_blank" rel="noopener">Apply for a residency &#8599;</a>
+        </div>
         <div id="content"><p class="djd-note" style="margin-top:20px">Loading your nights&hellip;</p></div>
         <div id="payHistory"></div>
         <div id="dateReqList"></div>
@@ -588,6 +610,19 @@
          venue:"Margolis (inside)", startTime:"21:00", endTime:"02:00",
          foodService:"Kitchen service", coverCharge:"$20 at the door", guestCount:"120"},
       ]};
+    }
+    if(payload.action==="myNightSales"){
+      const n = (date, title, net, minimum, from, extra) => Object.assign({date, title, role:"holder", with:[], net, basis:"sole",
+        minimum, minimumFrom:from, met: net!=null && minimum!=null ? net>=minimum : null,
+        shortBy: net!=null && minimum!=null && net<minimum ? minimum-net : null, cancelled:false}, extra||{});
+      const nights = [
+        n("2026-10-09","Kingspy Rhythm Nation",4100,5000,"ladder"),
+        n("2026-09-20","Sunday Sermon",1820,1500,"ladder",{role:"partner", with:["DJ Aura"]}),
+        n("2026-09-11","Kingspy Rhythm Nation",5600,5000,"ladder"),
+        n("2026-03-13","Kingspy Rhythm Nation",null,null,null,{basis:"shared"}),
+        n("2026-01-09","Kingspy Rhythm Nation",4200,null,null),
+      ];
+      return {ok:true, from:"2026-01-01", nights, summary:{nights:5, counted:4, total:15720, average:3930, met:2, short:1, noMin:1, gap:1}};
     }
     if(payload.action==="requestDates"){
       const today = new Date().toISOString().slice(0,10);
@@ -1276,122 +1311,96 @@
     }
   }
 
+  /* The two "more nights" doors (2026-10-22). Request opens the date
+     request form already on this page; the residency link signs them in
+     on margolis.events through the same #t= fragment handoff that site
+     uses to send them here. */
+  function bindBookMore(){
+    const btn = document.querySelector("[data-more-dates]");
+    if(btn && !btn.dataset.bound){
+      btn.dataset.bound = "1";
+      btn.addEventListener("click", ()=>{
+        const box = document.getElementById("dateReqBox");
+        if(!box) return;
+        box.open = true;
+        box.scrollIntoView({behavior:"smooth", block:"start"});
+        const sel = document.getElementById("dreqParty"), name = document.getElementById("dreqName");
+        setTimeout(()=>{ (sel && !document.getElementById("dreqPartyWrap").hidden ? sel : name)?.focus({preventScroll:true}); }, 350);
+      });
+    }
+    const res = document.getElementById("resApply");
+    if(res && TOKEN && !DEMO) res.href = "https://margolis.events/apply-for-a-residency#t=" + encodeURIComponent(TOKEN);
+  }
+
   document.getElementById("logout").addEventListener("click", ()=>{
     localStorage.removeItem("margolis-dj-token");
     location.href = "/margolis-login";
   });
 
-  /* ---- what you have been paid ----------------------------------
-     Every check on file for this account, newest first — including the
-     year of payouts that predates this dashboard entirely, imported
-     from Ruby's 2026 paycheck sheet and bound to the account by name
-     (margolis-payees.php). The rows are scoped to the account
-     SERVER-side, so there is nothing here that could show somebody
-     else's money by getting a filter wrong.
+  /* ---- your nights: net bar sales against the minimum ----------
+     Ruby, 2026-10-22: "see their net sales from events from january 2026
+     onward, and show them if it met minimum or not." Read from
+     myNightSales (margolis-dj-dashboard.php), which derives every figure
+     on request: which nights from the person spine, the bar from the
+     money library, the minimum from the run sheet's row for the night.
+     Nothing is worked out here, and the rows are scoped server-side.
 
-     Folded shut, and it removes itself when there is nothing on file,
-     so a brand new host never opens their dashboard to an empty
-     "your money" heading. Loaded after the nights, and its own failure
-     is silent: this is a record of what already happened, and it must
-     never be the reason the page they came for does not appear. */
+     This replaced the check-sheet view off margolis-payees.php, which
+     scored the same nights against the old $3,500 rating figure: two
+     screens holding one night to two minimums is the drift the house
+     rule exists to end.
+
+     Folded shut, gone when there is nothing on file, and its failure is
+     silent: a record of what already happened must never be the reason
+     the page somebody came for does not appear. */
   const payMoney = n => "$" + (Number(n)||0).toLocaleString("en-US",{minimumFractionDigits:2, maximumFractionDigits:2});
   const payWhole = n => "$" + Math.round(Number(n)||0).toLocaleString("en-US");
-  /* Ruby's labels, in her words: 1.5k and 3.5k are the BAR MINIMUM, 2k and 5k
-     are a GOOD NIGHT. Both the chip and the tooltip name the actual number for
-     that day of the week, so nobody has to guess which set they were held to. */
-  /* The thresholds ACTUALLY APPLIED to this person's nights, printed rather
-     than hardcoded. The moment The Patio got its own numbers (Ruby,
-     2026-08-27: "1500 minimum, 2k good day"), a fixed sentence about Fri/Sat
-     being $3,500 stopped being true for the people who work it. Rooms whose
-     weekend and weekday numbers are the same collapse into one clause, which
-     is what the Patio wants. */
-  function payTargetSentence(targets, fmt){
-    if(!targets || !targets.length) return "";
-    const byVenue = {};
-    targets.forEach(t => { (byVenue[t.venue] = byVenue[t.venue] || []).push(t); });
-    const parts = Object.keys(byVenue).sort().map(v => {
-      /* Distinct thresholds only. A room where every day is the same number
-         collapses to one clause (the Patio), and one where Friday and
-         Saturday differ prints all of them (Fabrika). */
-      const seen = {}, list = [];
-      byVenue[v].forEach(t => {
-        const k = t.min + "/" + t.good;
-        if(!seen[k]){ seen[k] = {min:t.min, good:t.good, days:[]}; list.push(seen[k]); }
-        seen[k].days.push(t.label);
-      });
-      const clause = c => `${fmt(c.min)} minimum, ${fmt(c.good)} a good night`;
-      if(list.length === 1) return `<strong>${esc(v)}</strong>: ${clause(list[0])}`;
-      return `<strong>${esc(v)}</strong>: ` + list.map(c => `${esc(c.days.join(" and "))} ${clause(c)}`).join("; ");
-    });
-    return "Every night is measured against the room and the day it fell on. " + parts.join(". ") + ".";
-  }
-
-  /* Same words as the manager side's. Two copies because the two halves of
-     this page are separate IIFEs sharing no scope; change both. */
-  const PAY_CAVEAT = `These numbers are put together from the calendar and the register after the fact,
-    not recorded night by night as it happened, so read them as close rather than exact. A night is
-    measured against the times on the calendar, so if something went down as 9 PM and the room did not
-    really fill until 10, part of the evening can land in the wrong column. And before 2026 some payouts
-    included door money as well as the bar. Everything here is bar sales only, worked out as carefully
-    as we can.`;
-
-  const BAND_WORD = {good:"Good night", fair:"Bar minimum", under:"Under minimum"};
-  function bandChip(r){
-    if(!r.band) return `<span class="djd-band djd-band--none" title="No register figure for this night.">Not rated</span>`;
-    const t = r.target;
-    const tip = t ? `${t.venue} ${t.day}: bar minimum ${payWhole(t.min)}, a good night is ${payWhole(t.good)}` : "";
-    return `<span class="djd-band djd-band--${esc(r.band)}" title="${esc(tip)}">${BAND_WORD[r.band]}</span>`;
-  }
-  /* fmtDay() drops the year, which is fine for a night three weeks out
-     and wrong for a history that runs back into last year. */
   function payDay(d){
-    try{ return new Date(d+"T12:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}); }
+    try{ return new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"}); }
     catch(e){ return d; }
   }
+  const NS_FROM = {booking:"agreed on your booking", set:"set for this night", ladder:"house minimum"};
+  function nsVerdict(r){
+    const chip = (cls, word, tip) => `<span class="djd-band djd-band--${cls}"${tip?` title="${esc(tip)}"`:""}>${word}</span>`;
+    if(r.cancelled) return chip("none", "Cancelled");
+    if(r.net == null) return r.basis === "shared"
+      ? chip("none", "Shared night", "Two parties ran this night and the register wasn't split by time, so there is no figure for yours alone.")
+      : chip("none", "No figure");
+    if(r.minimum == null) return chip("none", "No minimum", "No minimum was set for this night.");
+    return r.met ? chip("good", "Met") : chip("under", `Short by ${payWhole(r.shortBy)}`);
+  }
   async function renderPayHistory(){
-    /* Their own record: the nights, what the bar took, and whether each one
-       cleared. Ruby, 2026-08-27: no payout information anywhere, and a note
-       saying plainly how exact these figures are. */
     const el = document.getElementById("payHistory");
     if(!el) return;
     let h;
-    try{ h = await api(AUTH_URL, {action:"myPayHistory"}); }
+    try{ h = await api(DASH_URL, {action:"myNightSales"}); }
     catch(e){ el.innerHTML = ""; return; }
-    const rows = (h && h.rows) || [];
+    const rows = (h && h.nights) || [];
     if(!rows.length){ el.innerHTML = ""; return; }
-    const f = h.perf || {};
-    const scores = f.rated ? `<div class="djd-scores">
-        <div class="djd-score"><div class="djd-score__n">${f.events}</div>
+    const f = h.summary || {};
+    const rated = (f.met||0) + (f.short||0);
+    const scores = `<div class="djd-scores">
+        <div class="djd-score"><div class="djd-score__n">${f.nights}</div>
           <div class="djd-score__k">Nights</div></div>
-        <div class="djd-score"><div class="djd-score__n">${payWhole(f.avgNet)}</div>
-          <div class="djd-score__k">Average bar sales</div></div>
-        <div class="djd-score djd-score--${esc(f.band||"none")}"><div class="djd-score__n">${Math.round((f.vsGood||0)*100)}%</div>
-          <div class="djd-score__k">Of a good night</div></div>
-      </div>
-      <div class="djd-tally">
-        ${f.cleared ? `<span class="djd-band djd-band--good">${f.cleared} cleared the minimum</span>` : ``}
-        ${f.missed  ? `<span class="djd-band djd-band--under">${f.missed} did not</span>` : ``}
-        ${f.unrated ? `<span class="djd-band djd-band--none">${f.unrated} with no figure</span>` : ``}
-      </div>
-      <p class="djd-note" style="margin:0 0 16px">${payTargetSentence(f.targets, payWhole)}</p>` : ``;
+        <div class="djd-score"><div class="djd-score__n">${f.average!=null ? payWhole(f.average) : "&mdash;"}</div>
+          <div class="djd-score__k">Average net</div></div>
+        <div class="djd-score djd-score--${rated ? (f.short ? "fair" : "good") : "none"}"><div class="djd-score__n">${rated ? `${f.met}/${rated}` : "&mdash;"}</div>
+          <div class="djd-score__k">Met minimum</div></div>
+      </div>`;
+    const withLine = r => (r.with||[]).length ? ` <span>&middot; with ${esc(r.with.join(", "))}</span>` : "";
     el.innerHTML = `<details class="djd-prof" style="margin-top:18px">
-      <summary>Your nights${h.party?` at ${esc(h.party)}`:``}
-        <span class="djd-pill">${rows.length} night${rows.length===1?"":"s"}${
-          f.avgNet?` &middot; ${payWhole(f.avgNet)} average bar`:``}</span></summary>
+      <summary>Your nights &amp; net sales
+        <span class="djd-pill">${rows.length} since Jan 2026${rated?` &middot; ${f.met} of ${rated} met`:``}</span></summary>
       <div class="djd-prof__body">
         ${scores}
-        <div class="djd-paywrap">
-        <table class="djd-pay">
-          <thead><tr><th>Date</th><th>Where</th><th class="r">Bar sales</th><th>How the night did</th></tr></thead>
-          <tbody>${rows.map(r=>`<tr>
-            <td>${r.date ? esc(payDay(r.date)) : "&mdash;"}</td>
-            <td>${esc(r.venue||"Margolis")}${(r.onCalendar||[]).length?` &middot; ${esc(r.onCalendar[0])}`:""}</td>
-            <td class="r">${r.net ? payMoney(r.net) : "&mdash;"}</td>
-            <td>${bandChip(r)}</td>
-          </tr>`).join("")}</tbody>
-        </table>
-        </div>
-        <p class="djd-note" style="margin-top:14px"><strong>About these numbers.</strong> ${PAY_CAVEAT}</p>
+        <ul class="djd-ns">${rows.map(r=>`<li>
+          <div class="djd-ns__t">${esc(r.title)}${withLine(r)}</div>
+          <div class="djd-ns__n">${r.net!=null ? payMoney(r.net) : "&mdash;"}</div>
+          <div class="djd-ns__d">${esc(payDay(r.date))}</div>
+          <div class="djd-ns__v">${nsVerdict(r)}</div>
+          ${r.minimum!=null ? `<div class="djd-ns__d"></div><div class="djd-ns__m" title="${esc(NS_FROM[r.minimumFrom]||"")}">min ${payWhole(r.minimum)}</div>` : ``}
+        </li>`).join("")}</ul>
+        <p class="djd-note" style="margin-top:14px">Margolis nights. Net bar sales off the register: no tax, tips or service charge. Co-hosts see the same figure. Minimums before Aug 28, 2026 only where one was set.</p>
       </div></details>`;
   }
 
@@ -1495,6 +1504,7 @@
       startDoorPoll();
       renderDateRequests();
       bindDreqForm();
+      bindBookMore();
       renderPayHistory();
     }catch(e){
       if(e!=="auth") document.getElementById("content").innerHTML = `<p class="djd-note" style="margin-top:20px">Couldn't load your nights — refresh, or email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>`;
@@ -1557,6 +1567,9 @@
     /* Wind-down (2026-08-27). windPlan is the dry run she is looking at;
        nothing can be applied until one has been fetched. */
     windPlan: null, windMsg: "", windFrom: "2027-01-01",
+    /* Test accounts (2026-10-22). Guest profiles she switches between
+       regular / paid member / manager to see margolis.events as each. */
+    tests: null, testMsg: "",
   };
 
   /* ---------- plumbing ---------- */
@@ -1667,6 +1680,7 @@
     if(M.tab === "payees" && !M.payees) jobs.push(loadPayees());
     if(M.tab === "res" && !M.resList) jobs.push(loadResidencies());
     if(M.tab === "res" && !M.resApps) jobs.push(loadResidencyApps());
+    if(M.tab === "tests" && !M.tests) jobs.push(loadTests());
     await Promise.all(jobs);
   }
 
@@ -1787,7 +1801,7 @@
       : `No payout details on file`;
     return `<div class="mgr-card ${a.approved?"":"mgr-card--flag"}">
       <div class="mgr-chips">
-        <span class="mgr-chip mgr-chip--dark">${esc(a.type||"dj")}</span>
+        <span class="mgr-chip mgr-chip--dark">${esc((a.type||"dj").replace("both","dj + host"))}</span>
         ${a.isManager?`<span class="mgr-chip mgr-chip--ok">That's you</span>`:""}
         ${a.approved?"":`<span class="mgr-chip mgr-chip--warn">Awaiting your review</span>`}
         ${a.mustSetPassword?`<span class="mgr-chip mgr-chip--bad">Never signed in</span>`:""}
@@ -1819,7 +1833,7 @@
       </div>
       ${a.photoFace?`<div data-flyer="${esc(a.photoFace)}"></div>`:""}
       <details class="mgr-fold" data-fold="rate-${esc(a.id)}" style="margin-top:6px">
-        <summary>Rate this ${esc(a.type||"dj")}</summary>
+        <summary>Rate this ${esc((a.type||"dj").replace("both","dj + host"))}</summary>
         <div style="padding:14px 0">${DIMS.map(d=>starRow(a.id, d, (a.rating||{})[d[0]]||0)).join("")}</div>
       </details>
     </div>`;
@@ -2048,9 +2062,9 @@
     return `${name} <span style="opacity:.7">${r.ran} on the calendar</span>`;
   }
 
-  /* Same sentence as the host dashboard's. Two copies because the two halves
-     of this page are separate IIFEs sharing no scope; if you change one,
-     change the other. */
+  /* Manager side only since 2026-10-22: the host half stopped reading the
+     Payees rollup and now shows net sales against the run sheet's minimum
+     (myNightSales), so this sentence has no twin any more. */
   function payTargetSentence(targets, fmt){
     if(!targets || !targets.length) return "";
     const byVenue = {};
@@ -2090,8 +2104,8 @@
   /* Ruby, 2026-08-27, asked for this on the profile in as many words: the data
      is aggregated after the fact, calendar times are not always when the room
      really filled, and pre-2026 payouts sometimes included door money while
-     everything here is bar only. It appears on her side and on the DJ's, from
-     one string, so the two cannot drift. */
+     everything here is bar only. Manager side only since 2026-10-22, when
+     the host half moved to myNightSales. */
   const PAY_CAVEAT = `These numbers are put together from the calendar and the register after the fact,
     not recorded night by night as it happened, so read them as close rather than exact. A night is
     measured against the times on the calendar, so if something went down as 9 PM and the room did not
@@ -2321,7 +2335,7 @@
 
     if(p.account){
       h += `<p class="mgr-label">Profile</p>
-        <p class="mgr-val"><strong>${esc(p.account.name)}</strong> &middot; ${esc(p.account.type)}${
+        <p class="mgr-val"><strong>${esc(p.account.name)}</strong> &middot; ${esc((p.account.type||"").replace("both","dj + host"))}${
           p.account.claimed ? "" : " &middot; has not signed in yet"}</p>
         <div class="mgr-meta">${contactLinks(p.account.name, p.account.email, p.phone, p.instagram)}</div>
         <div class="mgr-meta" style="margin-top:6px">${(p.stats.perf||{}).events||0} night${((p.stats.perf||{}).events||0)===1?"":"s"}
@@ -2361,6 +2375,7 @@
           <div class="mgr-field"><label>They are a</label><select data-pf="type" data-key="${esc(p.key)}">
             <option value="dj" ${d.type==="dj"?"selected":""}>DJ</option>
             <option value="host" ${d.type==="host"?"selected":""}>Event host</option>
+            <option value="both" ${d.type==="both"?"selected":""}>DJ + host</option>
           </select></div>
         </div>
         ${payPartyField(p, d)}
@@ -2523,6 +2538,75 @@
       </div></details>`;
   }
 
+  /* WHAT THE TILL SAYS ABOUT THIS PARTY'S SIZE.
+
+     Printed as what it is and no further: orders are rounds rung, not
+     people, so the number is never converted into a headcount. A party
+     whose every night shared the building with another room says so
+     instead of showing a zero - the register cannot tell whose round it
+     rang on a two-room night, the same reason the balcony till is flagged
+     and never attributed. */
+  function resSizeLine(r){
+    const s = r.size;
+    if(!s) return `<p class="mgr-meta">No bar nights matched to this party yet, so there is nothing measured to go on.</p>`;
+    if(s.ordersAvg == null) return `<p class="mgr-meta">All ${s.nights} night${s.nights===1?"":"s"} of it shared the building with another room, so the till can't say how big this one is on its own.</p>`;
+    return `<p class="mgr-meta"><b>${s.ordersAvg} orders</b>/night &middot; peak <b>${s.bestOrders}</b>${
+      s.avgNet!=null?` &middot; ${usdShort(s.avgNet)} bar`:""} &middot; over ${s.soloNights} night${s.soloNights===1?"":"s"} it ran alone. Rounds rung, not people.</p>`;
+  }
+
+  function resSizeChip(r){
+    const s = r.size;
+    if(!s || s.ordersAvg == null) return "";
+    return `<span class="mgr-chip">${s.ordersAvg}/night</span>`;
+  }
+
+  /* THE BIG ONES, IN ORDER, WITH THE FLAG ON EACH ROW.
+
+     Ruby, 2026-10-07: "add note to some of the residencies that are known
+     to be larger that we'll need a balcony extension to accommodate party
+     size."
+
+     Rather than guess which those are, every running residency is listed
+     busiest first and she ticks down the list. No cut-off is applied: a
+     threshold on orders would be a headcount rule invented out of a round
+     count, and the one person who knows where the room stops filling is
+     reading this. The ranking is the whole contribution.
+
+     Ordered on orders a night, not on takings - a $12 party of 200 and a
+     $30 party of 80 can ring the same money and only one of them needs
+     upstairs open. */
+  function resBigBlock(){
+    const live = (M.resList||[]).filter(r => r.active && r.size && r.size.ordersAvg != null);
+    if(!live.length) return "";
+    live.sort((a,b) => b.size.ordersAvg - a.size.ordersAvg);
+    const flagged = (M.resList||[]).filter(r => r.balcony).length;
+    return `<details class="mgr-fold" data-fold="resbig" open><summary>Which of these fill the room (${live.length})${flagged?` &middot; ${flagged} set to open the balcony`:""}</summary>
+      <div class="mgr-card">
+        <div class="mgr-meta">Busiest first, by orders a night on the nights each ran alone. Rounds rung, not people.
+          Tick the ones the main floor can't hold &mdash; stays off margolis.events.</div>
+        ${live.map(r => `<div class="mgr-part"><div class="mgr-part__head">
+            <span class="mgr-label">${esc(r.title)}</span>
+            <span class="mgr-meta">${r.size.ordersAvg}/night &middot; peak ${r.size.bestOrders} &middot; ${r.size.soloNights} night${r.size.soloNights===1?"":"s"} counted</span>
+          </div>
+          <div class="mgr-acts">
+            <button class="mgr-btn ${r.balcony?"":"mgr-btn--ghost"}" data-act="resbalcony" data-key="${esc(r.key)}">${r.balcony?"&uarr; Balcony &mdash; on":"Needs the balcony"}</button>
+          </div></div>`).join("")}
+      </div></details>`;
+  }
+
+  /* THE HOUSE NOTE, at the foot of the editor. Ops only: neither `note`
+     nor `balcony` is whitelisted by margolis-residencies.php, so nothing
+     in that block reaches the public page and she can write plainly.
+
+     The balcony is a FLAG beside the note rather than a sentence inside
+     it, so the run sheet and the year plan can read it later, and so the
+     same line is not retyped on five parties.
+
+     Not the private-event balcony extension, which was withdrawn on
+     4 October 2026 and is gone from privateMinimumFor(). That was a
+     priced add-on on a buyout minimum; this is "open upstairs, this one
+     is too big for downstairs" on a night already running, which is why
+     it carries no money. */
   function resEditor(r){
     const c = r.fromCalendar || {};
     const o = r.overrides || {};          // what SHE has set, not the resolved value
@@ -2561,6 +2645,19 @@
         ${r.photo ? `<div class="res-photo"><img src="${esc(r.photoUrl||"")}" alt=""></div>` : ""}
         <input type="file" accept="image/jpeg,image/png,image/webp" data-res-photo="${esc(r.key)}">
         <p class="mgr-meta">JPG, PNG or WebP, up to 6 MB.${r.photo?` <button class="mgr-link" data-act="resphotoclear" type="button">Remove it</button>`:""}</p>
+      </div>
+
+      <div class="res-cal-note">
+        <span class="mgr-label">House note &middot; not on the site</span>
+        ${resSizeLine(r)}
+        <div class="mgr-field">
+          <label>Note for you and the floor${r.note?` <span class="mgr-chip">written</span>`:""}</label>
+          <textarea rows="3" data-res-field="note" placeholder="Anything the night needs known in advance — which editions went over, who to call.">${esc(r.note||"")}</textarea>
+        </div>
+        <div class="mgr-acts">
+          <button class="mgr-btn ${r.balcony?"":"mgr-btn--ghost"}" data-act="resbalcony" data-key="${esc(r.key)}" type="button">${r.balcony?"&uarr; Balcony — on":"Needs the balcony"}</button>
+        </div>
+        <p class="mgr-meta">${r.balcony ? "Upstairs bar opens for this one." : "For a party the main floor can't hold."}</p>
       </div>
 
       ${resCalBlock(r)}
@@ -2744,6 +2841,7 @@
     h += `<div class="pay-seg">${RES_SCOPES.map(([k,l])=>
       `<button class="${M.resScope===k?"on":""}" data-act="resscope" data-scope="${k}">${l}</button>`).join("")}</div>`;
     h += `<input class="mgr-search" id="resSearch" type="search" placeholder="Find a party" value="${esc(M.resSearch||"")}">`;
+    h += resBigBlock();
 
     if(!rows.length) return h + `<div class="mgr-empty">Nothing here.</div>`;
 
@@ -2760,6 +2858,9 @@
           ${r.hidden?`<span class="mgr-chip mgr-chip--bad">Hidden</span>`:""}
           ${r.manual?`<span class="mgr-chip">Added by hand</span>`:""}
           ${r.active && !r.blurb?`<span class="mgr-chip mgr-chip--warn">No description</span>`:""}
+          ${resSizeChip(r)}
+          ${r.balcony?`<span class="mgr-chip mgr-chip--warn">&uarr; Balcony</span>`:""}
+          ${r.note?`<span class="mgr-chip">Note</span>`:""}
         </div>
         <h3>${esc(r.title)}</h3>
         <div class="mgr-meta">${when} &middot; ${esc(r.start||"?")}–${esc(r.end||"?")}</div>
@@ -2882,6 +2983,7 @@
          rolling up a whole ledger on every dashboard load, for a
          number that changes a few times a year, is not worth it. */
       ["payees", "Payees", M.payees ? (M.inviteCandidates||0) : 0],
+      ["tests", "Test accounts", 0],
     ];
     return `<div class="mgr-tabs">${defs.map(([k,label,n])=>
       `<button class="mgr-tab ${M.tab===k?"on":""}" data-act="tab" data-tab="${k}">${label}${n?`<b>${n}</b>`:""}</button>`).join("")}</div>`;
@@ -2978,7 +3080,7 @@
     if(archived.length){
       html += `<details class="mgr-fold" data-fold="archived"><summary>Rejected (${archived.length})</summary><div style="padding:8px 0">${archived.map(a=>`
         <div class="mgr-card" style="opacity:.75">
-          <div class="mgr-chips"><span class="mgr-chip mgr-chip--dark">${esc(a.type||"dj")}</span></div>
+          <div class="mgr-chips"><span class="mgr-chip mgr-chip--dark">${esc((a.type||"dj").replace("both","dj + host"))}</span></div>
           <h3>${esc(a.name||a.email)}</h3>
           <div class="mgr-meta">${esc(a.email)} &middot; rejected ${esc(fmtWhen(a.archivedAt))}</div>
           <div class="mgr-acts"><button class="mgr-btn mgr-btn--ghost" data-act="acct" data-id="${esc(a.id)}" data-decision="reconsider">Reconsider</button></div>
@@ -2991,11 +3093,38 @@
      she just opened (and did, on every rating tap). Keyed on data-fold
      rather than the summary text, because that text carries a count
      that changes under her. */
+  /* ---------- test accounts ----------
+     The switch only ever reaches profiles marked here, and the server
+     refuses to mark a DJ/host, a real manager, or any email with a real
+     membership. "Manager" is the look only: no manager powers. */
+  const TEST_ROLES = [["regular","Regular"],["member","Member $50"],["member-plus-one","Member + One $100"],["manager","Manager"]];
+  async function loadTests(){
+    const r = await mapi({action:"testAccounts"});
+    M.tests = r.accounts || [];
+  }
+  function renderTests(){
+    const add = `<div class="mgr-card">
+        <div class="mgr-field"><label>Test profile email</label><input id="testEmail" type="email" autocomplete="off" placeholder="a guest profile you made for testing"></div>
+        <div class="mgr-acts"><button class="mgr-btn" data-act="testmark">Mark as test</button></div>
+        ${M.testMsg ? `<p class="mgr-empty" style="padding:10px 0 0">${esc(M.testMsg)}</p>` : ""}
+      </div>`;
+    const list = (M.tests||[]);
+    if(!list.length) return add + `<div class="mgr-empty">No test accounts yet.</div>`;
+    return add + list.map(t => `<div class="mgr-card">
+        <div style="font-weight:600">${esc(t.name || t.email)}</div>
+        <div class="mgr-empty" style="padding:2px 0 12px">${esc(t.email)}${t.missing ? " &middot; profile deleted" : ""}</div>
+        <div class="mgr-tabs" style="margin:0 0 12px">${TEST_ROLES.map(([k,label]) =>
+          `<button class="mgr-tab ${t.role===k?"on":""}" data-act="testrole" data-email="${esc(t.email)}" data-role="${k}">${label}</button>`).join("")}</div>
+        <div class="mgr-acts"><button class="mgr-btn mgr-btn--ghost" data-act="testunmark" data-email="${esc(t.email)}">Remove</button></div>
+      </div>`).join("");
+  }
+
   function render(){
     const open = new Set();
     view.querySelectorAll("details[open][data-fold]").forEach(d => open.add(d.dataset.fold));
     const bodies = {needs: renderNeeds, nights: renderNights, requests: renderRequests,
-                    djs: renderDjs, payees: renderPayees, res: renderResidencies};
+                    djs: renderDjs, payees: renderPayees, res: renderResidencies,
+                    tests: renderTests};
     view.innerHTML = tabsBar() + (bodies[M.tab] || renderNeeds)();
     view.querySelectorAll("details[data-fold]").forEach(d => { if(open.has(d.dataset.fold)) d.open = true; });
     const s = document.getElementById("mgrSearch");
@@ -3124,6 +3253,27 @@
 
     try{
       if(act === "tab"){ await setTab(btn.dataset.tab); return; }
+
+      if(act === "testmark"){
+        const inp = document.getElementById("testEmail");
+        const email = (inp && inp.value || "").trim();
+        if(!email){ M.testMsg = "Type the test profile's email."; render(); return; }
+        busy("Saving…");
+        try{ await mapi({action:"testMark", email}); M.testMsg = ""; }
+        catch(e){ if(e==="auth") return; M.testMsg = typeof e==="string" ? e : "Couldn't mark that one."; }
+        await loadTests(); render(); return;
+      }
+      if(act === "testrole"){
+        busy();
+        await mapi({action:"testRole", email: btn.dataset.email, role: btn.dataset.role});
+        await loadTests(); render(); return;
+      }
+      if(act === "testunmark"){
+        if(!confirm("Make this an ordinary account again?")) return;
+        busy();
+        await mapi({action:"testUnmark", email: btn.dataset.email});
+        await loadTests(); render(); return;
+      }
 
       if(act === "door"){
         const k = btn.dataset.key;
@@ -3262,6 +3412,28 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
           M.resMsg[r.key] = msg;
           render();
         }catch(e){ free("Save changes"); throw e; }
+        return;
+      }
+
+      /* Keyed off the button's own data-key, not M.resOpen: this one is
+         clicked from the busiest-first list as well, where no editor is
+         open and M.resOpen is whatever was last expanded. */
+      if(act === "resbalcony"){
+        const r = (M.resList||[]).find(x => x.key === btn.dataset.key);
+        if(!r) return;
+        const payload = {action:"residencySave", key:r.key, balcony: !r.balcony};
+        /* Carry the note in the same save when this was clicked from inside
+           an open editor. The toggle re-renders the card, so a note she had
+           typed and not yet saved would otherwise be thrown away by the one
+           button sitting right beside it. From the busiest-first list there
+           is no textarea and only the flag is sent. */
+        const card = btn.closest(".mgr-card");
+        const box = card && card.querySelector('[data-res-field="note"]');
+        if(box) payload.note = box.value;
+        busy("Saving…");
+        await mapi(payload);
+        await loadResidencies();
+        render();
         return;
       }
 
