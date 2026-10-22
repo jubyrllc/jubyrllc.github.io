@@ -617,7 +617,7 @@
       sub.solo = false;
       sub.partners.push({name:payload.name, instagram:ig});
       ev.partnered = true; ev.withNames = sub.partners.map(p=>p.name);
-      demoSave(s); return {ok:true, submission:sub};
+      demoSave(s); return {ok:true, submission:sub, linked:{name:payload.name, by: payload.email ? "new" : "instagram"}};
     }
     if(payload.action==="setSolo"){
       const ev=findEv(); const sub=ensureSub(ev);
@@ -843,6 +843,7 @@
   // Lineups are singular acts (name + IG), not one typed-out list — the
   // in-progress set for each event lives here until it's submitted.
   const lineupDraft = {};
+  const partnerNote = {};           // date|name -> who the last partner add linked to
   const lineupArr = v => Array.isArray(v) ? v : (v ? [{name:String(v), instagram:""}] : []);
   const igInput = f => `<span style="display:flex;align-items:center"><span style="padding:0 2px 0 0;color:var(--muted);font-family:'IBM Plex Mono',monospace">@</span><input type="text" data-f="${f}" placeholder="handle" style="flex:1" autocapitalize="none" autocorrect="off"></span>`;
   function stchip(label, status){
@@ -937,6 +938,7 @@
         </div>
         <div class="evt__pane ${tab==="partners"?"on":""}" data-pane="partners">
           <p class="evt__status">Hosting this night with someone? <strong>Every partner needs their own Margolis profile</strong> — the night isn't official until they do.</p>
+          ${partnerNote[keyOf(ev)]?`<p class="evt__status">${esc(partnerNote[keyOf(ev)])}</p>`:""}
           ${(s.partners||[]).length?`<p class="evt__status"><strong>On this night:</strong> ${(s.partners||[]).map(p=>esc(p.name)+(p.instagram?` (@${esc(p.instagram)})`:"")).join(", ")}</p>`:""}
           ${s.solo?`<div class="evt__collapse"><span class="lbl">No partner — solo night</span><button type="button" class="djd-readmore" data-solo-undo="1" data-i="${i}">Actually, add one</button></div>`:`
           <label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:16px;cursor:pointer;font-size:13.5px;color:var(--muted)">
@@ -946,6 +948,7 @@
           <div class="ifield"><label>Partner legal first name <span class="req">*</span></label><input type="text" data-f="pfirst" placeholder="Their legal first name"></div>
           <div class="ifield"><label>Partner legal last name <span class="req">*</span></label><input type="text" data-f="plast" placeholder="Their legal last name"></div>
           <div class="ifield"><label>Partner Instagram <span class="req">*</span></label>${igInput("pig")}<p class="help">Just the letters — the @ is already there. If they already have a profile, this links them instantly.</p></div>
+          <div class="ifield"><label>Partner mobile (optional)</label><input type="tel" inputmode="tel" data-f="pphone" placeholder="(215) 555-0100"><p class="help">Helps us find their profile if they already have one.</p></div>
           <div class="ifield" data-pemail-wrap hidden><label>Partner email <span class="req">*</span></label><input type="email" data-f="pemail" placeholder="partner@email.com"><p class="help">We don't have a profile for them yet — add their email and we'll create one and send them their login.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="partner" data-i="${i}">Add partner <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `}
@@ -1214,9 +1217,11 @@
       const ig = card.querySelector('[data-f="pig"]').value.trim().replace(/^@/,"");
       const emailWrap = card.querySelector('[data-pemail-wrap]');
       const email = card.querySelector('[data-f="pemail"]').value.trim();
+      const phone = card.querySelector('[data-f="pphone"]').value.trim();
       if(!pfirst || !plast) return showErr("Add your partner's legal first and last name.");
       if(!ig) return showErr("Add your partner's Instagram handle.");
-      payload = Object.assign({action:"addEventPartner", name, instagram:ig, email}, base);
+      if(phone && phone.replace(/\D/g,"").length !== 10) return showErr("That mobile needs 10 digits, or leave it blank.");
+      payload = Object.assign({action:"addEventPartner", name, instagram:ig, email, phone}, base);
       btn.disabled = true; btn.textContent = "Adding…";
       try{
         const out = await api(DASH_URL, payload);
@@ -1230,6 +1235,12 @@
           ev.submission = out.submission;
           ev.partnered = true;
           ev.withNames = (out.submission.partners||[]).map(p=>p.name);
+        }
+        /* Say who it linked to, so a wrong match is caught on the spot. */
+        if(out.linked && out.linked.name){
+          partnerNote[keyOf(ev)] = out.linked.by === "new"
+            ? `Created a profile for ${out.linked.name} and emailed them their login.`
+            : `Linked to ${out.linked.name}'s profile.`;
         }
         openCards.add(keyOf(ev));
         activeTab[keyOf(ev)] = "partners";
