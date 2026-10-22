@@ -1635,6 +1635,8 @@
     M.resApps   = r.applications || [];
     M.resAppCnt = r.counts || {};
     M.resAppYear = r.year || 2027;
+    M.resAppDeadline = r.deadline || "";
+    M.resAppDecideBy = r.decideBy || "";
   }
   async function loadResidencies(){
     const r = await mapi({action:"residencyList"});
@@ -2611,6 +2613,26 @@
      while an application is pending the public site must not change. So
      the card says so in as many words — the one fact that decides
      whether she has to hurry. */
+  /* The two dates Ruby set, 2026-10-22: applications close Dec 1, she
+     answers everyone by Dec 15. Counted in days so the board says how
+     long is left, and goes red once the answer date has passed with
+     anything still pending. */
+  function resDeadlineLine(nPending){
+    const dl = M.resAppDeadline, db = M.resAppDecideBy;
+    if(!dl || !db) return "";
+    const day = iso => { const [y,m,d] = iso.split("-").map(Number); return new Date(y, m-1, d); };
+    const today = new Date(); today.setHours(0,0,0,0);
+    const left = iso => Math.round((day(iso) - today) / 864e5);
+    const fmt = iso => day(iso).toLocaleDateString("en-US",{month:"short",day:"numeric"});
+    const nd = left(dl), nb = left(db);
+    const close = nd >= 0 ? `Applications close <b>${fmt(dl)}</b> (${nd === 0 ? "today" : nd + " day" + (nd === 1 ? "" : "s")})`
+                          : `Applications closed <b>${fmt(dl)}</b>`;
+    const decide = nb >= 0 ? `you answer by <b>${fmt(db)}</b> (${nb === 0 ? "today" : nb + " day" + (nb === 1 ? "" : "s")})`
+                           : `answer date <b>${fmt(db)}</b> has passed`;
+    const late = nb < 0 && nPending > 0;
+    return `<p class="mgr-meta" style="margin-top:8px${late ? ";color:#9B2C2C" : ""}">${close} &middot; ${decide} &middot; <b>${nPending}</b> waiting on you</p>`;
+  }
+
   function renderResidencyApps(){
     const apps = M.resApps || [];
     const year = M.resAppYear || 2027;
@@ -2624,8 +2646,9 @@
 
     let h = `<div class="mgr-card">
       <h3>${year} residency applications</h3>
-      <div class="mgr-meta">Hosts pick a night on <a class="mgr-link" href="https://margolis.events/apply-for-a-residency" target="_blank" rel="noopener">margolis.events/apply-for-a-residency</a> and apply for the slot it sits on.
+      <div class="mgr-meta">Hosts pick a first night, hours and how often on <a class="mgr-link" href="https://margolis.events/apply-for-a-residency" target="_blank" rel="noopener">margolis.events/apply-for-a-residency</a>.
       <b>Nothing reaches the public site until you confirm it.</b></div>
+      ${resDeadlineLine(pending.length)}
       <div class="mgr-chips" style="margin-top:10px">
         ${chip("pending","Pending", c.pending||0)}
         ${chip("confirmed","Confirmed", c.confirmed||0)}
@@ -2655,7 +2678,10 @@
         <div class="mgr-chips">${badge}
           <span class="mgr-chip">${esc(a.slotWords||"")}</span>
           <span class="mgr-chip">${esc(a.shape||"")}</span>
+          ${a.hoursWords?`<span class="mgr-chip">${esc(a.hoursWords)}</span>`:""}
+          ${a.minimum?`<span class="mgr-chip">$${Number(a.minimum).toLocaleString("en-US")} min</span>`:""}
           <span class="mgr-chip">${a.dateCount||0} night${a.dateCount===1?"":"s"}</span>
+          ${a.createdAt && !a.returning ? `<span class="mgr-chip">In ${new Date(a.createdAt).toLocaleDateString("en-US",{month:"short",day:"numeric"})}</span>` : ""}
           ${a.returning?`<span class="mgr-chip mgr-chip--dark">Returning</span>`:""}
         </div>
         <h3 style="margin-top:8px">${esc(a.name||"Untitled")}</h3>
@@ -2663,6 +2689,8 @@
           ${a.email?` &middot; <a class="mgr-link" href="mailto:${esc(a.email)}">${esc(a.email)}</a>`:""}${a.phone?` &middot; ${esc(a.phone)}`:""}</div>
         ${(a.rivals||[]).length?`<p class="mgr-meta" style="margin-top:6px"><b>Also applying for these nights:</b> ${a.rivals.map(r=>esc(r.name)).join(", ")}. Confirming one leaves the others pending &mdash; decline them yourself.</p>`:""}
         ${open ? `
+          ${(a.details||[]).map(([k,v])=>`<p class="mgr-meta" style="margin-top:6px"><b>${esc(k)}:</b> ${
+            /^https?:\/\//.test(v)?`<a class="mgr-link" href="${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a>`:esc(v)}</p>`).join("")}
           <p style="margin-top:10px;white-space:pre-wrap">${esc(a.about||"")}</p>
           <p class="mgr-meta" style="margin-top:8px"><b>${dateList.length} night${dateList.length===1?"":"s"} in ${year}:</b> ${dateList.join(" &middot; ")}</p>
           ${a.note?`<p class="mgr-meta" style="margin-top:6px"><b>Your note:</b> ${esc(a.note)}</p>`:""}
