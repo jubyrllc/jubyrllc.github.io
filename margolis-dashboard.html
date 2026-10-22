@@ -610,14 +610,15 @@
     if(payload.action==="saveFlyer"){ const ev=findEv(); const sub=ensureSub(ev); sub.flyerFile={value:payload.fileName||"flyer.png",status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="saveRsvp"){ const ev=findEv(); const sub=ensureSub(ev); if(payload.rsvpFree) sub.rsvpFree=payload.rsvpFree; if(payload.rsvpSold) sub.rsvpSold=payload.rsvpSold; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="addEventPartner"){
-      const known = ["mikeoleary","docsow"];
-      const ig = String(payload.instagram||"").toLowerCase();
-      if(!known.includes(ig) && !payload.email) return {ok:true, needEmail:true};
+      /* Demo: these two addresses stand in for partners who already
+         have profiles; anything else is made new. */
+      const known = {"mike@example.com":"mikeoleary", "doc@example.com":"docsow"};
+      const em = String(payload.email||"").toLowerCase();
       const ev=findEv(); const sub=ensureSub(ev);
       sub.solo = false;
-      sub.partners.push({name:payload.name, instagram:ig});
+      sub.partners.push({name:payload.name, instagram:known[em]||""});
       ev.partnered = true; ev.withNames = sub.partners.map(p=>p.name);
-      demoSave(s); return {ok:true, submission:sub, linked:{name:payload.name, by: payload.email ? "new" : "instagram"}};
+      demoSave(s); return {ok:true, submission:sub, linked:{name:payload.name, by: known[em] ? "email" : "new"}};
     }
     if(payload.action==="setSolo"){
       const ev=findEv(); const sub=ensureSub(ev);
@@ -947,9 +948,8 @@
           <div class="intake__nav" style="margin-bottom:20px"><button type="button" class="btn" data-save="solo" data-i="${i}">Confirm solo night</button></div>
           <div class="ifield"><label>Partner legal first name <span class="req">*</span></label><input type="text" data-f="pfirst" placeholder="Their legal first name"></div>
           <div class="ifield"><label>Partner legal last name <span class="req">*</span></label><input type="text" data-f="plast" placeholder="Their legal last name"></div>
-          <div class="ifield"><label>Partner Instagram <span class="req">*</span></label>${igInput("pig")}<p class="help">Just the letters — the @ is already there. If they already have a profile, this links them instantly.</p></div>
-          <div class="ifield"><label>Partner mobile (optional)</label><input type="tel" inputmode="tel" data-f="pphone" placeholder="(215) 555-0100"><p class="help">Helps us find their profile if they already have one.</p></div>
-          <div class="ifield" data-pemail-wrap hidden><label>Partner email <span class="req">*</span></label><input type="email" data-f="pemail" placeholder="partner@email.com"><p class="help">We don't have a profile for them yet — add their email and we'll create one and send them their login.</p></div>
+          <div class="ifield"><label>Partner mobile <span class="req">*</span></label><input type="tel" inputmode="tel" autocomplete="off" data-f="pphone" placeholder="(215) 555-0100"></div>
+          <div class="ifield"><label>Partner email <span class="req">*</span></label><input type="email" autocomplete="off" data-f="pemail" placeholder="partner@email.com"><p class="help">If they have a profile, this links it. If not, we make one and email them their login.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="partner" data-i="${i}">Add partner <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `}
         </div>
@@ -1214,23 +1214,17 @@
       const pfirst = card.querySelector('[data-f="pfirst"]').value.trim();
       const plast = card.querySelector('[data-f="plast"]').value.trim();
       const name = (pfirst + " " + plast).trim();
-      const ig = card.querySelector('[data-f="pig"]').value.trim().replace(/^@/,"");
-      const emailWrap = card.querySelector('[data-pemail-wrap]');
       const email = card.querySelector('[data-f="pemail"]').value.trim();
       const phone = card.querySelector('[data-f="pphone"]').value.trim();
+      /* Found by the phone and email on their profile, checked against
+         the name (Ruby, 2026-10-22). Instagram comes off the profile. */
       if(!pfirst || !plast) return showErr("Add your partner's legal first and last name.");
-      if(!ig) return showErr("Add your partner's Instagram handle.");
-      if(phone && phone.replace(/\D/g,"").length !== 10) return showErr("That mobile needs 10 digits, or leave it blank.");
-      payload = Object.assign({action:"addEventPartner", name, instagram:ig, email, phone}, base);
+      if(phone.replace(/\D/g,"").length !== 10) return showErr("Add your partner's mobile, 10 digits.");
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return showErr("Add your partner's email.");
+      payload = Object.assign({action:"addEventPartner", name, firstName:pfirst, lastName:plast, email, phone}, base);
       btn.disabled = true; btn.textContent = "Adding…";
       try{
         const out = await api(DASH_URL, payload);
-        if(out.needEmail){
-          btn.disabled = false; btn.innerHTML = orig;
-          emailWrap.hidden = false;
-          activeTab[keyOf(ev)] = "partners";
-          return showErr("We don't have a profile for that partner yet — add their email so we can create one and send their login.");
-        }
         if(out.submission){
           ev.submission = out.submission;
           ev.partnered = true;
