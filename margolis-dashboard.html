@@ -117,6 +117,11 @@
   .djd-ns__n{font-family:"IBM Plex Mono",monospace;font-size:14px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
   .djd-ns__v{text-align:right;white-space:nowrap}
   .djd-ns__m{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--muted);text-align:right;white-space:nowrap}
+  /* net by hour, under one night. Mirrored in jubyr.tools dj-accounts.html (.hr*) */
+  .djd-ns__h{grid-column:1/-1;margin-top:4px}
+  .djd-ns__h summary{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+  .djd-hr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 10px;align-items:center;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:11px;font-variant-numeric:tabular-nums}
+  .djd-hr i{display:block;height:8px;background:var(--green,#2D7A8F);min-width:1px}
   .djd-check{list-style:none;margin:0 0 16px;padding:0}
   .djd-check li{padding:6px 0;font-size:14px;color:var(--muted);display:flex;gap:9px;align-items:baseline}
   .djd-check li.done{color:var(--ink)}
@@ -1369,6 +1374,17 @@
     if(r.minimum == null) return chip("none", "No minimum", "No minimum was set for this night.");
     return r.met ? chip("good", "Met") : chip("under", `Short by ${payWhole(r.shortBy)}`);
   }
+  /* Net by hour for one night (Ruby, 2026-10-22: "so they can see the
+     hourly sales trend"). The hours come off the register orders in
+     myNightSales; nothing is summed here. Same drawing as Ruby's
+     "their view" in jubyr.tools dj-accounts.html. */
+  const hr12 = h => `${(h % 12) || 12} ${h < 12 ? "AM" : "PM"}`;
+  function nsHours(hours){
+    if(!(hours||[]).length) return "";
+    const top = Math.max(...hours.map(x=>x.net), 1);
+    return `<details class="djd-ns__h"><summary>⏱ By hour</summary><div class="djd-hr">${hours.map(x=>
+      `<span>${hr12(x.hour)}</span><i style="width:${Math.max(0, x.net)/top*100}%"></i><span>${payWhole(x.net)}</span>`).join("")}</div></details>`;
+  }
   async function renderPayHistory(){
     const el = document.getElementById("payHistory");
     if(!el) return;
@@ -1399,6 +1415,7 @@
           <div class="djd-ns__d">${esc(payDay(r.date))}</div>
           <div class="djd-ns__v">${nsVerdict(r)}</div>
           ${r.minimum!=null ? `<div class="djd-ns__d"></div><div class="djd-ns__m" title="${esc(NS_FROM[r.minimumFrom]||"")}">min ${payWhole(r.minimum)}</div>` : ``}
+          ${nsHours(r.hours)}
         </li>`).join("")}</ul>
         <p class="djd-note" style="margin-top:14px">Margolis nights. Net bar sales off the register: no tax, tips or service charge. Co-hosts see the same figure. Minimums before Aug 28, 2026 only where one was set.</p>
       </div></details>`;
