@@ -85,6 +85,21 @@
           <div class="intake__nav"><button type="button" class="btn btn--green" id="btnSet">Save my password <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </form>
 
+        <!-- Claiming a profile Ruby made by mobile (2026-10-22): once the
+             password is saved, the four things she needs from them. Shown
+             only while email, Instagram or Zelle is missing, so a plain
+             password reset goes straight through. -->
+        <form id="stepDetails" hidden>
+          <h3 style="margin-bottom:6px">Your details</h3>
+          <p class="dj-note" style="margin:0 0 18px">Legal name as it goes on your W9. Payouts go to your Zelle.</p>
+          <div class="ifield"><label>Legal first name <span class="req">*</span></label><input type="text" id="dFirst" autocomplete="given-name"></div>
+          <div class="ifield"><label>Legal last name <span class="req">*</span></label><input type="text" id="dLast" autocomplete="family-name"></div>
+          <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="dEmail" autocomplete="email" placeholder="you@email.com"></div>
+          <div class="ifield"><label>Instagram <span class="req">*</span></label><input type="text" id="dIg" autocapitalize="none" placeholder="@yourhandle"></div>
+          <div class="ifield"><label>Zelle <span class="req">*</span></label><input type="text" id="dZelle" autocapitalize="none" placeholder="Email or mobile your Zelle is under"></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnDetails">Save <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        </form>
+
         <div id="stepDone" hidden>
           <div class="dj-done">
             <div class="mark" aria-hidden="true">&#10003;</div>
@@ -135,6 +150,8 @@
   const stepAsk = document.getElementById('stepAsk');
   const stepSet = document.getElementById('stepSet');
   const stepDone = document.getElementById('stepDone');
+  const stepDetails = document.getElementById('stepDetails');
+  let session = "";
 
   function err(m){ okBox.classList.remove('show'); errBox.textContent = m; errBox.classList.add('show'); }
   function ok(m){ errBox.classList.remove('show'); okBox.textContent = m; okBox.classList.add('show'); }
@@ -183,7 +200,19 @@
          the password they just chose. */
       try{ localStorage.setItem("margolis-dj-token", out.token); }catch(e){}
       stepSet.hidden = true;
-      stepDone.hidden = false;
+      session = out.token;
+      const a = out.account || {};
+      if(!a.isGuest && (!a.email || !a.instagram || !a.zelle)){
+        document.getElementById('dFirst').value = a.firstName || "";
+        document.getElementById('dLast').value = a.lastName || "";
+        document.getElementById('dEmail').value = a.email || "";
+        document.getElementById('dIg').value = a.instagram ? "@" + a.instagram.replace(/^@/, "") : "";
+        document.getElementById('dZelle').value = a.zelle || "";
+        stepDetails.hidden = false;
+        document.getElementById(a.email ? 'dIg' : 'dEmail').focus();
+      } else {
+        stepDone.hidden = false;
+      }
       /* A guest has no dashboard to be sent to — their account lives
          behind the profile icon on margolis.events. Sending them to the
          host dashboard would bounce them straight back out. */
@@ -206,6 +235,25 @@
       err(e.message);
       btn.disabled = false;
     }
+  });
+
+  /* ---- the claim details ---- */
+  document.getElementById('btnDetails').addEventListener('click', async () => {
+    clearMsg();
+    const v = id => document.getElementById(id).value.trim();
+    const p = {action:"claimDetails", token: session, firstName: v('dFirst'), lastName: v('dLast'),
+               email: v('dEmail'), instagram: v('dIg').replace(/^@/, ""), zelle: v('dZelle')};
+    if(!p.firstName || !p.lastName) return err("Add your legal first and last name.");
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(p.email)) return err("Add your email.");
+    if(!p.instagram) return err("Add your Instagram.");
+    if(!p.zelle) return err("Add your Zelle.");
+    const btn = document.getElementById('btnDetails');
+    btn.disabled = true;
+    try{
+      await api(p);
+      stepDetails.hidden = true;
+      stepDone.hidden = false;
+    }catch(e){ err(e.message); btn.disabled = false; }
   });
 
   /* ---- which half of the page is this? ---- */

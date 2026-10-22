@@ -1541,7 +1541,10 @@
   const M = {
     me: null,
     counts: {},
-    tab: "needs",
+    /* ?tab=res is how the jubyr.tools/manage "Residencies" row lands here
+       (2026-10-22). Any tab not in this list opens on "needs" as before. */
+    tab: (()=>{ const t = new URLSearchParams(location.search).get("tab");
+      return ["needs","nights","requests","djs","res","payees","tests"].includes(t) ? t : "needs"; })(),
     accounts: null, submissions: null, requests: null, nights: null,
     subScope: "pending", dreqScope: "pending",
     /* Door (2026-09-05). doorOpen is the set of nights whose guest list

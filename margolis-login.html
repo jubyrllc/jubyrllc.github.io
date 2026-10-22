@@ -129,7 +129,7 @@
 
         <!-- ===== login ===== -->
         <form id="stepLogin" hidden>
-          <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="loginEmail" autocomplete="email" placeholder="you@email.com"></div>
+          <div class="ifield"><label>Email or mobile <span class="req">*</span></label><input type="text" id="loginEmail" autocomplete="username" inputmode="email" placeholder="you@email.com or (215) 555-1234"></div>
           <div class="ifield"><label>Password <span class="req">*</span></label><input type="password" id="loginPassword" autocomplete="current-password"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="btnLogin">Log in <span class="arw" aria-hidden="true">&gt;</span></button></div>
           <p class="dj-note">Booked with us before? Check the email we sent when your booking was
@@ -393,7 +393,8 @@
     clearErr();
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
-    if(!emailOk(email)) return showErr("Please add a valid email.");
+    /* Email or mobile (2026-10-22): profiles made by mobile sign in with it. */
+    if(!emailOk(email) && String(email).replace(/\D/g,"").length < 10) return showErr("Please add your email or mobile.");
     if(!password) return showErr("Please add your password.");
     const btn = document.getElementById("btnLogin");
     btn.disabled = true; btn.textContent = "Logging in…";
