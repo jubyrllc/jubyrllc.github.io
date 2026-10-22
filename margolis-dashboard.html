@@ -320,6 +320,7 @@
           and claim your residency now — everything goes live the moment you're approved.
         </div>
         <div id="profilePanel"></div>
+        <div id="guestListBox"></div>
         <div class="djd-w9" id="w9Box" hidden></div>
         <p class="djd-err" id="djdErr"></p>
         <!-- More nights (2026-10-22). Two doors onto forms that already
@@ -601,6 +602,11 @@
       if(!ev || !ev.door) throw "That is not one of your nights.";
       return {ok:true, door: ev.door};
     }
+    if(payload.action==="saveGuestList"){
+      const n = (payload.names||[]).map(x=>String(x).trim()).filter(Boolean);
+      if(n.length > 10) throw "Up to 10 names.";
+      s.account.guestList = n; demoSave(s); return {ok:true, account:s.account};
+    }
     if(payload.action==="saveW9"){ s.account.hasW9 = true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="savePhoto"){
       s.account.hasFacePhoto=true;
@@ -713,6 +719,47 @@
   // A plain file upload, same pattern as flyers and profile photos — no
   // third-party filing service, just a completed form in Ruby's files.
   const IRS_W9_URL = "https://www.irs.gov/pub/irs-pdf/fw9.pdf";
+  /* ---------- guest list (Ruby, 2026-10-22) ----------
+     "a recurring list, of people who they let in for free on certain
+     nights ... up to 10 people ... only valid on nights that they are the
+     host." One list on the profile; the door reads it live on their
+     nights. Deep link: /margolis-dashboard#guest-list */
+  const GL_MAX = 10;
+  function renderGuestList(account){
+    const box = document.getElementById("guestListBox");
+    if(!box || !account || account.isGuest) return;
+    const names = (account.guestList||[]).slice(0, GL_MAX);
+    const wasOpen = box.querySelector("details") ? box.querySelector("details").open : location.hash === "#guest-list";
+    let rows = "";
+    for(let i=0;i<GL_MAX;i++){
+      rows += `<div class="ifield" style="margin-bottom:6px"><input type="text" data-gl value="${esc(names[i]||"")}" placeholder="${i+1}. Full name" aria-label="Guest ${i+1}" maxlength="80" autocomplete="off"></div>`;
+    }
+    box.innerHTML = `<details class="djd-prof" id="guest-list"${wasOpen?" open":""}>
+      <summary>Guest list <span class="mono" style="font-weight:400;font-size:12px;color:var(--muted)">${names.length}/${GL_MAX}</span></summary>
+      <div class="djd-prof__body">
+        <p class="djd-note" style="margin:0 0 12px">Free entry on nights you host only. Up to 10 names.</p>
+        ${rows}
+        <p class="djd-err" id="glErr" style="margin:8px 0"></p>
+        <div class="intake__nav"><button type="button" class="btn btn--green" id="glSave">Save guest list <span class="arw" aria-hidden="true">&gt;</span></button></div>
+      </div></details>`;
+    document.getElementById("glSave").addEventListener("click", async (ev) => {
+      const btn = ev.currentTarget, errEl = document.getElementById("glErr");
+      const list = [...box.querySelectorAll("[data-gl]")].map(i => i.value.trim()).filter(Boolean);
+      errEl.textContent = "";
+      btn.disabled = true;
+      try{
+        const out = await api(AUTH_URL, {action:"saveGuestList", names: list});
+        renderGuestList(out.account);
+        const b2 = document.getElementById("glSave");
+        b2.innerHTML = "Saved &#10003;"; setTimeout(() => { b2.innerHTML = 'Save guest list <span class="arw" aria-hidden="true">&gt;</span>'; }, 1600);
+      }catch(e){ errEl.textContent = typeof e === "string" ? e : "Couldn't save. Try again."; btn.disabled = false; }
+    });
+    if(location.hash === "#guest-list" && !box.dataset.scrolled){
+      box.dataset.scrolled = "1";
+      box.scrollIntoView({block:"start"});
+    }
+  }
+
   function renderW9(account){
     const box = document.getElementById("w9Box");
     box.hidden = false;
@@ -1511,6 +1558,7 @@
          still loads: she has a profile and nights of her own. */
       if(me.account.isManager && typeof window.MGR_BOOT === "function"){ window.MGR_BOOT(); }
       renderProfilePanel(me.account);
+      renderGuestList(me.account);
       renderW9(me.account);
       const out = await api(DASH_URL, {action:"events"});
       EVENTS = out.events || [];
