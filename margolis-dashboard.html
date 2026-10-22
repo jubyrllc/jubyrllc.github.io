@@ -917,9 +917,9 @@
         <div class="evt__pane ${tab==="flyer"?"on":""}" data-pane="flyer">
           ${gatedBody("flyer", s.flyerFile, i, k, "Your flyer wasn't approved.", `
           <div class="ifield"><label>Event flyer <span class="req">*</span></label>
-            <input type="file" data-f="flyer" accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf">
+            <input type="file" data-f="flyer" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
             ${s.flyerFile.value?`<p class="help">On file: ${esc(s.flyerFile.value)}</p>`:""}
-            <p class="help">PDF, JPG, or PNG up to 10 MB. <strong>No AI-generated flyers — they will not be approved.</strong> Due at least 10 days before your night. A new upload replaces the old one and goes back into review.</p></div>
+            <p class="help">JPG or PNG, 4:5 portrait (e.g. 1080×1350), up to 10 MB. Any other shape opens a crop box. <strong>No AI-generated flyers — they will not be approved.</strong> Due at least 10 days before your night. A new upload replaces the old one and goes back into review.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="flyer" data-i="${i}">Upload flyer <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `)}
         </div>
@@ -1247,8 +1247,15 @@
     }
     if(kind==="flyer"){
       const input = card.querySelector('[data-f="flyer"]');
-      const file = input.files && input.files[0];
+      let file = input.files && input.files[0];
       if(!file) return showErr("Pick your flyer file first.");
+      // Every flyer shows as a 4:5 card on margolis.events, so anything
+      // else is cropped to 4:5 here before it is sent (2026-10-22).
+      if(window.flyerCrop){
+        try{ file = await window.flyerCrop(file); }
+        catch(e){ return showErr("That file isn't an image we can read. Send a JPG or PNG."); }
+        if(!file) return;
+      }
       if(file.size > 10*1024*1024) return showErr("That file is over 10 MB — please compress it.");
       btn.disabled = true; btn.textContent = "Uploading…";
       try{
@@ -3654,5 +3661,6 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
   };
 })();
 </script>
+<script src="https://jubyr.tools/assets/js/flyer-crop.js?v=1"></script>
 </body>
 </html>
