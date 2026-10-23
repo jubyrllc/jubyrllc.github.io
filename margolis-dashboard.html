@@ -1412,7 +1412,7 @@
     try{ return new Date(d+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"}); }
     catch(e){ return d; }
   }
-  const NS_FROM = {booking:"agreed on your booking", set:"set for this night", ladder:"house minimum"};
+  const NS_FROM = {booking:"agreed on your booking", set:"set for this night", ladder:"house minimum", reference:"today's house minimum, shown for comparison. It wasn't set for this night"};
   function nsVerdict(r){
     const chip = (cls, word, tip) => `<span class="djd-band djd-band--${cls}"${tip?` title="${esc(tip)}"`:""}>${word}</span>`;
     if(r.cancelled) return chip("none", "Cancelled");
@@ -1420,6 +1420,7 @@
       ? chip("none", "Shared night", "Two parties ran this night and the register wasn't split by time, so there is no figure for yours alone.")
       : chip("none", "No figure");
     if(r.minimum == null) return chip("none", "No minimum", "No minimum was set for this night.");
+    if(r.minimumFrom === "reference") return r.met ? chip("good", "Above", NS_FROM.reference) : chip("under", `Below by ${payWhole(r.shortBy)}`, NS_FROM.reference);
     return r.met ? chip("good", "Met") : chip("under", `Short by ${payWhole(r.shortBy)}`);
   }
   /* Net by hour for one night (Ruby, 2026-10-22: "so they can see the
