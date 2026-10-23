@@ -1798,6 +1798,7 @@
       ${partValue(key, part)}
       ${canReview ? `<div class="mgr-acts">
         <button class="mgr-btn" data-act="review" data-sub="${esc(subId)}" data-part="${key}" data-decision="approved">Approve</button>
+        ${key === "ticketLink" ? `<button class="mgr-btn" data-act="review" data-sub="${esc(subId)}" data-part="${key}" data-decision="approved" data-notify="1" title="Approve, then email everyone on this night's GA list once it is live">Approve + notify</button>` : ""}
         <button class="mgr-btn mgr-btn--bad" data-act="review" data-sub="${esc(subId)}" data-part="${key}" data-decision="rejected">Reject</button>
       </div>` : ""}
     </div>`;
@@ -3572,7 +3573,8 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
 
       if(act === "review"){
         busy("Saving…");
-        await mapi({action:"review", submissionId:btn.dataset.sub, part:btn.dataset.part, decision:btn.dataset.decision});
+        const rv = await mapi({action:"review", submissionId:btn.dataset.sub, part:btn.dataset.part, decision:btn.dataset.decision, notify: !!btn.dataset.notify});
+        if(btn.dataset.notify) alert(rv && rv.notified ? `${rv.notified} on the GA list will be emailed as soon as the link is live.` : "Nobody is on this night's GA list.");
         await reload();
         return;
       }
