@@ -24,6 +24,18 @@
   .dj-note{color:var(--muted);font-size:13.5px;line-height:1.55;margin-top:14px}
   .dj-note a{color:var(--green)}
   .dj-done{text-align:center;padding:20px 0}
+  .dj-steps{margin:0 0 22px;padding-left:22px;line-height:1.6;font-size:15px}
+  .dj-steps li{margin-bottom:8px}
+  .dj-btns{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .dj-terms h4{margin:26px 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+  .dj-terms h4:first-child{margin-top:0}
+  .dj-term{margin:0 0 14px}
+  .dj-term b{display:block;font-size:15px;margin-bottom:3px}
+  .dj-term p{margin:0;font-size:14.5px;line-height:1.6}
+  .dj-term details{margin-top:6px;font-size:13.5px;color:var(--muted)}
+  .dj-term summary{cursor:pointer;color:var(--green)}
+  .dj-term table{width:100%;border-collapse:collapse;margin:8px 0;font-size:13px}
+  .dj-term th,.dj-term td{text-align:left;padding:6px 8px;border-bottom:1px solid rgba(127,127,127,.25);vertical-align:top}
   .dj-done .mark{width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 18px}
 </style>
 </head>
@@ -75,11 +87,45 @@
           <p class="dj-note">Remembered it? <a href="/margolis-login">Log in</a>.</p>
         </form>
 
+        <!-- The cold screen (2026-10-26): a new host's invite link opens
+             here first, before any form. Plain password resets skip it. -->
+        <div id="stepWelcome" hidden>
+          <h3 style="margin-bottom:6px" id="welcomeHead">Welcome to your Margolis profile.</h3>
+          <p class="dj-note" style="margin:0 0 18px">Here you&rsquo;ll see every night you&rsquo;re on, and your past nights once they&rsquo;ve happened. Setup takes about 5 minutes:</p>
+          <ol class="dj-steps">
+            <li>Add your email and pick a password.</li>
+            <li>Confirm your legal name, Instagram and Zelle.</li>
+            <li>Add your photo and genres, sign the agreements, upload your W9. Your door charge isn&rsquo;t paid until your W9 is on file.</li>
+            <li>Send your lineup, flyer and ticket link 10+ days before your night.</li>
+            <li>Add up to 10 guest list names. Free entry on nights you host.</li>
+            <li>Keep RSVP and ticket counts current. We staff the door and bar against them.</li>
+          </ol>
+          <div class="intake__nav dj-btns">
+            <button type="button" class="btn btn--green" data-go="terms">See the deal <span class="arw" aria-hidden="true">&gt;</span></button>
+            <button type="button" class="btn btn--ghost" data-go="set" id="btnSkip">Skip to sign up <span class="arw" aria-hidden="true">&gt;</span></button>
+          </div>
+        </div>
+
+        <!-- The deal (2026-10-26). Never typed here: read live from
+             margolis.events/assets/js/info-data.js, the same file /info
+             and site search answer from, so it can't drift from the
+             public Host a Public Event terms. -->
+        <div id="stepTerms" hidden>
+          <h3 style="margin-bottom:6px">The deal</h3>
+          <p class="dj-note" style="margin:0 0 20px">Same terms as <a href="https://margolis.events/host-a-public-event.html" target="_blank" rel="noopener">margolis.events</a>.</p>
+          <div class="dj-terms" id="termsBody"><p class="dj-note">Loading&hellip;</p></div>
+          <div class="intake__nav dj-btns" style="margin-top:22px">
+            <button type="button" class="btn btn--green" data-go="set" id="btnTermsNext">Continue to sign up <span class="arw" aria-hidden="true">&gt;</span></button>
+            <button type="button" class="btn btn--ghost" data-go="welcome">Back</button>
+          </div>
+        </div>
+
         <!-- Setting the new password, reached from the emailed link. -->
         <form id="stepSet" hidden>
           <h3 style="margin-bottom:6px">Choose a new password</h3>
           <p class="dj-note" style="margin:0 0 18px">Once you save it, the old one stops working
           everywhere &mdash; here and on margolis.events.</p>
+          <div class="ifield" id="setEmailRow" hidden><label>Email <span class="req">*</span></label><input type="email" id="setEmail" autocomplete="email" placeholder="you@email.com"></div>
           <div class="ifield"><label>New password <span class="req">*</span></label><input type="password" id="pw1" autocomplete="new-password" placeholder="At least 8 characters"></div>
           <div class="ifield"><label>Confirm password <span class="req">*</span></label><input type="password" id="pw2" autocomplete="new-password"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="btnSet">Save my password <span class="arw" aria-hidden="true">&gt;</span></button></div>
@@ -94,7 +140,7 @@
           <p class="dj-note" style="margin:0 0 18px">Legal name as it goes on your W9. Payouts go to your Zelle.</p>
           <div class="ifield"><label>Legal first name <span class="req">*</span></label><input type="text" id="dFirst" autocomplete="given-name"></div>
           <div class="ifield"><label>Legal last name <span class="req">*</span></label><input type="text" id="dLast" autocomplete="family-name"></div>
-          <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="dEmail" autocomplete="email" placeholder="you@email.com"></div>
+          <div class="ifield" id="dEmailRow"><label>Email <span class="req">*</span></label><input type="email" id="dEmail" autocomplete="email" placeholder="you@email.com"></div>
           <div class="ifield"><label>Instagram <span class="req">*</span></label><input type="text" id="dIg" autocapitalize="none" placeholder="@yourhandle"></div>
           <div class="ifield"><label>Zelle <span class="req">*</span></label><input type="text" id="dZelle" autocapitalize="none" placeholder="Email or mobile your Zelle is under"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="btnDetails">Save <span class="arw" aria-hidden="true">&gt;</span></button></div>
@@ -151,7 +197,11 @@
   const stepSet = document.getElementById('stepSet');
   const stepDone = document.getElementById('stepDone');
   const stepDetails = document.getElementById('stepDetails');
+  const stepWelcome = document.getElementById('stepWelcome');
+  const stepTerms = document.getElementById('stepTerms');
+  let linkUsed = false;  /* invite link already spent: terms still open, sign-up becomes log in */
   let session = "";
+  let isSetup = false;   /* a new host's invite, from peekReset */
 
   function err(m){ okBox.classList.remove('show'); errBox.textContent = m; errBox.classList.add('show'); }
   function ok(m){ errBox.classList.remove('show'); okBox.textContent = m; okBox.classList.add('show'); }
@@ -190,6 +240,8 @@
     clearMsg();
     const pw1 = document.getElementById('pw1').value;
     const pw2 = document.getElementById('pw2').value;
+    const setEmail = document.getElementById('setEmail').value.trim();
+    if(isSetup && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(setEmail)) return err("Add your email.");
     if(pw1.length < 8) return err("Password needs to be at least 8 characters.");
     if(pw1 !== pw2) return err("Those two passwords don't match.");
     const btn = document.getElementById('btnSet');
@@ -202,14 +254,17 @@
       stepSet.hidden = true;
       session = out.token;
       const a = out.account || {};
-      if(!a.isGuest && (!a.email || !a.instagram || !a.zelle)){
+      /* An invite always gets the details step: the email they typed
+         with the password is saved by claimDetails, not resetPassword. */
+      if(!a.isGuest && (isSetup || !a.email || !a.instagram || !a.zelle)){
         document.getElementById('dFirst').value = a.firstName || "";
         document.getElementById('dLast').value = a.lastName || "";
-        document.getElementById('dEmail').value = a.email || "";
+        document.getElementById('dEmail').value = (isSetup && setEmail) || a.email || "";
+        if(isSetup) document.getElementById('dEmailRow').hidden = true;
         document.getElementById('dIg').value = a.instagram ? "@" + a.instagram.replace(/^@/, "") : "";
         document.getElementById('dZelle').value = a.zelle || "";
         stepDetails.hidden = false;
-        document.getElementById(a.email ? 'dIg' : 'dEmail').focus();
+        document.getElementById(isSetup ? (a.firstName ? 'dIg' : 'dFirst') : (a.email ? 'dIg' : 'dEmail')).focus();
       } else {
         stepDone.hidden = false;
       }
@@ -251,20 +306,125 @@
     btn.disabled = true;
     try{
       await api(p);
+      if(isSetup) stepDone.querySelector('h3').textContent = "You're set up.";
       stepDetails.hidden = true;
       stepDone.hidden = false;
     }catch(e){ err(e.message); btn.disabled = false; }
   });
 
   /* ---- which half of the page is this? ---- */
+  /* ---- the deal, read from margolis.events ---- */
+  const TERMS = [
+    ["Bar minimum",   ["margolis-minimums", "margolis-shortfall"]],
+    ["What you earn", ["margolis-payout-ticketed", "when-am-i-paid"]],
+    ["Your tab",      ["talent-discount"]],
+    ["Reservations",  ["host-reservations-compete", "host-reservations-promotion", "host-reservations-revenue", "host-members-free"]],
+    ["Cancelling",    ["late-cancellation-kill-fee"]]
+  ];
+  let termsLoaded = null;
+  function loadTerms(){
+    if(termsLoaded) return termsLoaded;
+    termsLoaded = new Promise((res, rej) => {
+      const sc = document.createElement('script');
+      /* info-data.js is cached a week; a per-day query keeps the terms
+         at most a day behind the site. */
+      sc.src = "https://margolis.events/assets/js/info-data.js?d=" + new Date().toISOString().slice(0, 10);
+      sc.onload = () => window.MGL_INFO ? res(window.MGL_INFO) : rej();
+      sc.onerror = rej;
+      document.head.appendChild(sc);
+    });
+    return termsLoaded;
+  }
+  function renderTerms(info){
+    const byId = {};
+    (info.entries || []).forEach(e => byId[e.id] = e);
+    const box = document.getElementById('termsBody');
+    box.innerHTML = "";
+    TERMS.forEach(([head, ids]) => {
+      const list = ids.map(id => byId[id]).filter(Boolean);
+      if(!list.length) return;
+      const h = document.createElement('h4'); h.textContent = head; box.appendChild(h);
+      list.forEach(e => {
+        const d = document.createElement('div'); d.className = "dj-term";
+        const b = document.createElement('b'); b.textContent = e.q; d.appendChild(b);
+        const p = document.createElement('p'); p.textContent = e.short; d.appendChild(p);
+        if(e.full){
+          /* full is HTML from Ruby's own data file on margolis.events */
+          const det = document.createElement('details');
+          det.innerHTML = "<summary>More</summary>" + e.full;
+          det.querySelectorAll('a[href]').forEach(a => {
+            a.href = new URL(a.getAttribute('href'), "https://margolis.events/").href;
+            a.target = "_blank"; a.rel = "noopener";
+          });
+          d.appendChild(det);
+        }
+        box.appendChild(d);
+      });
+    });
+    if(!box.children.length) throw new Error();
+  }
+  function go(where){
+    clearMsg();
+    [stepWelcome, stepTerms, stepSet].forEach(x => x.hidden = true);
+    if(where === "terms"){
+      stepTerms.hidden = false;
+      window.scrollTo(0, 0);
+      loadTerms().then(renderTerms).catch(() => {
+        document.getElementById('termsBody').innerHTML =
+          '<p class="dj-note">Couldn\u2019t load them here. They\u2019re on <a href="https://margolis.events/host-a-public-event.html" target="_blank" rel="noopener">margolis.events</a>.</p>';
+      });
+    } else if(where === "set"){
+      if(linkUsed){ location.href = "/margolis-login"; return; }
+      stepSet.hidden = false;
+      document.getElementById(document.getElementById('setEmail').value ? 'pw1' : 'setEmail').focus();
+    } else {
+      stepWelcome.hidden = false;
+    }
+  }
+  document.querySelectorAll('[data-go]').forEach(btn => btn.addEventListener('click', () => go(btn.dataset.go)));
+
   if(resetToken){
-    stepSet.hidden = false;
     /* The token is a live credential. Take it out of the address bar so
        it isn't shoulder-surfed, pasted into a chat, or kept in history
        with the rest of the URL — it stays in memory for the one POST
        that consumes it. */
     try{ history.replaceState(null, "", location.pathname); }catch(e){}
-    document.getElementById('pw1').focus();
+    /* Invite or plain reset? peekReset reads without consuming. If the
+       peek itself fails for a network reason, fall back to the plain
+       form: resetPassword still gives the real answer. */
+    api({action:"peekReset", resetToken}).then(out => {
+      if(out.setup){
+        isSetup = true;
+        document.title = "Your Profile — Margolis";
+        document.querySelector('.sechead h2').textContent = "Your Margolis profile.";
+        document.querySelector('.sechead p').textContent = "Where you run your nights with us.";
+        document.querySelector('#stepSet h3').textContent = "Your email and password";
+        document.querySelector('#stepSet .dj-note').textContent = "You'll use these to log in.";
+        document.getElementById('setEmailRow').hidden = false;
+        document.getElementById('setEmail').value = out.email || "";
+        document.getElementById('pw1').placeholder = "At least 8 characters";
+        if(out.firstName) document.getElementById('welcomeHead').textContent = "Welcome to your Margolis profile, " + out.firstName + ".";
+        stepWelcome.hidden = false;
+      } else {
+        stepSet.hidden = false;
+        document.getElementById('pw1').focus();
+      }
+    }).catch(e => {
+      if(/expired|invalid/i.test(e.message)) {
+        /* Already set up, or past 7 days. The deal stays one click away;
+           the sign-up button turns into Log in. */
+        linkUsed = true;
+        document.title = "Your Profile — Margolis";
+        document.querySelector('.sechead h2').textContent = "Your Margolis profile.";
+        document.querySelector('.sechead p').textContent = "Where you run your nights with us.";
+        document.getElementById('btnSkip').firstChild.textContent = "Log in ";
+        document.getElementById('btnTermsNext').firstChild.textContent = "Log in ";
+        ok("This link has been used or has expired. Already set up? Log in. Still need to? Reply to Ruby for a new link.");
+        stepWelcome.hidden = false;
+        return;
+      }
+      stepSet.hidden = false;
+    });
   } else {
     stepAsk.hidden = false;
   }
