@@ -476,11 +476,14 @@
     if(!signupType) return showErr("Pick DJ, event host, or both.");
     if(p1.length < 8) return showErr("Password needs to be at least 8 characters.");
     if(p1 !== p2) return showErr("Those passwords don't match.");
-    if(!document.getElementById("suConsent").checked) return showErr("Please agree to be contacted — it's how approvals, reminders, and payouts reach you.");
+    // Never required: a box you must tick to sign up is A2P error 30923, and
+    // one that also covers approvals/payouts bundles marketing with service
+    // texts (30913). Service texts ride on the phone number itself.
+    const wantsMarketing = document.getElementById("suConsent").checked;
     const btn = document.getElementById("btnSignup");
     btn.disabled = true; btn.textContent = "Creating your account…";
     try{
-      const out = await api({action:"signup", firstName, lastName, name, email, phone, type:signupType, password:p1, contactConsent:"Yes, I agree"});
+      const out = await api({action:"signup", firstName, lastName, name, email, phone, type:signupType, password:p1, contactConsent: wantsMarketing ? "Yes, I agree" : ""});
       TOKEN = out.token; localStorage.setItem("margolis-dj-token", TOKEN);
       afterAuth(out.account);   // routes into the profile step
     }catch(e){ showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection."); }

@@ -859,7 +859,7 @@
           ${[["agPhil","I understand and agree to the Booking Philosophy"],
              ["agMins","I understand and agree to the Bar Minimum Policy"],
              ["agAll","I have read and agree to all event policies and terms"],
-             ["agConsent","Optional: Jubyr LLC may contact me about my bookings and future events by email, phone, and text. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. Opt out anytime, info never sold."]].map(([id,label])=>
+             ["agConsent","Optional: text and email me about events, lineups, ticket drops and offers from Jubyr LLC. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. Never required to book, and your information is never sold."]].map(([id,label])=>
             `<label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="checkbox" id="${id}"${(id==="agConsent" ? !!account.smsConsent : !!account.agreementsSigned)?" checked":""} style="margin-top:3px">${label}</label>`).join("")}
           <div class="ifield" style="margin-top:6px"><label>Electronic signature (full legal name) <span class="req">*</span></label><input type="text" id="agSig" autocomplete="name" value="${account.agreementsSigned?esc(account.name||""):""}"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSignAgreements">${account.agreementsSigned?"Update signature":"Sign the agreements"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
