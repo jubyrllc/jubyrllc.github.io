@@ -317,7 +317,7 @@
         <button type="button" class="djd-readmore" data-presale-open>Read the full presale policy &gt;</button></p>
         <div class="djd-w9 djd-w9--warn" id="approvalBox" hidden>
           <strong>Your account is awaiting Margolis review.</strong> You can finish your profile
-          and claim your residency now — everything goes live the moment you're approved.
+          now — everything goes live the moment you're approved.
         </div>
         <div id="profilePanel"></div>
         <div id="guestListBox"></div>
@@ -822,11 +822,10 @@
       <div class="djd-prof__body">
         ${!complete?`<p class="djd-note" style="margin:0 0 14px"><strong>Until your profile hits 100%</strong>, your residency stays unlocked and your door charge is not paid: we can't properly file our taxes without your W9. We'll keep reminding you daily — finishing takes a few minutes.</p>`:""}
         ${editing?`<ul class="djd-check">${items.map(([done,label])=>`<li class="${done?"done":""}"><span class="mk">${done?"&#10003;":"&#8226;"}</span>${label}</li>`).join("")}</ul>`:""}
-        <p class="djd-note" style="margin:0 0 4px"><strong>Residency:</strong> ${
-          claim ? (claim.status==="locked"
+        ${claim?`<p class="djd-note" style="margin:0 0 4px"><strong>Residency:</strong> ${
+          claim.status==="locked"
             ? `${esc(claim.title)} — <span style="color:var(--green)">locked in</span>`
-            : `${esc(claim.title)} — claim under review${p<100?" (complete your profile to lock it)":""}`)
-          : `none claimed yet — <a href="/margolis-login?claim=1">claim your spot</a>`}</p>
+            : `${esc(claim.title)} — under review${p<100?" (complete your profile to lock it)":""}`}</p>`:""}
         ${(!account.hasFacePhoto || profileEditMode)?`<div class="djd-task">
           <h4>Profile photo</h4>
           <p class="djd-note" style="margin:0 0 12px">${account.hasFacePhoto

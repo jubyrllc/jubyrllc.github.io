@@ -14,7 +14,8 @@
 <style>
   .dj-wrap{max-width:440px;margin:0 auto}
   .dj-tag{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-  .dj-err{color:#A03A2E;font-size:14px;margin:0 0 14px;display:none}
+  .dj-err{color:#A03A2E;font-size:15px;font-weight:600;line-height:1.45;margin:0 0 18px;padding:14px 16px;border:2px solid #A03A2E;border-radius:4px;background:#FBEFEF;display:none}
+  .dj-err a{color:#A03A2E;font-weight:700}
   .dj-err.show{display:block}
   .dj-note{color:var(--muted);font-size:13.5px;line-height:1.55;margin-top:14px}
   .dj-note a{color:var(--green)}
@@ -177,16 +178,6 @@
           <div class="intake__nav"><button type="button" class="btn btn--green" id="btnProfile">Save profile <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </form>
 
-        <!-- ===== residency claim (right after profile) ===== -->
-        <div id="stepClaim" hidden>
-          <h3 style="margin-bottom:6px">Claim your residency</h3>
-          <p class="dj-note" style="margin:0 0 18px">If one of these recurring nights on our events
-          calendar is yours, claim it — Margolis reviews every claim before it's locked in. Your
-          residency is not locked until your profile is complete and the claim is approved.</p>
-          <div id="claimList"><p class="dj-note">Loading the calendar&hellip;</p></div>
-          <p class="dj-note" style="margin-top:18px"><a href="#login" id="claimSkip">None of these are mine — skip for now</a></p>
-        </div>
-
         <!-- ===== done ===== -->
         <div class="dj-done" id="stepDone" hidden>
           <div class="mark">&#10003;</div>
@@ -257,10 +248,18 @@
   });
 
   const errEl = document.getElementById("djErr");
-  function showErr(m){ errEl.textContent = m; errEl.classList.add("show"); }
+  function showErr(m){
+    errEl.textContent = m; errEl.classList.add("show");
+    /* A refusal above the fold on a phone reads as "the page doesn't change" (2026-10-28). */
+    try{ errEl.scrollIntoView({block:"center", behavior:"smooth"}); }catch(e){ errEl.scrollIntoView(); }
+    if(/not recognized/i.test(m)){
+      const a = document.createElement("a"); a.href = "/margolis-reset"; a.textContent = " Reset your password >";
+      errEl.appendChild(a);
+    }
+  }
   function clearErr(){ errEl.classList.remove("show"); }
   function showStep(id){
-    ["stepSignup","stepLogin","stepSetPassword","stepProfile","stepClaim","stepDone"].forEach(s=>{
+    ["stepSignup","stepLogin","stepSetPassword","stepProfile","stepDone"].forEach(s=>{
       document.getElementById(s).hidden = (s !== id);
     });
     clearErr();
@@ -268,7 +267,6 @@
 
   let TOKEN = localStorage.getItem("margolis-dj-token") || "";
   let ACCOUNT = null;
-  const WANTS_CLAIM = new URLSearchParams(location.search).get("claim") === "1";
 
   // ---------- demo mode (Ruby's preview only, no server writes) ----------
   const DEMO = localStorage.getItem("margolis-dj-demo") === "1";
@@ -351,7 +349,6 @@
     ACCOUNT = account;
     if(account.mustSetPassword){ showStep("stepSetPassword"); return; }
     if(!account.quickProfileDone){ openProfileStep(account); return; }
-    if(WANTS_CLAIM){ openClaimStep(); return; }
     location.href = "/margolis-dashboard";
   }
 
@@ -448,10 +445,9 @@
         instagram: document.getElementById("pInstagram").value.trim().replace(/^@/,""),
         type: profileType, genres: profileGenres, venues: profileVenues});
       ACCOUNT = out.account;
-      // fresh profile save flows into claiming a residency; anyone whose
-      // claim already exists just heads to the dashboard
-      if(!out.account.claimedResidency){ openClaimStep(); }
-      else afterAuth(out.account);
+      /* Residencies are assigned by Ruby by hand (2026-10-28), so a
+         profile save goes straight on to the dashboard. */
+      afterAuth(out.account);
     }catch(e){ showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection."); }
     btn.disabled = false; btn.textContent = "Save profile >";
   });
@@ -489,35 +485,6 @@
       afterAuth(out.account);   // routes into the profile step
     }catch(e){ showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection."); }
     btn.disabled = false; btn.innerHTML = `Create my account <span class="arw" aria-hidden="true">&gt;</span>`;
-  });
-
-  // ---------- residency claim ----------
-  async function openClaimStep(){
-    showStep("stepClaim");
-    const host = document.getElementById("claimList");
-    try{
-      const out = await api({action:"listResidencies", token: TOKEN});
-      const list = out.residencies || [];
-      if(!list.length){ host.innerHTML = `<p class="dj-note">No recurring nights found on the calendar right now — you can skip ahead.</p>`; return; }
-      host.innerHTML = list.map(r=>`<button type="button" class="claim-card" data-claim="${esc(r.title)}" style="display:block;width:100%;text-align:left;border:1px dashed var(--line);background:#fff;padding:16px 18px;margin-bottom:10px;cursor:pointer">
-        <strong style="display:block;font-size:16px;margin-bottom:4px">${esc(r.title)}</strong>
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted)">Next: ${esc(r.nextDate)} &middot; ${esc(r.start)} &middot; ${r.count} upcoming dates</span>
-      </button>`).join("");
-      host.querySelectorAll("[data-claim]").forEach(b=>b.addEventListener("click", async ()=>{
-        b.disabled = true; b.style.opacity = ".6";
-        try{
-          const res = await api({action:"claimResidency", token: TOKEN, title: b.dataset.claim});
-          ACCOUNT = res.account;
-          showStep("stepDone");
-          document.getElementById("doneHeading").textContent = "Claim received.";
-          document.getElementById("doneBody").innerHTML = `You claimed <strong>${esc(b.dataset.claim)}</strong>. Margolis reviews every claim — it locks in once your profile is complete and the claim is approved. <a href="/margolis-dashboard">Head to your dashboard</a>.`;
-        }catch(e){ b.disabled=false; b.style.opacity="1"; showErr(typeof e==="string"?e:"Couldn't reach the server — try again."); }
-      }));
-    }catch(e){ host.innerHTML = `<p class="dj-note">Couldn't load the calendar — you can skip ahead and claim later.</p>`; }
-  }
-  document.getElementById("claimSkip").addEventListener("click", e=>{
-    e.preventDefault();
-    location.href = "/margolis-dashboard";
   });
 
   // ---------- full-screen intro wizard ----------
