@@ -973,7 +973,6 @@
         <h3>${esc(ev.eventName)}</h3>
         ${withLine}
         <div class="evt__chips">${chips}</div>
-        ${(!archived && /^https:\/\/jubyr\.tools\//.test(ev.ticketing||""))?`<div class="door"><a class="door__more" href="${esc(ev.ticketing)}" target="_blank" rel="noopener">&#127915; Your Margolis tickets: prices + sales</a></div>`:""}
         ${archived?"":`<div class="door" data-door-for="${esc(k)}">${DOOR.chips(ev.door)}${DOOR.any(ev.door)?`<button type="button" class="door__more" data-door="${esc(k)}" data-i="${i}">${doorOpen.has(k)?"Hide names":"See who booked"}</button>`:""}</div>
         <div class="door__list" data-door-list="${esc(k)}">${doorOpen.has(k)?(doorData[k]?DOOR.list(doorData[k]):`<div class="door__sect">Loading&hellip;</div>`):""}</div>`}
         ${s.fullyApproved?`<div class="evt__ok" style="width:100%">All approved — the presale is off and guests go straight to your ticket link.</div>`:""}
