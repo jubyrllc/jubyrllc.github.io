@@ -57,6 +57,7 @@
   .card .spec{color:var(--muted);font-size:14px}
   .tags{display:flex;flex-wrap:wrap;gap:6px}
   .tags span{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;border:1px dashed var(--line);padding:3px 7px;color:var(--muted)}
+  .rate{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--green);font-weight:600}
   .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:8px}
   .acts .btn{padding:9px 12px;font-size:11px}
   .state{padding:40px var(--gutter);color:var(--muted)}
@@ -205,6 +206,7 @@
       "<h3>" + esc(p.name) + "</h3>" +
       (h ? '<a class="ig" href="https://instagram.com/' + esc(h) + '" target="_blank" rel="noopener">@' + esc(h) + "</a>" : "") +
       (tags ? '<div class="tags">' + tags + "</div>" : "") +
+      (p.rate ? '<span class="rate">Rate &middot; ' + esc(p.rate) + "</span>" : "") +
       (p.about ? "<p>" + esc(p.about) + "</p>" : "") +
       (p.specialties && p.specialties !== p.about ? '<p class="spec">' + esc(p.specialties) + "</p>" : "") +
       '<div class="acts">' + acts + "</div>" +
