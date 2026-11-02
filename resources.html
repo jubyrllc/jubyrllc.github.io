@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Built in the margolis.events home-page language on purpose (Ruby, 2026-11-02): each person is laid out the way a night is on margolis.events/margolis, with their links where the ticket buttons sit. -->
+<title>Resources — Jubyr LLC</title>
+<meta name="description" content="People we trust in Philadelphia, from the Jubyr LLC client book: photographers, videographers, hosts, DJs, dancers and more. See their work and DM them to book.">
+<link rel="canonical" href="https://jubyr.com/resources">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="apple-touch-icon" href="assets/jubyr-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jubyr LLC">
+<meta property="og:title" content="Resources — Jubyr LLC">
+<meta property="og:description" content="People we trust in Philadelphia, from the Jubyr LLC client book. See their work and DM them to book.">
+<meta property="og:url" content="https://jubyr.com/resources">
+<meta property="og:image" content="https://jubyr.com/assets/og-default.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  /* margolis.events tokens, read off the live Margolis page 2026-11-02. */
+  :root{
+    --paper:#FAF7F2; --card:#FFFFFF; --ink:#1B1815; --muted:#8B8377; --line:#E2D9C9;
+    --gold:#8A6A28; --gold-line:#A8813C; --maroon:#6E2A38; --dark:#0C0C0C;
+    --serif:"Fraunces",Georgia,"Times New Roman",serif;
+    --sans:"Inter","Helvetica Neue",Arial,sans-serif;
+    --mono:"IBM Plex Mono","SF Mono",Menlo,monospace;
+    --gut:28px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  /* ---- top bar ---- */
+  .nav{position:fixed;inset:0 0 auto 0;z-index:40;height:56px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 var(--gut);background:rgba(250,247,242,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(226,217,201,.7)}
+  .nav__home{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;color:var(--ink)}
+  .nav__label{justify-self:center;background:var(--dark);color:#fff;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:7px 22px;text-decoration:none}
+  .nav__right{justify-self:end;display:flex;align-items:center;gap:6px}
+  .nav__icon{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;color:var(--ink);background:none;border:0;cursor:pointer;padding:0}
+  .menu{position:fixed;top:56px;right:0;z-index:39;width:min(320px,100%);background:var(--paper);border-left:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;display:none}
+  .menu.open{display:block}
+  .menu a{display:block;padding:12px var(--gut);font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none}
+  .menu a:hover,.menu a[aria-current]{color:var(--gold)}
+
+  /* ---- hero ---- */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:var(--dark)}
+  .hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .hero__scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.12) 0%,rgba(0,0,0,0) 35%,rgba(0,0,0,.62) 100%)}
+  .hero__content{position:relative;width:100%;max-width:1360px;margin:0 auto;padding:0 var(--gut) 56px}
+  .hero__eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.9;margin:0 0 10px}
+  .hero__head{font-family:var(--serif);font-weight:400;font-size:clamp(34px,5vw,56px);line-height:1.05;letter-spacing:-.01em;margin:0 0 10px}
+  .hero__body{margin:0 0 26px;max-width:44ch;font-size:16px;opacity:.92}
+  .hero__ctas{display:flex;flex-wrap:wrap;gap:12px}
+  .btn-hero{display:inline-flex;align-items:center;justify-content:center;min-width:190px;height:48px;padding:0 22px;border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.06);color:#fff;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:background .2s,color .2s}
+  .btn-hero:hover{background:#fff;color:var(--ink)}
+
+  /* ---- list ---- */
+  .people{max-width:1360px;margin:0 auto;padding:56px var(--gut) 40px}
+  .wrap{max-width:820px;margin:0 auto}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 34px}
+  .filters button{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:9px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;border-radius:2px}
+  .filters button:hover{border-color:var(--ink)}
+  .filters button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .filters button span{color:var(--muted);margin-left:6px}
+  .filters button[aria-pressed="true"] span{color:#C9B48A}
+
+  .note{background:var(--card);border:1px solid var(--line);padding:24px 26px;margin:0 0 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:26px}
+  .note__k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 6px}
+  .note h2{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.1;margin:0 0 8px}
+  .note p.help{margin:0 0 16px;color:var(--muted);font-size:13px}
+  .ifield{margin:0 0 12px}
+  .ifield label{display:block;font-size:12px;font-weight:600;letter-spacing:.03em;margin:0 0 6px}
+  .ifield input{width:100%;font:inherit;font-size:14px;padding:12px 13px;background:var(--paper);border:1px solid var(--line);border-radius:2px;color:var(--ink)}
+  .ifield input:focus{outline:none;border-color:var(--gold)}
+  .msg{margin:0;background:var(--paper);border:1px solid var(--line);padding:18px 20px;font-family:var(--serif);font-size:17px;line-height:1.55}
+  .msg .slot{color:var(--gold);font-style:italic}
+  .note__msg{display:flex;flex-direction:column;gap:12px}
+
+  .group{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:0 0 10px;margin:34px 0 14px;border-bottom:1px solid var(--line)}
+  .group:first-child{margin-top:0}
+
+  .pc{background:var(--card);border:1px solid var(--line);margin:0 0 10px;display:grid;grid-template-columns:96px minmax(0,1fr) 250px;align-items:center;gap:0 22px;padding:22px 22px 22px 0}
+  .pc__mark{display:flex;flex-direction:column;align-items:center;text-align:center;border-right:1px solid var(--line);padding:8px 0;align-self:center}
+  .pc__top,.pc__bot{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;line-height:1}
+  .pc__top{color:var(--muted)}
+  .pc__big{font-family:var(--serif);font-size:38px;line-height:1;margin:6px 0 5px;letter-spacing:-.01em}
+  .pc__bot{color:var(--gold)}
+  .pc__when{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;line-height:1.5;margin:0 0 5px}
+  .pc__name{font-family:var(--serif);font-weight:500;font-size:22px;line-height:1.2;letter-spacing:-.01em;margin:0 0 4px}
+  .pc__biz{margin:0 0 6px;color:var(--muted);font-size:15px;line-height:1.4}
+  .pc__ig{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--maroon);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
+  .pc__buy{display:flex;flex-direction:column;gap:8px}
+  .btn{display:flex;align-items:center;justify-content:space-between;gap:12px;height:46px;padding:12px 16px;border-radius:2px;font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink);transition:border-color .2s,background .2s}
+  .btn:hover{border-color:var(--ink)}
+  .btn--gold{background:var(--gold);border-color:var(--gold);color:#fff}
+  .btn--gold:hover{background:#735820;border-color:#735820}
+  .btn__note{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:none}
+  .state{color:var(--muted);padding:30px 0}
+
+  /* ---- apply banner ---- */
+  .banner{display:grid;grid-template-columns:1fr 1fr;min-height:520px;background:var(--dark);color:#fff}
+  .banner__img{position:relative;overflow:hidden}
+  .banner__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .banner__text{display:flex;flex-direction:column;justify-content:center;padding:56px clamp(28px,6vw,90px)}
+  .banner__k{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#C9B48A;margin:0 0 14px}
+  .banner h2{font-family:var(--serif);font-weight:400;font-size:clamp(32px,4vw,48px);line-height:1.05;margin:0 0 14px}
+  .banner p{margin:0 0 28px;max-width:40ch;opacity:.86}
+
+  /* ---- footer ---- */
+  .footer{background:var(--dark);color:#EDEDE8;border-top:1px solid #222;padding:40px var(--gut)}
+  .footer__in{max-width:1360px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px;align-items:center}
+  .footer img{display:block}
+  .footer__links{display:flex;flex-wrap:wrap;gap:18px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+  .footer__links a{text-decoration:none;color:#8A8A82}
+  .footer__links a:hover{color:#fff}
+
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;font-family:var(--mono);font-size:12px;letter-spacing:.05em;padding:12px 16px;opacity:0;visibility:hidden;transition:opacity .2s;z-index:60;max-width:calc(100% - 32px);text-align:center;border-radius:2px}
+  .toast.up{opacity:1;visibility:visible}
+
+  @media (max-width:760px){
+    :root{--gut:16px}
+    .note{grid-template-columns:1fr;padding:20px 18px;gap:18px}
+    .pc{grid-template-columns:72px minmax(0,1fr);padding:18px 16px 18px 0;gap:0 16px}
+    .pc__big{font-size:32px}
+    .pc__buy{grid-column:1 / -1;padding:16px 0 0 16px}
+    .banner{grid-template-columns:1fr}
+    .banner__img{min-height:320px}
+    .hero__content{padding-bottom:40px}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a class="nav__home" href="/" aria-label="Jubyr LLC home">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg>
+  </a>
+  <a class="nav__label" href="#top">Resources</a>
+  <div class="nav__right">
+    <a class="nav__icon" href="https://instagram.com/jubyrllc" target="_blank" rel="noopener" aria-label="Jubyr on Instagram">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+    </a>
+    <button class="nav__icon" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h18M3 16h18"/></svg>
+    </button>
+  </div>
+</header>
+<nav class="menu" id="menu" aria-label="Main">
+  <a href="/">Home</a>
+  <a href="/#approach">Approach</a>
+  <a href="/#services">Services</a>
+  <a href="/#portfolio">Portfolio</a>
+  <a href="/#get-involved">Get involved</a>
+  <a href="/resources" aria-current="page">Resources</a>
+  <a href="/contact">Contact</a>
+</nav>
+
+<main id="top">
+  <section class="hero">
+    <img class="hero__img" src="assets/bg-lounge-dark.jpg" alt="A low-lit lounge with plants, bookshelves and people talking">
+    <div class="hero__scrim"></div>
+    <div class="hero__content">
+      <p class="hero__eyebrow">Jubyr LLC &middot; Philadelphia</p>
+      <h1 class="hero__head">Resources</h1>
+      <p class="hero__body">Photographers, hosts, DJs, dancers and makers from the Jubyr client book. See their work, then DM to book.</p>
+      <div class="hero__ctas">
+        <a class="btn-hero" href="#people">Find someone</a>
+        <a class="btn-hero" href="/contractors">Apply to be listed</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="people" id="people">
+    <div class="wrap">
+      <h2 class="vh">Who's in the book</h2>
+      <div class="filters" id="filters" role="group" aria-label="Filter by what they do"></div>
+
+      <div class="note">
+        <div>
+          <p class="note__k">Your message</p>
+          <h2>Fill this in once.</h2>
+          <p class="help">Every DM button copies this with their role filled in, then opens their Instagram. Paste it and send.</p>
+          <div class="ifield"><label for="fDate">Date</label><input id="fDate" type="text" placeholder="Saturday, Nov 22" autocomplete="off"></div>
+          <div class="ifield"><label for="fEvent">Event</label><input id="fEvent" type="text" placeholder="my birthday dinner" autocomplete="off"></div>
+          <div class="ifield"><label for="fBudget">Budget</label><input id="fBudget" type="text" placeholder="$400" autocomplete="off"></div>
+        </div>
+        <div class="note__msg">
+          <p class="msg" id="msg"></p>
+          <button class="btn" id="copyMsg" type="button">Copy message <span class="btn__note" aria-hidden="true">&#x2398;</span></button>
+        </div>
+      </div>
+
+      <div id="list"><div class="state">Loading&hellip;</div></div>
+    </div>
+  </section>
+
+  <section class="banner" id="apply">
+    <div class="banner__img"><img src="assets/film-34.webp" alt="A bartender's hands finishing a cocktail over the bar" loading="lazy"></div>
+    <div class="banner__text">
+      <p class="banner__k">For artists and independent contractors</p>
+      <h2>Get in the book.</h2>
+      <p>Tell us what you do and how to book you. If you say yes to sharing, you can be listed here for people looking to hire.</p>
+      <div><a class="btn-hero" href="/contractors">Apply</a></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer__in">
+    <img src="assets/jubyr-logo-white.png?v=2" alt="Jubyr LLC" width="97" height="30">
+    <div class="footer__links">
+      <a href="/">Home</a>
+      <a href="/contractors">Apply</a>
+      <a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a>
+      <a href="https://instagram.com/jubyrllc" rel="noopener">Instagram</a>
+      <a href="/privacy">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var btn = document.getElementById("menuBtn"), menu = document.getElementById("menu");
+  btn.addEventListener("click", function(){
+    var open = menu.classList.toggle("open");
+    btn.setAttribute("aria-expanded", String(open));
+    btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  });
+  menu.addEventListener("click", function(e){ if (e.target.closest("a")) menu.classList.remove("open"); });
+})();
+
+(function(){
+  // Read live from the Client Book through a public endpoint that only
+  // returns contractors who agreed to be shared.
+  var API = "https://jubyr.tools/resources-public.php";
+  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
+    var q = new URLSearchParams(location.search).get("api");
+    if (q) API = q;
+  }
+
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); };
+
+  // What someone does, folded into the groups a visitor actually looks
+  // for. A person sits under the group of the FIRST role they listed, and
+  // a filter finds them under any role they do.
+  var GROUPS = [
+    { key:"photo",  label:"Photo & video",       short:"Photo",  roles:["Photographer","Videographer","Director","Photo editor"] },
+    { key:"host",   label:"Hosts & MCs",         short:"Host",   roles:["Host / MC"] },
+    { key:"music",  label:"DJs & music",         short:"Music",  roles:["DJ","Musician","Singer","Producer / Beatmaker","Band","Rapper / MC"] },
+    { key:"move",   label:"Dance & performance", short:"Perform",roles:["Dancer","Choreographer","Aerialist","Circus performer","Burlesque","Model"] },
+    { key:"design", label:"Design & art",        short:"Design", roles:["Illustrator","Digital artist","Graphic designer","Muralist","Web developer"] },
+    { key:"words",  label:"Writers",             short:"Words",  roles:["Writer","Journalist","Copywriter","Editor","Podcaster"] },
+    { key:"create", label:"Creators",            short:"Create", roles:["Influencer","Content creator"] },
+    { key:"vendor", label:"Vendors",             short:"Vendor", roles:["Vendor"] }
+  ];
+  var OTHER = { key:"other", label:"More", short:"More", roles:[] };
+  function groupOf(role){
+    for (var i = 0; i < GROUPS.length; i++) if (GROUPS[i].roles.indexOf(role) >= 0) return GROUPS[i];
+    return OTHER;
+  }
+  function inGroup(p, g){ return (p.roles || []).some(function(r){ return groupOf(r) === g; }); }
+
+  var PEOPLE = [], GROUP = null;
+
+  // ---- the message ----
+  var DRAFT = "jubyr-resources-note";
+  var fields = { date: $("fDate"), event: $("fEvent"), budget: $("fBudget") };
+  try {
+    var saved = JSON.parse(localStorage.getItem(DRAFT) || "{}");
+    Object.keys(fields).forEach(function(k){ if (saved[k]) fields[k].value = saved[k]; });
+  } catch (e) {}
+  function val(k, fb){ var v = fields[k].value.trim(); return v || fb; }
+
+  // "Host / MC" reads as "host", "DJ" stays "DJ", and the article follows
+  // the word: "an illustrator", "a DJ".
+  function roleWord(r){
+    var w = String(r || "").split(" / ")[0].trim();
+    return /^[A-Z]{2,}$/.test(w) ? w : w.toLowerCase();
+  }
+  function withArticle(w){ return (/^[aeiou]/i.test(w) && !/^(DJ|MC)$/.test(w) ? "an " : "a ") + w; }
+  function roleFor(p){
+    var roles = p.roles || [];
+    if (GROUP) for (var i = 0; i < roles.length; i++) if (groupOf(roles[i]) === GROUP) return roles[i];
+    return roles[0];
+  }
+  function parts(role){
+    return [
+      "Hey! Jubyr sent me your way. I'm currently looking for ", role ? withArticle(roleWord(role)) : "[insert role]",
+      " on ", ["date", "[insert date]"], " for ", ["event", "[insert event]"],
+      ". I currently have a budget of ", ["budget", "[insert budget]"],
+      " and would love to book you. Can you please let me know what next steps are?"
+    ];
+  }
+  function noteText(role){
+    return parts(role).map(function(x){ return typeof x === "string" ? x : val(x[0], x[1]); }).join("");
+  }
+  function previewRole(){ return GROUP ? GROUP.roles[0] : ""; }
+  function paintNote(){
+    $("msg").innerHTML = parts(previewRole()).map(function(x, i){
+      if (i === 1) return '<span class="slot">' + esc(x) + "</span>";
+      if (typeof x === "string") return esc(x);
+      return '<span class="slot">' + esc(val(x[0], x[1])) + "</span>";
+    }).join("");
+  }
+  Object.keys(fields).forEach(function(k){
+    fields[k].addEventListener("input", function(){
+      paintNote();
+      try {
+        var d = {}; Object.keys(fields).forEach(function(j){ d[j] = fields[j].value; });
+        localStorage.setItem(DRAFT, JSON.stringify(d));
+      } catch (e) {}
+    });
+  });
+
+  var toastT;
+  function toast(t){
+    var el = $("toast"); el.textContent = t; el.classList.add("up");
+    clearTimeout(toastT); toastT = setTimeout(function(){ el.classList.remove("up"); }, 3200);
+  }
+  function copy(text){
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function(){ return true; }, function(){ return legacyCopy(text); });
+    }
+    return Promise.resolve(legacyCopy(text));
+  }
+  function legacyCopy(text){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    return ok;
+  }
+  $("copyMsg").addEventListener("click", function(){
+    copy(noteText(previewRole())).then(function(ok){ toast(ok ? "Message copied." : "Couldn't copy. Press and hold the message to copy it."); });
+  });
+
+  // ---- a person, laid out like a night ----
+  function initials(name){
+    var w = String(name).trim().split(/\s+/);
+    return ((w[0] || "")[0] || "") + (w.length > 1 ? (w[w.length - 1][0] || "") : "");
+  }
+  function shortRate(r){
+    return String(r || "").replace(" / hour", "/hr").replace(" / day", "/day").replace(" / project", "");
+  }
+  function card(p, i){
+    var h = p.instagram, g = groupOf((p.roles || [])[0]);
+    var buy = "";
+    if (p.portfolio) buy += '<a class="btn" href="' + esc(p.portfolio) + '" target="_blank" rel="noopener">Portfolio <span class="btn__note" aria-hidden="true">&#8599;</span></a>';
+    if (h) {
+      buy += '<a class="btn btn--gold js-dm" data-i="' + i + '" href="https://ig.me/m/' + esc(h) + '" target="_blank" rel="noopener">DM to book' +
+        (p.rate ? ' <span class="btn__note">' + esc(shortRate(p.rate)) + "</span>" : "") + "</a>";
+      buy += '<a class="btn" href="https://instagram.com/' + esc(h) + '" target="_blank" rel="noopener">Instagram <span class="btn__note" aria-hidden="true">&#8599;</span></a>';
+    }
+    return '<article class="pc">' +
+      '<div class="pc__mark" aria-hidden="true"><span class="pc__top">' + esc(g.short) + '</span><span class="pc__big">' + esc(initials(p.name)) + '</span><span class="pc__bot">PHL</span></div>' +
+      '<div class="pc__main">' +
+        '<span class="pc__when">' + esc((p.roles || []).join(" · ")) + "</span>" +
+        '<h3 class="pc__name">' + esc(p.name) + "</h3>" +
+        (p.business ? '<p class="pc__biz">' + esc(p.business) + "</p>" : "") +
+        (h ? '<a class="pc__ig" href="https://instagram.com/' + esc(h) + '" target="_blank" rel="noopener">@' + esc(h) + "</a>" : "") +
+      "</div>" +
+      '<div class="pc__buy">' + buy + "</div>" +
+      "</article>";
+  }
+
+  $("list").addEventListener("click", function(e){
+    var a = e.target.closest(".js-dm");
+    if (!a) return;
+    var p = PEOPLE[+a.dataset.i] || {};
+    copy(noteText(roleFor(p))).then(function(ok){
+      toast(ok ? "Message copied. Paste it into the DM." : "Couldn't copy. Copy the message above first.");
+    });
+  });
+
+  function draw(){
+    var html = "";
+    var groups = GROUP ? [GROUP] : GROUPS.concat([OTHER]);
+    groups.forEach(function(g){
+      var rows = PEOPLE.map(function(p, i){ return { p:p, i:i }; }).filter(function(x){
+        return GROUP ? inGroup(x.p, g) : groupOf((x.p.roles || [])[0]) === g;
+      });
+      if (!rows.length) return;
+      html += '<div class="group">' + esc(g.label) + "</div>" + rows.map(function(x){ return card(x.p, x.i); }).join("");
+    });
+    $("list").innerHTML = html || '<div class="state">Nobody here yet.</div>';
+    Array.prototype.forEach.call($("filters").querySelectorAll("button"), function(b){
+      b.setAttribute("aria-pressed", String((b.dataset.g || "") === (GROUP ? GROUP.key : "")));
+    });
+    paintNote();
+  }
+
+  function drawFilters(){
+    var html = '<button type="button" data-g="">All<span>' + PEOPLE.length + "</span></button>";
+    GROUPS.forEach(function(g){
+      var n = PEOPLE.filter(function(p){ return inGroup(p, g); }).length;
+      if (n) html += '<button type="button" data-g="' + g.key + '">' + esc(g.label) + "<span>" + n + "</span></button>";
+    });
+    $("filters").innerHTML = html;
+  }
+  $("filters").addEventListener("click", function(e){
+    var b = e.target.closest("button");
+    if (!b) return;
+    var k = b.dataset.g || "";
+    GROUP = null;
+    GROUPS.forEach(function(g){ if (g.key === k) GROUP = g; });
+    draw();
+  });
+
+  paintNote();
+  fetch(API, { headers: { "Accept": "application/json" } })
+    .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(d){
+      PEOPLE = (d && d.people) || [];
+      if (!PEOPLE.length) { $("list").innerHTML = '<div class="state">Nobody listed right now. Email <a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a> for a recommendation.</div>'; return; }
+      drawFilters();
+      draw();
+    })
+    .catch(function(){
+      $("list").innerHTML = '<div class="state">The list didn\'t load. Refresh, or email <a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a> for a recommendation.</div>';
+    });
+})();
+</script>
+</body>
+</html>
