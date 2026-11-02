@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Unlisted: shared by link only, no nav entry, kept out of search. -->
+<meta name="robots" content="noindex, nofollow">
+<title>Photographers — Jubyr LLC</title>
+<meta name="description" content="Philadelphia photographers from the Jubyr LLC client book. Look through their work and DM them to book.">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png">
+<link rel="apple-touch-icon" href="assets/jubyr-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=32">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jubyr LLC">
+<meta property="og:title" content="Photographers — Jubyr LLC">
+<meta property="og:description" content="Philadelphia photographers from the Jubyr LLC client book. Look through their work and DM them to book.">
+<meta property="og:url" content="https://jubyr.com/photographers">
+<meta property="og:image" content="https://jubyr.com/assets/og-default.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  /* Page-only rules. Tokens come from styles.css. */
+  .ph-intro{padding:36px var(--gutter) 30px;display:flex;flex-direction:column;gap:12px;max-width:760px}
+  .ph-intro h1{font-weight:800;font-size:clamp(34px,6vw,64px);line-height:.98;letter-spacing:-.03em;margin:0}
+  .ph-intro p{margin:0;color:var(--muted);font-size:16px;line-height:1.55}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+
+  /* the DM note */
+  .note{border-top:1px dashed var(--line);padding:26px var(--gutter);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:28px}
+  .note h2{font-size:22px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px}
+  .note .hint{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+  .fields{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+  .fields label{display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .fields input{font:inherit;font-family:var(--sans);font-size:15px;text-transform:none;letter-spacing:0;color:var(--ink);padding:10px 12px;border:1px dashed var(--line);background:#fff;border-radius:0}
+  .fields input:focus{outline:none;border-style:solid;border-color:var(--green)}
+  .msg{background:var(--green-tint);border:1px dashed var(--green-line);padding:20px 22px;font-size:16px;line-height:1.6;white-space:pre-wrap;margin:0}
+  .msg .slot{color:var(--green);font-weight:600}
+  .msgwrap{display:flex;flex-direction:column;gap:12px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:11px 16px;border:1px solid var(--ink);background:var(--ink);color:#fff;text-decoration:none;cursor:pointer;border-radius:0}
+  .btn:hover{background:var(--green);border-color:var(--green)}
+  .btn--ghost{background:#fff;color:var(--ink)}
+  .btn--ghost:hover{background:var(--green-tint);color:var(--ink);border-color:var(--ink)}
+  .msgwrap .btn{align-self:flex-start}
+
+  /* the list */
+  .list{border-top:1px dashed var(--line)}
+  .listhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:16px var(--gutter);border-bottom:1px dashed var(--line)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+  .card{padding:24px var(--gutter);border-bottom:1px dashed var(--line);border-right:1px dashed var(--line);display:flex;flex-direction:column;gap:10px;min-width:0}
+  .card h3{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
+  .card .biz{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .card .ig{font-family:var(--mono);font-size:13px;color:var(--green);text-decoration:none;word-break:break-all}
+  .card .ig:hover{text-decoration:underline}
+  .card p{margin:0;font-size:15px;line-height:1.55;color:var(--ink)}
+  .card .spec{color:var(--muted);font-size:14px}
+  .tags{display:flex;flex-wrap:wrap;gap:6px}
+  .tags span{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;border:1px dashed var(--line);padding:3px 7px;color:var(--muted)}
+  .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:8px}
+  .acts .btn{padding:9px 12px;font-size:11px}
+  .state{padding:40px var(--gutter);color:var(--muted)}
+
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding:12px 16px;opacity:0;visibility:hidden;transition:opacity .2s;z-index:50;max-width:calc(100% - 32px);text-align:center}
+  .toast.up{opacity:1;visibility:visible}
+
+  @media (max-width:768px){
+    .note{grid-template-columns:1fr;gap:18px}
+    .grid{grid-template-columns:1fr}
+    .card{border-right:0}
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <header>
+    <nav class="nav" aria-label="Main">
+      <a class="nav__logo" href="/" aria-label="Jubyr LLC home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="box">
+      <div class="ph-intro">
+        <span class="kicker">From the client book</span>
+        <h1>Photographers we trust.</h1>
+        <p>Look through their work, then DM the ones you like. Tell them Jubyr sent you.</p>
+      </div>
+
+      <div class="note">
+        <div>
+          <span class="kicker">Your DM</span>
+          <h2>Fill this in once.</h2>
+          <p class="hint">Every DM button copies this note, then opens their Instagram. Paste it in and send.</p>
+          <div class="fields">
+            <label>Date<input id="fDate" type="text" placeholder="Saturday, Nov 22" autocomplete="off"></label>
+            <label>Event<input id="fEvent" type="text" placeholder="my birthday dinner" autocomplete="off"></label>
+            <label>Budget<input id="fBudget" type="text" placeholder="$400" autocomplete="off"></label>
+          </div>
+        </div>
+        <div class="msgwrap">
+          <p class="msg" id="msg"></p>
+          <button class="btn btn--ghost" id="copyMsg" type="button">Copy note</button>
+        </div>
+      </div>
+
+      <div class="list">
+        <div class="listhead">
+          <span class="kicker">The photographers</span>
+          <span class="kicker" id="count" style="color:var(--muted)"></span>
+        </div>
+        <div class="grid" id="grid"><div class="state">Loading&hellip;</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  // The list is read live from the Client Book through a public endpoint
+  // that only returns photographers who said "share freely".
+  var API = "https://jubyr.tools/photographers-public.php";
+  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
+    var q = new URLSearchParams(location.search).get("api");
+    if (q) API = q;
+  }
+
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); };
+
+  var DRAFT = "jubyr-photog-note";
+  var fields = { date: $("fDate"), event: $("fEvent"), budget: $("fBudget") };
+  try {
+    var saved = JSON.parse(localStorage.getItem(DRAFT) || "{}");
+    Object.keys(fields).forEach(function(k){ if (saved[k]) fields[k].value = saved[k]; });
+  } catch (e) {}
+
+  function val(k, fallback){ var v = fields[k].value.trim(); return v || fallback; }
+
+  function noteText(){
+    return "Hey! Jubyr sent me your way. I'm currently looking for a photographer on " +
+      val("date", "[insert date]") + " to capture photos for " + val("event", "[insert event]") +
+      ". I currently have a budget of " + val("budget", "[insert budget]") +
+      " and would love to book you. Can you please let me know what next steps are?";
+  }
+
+  function paintNote(){
+    var slot = function(k, ph){ var v = fields[k].value.trim(); return '<span class="slot">' + esc(v || ph) + '</span>'; };
+    $("msg").innerHTML = "Hey! Jubyr sent me your way. I'm currently looking for a photographer on " +
+      slot("date", "[insert date]") + " to capture photos for " + slot("event", "[insert event]") +
+      ". I currently have a budget of " + slot("budget", "[insert budget]") +
+      " and would love to book you. Can you please let me know what next steps are?";
+  }
+
+  Object.keys(fields).forEach(function(k){
+    fields[k].addEventListener("input", function(){
+      paintNote();
+      try {
+        var d = {}; Object.keys(fields).forEach(function(j){ d[j] = fields[j].value; });
+        localStorage.setItem(DRAFT, JSON.stringify(d));
+      } catch (e) {}
+    });
+  });
+  paintNote();
+
+  var toastT;
+  function toast(t){
+    var el = $("toast"); el.textContent = t; el.classList.add("up");
+    clearTimeout(toastT); toastT = setTimeout(function(){ el.classList.remove("up"); }, 3200);
+  }
+
+  function copy(text){
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function(){ return true; }, function(){ return legacyCopy(text); });
+    }
+    return Promise.resolve(legacyCopy(text));
+  }
+  function legacyCopy(text){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  $("copyMsg").addEventListener("click", function(){
+    copy(noteText()).then(function(ok){ toast(ok ? "Note copied." : "Couldn't copy. Press and hold the note to copy it."); });
+  });
+
+  function card(p){
+    var h = p.instagram;
+    var acts = "";
+    if (p.portfolio) acts += '<a class="btn btn--ghost" href="' + esc(p.portfolio) + '" target="_blank" rel="noopener">Portfolio</a>';
+    if (h) {
+      acts += '<a class="btn btn--ghost" href="https://instagram.com/' + esc(h) + '" target="_blank" rel="noopener">Instagram</a>';
+      acts += '<a class="btn js-dm" href="https://ig.me/m/' + esc(h) + '" target="_blank" rel="noopener">Copy note + DM</a>';
+    }
+    var tags = (p.disciplines || []).map(function(d){ return "<span>" + esc(d) + "</span>"; }).join("");
+    return '<article class="card">' +
+      '<span class="biz">' + (p.business ? esc(p.business) : "&nbsp;") + "</span>" +
+      "<h3>" + esc(p.name) + "</h3>" +
+      (h ? '<a class="ig" href="https://instagram.com/' + esc(h) + '" target="_blank" rel="noopener">@' + esc(h) + "</a>" : "") +
+      (tags ? '<div class="tags">' + tags + "</div>" : "") +
+      (p.about ? "<p>" + esc(p.about) + "</p>" : "") +
+      (p.specialties && p.specialties !== p.about ? '<p class="spec">' + esc(p.specialties) + "</p>" : "") +
+      '<div class="acts">' + acts + "</div>" +
+      "</article>";
+  }
+
+  // The DM link opens in a new tab on its own; the copy runs in the same
+  // click so the note is on the clipboard by the time Instagram opens.
+  $("grid").addEventListener("click", function(e){
+    var a = e.target.closest(".js-dm");
+    if (!a) return;
+    copy(noteText()).then(function(ok){
+      toast(ok ? "Note copied. Paste it into the DM." : "Couldn't copy. Copy the note above first.");
+    });
+  });
+
+  fetch(API, { headers: { "Accept": "application/json" } })
+    .then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(d){
+      var list = (d && d.photographers) || [];
+      if (!list.length) { $("grid").innerHTML = '<div class="state">No photographers listed right now. Email <a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a> for a recommendation.</div>'; return; }
+      $("count").textContent = list.length + " listed";
+      $("grid").innerHTML = list.map(card).join("");
+    })
+    .catch(function(){
+      $("grid").innerHTML = '<div class="state">The list didn\'t load. Refresh, or email <a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a> for a recommendation.</div>';
+    });
+})();
+</script>
+</body>
+</html>
