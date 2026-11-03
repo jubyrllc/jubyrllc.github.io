@@ -176,6 +176,18 @@
   .mgr-fold summary::-webkit-details-marker{display:none}
   .mgr-fold[open] summary{border-bottom:1px dashed var(--line)}
   .mgr-fold .mgr-card{border:none;border-bottom:1px dashed var(--line);border-radius:0;padding-left:0;padding-right:0;margin-bottom:0}
+  /* Open dates (2026-11-03) */
+  .od-goal{display:flex;align-items:center;gap:12px;margin:0 0 16px}
+  .od-goal__bar{flex:1;height:8px;border-radius:999px;background:#F1F1EC;overflow:hidden}
+  .od-goal__bar i{display:block;height:100%;background:var(--green)}
+  .od-goal b{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.04em;white-space:nowrap}
+  .od-sect{display:flex;align-items:center;gap:10px}
+  .od-copy{padding:5px 10px;font-size:10px}
+  .od-row{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;border-top:1px dashed var(--line);padding:11px 0}
+  .od-row__d{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.04em;min-width:92px;font-weight:600}
+  .od-row .mgr-chips{margin:0}
+  .od-row__on{flex-basis:100%;font-size:12.5px;color:var(--muted);line-height:1.5;padding-left:104px}
+  @media (max-width:520px){ .od-row__on{padding-left:0} }
   .mgr-field{margin-bottom:12px}
   .mgr-field label{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
   .mgr-field textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:14px;line-height:1.5;background:#fff;color:var(--ink);resize:vertical}
@@ -1625,7 +1637,7 @@
     /* ?tab=res is how the jubyr.tools/manage "Residencies" row lands here
        (2026-10-22). Any tab not in this list opens on "needs" as before. */
     tab: (()=>{ const t = new URLSearchParams(location.search).get("tab");
-      return ["needs","nights","requests","djs","res","payees","tests"].includes(t) ? t : "needs"; })(),
+      return ["needs","nights","open","requests","djs","res","payees","tests"].includes(t) ? t : "needs"; })(),
     accounts: null, submissions: null, requests: null, nights: null,
     subScope: "pending", dreqScope: "pending",
     /* Door (2026-09-05). doorOpen is the set of nights whose guest list
@@ -1654,6 +1666,8 @@
     /* Test accounts (2026-10-22). Guest profiles she switches between
        regular / paid member / manager to see margolis.events as each. */
     tests: null, testMsg: "",
+    /* Open dates (2026-11-03). Derived on every load, never stored. */
+    openDates: null, odMonths: 6, odFilter: "all",
   };
 
   /* ---------- plumbing ---------- */
@@ -1742,6 +1756,9 @@
     M.resAppDeadline = r.deadline || "";
     M.resAppDecideBy = r.decideBy || "";
   }
+  async function loadOpenDates(){
+    M.openDates = await mapi({action:"openDates", months: M.odMonths});
+  }
   async function loadResidencies(){
     const r = await mapi({action:"residencyList"});
     M.resList = r.residencies || [];
@@ -1760,6 +1777,7 @@
     }
     if(M.tab === "nights") jobs.push(loadNights());
     if(M.tab === "requests") jobs.push(loadRequests());
+    if(M.tab === "open") jobs.push(loadOpenDates());
     if(M.tab === "djs" && !M.accounts) jobs.push(loadAccounts());
     if(M.tab === "payees" && !M.payees) jobs.push(loadPayees());
     if(M.tab === "res" && !M.resList) jobs.push(loadResidencies());
@@ -3059,6 +3077,8 @@
     const defs = [
       ["needs", "Needs you", needs],
       ["nights", "Nights", c.margolisMissing||0],
+      /* Badge only once loaded: the count costs a Google read. */
+      ["open", "Open dates", M.openDates ? (M.openDates.rows||[]).length : 0],
       ["requests", "Date requests", c.pendingDateRequests||0],
       ["djs", "DJs &amp; hosts", c.unclaimed||0],
       ["res", "Residencies", 0],
@@ -3123,6 +3143,58 @@
     if(short.length) html += `<div class="mgr-sect">Still short something &middot; ${short.length}</div>` + short.map(nightCard).join("");
     if(waiting.length) html += `<div class="mgr-sect">All sent, waiting on your review &middot; ${waiting.length}</div>` + waiting.map(nightCard).join("");
     if(ready.length) html += `<details class="mgr-fold" data-fold="ready"><summary>Done and approved (${ready.length})</summary><div style="padding:8px 0">${ready.map(nightCard).join("")}</div></details>`;
+    return html;
+  }
+
+  /* ---------- open dates ----------
+     Goal: Thu-Sun at least one Margolis booking, Fri/Sat a happy hour
+     AND a night at Margolis, and a booking at Fabrika. */
+  const OD_KINDS = [
+    ["fab",    "Fabrika Fri/Sat"],
+    ["mhh",    "Margolis happy hour"],
+    ["mnight", "Margolis night"],
+    ["mthu",   "Margolis Thu"],
+    ["msun",   "Margolis Sun"],
+  ];
+  const OD_LABEL = Object.fromEntries(OD_KINDS);
+  function renderOpen(){
+    const d = M.openDates || {};
+    const rows = d.rows || [], c = d.counts || {}, g = d.goal || {days:0, met:0};
+    const f = M.odFilter;
+    const shown = f === "all" ? rows : rows.filter(r => r.missing.includes(f));
+    const pct = g.days ? Math.round(100 * g.met / g.days) : 0;
+    let html = `<div class="mgr-tabs">${[3,6,12].map(n =>
+        `<button class="mgr-tab ${M.odMonths===n?"on":""}" data-act="odmonths" data-n="${n}">${n} mo</button>`).join("")}</div>`;
+    if((d.failed||[]).length) html += `<div class="mgr-banner">${esc(d.failed.join(", "))} couldn't be read. Its nights are left off, not shown as open.</div>`;
+    html += `<div class="od-goal"><div class="od-goal__bar"><i style="width:${pct}%"></i></div><b>${g.met} / ${g.days} at goal</b></div>`;
+    html += `<div class="mgr-tabs">
+      <button class="mgr-tab ${f==="all"?"on":""}" data-act="odfilter" data-k="all">All${rows.length?`<b>${rows.length}</b>`:""}</button>
+      ${OD_KINDS.map(([k,l]) => `<button class="mgr-tab ${f===k?"on":""}" data-act="odfilter" data-k="${k}">${l}${c[k]?`<b>${c[k]}</b>`:""}</button>`).join("")}
+    </div>`;
+    if(!shown.length) return html + `<div class="mgr-empty">${rows.length ? "None of these open." : "Every Thursday to Sunday is at goal."}</div>`;
+    let month = "";
+    for(const r of shown){
+      const m = r.date.slice(0,7);
+      if(m !== month){
+        month = m;
+        const [y,mm] = m.split("-").map(Number);
+        const n = shown.filter(x => x.date.slice(0,7) === m).length;
+        html += `<div class="mgr-sect od-sect">${new Date(y, mm-1, 1).toLocaleDateString("en-US",{month:"long", year:"numeric"})} &middot; ${n}
+          <button class="mgr-btn mgr-btn--ghost od-copy" data-act="odcopy" data-m="${m}">Copy</button></div>`;
+      }
+      const on = [];
+      if(r.booked.m.length) on.push("Margolis: " + r.booked.m.map(esc).join(", "));
+      if(r.booked.f.length) on.push("Fabrika: " + r.booked.f.map(esc).join(", "));
+      const extra = [];
+      [...r.holds.m, ...r.holds.f].forEach(h => extra.push(`<span class="mgr-chip mgr-chip--warn" title="${esc(h)}">Hold</span>`));
+      const asked = r.asked.m.length + r.asked.f.length;
+      if(asked) extra.push(`<span class="mgr-chip mgr-chip--warn" title="${esc([...r.asked.m, ...r.asked.f].join(", "))}">${asked} request${asked>1?"s":""} pending</span>`);
+      html += `<div class="od-row">
+        <span class="od-row__d">${esc(fmtDay(r.date))}</span>
+        <div class="mgr-chips">${r.missing.map(k => `<span class="mgr-chip mgr-chip--bad">${OD_LABEL[k]}</span>`).join("")}${extra.join("")}</div>
+        ${on.length ? `<div class="od-row__on">${on.join(" &middot; ")}</div>` : ""}
+      </div>`;
+    }
     return html;
   }
 
@@ -3207,7 +3279,7 @@
   function render(){
     const open = new Set();
     view.querySelectorAll("details[open][data-fold]").forEach(d => open.add(d.dataset.fold));
-    const bodies = {needs: renderNeeds, nights: renderNights, requests: renderRequests,
+    const bodies = {needs: renderNeeds, nights: renderNights, open: renderOpen, requests: renderRequests,
                     djs: renderDjs, payees: renderPayees, res: renderResidencies,
                     tests: renderTests};
     view.innerHTML = tabsBar() + (bodies[M.tab] || renderNeeds)();
@@ -3369,6 +3441,23 @@
         return;
       }
 
+      if(act === "odcopy"){
+        /* The month as plain text, in whatever filter is showing. */
+        const m = btn.dataset.m, f = M.odFilter;
+        const rows = ((M.openDates||{}).rows||[]).filter(r => r.date.slice(0,7) === m && (f === "all" || r.missing.includes(f)));
+        const [y,mm] = m.split("-").map(Number);
+        const head = new Date(y, mm-1, 1).toLocaleDateString("en-US",{month:"long", year:"numeric"}) + " open dates" + (f === "all" ? "" : " (" + OD_LABEL[f] + ")");
+        const text = [head, ...rows.map(r => fmtDay(r.date) + ": " + (f === "all" ? r.missing.map(k => OD_LABEL[k]).join(", ") : OD_LABEL[f]))].join("\n");
+        try{ await navigator.clipboard.writeText(text); free("Copied"); }
+        catch(e){ window.prompt("Copy this:", text); }
+        setTimeout(() => { btn.textContent = "Copy"; }, 1500);
+        return;
+      }
+      if(act === "odfilter"){ M.odFilter = btn.dataset.k; render(); return; }
+      if(act === "odmonths"){
+        M.odMonths = Number(btn.dataset.n); busy("…");
+        await loadOpenDates(); render(); return;
+      }
       if(act === "dreqscope"){ M.dreqScope = btn.dataset.scope; await loadRequests(); render(); return; }
 
       /* ---------- residencies ---------- */
