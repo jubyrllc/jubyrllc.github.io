@@ -1555,9 +1555,17 @@
       busy = true;
       try{
         const out = await api(DASH_URL, {action:"events"});
+        const live = new Set((out.events || []).map(keyOf));
         (out.events || []).forEach(fresh => {
           const ev = EVENTS.find(e => keyOf(e) === keyOf(fresh));
           if(ev) ev.door = fresh.door;
+        });
+        /* A night that has passed drops off the list, and with it the
+           guest list: the server refuses past dates (2026-11-03). */
+        EVENTS.forEach(ev => {
+          const k = keyOf(ev);
+          if(live.has(k)) return;
+          ev.door = null; doorOpen.delete(k); delete doorData[k];
         });
         EVENTS.forEach(ev => {
           const k = keyOf(ev);
