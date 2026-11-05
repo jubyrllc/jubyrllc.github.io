@@ -278,7 +278,7 @@
     text-transform:uppercase;color:var(--muted)}
   .pay-sug__use{margin-left:auto}
 </style>
-<link rel="stylesheet" href="margolis-dashboard-skin.css?v=4">
+<link rel="stylesheet" href="margolis-dashboard-skin.css?v=5">
 </head>
 <body>
 
@@ -295,6 +295,18 @@
     </div>
   </div>
 </div>
+
+<!-- Dashboard nav (Ruby, 2026-11-05: "there should be things regardless
+     of profile completion"). Every link works at any percent; each one
+     reaches something already on this page, nothing new behind it. -->
+<nav class="mgx-sub" aria-label="Dashboard">
+  <a href="#content" data-dnav="nights">Nights</a>
+  <a href="#payHistory" data-dnav="pay">Pay</a>
+  <a href="#dateReqBox" data-dnav="dates">Request dates</a>
+  <a href="#profilePanel" data-dnav="account">Account</a>
+  <a href="mailto:ruby@margolisphilly.com?subject=Margolis%20dashboard%20help">Help</a>
+  <a href="#" data-dnav="logout">Log out</a>
+</nav>
 
 <div class="announce">
   <span class="mono">Margolis &middot; 9 W Wildey St &middot; Fishtown, Philadelphia</span>
@@ -329,7 +341,7 @@
         <div class="djd-topbar">
           <span class="djd-hello" id="hello"><span class="djd-avatar" id="djdAvatar" hidden></span><span id="helloText"></span></span>
           <span style="display:flex;gap:18px;align-items:center">
-            <button type="button" class="djd-logout" id="profileEditToggle" hidden>Edit profile</button>
+            <button type="button" class="djd-logout" id="profileEditToggle">Account</button>
             <button class="djd-logout" id="logout">Log out</button>
           </span>
         </div>
@@ -943,8 +955,9 @@
     ];
     const el = document.getElementById("profilePanel");
     const editBtn = document.getElementById("profileEditToggle");
-    editBtn.hidden = !complete;
-    editBtn.textContent = profileEditMode ? "Done editing" : "Edit profile";
+    /* Always shown (Ruby, 2026-11-05): it used to appear only at 100%,
+       so anyone mid-setup had no way to reach their account at all. */
+    editBtn.textContent = profileEditMode ? "Done" : "Account";
     el.hidden = complete && !profileEditMode;
     el.innerHTML = el.hidden ? "" : `<details class="djd-prof"${editing?" open":""}>
       <summary>${complete
@@ -957,6 +970,16 @@
           claim.status==="locked"
             ? `${esc(claim.title)} — <span style="color:var(--green)">locked in</span>`
             : `${esc(claim.title)} — under review${p<100?" (complete your profile to lock it)":""}`}</p>`:""}
+        ${profileEditMode?`<div class="djd-task">
+          <h4>Account</h4>
+          <div class="ifield"><label>Email</label><input type="email" value="${esc(account.email||"")}" disabled></div>
+          <div class="ifield"><label>Phone</label><input type="tel" id="ppPhone" value="${esc(account.phone||"")}" placeholder="(215)-771-4222"></div>
+          <div class="intake__nav" style="gap:12px;flex-wrap:wrap">
+            <button type="button" class="btn btn--green" id="ppSavePhone">Save phone <span class="arw" aria-hidden="true">&gt;</span></button>
+            <button type="button" class="btn" id="ppResetPw">Email me a password link</button>
+          </div>
+          <p class="djd-note" id="ppAcctMsg" style="margin:10px 0 0"></p>
+        </div>`:""}
         ${(!account.stageName || profileEditMode)?`<div class="djd-task">
           <h4>Stage name and bio</h4>
           <p class="djd-note" style="margin:0 0 12px">What guests see on margolis.events.</p>
@@ -974,10 +997,9 @@
           <p class="djd-note" style="margin:0 0 12px">${account.hasFacePhoto
             ? "On file. Upload a new one to replace it."
             : "A good photo of just you. No group shots."}</p>
-          <div class="ifield"><label>Profile photo${account.hasFacePhoto?"":` <span class="req">*</span>`}</label>
-            <input type="file" id="ppPhotoFace" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
-            <p class="help">This is your profile icon.</p></div>
-          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePhotos">${account.hasFacePhoto?"Save photo":"Upload photo"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          <input type="file" id="ppPhotoFace" accept=".jpg,.jpeg,.png,image/jpeg,image/png" hidden>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePhotos">${account.hasFacePhoto?"Replace photo":"Upload photo"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          <p class="djd-note" id="ppPhotoMsg" style="margin:10px 0 0"></p>
         </div>`:""}
         ${(!(account.payableTo && account.zelle) || profileEditMode)?`<div class="djd-task">
           <h4>Payout info</h4>
@@ -1037,39 +1059,69 @@
     /* Picking a photo opens the round face crop (face-crop.js, Ruby
        2026-11-04: staff have to recognise the DJ from it). What is
        uploaded is the crop, never the raw file. */
+    /* One button (Ruby, 2026-11-05: "the upload photo button isnt
+       working"). It was pick file, crop, then press Upload; pressed
+       first, it refused with an error rendered under the whole panel,
+       off screen. Now the button opens the picker, the crop follows,
+       and the crop uploads itself. Messages sit under the button. */
     const faceInput = document.getElementById("ppPhotoFace");
-    if(faceInput) faceInput.addEventListener("change", async ()=>{
-      const raw = faceInput.files && faceInput.files[0];
-      croppedFace = null;
-      if(!raw) return;
-      if(typeof window.faceCrop !== "function"){ croppedFace = raw; return; }
-      try{
-        const out = await window.faceCrop(raw);
-        if(!out){ faceInput.value = ""; return; }
-        croppedFace = out; clearErr();
-        const help = faceInput.parentElement.querySelector(".help");
-        if(help) help.textContent = "Cropped and ready. Press Upload photo.";
-      }catch(e){ faceInput.value = ""; showErr(typeof e==="string"?e:"Couldn't open that photo."); }
-    });
     const savePhotosBtn = document.getElementById("ppSavePhotos");
-    if(savePhotosBtn) savePhotosBtn.addEventListener("click", async ()=>{
-      const faceIn = document.getElementById("ppPhotoFace");
-      const facePick = croppedFace || null;
-      if(!facePick) return showErr(faceIn && faceIn.files[0] ? "Crop your photo first: pick it again." : "Pick a photo first.");
-      if(facePick.size > 10*1024*1024) return showErr("That photo is over 10 MB — please compress it.");
+    const photoMsg = m => { const el = document.getElementById("ppPhotoMsg"); if(el) el.textContent = m; };
+    async function uploadFace(facePick){
+      if(facePick.size > 10*1024*1024) return photoMsg("That photo is over 10 MB. Please compress it.");
       savePhotosBtn.disabled = true;
+      savePhotosBtn.textContent = "Uploading…";
       try{
-        savePhotosBtn.textContent = "Uploading photo…";
         const acct = (await api(AUTH_URL, {action:"savePhoto", kind:"face", fileB64: await readFileB64(facePick)})).account;
         clearErr(); renderProfilePanel(acct); loadAvatar(acct);
       }catch(e){
         savePhotosBtn.disabled = false;
         savePhotosBtn.innerHTML = `Upload photo <span class="arw" aria-hidden="true">&gt;</span>`;
-        if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+        if(e!=="auth") photoMsg(typeof e==="string"?e:"Couldn't reach the server. Check your connection.");
       }
+    }
+    if(savePhotosBtn && faceInput) savePhotosBtn.addEventListener("click", ()=>{ photoMsg(""); faceInput.value = ""; faceInput.click(); });
+    if(faceInput) faceInput.addEventListener("change", async ()=>{
+      const raw = faceInput.files && faceInput.files[0];
+      croppedFace = null;
+      if(!raw) return;
+      if(typeof window.faceCrop !== "function") return uploadFace(raw);
+      try{
+        const out = await window.faceCrop(raw);
+        faceInput.value = "";
+        if(!out) return;
+        croppedFace = out;
+        await uploadFace(out);
+      }catch(e){ faceInput.value = ""; photoMsg(typeof e==="string"?e:"Couldn't open that photo."); }
     });
     const bioBox = document.getElementById("ppBio");
     if(bioBox) bioBox.addEventListener("input", ()=>{ const n=document.getElementById("ppBioN"); if(n) n.textContent = bioBox.value.length; });
+    const savePhoneBtn = document.getElementById("ppSavePhone");
+    if(savePhoneBtn) savePhoneBtn.addEventListener("click", async ()=>{
+      const phone = document.getElementById("ppPhone").value.trim();
+      savePhoneBtn.disabled = true;
+      try{
+        const out = await api(AUTH_URL, {action:"updateProfile", phone});
+        clearErr(); renderProfilePanel(out.account);
+        document.getElementById("ppAcctMsg").textContent = "Phone saved.";
+      }catch(e){
+        savePhoneBtn.disabled = false;
+        if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+      }
+    });
+    /* Password change = the existing reset email, so a borrowed
+       session can't swap the password without the inbox. */
+    const resetPwBtn = document.getElementById("ppResetPw");
+    if(resetPwBtn) resetPwBtn.addEventListener("click", async ()=>{
+      resetPwBtn.disabled = true;
+      try{
+        await api(AUTH_URL, {action:"forgotPassword", email: account.email});
+        document.getElementById("ppAcctMsg").textContent = `Link sent to ${account.email}.`;
+      }catch(e){
+        resetPwBtn.disabled = false;
+        if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+      }
+    });
     const saveStageBtn = document.getElementById("ppSaveStage");
     if(saveStageBtn) saveStageBtn.addEventListener("click", async ()=>{
       const stageName = document.getElementById("ppStage").value.trim();
@@ -1704,6 +1756,36 @@
      request form already on this page; the residency link signs them in
      on margolis.events through the same #t= fragment handoff that site
      uses to send them here. */
+  /* Dashboard nav row. A manager on the Manager half is flipped to her
+     own nights first, since every target lives in that half. */
+  document.querySelector(".mgx-sub").addEventListener("click", (ev)=>{
+    const a = ev.target.closest("[data-dnav]");
+    if(!a) return;
+    ev.preventDefault();
+    const go = a.dataset.dnav;
+    if(go === "logout"){ document.getElementById("logout").click(); return; }
+    const hv = document.getElementById("hostView");
+    if(hv && hv.hidden){ const hb = document.querySelector('[data-view="host"]'); if(hb) hb.click(); }
+    setTimeout(()=>{
+      if(go === "dates"){ const b = document.querySelector("[data-more-dates]"); if(b) b.click(); return; }
+      if(go === "account"){
+        if(!profileEditMode) document.getElementById("profileEditToggle").click();
+        setTimeout(()=>{
+          const t = document.getElementById("ppPhone");
+          (t ? t.closest(".djd-task") : document.getElementById("profilePanel")).scrollIntoView({behavior:"smooth", block:"start"});
+        }, 60);
+        return;
+      }
+      if(go === "pay"){
+        const el = document.getElementById("payHistory");
+        if(!el.innerHTML.trim()) el.innerHTML = `<p class="djd-note" style="margin-top:20px">No paid nights yet.</p>`;
+        el.scrollIntoView({behavior:"smooth", block:"start"});
+        return;
+      }
+      document.getElementById("content").scrollIntoView({behavior:"smooth", block:"start"});
+    }, 30);
+  });
+
   function bindBookMore(){
     const btn = document.querySelector("[data-more-dates]");
     if(btn && !btn.dataset.bound){
