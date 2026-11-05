@@ -1,0 +1,249 @@
+/* ============================================================
+   DJ & host dashboard — margolis.events skin (2026-11-04)
+   Ruby: the dashboard was "really ugly and outdated" next to the
+   new margolis.events. This file reskins it in that site's language
+   (warm paper, Fraunces heads, Inter body, Plex Mono micro-labels,
+   maroon accent, 2px corners, solid hairlines instead of dashes)
+   without touching a line of the page's script or markup classes.
+
+   How: the page's inline styles all key on --green / --paper /
+   --line / --muted / --ink, so remapping those tokens carries most
+   of it; the rest are overrides below. Loaded AFTER the inline
+   <style>, so equal-specificity rules here win.
+   Tokens are copied from margolis-events-site/styles.css :root —
+   change them there first, then here.
+   ============================================================ */
+
+:root{
+  --paper:#FAF7F2;
+  --paper-2:#F1EBE0;
+  --card:#FFFDF9;
+  --ink:#1B1815;
+  --muted:#8B8377;
+  --line:#E2D9C9;
+  --maroon:#6E2A38;
+  --maroon-deep:#4A1B24;
+  --gold:#8A6A28;
+  --gold-tint:#FAF4E8;
+  /* the old accent, now maroon everywhere it was used */
+  --green:#6E2A38;
+  --green-hi:#6E2A38;
+  --green-tint:#F6EDEC;
+  --green-line:#DCC3C5;
+  --serif:"Fraunces", Georgia, "Times New Roman", serif;
+  --sans:"Inter", "Helvetica Neue", Arial, sans-serif;
+  --mono:"IBM Plex Mono", "SF Mono", Menlo, monospace;
+  /* status colours, softened to sit on paper */
+  --ok:#4E6B34;   --ok-bg:#EEF1E4;
+  --warn:#8A6A28; --warn-bg:#FAF4E8;
+  --bad:#9B3A2E;  --bad-bg:#F8E9E5;
+  --chip-bg:#F1EBE0;
+}
+
+html,body{background:var(--paper)}
+body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:-0.01em}
+
+/* ---------- top bar: the margolis.events nav, slimmed ---------- */
+.announce,.frame > header{display:none}
+.mgx-bar{position:sticky;top:0;z-index:50;background:rgba(250,247,242,.94);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.mgx-bar__in{max-width:1400px;margin:0 auto;height:52px;padding:0 20px;display:grid;
+  grid-template-columns:1fr auto 1fr;align-items:center}
+.mgx-bar__home{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;color:var(--ink)}
+.mgx-bar__home svg{width:20px;height:20px}
+.mgx-bar__mark{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  background:var(--ink);color:var(--paper);padding:7px 16px;border-radius:2px;text-decoration:none}
+.mgx-bar__right{justify-self:end;display:flex;gap:18px;align-items:center}
+.mgx-bar__right a{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+.mgx-bar__right a:hover{border-color:var(--maroon);color:var(--maroon)}
+@media (max-width:520px){ .mgx-bar__right a.mgx-hide-sm{display:none} }
+
+/* ---------- frame + hero ---------- */
+.frame{max-width:1400px;padding:0}
+.box{border:none}
+.sechead.sechead--photo{
+  position:relative;text-align:left;min-height:440px;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:120px 40px 40px;
+  background-position:center 50%}
+.sechead.sechead--photo::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(20,16,14,0) 35%,rgba(20,16,14,.55) 100%)}
+.sechead.sechead--photo > *{position:relative;z-index:1}
+.sechead.sechead--photo .tag{background:none;border:none;padding:0;margin:0 0 12px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:rgba(244,238,228,.85)}
+.sechead.sechead--photo h2{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5.4vw,68px);
+  line-height:1;letter-spacing:-.02em;max-width:none;margin:0;color:#F4EEE4}
+.sechead.sechead--photo p{margin:14px 0 0;max-width:52ch;font-size:15.5px;color:rgba(244,238,228,.82)}
+@media (max-width:600px){
+  .sechead.sechead--photo{min-height:260px;padding:90px 20px 26px}
+}
+
+/* ---------- reading column ---------- */
+.djd-wrap{max-width:720px}
+.mg-pad{padding-left:20px;padding-right:20px}
+.djd-note{color:var(--muted);font-size:14px;line-height:1.6}
+.djd-note strong{color:var(--ink);font-weight:600}
+.djd-hello{font-size:16px}
+.djd-hello strong{font-family:var(--serif);font-weight:500;font-size:19px}
+.djd-avatar{background-color:var(--maroon);color:var(--paper);font-family:var(--mono)}
+.djd-logout{border-bottom:1px solid var(--line);color:var(--muted)}
+.djd-logout:hover{color:var(--maroon);border-color:var(--maroon)}
+
+/* Section heads: a serif title over a hairline, like the month heads on the calendar */
+.djd-section,.mgr-sect{font-family:var(--serif);font-weight:400;font-size:28px;letter-spacing:-.01em;
+  text-transform:none;color:var(--ink);margin:44px 0 16px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+
+/* links that were dashed underlines */
+.djd-readmore,.door__more{color:var(--maroon);border-bottom:1px solid currentColor;letter-spacing:.08em}
+.djd-readmore:hover,.door__more:hover{color:var(--ink)}
+.mgr-link{color:var(--maroon);border-bottom-color:currentColor}
+
+/* ---------- cards ---------- */
+.evt,.mgr-card,.djd-prof,.mgr-fold,.pay-sum,.pay-tbl{
+  background:var(--card);border:1px solid var(--line);border-radius:2px;box-shadow:none}
+.evt{margin-bottom:14px;transition:border-color .18s ease}
+.evt:hover{border-color:#CFC3AE}
+.evt.open{border-color:var(--ink)}
+.evt__head{padding:20px 22px 16px}
+.evt__head h3{font-family:var(--serif);font-weight:500;font-size:24px;line-height:1.15;margin:2px 0 6px}
+.evt__date{font-size:11px;letter-spacing:.1em;color:var(--gold)}
+.evt__body{border-top:1px solid var(--line);padding:0 22px 22px}
+.evt__collapse,.res-cal-note,.pay-sug{border:1px solid var(--line);border-radius:2px;background:var(--paper)}
+.evt__collapse .lbl{color:var(--gold)}
+.arch{opacity:.6}
+
+/* step tabs: a quiet segmented row, ink when on (like the ticket rows) */
+.evt__tabs{gap:6px;margin:18px 0}
+.evt__tab,.mgr-tab{border:1px solid var(--line);border-radius:2px;background:transparent;
+  color:var(--muted);padding:9px 13px;letter-spacing:.08em}
+.evt__tab:hover,.mgr-tab:hover{border-color:var(--ink);color:var(--ink)}
+.evt__tab.on,.mgr-tab.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.mgr-tab b{background:var(--maroon);border-radius:2px}
+
+/* manager / own-nights switch */
+/* the inline display:flex beat the hidden attribute, so non-managers saw the toggle */
+.mgr-switch[hidden]{display:none}
+.mgr-switch{border-radius:2px;border-color:var(--line);padding:3px;background:var(--card)}
+.mgr-switch__btn{border-radius:2px;letter-spacing:.1em}
+.mgr-switch__btn.on{background:var(--ink);color:var(--paper)}
+
+/* ---------- status chips: flat, square, mono ---------- */
+.stchip,.door__chip,.mgr-chip,.djd-pill{border-radius:2px;letter-spacing:.08em}
+.stchip--none,.door__chip--none,.mgr-chip,.djd-pill{background:var(--chip-bg);color:var(--muted)}
+.stchip--pending,.door__chip--live,.mgr-chip--warn{background:var(--warn-bg);color:var(--warn)}
+.stchip--approved,.door__chip,.mgr-chip--ok{background:var(--ok-bg);color:var(--ok)}
+.stchip--rejected,.mgr-chip--bad{background:var(--bad-bg);color:var(--bad)}
+.mgr-chip--dark{background:var(--ink);color:var(--paper)}
+
+/* callouts */
+.evt__ok,.djd-w9--ok{border-left:2px solid var(--maroon);background:var(--green-tint);color:var(--ink)}
+.djd-w9--warn,.mgr-banner{border-left:2px solid var(--bad);background:var(--bad-bg);color:#5a2219}
+.djd-w9--warn strong{color:var(--bad)}
+.mgr-card--flag{border-left:2px solid var(--bad)}
+
+/* ---------- profile completion ---------- */
+.djd-prof{padding:0 22px}
+.djd-prof summary{font-family:var(--serif);font-weight:500;font-size:19px;padding:18px 0}
+.djd-prof__body,.mgr-fold[open] summary,.djd-task,.door__row,.mgr-part,.od-row,.res-edit{border-top-style:solid}
+.mgr-fold[open] summary{border-bottom-style:solid}
+.mgr-fold .mgr-card{border-bottom-style:solid}
+.djd-bar,.od-goal__bar{height:4px;background:var(--paper-2);border-radius:0}
+.djd-bar i,.od-goal__bar i{background:var(--maroon);border-radius:0}
+.djd-check li{font-size:14.5px}
+.djd-check .mk{color:var(--ok)}
+.djd-check li:not(.done) .mk{color:var(--maroon)}
+.djd-task h4{font-family:var(--serif);font-weight:500;font-size:18px}
+
+/* ---------- numbers ---------- */
+.djd-scores,.pay-stats{border-radius:2px}
+.djd-score,.pay-stat{background:var(--card)}
+.djd-score__n,.pay-stat__n,.pay-sum__n{font-family:var(--serif);font-weight:400;font-size:30px;letter-spacing:-.01em}
+.pay-stat__n{font-size:24px}
+.djd-score--good .djd-score__n,.djd-band--good,.pay-band--good{color:var(--ok)}
+.djd-score--fair .djd-score__n,.djd-band--fair,.pay-band--fair{color:var(--warn)}
+.djd-score--under .djd-score__n,.djd-band--under,.pay-band--under{color:var(--bad)}
+.djd-hr i{background:var(--maroon)}
+
+/* ---------- buttons: the site's uppercase Inter, 2px corners ---------- */
+.btn,.btn--green{font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.08em;
+  padding:14px 26px;border-radius:2px;background:var(--maroon);border-color:var(--maroon);color:#F4EEE4}
+.btn:hover,.btn--green:hover{background:var(--maroon-deep);border-color:var(--maroon-deep);color:#F4EEE4}
+.btn--ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn--ghost:hover{background:var(--ink);color:var(--paper)}
+.djd-act{font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.08em;border-radius:2px;
+  padding:12px 18px;background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.djd-act:hover{background:var(--ink);color:var(--paper)}
+.djd-act:first-child{background:var(--maroon);border-color:var(--maroon);color:#F4EEE4}
+.djd-act:first-child:hover{background:var(--maroon-deep);border-color:var(--maroon-deep)}
+.mgr-btn{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.08em;border-radius:2px;
+  background:var(--maroon);border-color:var(--maroon);color:#F4EEE4}
+.mgr-btn:hover{background:var(--maroon-deep)}
+.mgr-btn--ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.mgr-btn--ghost:hover{border-color:var(--ink);background:transparent}
+.mgr-btn--bad{background:transparent;color:var(--bad);border-color:#E3C3BC}
+.pay-open,.pay-seg button,.mgr-star{border-radius:2px}
+.pay-open--go,.mgr-star.on{background:var(--maroon);border-color:var(--maroon)}
+.pay-seg button.on{background:var(--ink)}
+
+/* ---------- forms: solid hairlines, paper fields ---------- */
+.ifield > label,.mgr-field label{font-size:11px;letter-spacing:.12em;color:var(--muted)}
+.ifield .req{color:var(--maroon)}
+.ifield input[type="text"],.ifield input[type="email"],.ifield input[type="tel"],.ifield input[type="time"],
+.ifield input[type="url"],.ifield input[type="number"],.ifield textarea,.ifield select,
+.mgr-field input,.mgr-field select,.mgr-field textarea,.mgr-search{
+  border:1px solid var(--line);border-radius:2px;background:var(--card);font-family:var(--sans);font-size:15px}
+.ifield input:focus,.ifield textarea:focus,.ifield select:focus,
+.mgr-field input:focus,.mgr-field textarea:focus,.mgr-search:focus{outline:none;border-color:var(--ink)}
+input[type=file]{font-family:var(--sans);font-size:13px;color:var(--muted)}
+input[type=file]::file-selector-button{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;background:transparent;color:var(--ink);border:1px solid var(--ink);border-radius:2px;
+  padding:9px 14px;margin-right:12px;cursor:pointer}
+input[type=file]::file-selector-button:hover{background:var(--ink);color:var(--paper)}
+input[type=radio],input[type=checkbox]{accent-color:var(--maroon)}
+
+/* ---------- tables ---------- */
+.djd-pay th,.pay-hist th,.pay-hd{color:var(--muted)}
+.pay-hd,.pay-rw--open,.pay-panel{background:var(--paper)}
+.mgr-flyer,.res-photo img{border-radius:2px}
+
+/* ---------- presale modal ---------- */
+.mgmodal{background:rgba(27,24,21,.55)}
+.mgmodal__card{background:var(--paper);border-radius:2px;border:1px solid var(--line)}
+.mgmodal__card h3{font-family:var(--serif);font-weight:500}
+.mgmodal__kicker{font-family:var(--mono);color:var(--gold)}
+
+/* agreement stack links that open the policy pop-ups */
+.djd-policy{background:none;border:none;padding:0;font:inherit;color:var(--maroon);cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+.djd-policy:hover{color:var(--ink)}
+.mgmodal__card h4{font-family:var(--serif);font-weight:500;font-size:18px;margin:22px 0 8px}
+.mgmodal__card p{font-size:14.5px;line-height:1.6;margin:0 0 12px}
+.mgmodal__tbl{overflow-x:auto;margin:4px 0 14px;border:1px solid var(--line)}
+.mgmodal__tbl table{border-collapse:collapse;width:100%;font-size:13.5px}
+.mgmodal__tbl th,.mgmodal__tbl td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.mgmodal__tbl tr:last-child td{border-bottom:none}
+.mgmodal__tbl th{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--paper-2)}
+.mgmodal__tbl td+td{font-family:var(--mono);font-size:12.5px;white-space:nowrap}
+.mgmodal__terms{margin:6px 0 16px}
+.mgmodal__terms div{display:grid;grid-template-columns:150px 1fr;gap:4px 16px;padding:10px 0;border-top:1px solid var(--line)}
+.mgmodal__terms dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.mgmodal__terms dd{margin:0;font-size:14px;line-height:1.5}
+@media (max-width:520px){ .mgmodal__terms div{grid-template-columns:1fr} .mgmodal__tbl td+td{white-space:normal} }
+.mgmodal__more{display:inline-block;margin-top:6px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--maroon);border-bottom:1px solid currentColor;padding-bottom:2px;text-decoration:none}
+
+/* own partner code, beside the name in the greeting */
+.djd-mycode{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);margin-left:6px;white-space:nowrap}
+
+/* "How your nights work" rundown */
+.djd-rules{margin:0 0 14px;padding-left:20px;font-size:14px;line-height:1.6;color:var(--muted)}
+.djd-rules li{margin-bottom:8px;padding-left:4px}
+.djd-rules strong{color:var(--ink);font-weight:600}
+.djd-rules li::marker{font-family:var(--mono);font-size:12px;color:var(--maroon)}
+
+/* ---------- footer: the margolis.events foot ---------- */
+.footer{background:var(--ink);color:rgba(244,238,228,.72);margin-top:40px}
+.footer__inner{border:none;padding:28px 20px}
+.footer .status .dot{background:var(--maroon)}
+.footer__legal,.footer .status{font-family:var(--mono);font-size:11px;letter-spacing:.06em}

@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Your Nights — Margolis</title>
-<meta name="description" content="Manage your lineup, flyer, ticket link, and RSVP counts for every night you play at Margolis.">
+<meta name="description" content="Manage your lineup, flyer, and ticket link for every night you play at Margolis.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/png" href="assets/jubyr-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=43">
 <style>
   .djd-wrap{max-width:680px;margin:0 auto}
@@ -278,8 +278,23 @@
     text-transform:uppercase;color:var(--muted)}
   .pay-sug__use{margin-left:auto}
 </style>
+<link rel="stylesheet" href="margolis-dashboard-skin.css?v=1">
 </head>
 <body>
+
+<!-- margolis.events top bar (2026-11-04 reskin). The old announce strip
+     and Jubyr nav below stay in the markup, hidden by the skin, because
+     the burger script still binds to them. -->
+<div class="mgx-bar">
+  <div class="mgx-bar__in">
+    <a class="mgx-bar__home" href="https://margolis.events/" aria-label="margolis.events home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg></a>
+    <a class="mgx-bar__mark" href="https://margolis.events/margolis">Margolis</a>
+    <div class="mgx-bar__right">
+      <a class="mgx-hide-sm" href="https://margolis.events/calendar">Calendar</a>
+      <a href="https://margolis.events/host-a-public-event.html">Host an event</a>
+    </div>
+  </div>
+</div>
 
 <div class="announce">
   <span class="mono">Margolis &middot; 9 W Wildey St &middot; Fishtown, Philadelphia</span>
@@ -304,16 +319,19 @@
 
   <main id="top">
     <section class="box">
-      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.65)), url('assets/media/margolis/photo-24.jpg')">
+      <div class="sechead sechead--photo sechead--band" style="background-image: linear-gradient(rgba(12,12,12,0.12), rgba(12,12,12,0.3)), url('assets/media/margolis/photo-25.jpg')">
         <span class="tag" id="secTag">DJs &amp; hosts</span>
         <h2 id="secTitle">Your nights.</h2>
-        <p id="secSub">Lineup, flyer, ticket link, and RSVP counts &mdash; one place per event.</p>
+        <p id="secSub">Lineup, flyer, and ticket link &mdash; one place per event.</p>
       </div>
 
       <div class="mg-pad djd-wrap" style="padding-top:28px;padding-bottom:44px;">
         <div class="djd-topbar">
           <span class="djd-hello" id="hello"><span class="djd-avatar" id="djdAvatar" hidden></span><span id="helloText"></span></span>
-          <button class="djd-logout" id="logout">Log out</button>
+          <span style="display:flex;gap:18px;align-items:center">
+            <button type="button" class="djd-logout" id="profileEditToggle" hidden>Edit profile</button>
+            <button class="djd-logout" id="logout">Log out</button>
+          </span>
         </div>
         <div class="mgr-switch mono" id="mgrSwitch" hidden>
           <button type="button" class="mgr-switch__btn" data-view="manager">Manager</button>
@@ -322,17 +340,15 @@
         <p class="djd-err" id="mgrErr"></p>
         <div id="mgrView" hidden></div>
         <div id="hostView">
-        <p class="djd-note">Each part needs Margolis approval before it counts, and your lineup,
-        flyer, and ticket link are due <strong>at least 10 days before your night</strong> —
-        earlier is always welcome. Until all three are approved, our $20 presale stays live for
-        that night; the moment they clear, guests are sent to your ticket link instead.
-        <button type="button" class="djd-readmore" data-presale-open>Read the full presale policy &gt;</button></p>
         <div class="djd-w9 djd-w9--warn" id="approvalBox" hidden>
           <strong>Your account is awaiting Margolis review.</strong> You can finish your profile
           now — everything goes live the moment you're approved.
         </div>
+        <!-- Only what is still owed shows up here (Ruby, 2026-11-04): a part
+             of the profile disappears once it is done, and at 100% the whole
+             panel goes, so the page opens on the two buttons and the nights.
+             "Edit profile" in the top bar brings it all back. -->
         <div id="profilePanel"></div>
-        <div id="guestListBox"></div>
         <div class="djd-w9" id="w9Box" hidden></div>
         <p class="djd-err" id="djdErr"></p>
         <!-- More nights (2026-10-22). Two doors onto forms that already
@@ -343,6 +359,7 @@
           <a class="djd-act" id="resApply" href="https://margolis.events/apply-for-a-residency" target="_blank" rel="noopener">Apply for a residency &#8599;</a>
         </div>
         <div id="content"><p class="djd-note" style="margin-top:20px">Loading your nights&hellip;</p></div>
+        <div id="guestListBox"></div>
         <div id="payHistory"></div>
         <div id="dateReqList"></div>
         <details class="djd-prof" id="dateReqBox" style="margin-top:18px">
@@ -418,6 +435,92 @@
     no presale run for their night. Margolis reserves the right to deny the
     request within reason. Ask by replying to your confirmation email or
     writing <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>
+  </div>
+</div>
+
+<!-- Agreement stack pop-ups (2026-11-04). The three links in "The agreement
+     stack" open these. The two /margolis#payouts and #minimums links they
+     replace pointed at anchors that never existed.
+     SECOND COPY: this text is copied from margolis-events-site/
+     host-a-public-event.html (steps 01, 02, 03, 05, 07), Ruby's final policy
+     text of 2026-11-04. margolis.events sends no CORS header, so this page
+     cannot read it live. Change it THERE first, then here. -->
+<div class="mgmodal" id="policyPhilosophy" role="dialog" aria-modal="true" aria-labelledby="policyPhilosophyTitle">
+  <div class="mgmodal__card">
+    <button type="button" class="mgmodal__close" data-policy-close aria-label="Close">&times;</button>
+    <span class="mgmodal__kicker">Booking philosophy &amp; payouts</span>
+    <h3 id="policyPhilosophyTitle">Hosting at Margolis.</h3>
+    <p>You keep <strong>100% of GA sales</strong>, plus <strong>10% of eligible net bar sales</strong> for both ticketed and free events. Bar commission is paid only when the event meets its minimum.</p>
+    <p>Hosts may sell up to <strong>200 presale GA tickets</strong>. Additional GA admission at the door is subject to capacity.</p>
+    <h4>How payouts are calculated</h4>
+    <p><strong>Eligible net bar sales</strong> means what guests actually paid over your night. It is counted after any discount, not at the original price. Tax (10%), gratuity (20%), refunds, chargebacks and comped items do not count. Once your minimum is met, your percentage is paid on the whole night&rsquo;s sales, not only the part above the minimum.</p>
+    <p>Presale GA pays out through your ticketing platform. Door GA pays via Zelle within 24 to 48 hours. Your bar commission is ready the following Thursday.</p>
+    <p>Refunds, chargebacks and comped items are deducted from the admission revenue they came from, before payout.</p>
+    <h4>Couches and Priority Reservations</h4>
+    <p>Margolis separately manages couch sales and a maximum of <strong>20 Priority guests per event</strong>. You may set the Priority limit lower, but never higher.</p>
+    <p>We pay hosts and DJs among the highest in the city while maintaining the experience guests expect from Margolis: a custom DJ booth, a well-kept room, a full cocktail program, and real glassware. Couch and Priority Reservation revenue helps support that experience while allowing hosts to keep 100% of GA sales.</p>
+    <h4>Your ticketing platform</h4>
+    <p>Hosts choose either Margolis ticketing or a 3rd party platform (Posh, Eventbrite, Resident Advisor) for GA sales. Tickets cannot be sold through both.</p>
+    <div class="mgmodal__tbl"><table>
+      <thead><tr><th></th><th>Margolis ticketing</th><th>3rd party</th></tr></thead>
+      <tbody>
+        <tr><td>GA sales</td><td>100%</td><td>100%</td></tr>
+        <tr><td>Eligible net bar sales, once the minimum is met</td><td>10%</td><td>10%</td></tr>
+        <tr><td>Priority Reservation revenue</td><td>50%</td><td>Retained by Margolis</td></tr>
+        <tr><td>Couch revenue</td><td>25%</td><td>Retained by Margolis</td></tr>
+        <tr><td>Couch and Priority guest contact information</td><td>Available</td><td>Not shared</td></tr>
+      </tbody>
+    </table></div>
+    <p>Your share of Margolis couch and Priority Reservation revenue is calculated <strong>after taxes, fees, and refunds</strong> and paid with your bar commission settlement.</p>
+    <a class="mgmodal__more" href="https://margolis.events/host-a-public-event" target="_blank" rel="noopener">Full host page &#8599;</a>
+  </div>
+</div>
+
+<div class="mgmodal" id="policyMinimums" role="dialog" aria-modal="true" aria-labelledby="policyMinimumsTitle">
+  <div class="mgmodal__card">
+    <button type="button" class="mgmodal__close" data-policy-close aria-label="Close">&times;</button>
+    <span class="mgmodal__kicker">Bar minimum policy</span>
+    <h3 id="policyMinimumsTitle">Your night sets the minimum.</h3>
+    <div class="mgmodal__tbl"><table>
+      <thead><tr><th>Your night</th><th>Minimum</th></tr></thead>
+      <tbody>
+        <tr><td>Sunday, Tuesday to Thursday</td><td>$1,500</td></tr>
+        <tr><td>Friday or Saturday, ending by 9 PM</td><td>$2,000</td></tr>
+        <tr><td>Friday or Saturday, 9 PM to 2 AM</td><td>$5,000</td></tr>
+        <tr><td>Kitchen service</td><td>+ $500</td></tr>
+        <tr><td>Event running over four hours</td><td>+ $500</td></tr>
+      </tbody>
+    </table></div>
+    <p>On a 9 PM to 2 AM night the kitchen takes last orders at 11 PM.</p>
+    <dl class="mgmodal__terms">
+      <div><dt>Minimum due</dt><dd>In full by the end of the event</dd></div>
+      <div><dt>Under the minimum</dt><dd>You cover the difference, and no percentage is paid</dd></div>
+      <div><dt>Sales counted</dt><dd>After discounts. Tax, gratuity, refunds and comps excluded</dd></div>
+      <div><dt>Cancelling 48+ hours ahead</dt><dd>No fee</dd></div>
+      <div><dt>Cancelling inside 48 hours</dt><dd>50% of your minimum, capped at $1,500</dd></div>
+    </dl>
+    <a class="mgmodal__more" href="https://margolis.events/host-a-public-event" target="_blank" rel="noopener">Full host page &#8599;</a>
+  </div>
+</div>
+
+<div class="mgmodal" id="policyTerms" role="dialog" aria-modal="true" aria-labelledby="policyTermsTitle">
+  <div class="mgmodal__card">
+    <button type="button" class="mgmodal__close" data-policy-close aria-label="Close">&times;</button>
+    <span class="mgmodal__kicker">Event terms</span>
+    <h3 id="policyTermsTitle">The terms.</h3>
+    <dl class="mgmodal__terms">
+      <div><dt>Mondays</dt><dd>Not available. A standing weekly residency</dd></div>
+      <div><dt>Minimum due</dt><dd>In full by the end of the event</dd></div>
+      <div><dt>Under the minimum</dt><dd>You cover the difference, and no percentage is paid</dd></div>
+      <div><dt>Sales counted</dt><dd>After discounts. Tax, gratuity, refunds and comps excluded</dd></div>
+      <div><dt>GA sales</dt><dd>100% yours. Up to 200 presale GA tickets; door GA subject to capacity</dd></div>
+      <div><dt>Bar commission</dt><dd>10%, ticketed or free. Paid only when the event meets its minimum</dd></div>
+      <div><dt>Priority Reservations &amp; couches</dt><dd>50% / 25% with Margolis ticketing. Retained by Margolis on a 3rd party platform (Posh, Eventbrite, Resident Advisor). Tickets cannot be sold through both.</dd></div>
+      <div><dt>Host discount</dt><dd>50% off your tab if it&rsquo;s only your own food and drinks. Order for anyone else and the whole tab is 25% off. Bottles 25% off, during the event</dd></div>
+      <div><dt>Cancelling 48+ hours ahead</dt><dd>No fee</dd></div>
+      <div><dt>Cancelling inside 48 hours</dt><dd>50% of your minimum, capped at $1,500</dd></div>
+    </dl>
+    <a class="mgmodal__more" href="https://margolis.events/host-a-public-event" target="_blank" rel="noopener">Full host page &#8599;</a>
   </div>
 </div>
 
@@ -606,9 +709,10 @@
     };
     if(payload.action==="me"){
       if(!s.account) throw "Please log in again.";
+      if(!s.account.partnerCode) s.account.partnerCode = "KTR-482";
       demoSave(s); return {ok:true, account:s.account};
     }
-    const demoPct = a => { const c=[!!(a.name&&a.type&&a.phone),!!a.hasFacePhoto,(a.genres||[]).length>0||(a.venues||[]).length>0,!!(a.payableTo&&a.zelle),!!a.agreementsSigned,!!a.hasW9]; a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100); };
+    const demoPct = a => { const c=[!!(a.name&&a.type&&a.phone),!!a.hasFacePhoto,(a.genres||[]).length>0||(a.venues||[]).length>0,!!(a.payableTo&&a.zelle),!!a.agreementsSigned,!!a.hasW9,!!a.nightsAck]; a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100); };
     if(payload.action==="nightGuests"){
       const ev = s.events.find(e => e.date === payload.date);
       if(!ev || !ev.door) throw "That is not one of your nights.";
@@ -626,6 +730,7 @@
       demoPct(s.account); demoSave(s); return {ok:true, account:s.account};
     }
     if(payload.action==="savePayout"){ s.account.payableTo=payload.payableTo; s.account.zelle=payload.zelle; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="ackNights"){ s.account.nightsAck=true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="saveAgreements"){ s.account.agreementsSigned=true; s.account.smsConsent=!!payload.contactConsent; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="events"){ demoSave(s); return {ok:true, events:s.events, archive:s.archive||[], dateRequests:s.dateRequests||[]}; }
     if(payload.action==="myPastParties"){
@@ -671,13 +776,14 @@
     if(payload.action==="addEventPartner"){
       /* Demo: these two addresses stand in for partners who already
          have profiles; anything else is made new. */
-      const known = {"mike@example.com":"mikeoleary", "doc@example.com":"docsow"};
-      const em = String(payload.email||"").toLowerCase();
+      const known = {"MKE234":{name:"Mike O'Leary", instagram:"mikeoleary"}, "DCS567":{name:"Doc Sow", instagram:"docsow"}};
+      const p = known[String(payload.code||"")];
+      if(!p) throw "No profile has that code. Check it with your partner. If they don't have a profile yet, they need to create one first.";
       const ev=findEv(); const sub=ensureSub(ev);
       sub.solo = false;
-      sub.partners.push({name:payload.name, instagram:known[em]||""});
-      ev.partnered = true; ev.withNames = sub.partners.map(p=>p.name);
-      demoSave(s); return {ok:true, submission:sub, linked:{name:payload.name, by: known[em] ? "email" : "new"}};
+      if(!sub.partners.some(x=>x.name===p.name)) sub.partners.push(p);
+      ev.partnered = true; ev.withNames = sub.partners.map(x=>x.name);
+      demoSave(s); return {ok:true, submission:sub, linked:{name:p.name, by:"code"}};
     }
     if(payload.action==="setSolo"){
       const ev=findEv(); const sub=ensureSub(ev);
@@ -776,11 +882,7 @@
   function renderW9(account){
     const box = document.getElementById("w9Box");
     box.hidden = false;
-    if(account.hasW9){
-      box.className = "djd-w9 djd-w9--ok";
-      box.innerHTML = `W9 on file — your payouts are clear to process once we verify it.`;
-      return;
-    }
+    if(account.hasW9){ box.hidden = true; box.innerHTML = ""; return; }
     box.className = "djd-w9 djd-w9--warn";
     box.innerHTML = `<strong>Your W9 is missing.</strong> Your door charge is not paid until your
       profile is set up and your W9 is on file: we can't properly file our taxes without it. Fill out the IRS's own
@@ -825,15 +927,20 @@
       [!!(account.payableTo && account.zelle), "Payout info — checks payable to + Zelle"],
       [!!account.agreementsSigned, "The agreement stack, signed"],
       [!!account.hasW9, "W9 on file"],
+      [!!account.nightsAck, "How your nights work"],
     ];
     const el = document.getElementById("profilePanel");
-    el.innerHTML = `<details class="djd-prof"${editing?" open":""}>
+    const editBtn = document.getElementById("profileEditToggle");
+    editBtn.hidden = !complete;
+    editBtn.textContent = profileEditMode ? "Done editing" : "Edit profile";
+    el.hidden = complete && !profileEditMode;
+    el.innerHTML = el.hidden ? "" : `<details class="djd-prof"${editing?" open":""}>
       <summary>${complete
-        ? `Profile complete <span style="color:var(--green)">&#10003;</span> <button type="button" id="profileEditToggle" style="margin-left:auto;background:none;border:none;padding:0;cursor:pointer;color:var(--green);font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;text-decoration:underline">${profileEditMode?"Done editing":"Profile settings"}</button>`
+        ? `Your profile`
         : `Profile completion <span class="djd-bar"><i style="width:${p}%"></i></span> <span style="font-family:'IBM Plex Mono',monospace;font-size:13px">${p}%</span>`}</summary>
       <div class="djd-prof__body">
         ${!complete?`<p class="djd-note" style="margin:0 0 14px"><strong>Until your profile hits 100%</strong>, your residency stays unlocked and your door charge is not paid: we can't properly file our taxes without your W9. We'll keep reminding you daily — finishing takes a few minutes.</p>`:""}
-        ${editing?`<ul class="djd-check">${items.map(([done,label])=>`<li class="${done?"done":""}"><span class="mk">${done?"&#10003;":"&#8226;"}</span>${label}</li>`).join("")}</ul>`:""}
+        ${editing?`<ul class="djd-check">${items.filter(([done])=>!done || profileEditMode).map(([done,label])=>`<li class="${done?"done":""}"><span class="mk">${done?"&#10003;":"&#8226;"}</span>${label}</li>`).join("")}</ul>`:""}
         ${claim?`<p class="djd-note" style="margin:0 0 4px"><strong>Residency:</strong> ${
           claim.status==="locked"
             ? `${esc(claim.title)} — <span style="color:var(--green)">locked in</span>`
@@ -859,10 +966,9 @@
         ${(!account.agreementsSigned || profileEditMode)?`<div class="djd-task">
           <h4>The agreement stack</h4>
           <p class="djd-note" style="margin:0 0 12px">${account.agreementsSigned?"Already signed and on file — resign below only if you need to update your legal name.":""} The same terms every Margolis booking runs on — the
-          <a href="/margolis#payouts" target="_blank" rel="noopener">booking philosophy and payout model</a>,
-          the <a href="/margolis#minimums" target="_blank" rel="noopener">bar minimum policy</a>, and the full
-          event policies (sound, conduct, door operations, fees) on the
-          <a href="https://margolis.events/host-a-public-event.html" target="_blank" rel="noopener">booking page</a>.</p>
+          <button type="button" class="djd-policy" data-policy-open="policyPhilosophy">booking philosophy and payout model</button>,
+          the <button type="button" class="djd-policy" data-policy-open="policyMinimums">bar minimum policy</button>, and the
+          <button type="button" class="djd-policy" data-policy-open="policyTerms">full event terms</button>.</p>
           <!-- The three policy boxes tick from agreementsSigned because that
                is what signing them means. agConsent must tick from the host's
                own stored answer instead: sharing the flag re-ticked marketing
@@ -876,14 +982,34 @@
           <div class="ifield" style="margin-top:6px"><label>Electronic signature (full legal name) <span class="req">*</span></label><input type="text" id="agSig" autocomplete="name" value="${account.agreementsSigned?esc(account.name||""):""}"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSignAgreements">${account.agreementsSigned?"Update signature":"Sign the agreements"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
+        ${(!account.nightsAck || profileEditMode)?`<div class="djd-task">
+          <!-- "How your nights work" (Ruby, 2026-11-04): agreed once, as part of
+               setup. It replaced the paragraph that sat at the top of the page
+               on every visit. ackNights in margolis-dj-auth.php records it. -->
+          <h4>How your nights work</h4>
+          <ol class="djd-rules">
+            <li><strong>Every night has three parts</strong>, each on that night's card: your lineup (every DJ, with a link to their Instagram), your flyer, and your ticket link. Each needs Margolis approval.</li>
+            <li><strong>Due at least 10 days before your night.</strong> Earlier is always welcome.</li>
+            <li><strong>Until your ticket link is up</strong>, your night shows a waitlist and we direct all inquiries to our Priority Reservation. Once it's up, guests are sent to your link, and everyone on the waitlist gets an email with it.</li>
+            <li><strong>Hosting with someone?</strong> Add them on the night's Partners step with their profile code.</li>
+          </ol>
+          <div class="djd-w9 djd-w9--warn" style="margin:4px 0 14px">
+            <strong>Your bar payout is held until your lineup, flyer, and ticket link are uploaded.</strong><br>
+            <strong>All payouts are held until your profile is complete.</strong>
+          </div>
+          ${account.nightsAck
+            ? `<p class="djd-note" style="margin:0">Agreed and on file.</p>`
+            : `<label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:12px;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="checkbox" id="nightsAckBox" style="margin-top:3px">I understand how my nights work.</label>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppAckNights">I agree <span class="arw" aria-hidden="true">&gt;</span></button></div>`}
+        </div>`:""}
       </div>
     </details>`;
-    const editToggle = document.getElementById("profileEditToggle");
-    if(editToggle) editToggle.addEventListener("click", (e)=>{
-      e.preventDefault(); e.stopPropagation();
+    editBtn.onclick = (e)=>{
+      e.preventDefault();
       profileEditMode = !profileEditMode;
       renderProfilePanel(account);
-    });
+      if(profileEditMode) el.scrollIntoView({block:"start"});
+    };
     const savePhotosBtn = document.getElementById("ppSavePhotos");
     if(savePhotosBtn) savePhotosBtn.addEventListener("click", async ()=>{
       const faceIn = document.getElementById("ppPhotoFace");
@@ -912,6 +1038,18 @@
         clearErr(); renderProfilePanel(out.account); renderW9(out.account);
       }catch(e){ savePayoutBtn.disabled=false; if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server."); }
     });
+    const ackBtn = document.getElementById("ppAckNights");
+    if(ackBtn) ackBtn.addEventListener("click", async ()=>{
+      if(!document.getElementById("nightsAckBox").checked) return showErr("Tick the box to agree.");
+      ackBtn.disabled = true;
+      try{
+        const out = await api(AUTH_URL, {action:"ackNights", agree:1});
+        clearErr(); renderProfilePanel(out.account);
+      }catch(e){
+        ackBtn.disabled = false;
+        if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+      }
+    });
     const signBtn = document.getElementById("ppSignAgreements");
     if(signBtn) signBtn.addEventListener("click", async ()=>{
       // agConsent is NOT in this list. The three policy boxes are terms of
@@ -931,6 +1069,19 @@
     });
   }
 
+  // ---------- agreement stack pop-ups ----------
+  // Delegated, because the profile panel that holds the links re-renders.
+  (function(){
+    let open = null;
+    const close = () => { if(open){ open.classList.remove("show"); open = null; } };
+    document.addEventListener("click", e=>{
+      const b = e.target.closest("[data-policy-open]");
+      if(b){ e.preventDefault(); close(); open = document.getElementById(b.dataset.policyOpen); if(open) open.classList.add("show"); return; }
+      if(open && (e.target === open || e.target.closest("[data-policy-close]"))) close();
+    });
+    document.addEventListener("keydown", e=>{ if(e.key==="Escape") close(); });
+  })();
+
   // ---------- presale policy modal ----------
   (function(){
     const modal = document.getElementById("presaleModal");
@@ -943,8 +1094,22 @@
   // Lineups are singular acts (name + IG), not one typed-out list — the
   // in-progress set for each event lives here until it's submitted.
   const lineupDraft = {};
+  let MY_CODE = "";                 // this account's own partner code, from `me`
   const partnerNote = {};           // date|name -> who the last partner add linked to
   const lineupArr = v => Array.isArray(v) ? v : (v ? [{name:String(v), instagram:""}] : []);
+  /* Lineup asks for a link to the act's Instagram (Ruby, 2026-11-04); the
+     server stores only the handle (margolis-dj-dashboard.php strips
+     everything else), so pull it out here. Takes a profile link, an
+     @handle or a bare handle; "" when it isn't one. */
+  function igHandle(v){
+    let t = String(v||"").trim();
+    const m = /^(?:https?:\/\/)?(?:www\.|m\.)?(?:instagram\.com|instagr\.am)\/([^/?#\s]+)/i.exec(t);
+    if(m) t = m[1];
+    else if(/[\/:]/.test(t)) return "";
+    t = t.replace(/^@/,"");
+    if(["p","reel","reels","stories","explore","accounts"].includes(t.toLowerCase())) return "";
+    return /^[A-Za-z0-9._]{1,30}$/.test(t) ? t.toLowerCase() : "";
+  }
   const igInput = f => `<span style="display:flex;align-items:center"><span style="padding:0 2px 0 0;color:var(--muted);font-family:'IBM Plex Mono',monospace">@</span><input type="text" data-f="${f}" placeholder="handle" style="flex:1" autocapitalize="none" autocorrect="off"></span>`;
   function stchip(label, status){
     const cls = status==="approved"?"approved":status==="rejected"?"rejected":status==="pending"?"pending":"none";
@@ -995,19 +1160,19 @@
       </div>
       ${archived?"":`<div class="evt__body">
         <div class="evt__tabs">
-          ${[["lineup","1 · Lineup"],["flyer","2 · Flyer"],["ticket","3 · Ticket link"],["rsvp","4 · RSVP count"],["partners","5 · Partners"]].map(([tk,label])=>
+          ${[["lineup","1 · Lineup"],["flyer","2 · Flyer"],["ticket","3 · Ticket link"],["partners","4 · Partners"]].map(([tk,label])=>
             `<button type="button" class="evt__tab ${tab===tk?"on":""}" data-tab="${tk}" data-k="${esc(k)}">${label}</button>`).join("")}
         </div>
         <div class="evt__pane ${tab==="lineup"?"on":""}" data-pane="lineup">
           ${gatedBody("lineup", s.lineup, i, k, "Your lineup wasn't approved.", `
           ${(lineupDraft[k]||[]).length?`<ul class="djd-check" style="margin-bottom:14px">${lineupDraft[k].map((a,ai)=>
-            `<li class="done"><span class="mk">&#9835;</span>${esc(a.name)}${a.instagram?` <span style="color:var(--muted)">@${esc(a.instagram)}</span>`:""}
+            `<li class="done"><span class="mk">&#9835;</span>${esc(a.name)}${a.instagram?` <a href="https://instagram.com/${esc(a.instagram)}" target="_blank" rel="noopener" style="color:var(--muted)">@${esc(a.instagram)}</a>`:""}
              <button type="button" class="djd-readmore" data-lu-rm="${ai}" data-i="${i}" style="margin-left:8px">remove</button></li>`).join("")}</ul>`:""}
           <div class="ifield"><label>DJ name <span class="req">*</span></label>
             <input type="text" data-f="luName" placeholder="Exactly as it should appear on the flyer"></div>
-          <div class="ifield"><label>Their Instagram</label>
-            ${igInput("luIg")}
-            <p class="help">Just the letters — the @ is already there.</p></div>
+          <div class="ifield"><label>Link to their Instagram <span class="req">*</span></label>
+            <input type="url" data-f="luIg" placeholder="instagram.com/theirname" autocapitalize="none" autocorrect="off" inputmode="url">
+            <p class="help">Open their profile and copy the link.</p></div>
           <div class="intake__nav" style="margin-bottom:8px"><button type="button" class="btn" data-save="lineupAdd" data-i="${i}">Add this act +</button></div>
           <p class="help">Add each act one at a time — every event needs a fresh lineup, even for residencies; this is what we promote. Due at least 10 days before your night; earlier is always welcome.</p>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="lineup" data-i="${i}">Submit lineup <span class="arw" aria-hidden="true">&gt;</span></button></div>
@@ -1026,18 +1191,15 @@
           ${gatedBody("ticket", s.ticketLink, i, k, "Your ticket link wasn't approved.", `
           <div class="ifield"><label>Ticket link <span class="req">*</span></label>
             <input type="url" data-f="ticket" placeholder="https://posh.vip/e/your-event" value="${esc(s.ticketLink.value)}">
-            <p class="help">Once approved (with your lineup and flyer), guests get sent here instead of our $20 presale. Due at least 10 days before your night.</p></div>
+            <p class="help">Guests get sent here instead of our waitlist. Once your link is approved, everyone who joined the waitlist for this night gets an email with it.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="ticket" data-i="${i}">Submit link <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `)}
         </div>
-        <div class="evt__pane ${tab==="rsvp"?"on":""}" data-pane="rsvp">
-          <p class="evt__status">Update these 3 days out, 2 days out, and day of. Be straight with the numbers — the Posh scanner tells us tickets sold anyway.</p>
-          <div class="ifield"><label>Free RSVPs</label><input type="text" inputmode="numeric" data-f="rsvpFree" value="${esc(s.rsvpFree)}" placeholder="e.g. 120"></div>
-          <div class="ifield"><label>Tickets sold</label><input type="text" inputmode="numeric" data-f="rsvpSold" value="${esc(s.rsvpSold)}" placeholder="e.g. 85"></div>
-          <div class="intake__nav"><button type="button" class="btn btn--green" data-save="rsvp" data-i="${i}">Update counts <span class="arw" aria-hidden="true">&gt;</span></button></div>
-        </div>
+        <!-- RSVP count step removed (Ruby, 2026-11-04). The saveRsvp handler
+             below and the manager view's RSVP line stay, so counts a host
+             already entered still show; nothing new can be typed. -->
         <div class="evt__pane ${tab==="partners"?"on":""}" data-pane="partners">
-          <p class="evt__status">Hosting this night with someone? <strong>Every partner needs their own Margolis profile</strong> — the night isn't official until they do.</p>
+          <p class="evt__status">Hosting this night with someone? Add them with <strong>their profile code</strong>. They'll see this night and its sales on their own dashboard.</p>
           ${partnerNote[keyOf(ev)]?`<p class="evt__status">${esc(partnerNote[keyOf(ev)])}</p>`:""}
           ${(s.partners||[]).length?`<p class="evt__status"><strong>On this night:</strong> ${(s.partners||[]).map(p=>esc(p.name)+(p.instagram?` (@${esc(p.instagram)})`:"")).join(", ")}</p>`:""}
           ${s.solo?`<div class="evt__collapse"><span class="lbl">No partner — solo night</span><button type="button" class="djd-readmore" data-solo-undo="1" data-i="${i}">Actually, add one</button></div>`:`
@@ -1045,10 +1207,7 @@
             <input type="checkbox" data-f="soloCheck" style="margin-top:3px">No partner for this night — I'm running it solo.
           </label>
           <div class="intake__nav" style="margin-bottom:20px"><button type="button" class="btn" data-save="solo" data-i="${i}">Confirm solo night</button></div>
-          <div class="ifield"><label>Partner legal first name <span class="req">*</span></label><input type="text" data-f="pfirst" placeholder="Their legal first name"></div>
-          <div class="ifield"><label>Partner legal last name <span class="req">*</span></label><input type="text" data-f="plast" placeholder="Their legal last name"></div>
-          <div class="ifield"><label>Partner mobile <span class="req">*</span></label><input type="tel" inputmode="tel" autocomplete="off" data-f="pphone" placeholder="(215) 555-0100"></div>
-          <div class="ifield"><label>Partner email <span class="req">*</span></label><input type="email" autocomplete="off" data-f="pemail" placeholder="partner@email.com"><p class="help">If they have a profile, this links it. If not, we make one and email them their login.</p></div>
+          <div class="ifield"><label>Partner's profile code <span class="req">*</span></label><input type="text" data-f="pcode" placeholder="ABC-234" maxlength="9" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" style="font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase"><p class="help">Your partner finds it by logging in at <a href="https://jubyr.com/margolis-login" target="_blank" rel="noopener">jubyr.com/margolis-login</a>. It's the short code next to their name at the top of their dashboard. No profile yet? They create one there first.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="partner" data-i="${i}">Add partner <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `}
         </div>
@@ -1279,8 +1438,11 @@
     if(kind==="lineupAdd"){
       const k = keyOf(ev);
       const name = card.querySelector('[data-f="luName"]').value.trim();
-      const ig = card.querySelector('[data-f="luIg"]').value.trim().replace(/^@/,"");
+      const igRaw = card.querySelector('[data-f="luIg"]').value;
+      const ig = igHandle(igRaw);
       if(!name) return showErr("Add the DJ name as it should appear on the flyer.");
+      if(!igRaw.trim()) return showErr("Add the link to their Instagram.");
+      if(!ig) return showErr("That doesn't look like an Instagram link. Copy it from their profile, e.g. instagram.com/theirname.");
       (lineupDraft[k] = lineupDraft[k]||[]).push({name, instagram:ig});
       openCards.add(k); activeTab[k] = "lineup";
       render();
@@ -1310,17 +1472,13 @@
       payload = Object.assign({action:"saveRsvp", rsvpFree:free, rsvpSold:sold}, base);
     }
     if(kind==="partner"){
-      const pfirst = card.querySelector('[data-f="pfirst"]').value.trim();
-      const plast = card.querySelector('[data-f="plast"]').value.trim();
-      const name = (pfirst + " " + plast).trim();
-      const email = card.querySelector('[data-f="pemail"]').value.trim();
-      const phone = card.querySelector('[data-f="pphone"]').value.trim();
-      /* Found by the phone and email on their profile, checked against
-         the name (Ruby, 2026-10-22). Instagram comes off the profile. */
-      if(!pfirst || !plast) return showErr("Add your partner's legal first and last name.");
-      if(phone.replace(/\D/g,"").length !== 10) return showErr("Add your partner's mobile, 10 digits.");
-      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return showErr("Add your partner's email.");
-      payload = Object.assign({action:"addEventPartner", name, firstName:pfirst, lastName:plast, email, phone}, base);
+      /* By their profile code only (Ruby, 2026-11-04). No code, no
+         partner: they make a profile first. Instagram comes off it. */
+      const code = card.querySelector('[data-f="pcode"]').value.toUpperCase().replace(/[^A-Z0-9]/g,"");
+      if(!code) return showErr("Enter your partner's profile code.");
+      if(code.length !== 6) return showErr("A profile code is 6 characters, like ABC-234.");
+      if(MY_CODE && code === MY_CODE.replace(/-/g,"")) return showErr("That's your own code. Enter your partner's.");
+      payload = Object.assign({action:"addEventPartner", code}, base);
       btn.disabled = true; btn.textContent = "Adding…";
       try{
         const out = await api(DASH_URL, payload);
@@ -1331,9 +1489,7 @@
         }
         /* Say who it linked to, so a wrong match is caught on the spot. */
         if(out.linked && out.linked.name){
-          partnerNote[keyOf(ev)] = out.linked.by === "new"
-            ? `Created a profile for ${out.linked.name} and emailed them their login.`
-            : `Linked to ${out.linked.name}'s profile.`;
+          partnerNote[keyOf(ev)] = `Added ${out.linked.name}.`;
         }
         openCards.add(keyOf(ev));
         activeTab[keyOf(ev)] = "partners";
@@ -1586,6 +1742,8 @@
       const first = (me.account.name||"").split(" ")[0] || "there";
       document.getElementById("helloText").innerHTML = `Good to see you, <strong>${esc(first)}</strong>.`;
       loadAvatar(me.account);
+      MY_CODE = me.account.partnerCode || "";
+      if(MY_CODE) document.getElementById("helloText").insertAdjacentHTML("beforeend", ` <span class="djd-mycode" title="Your partner code">${esc(MY_CODE)}</span>`);
       if(me.account.mustSetPassword || !me.account.quickProfileDone){ location.href = "/margolis-login"; return; }
       /* Manager (Ruby): the same page grows a second half. The server
          decides this — margolis-manager.php checks the account against
@@ -1924,6 +2082,7 @@
       </div>
       <h3>${esc(a.name||a.email)}</h3>
       <div class="mgr-meta">${contactLinks(a.name, a.email, a.phone, a.instagram)}</div>
+      ${a.partnerCode?`<div class="mgr-meta">Partner code <b style="font-family:var(--mono);letter-spacing:.12em;color:var(--ink)">${esc(a.partnerCode)}</b></div>`:""}
       <div class="mgr-meta">
         ${(a.genres||[]).length?`Plays <b>${esc(a.genres.join(", "))}</b><br>`:""}
         ${(a.venues||[]).length?`Also at <b>${esc(a.venues.join(", "))}</b><br>`:""}
@@ -3989,7 +4148,7 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
     document.getElementById("secTitle").textContent = manager ? "The DJ desk." : "Your nights.";
     document.getElementById("secSub").textContent = manager
       ? "Approvals, the nights that still owe you something, and everyone who plays here."
-      : "Lineup, flyer, ticket link, and RSVP counts — one place per event.";
+      : "Lineup, flyer, and ticket link — one place per event.";
     localStorage.setItem("margolis-mgr-view", which);
     window.scrollTo({top:0, behavior:"instant"});
   }
