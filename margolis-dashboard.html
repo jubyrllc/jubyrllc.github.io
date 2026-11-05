@@ -485,7 +485,7 @@
       }
       const out = [];
       if(r.parties) out.push(`<span class="door__chip">${r.guests} priority guest${r.guests===1?"":"s"} &middot; ${r.parties} reservation${r.parties===1?"":"s"}</span>`);
-      if(c.parties) out.push(`<span class="door__chip">${c.couches} of 5 couches &middot; ${c.guests} guest${c.guests===1?"":"s"}</span>`);
+      if(c.parties) out.push(`<span class="door__chip">${c.couches} of ${c.total||6} couches &middot; ${c.guests} guest${c.guests===1?"":"s"}</span>`);
       if(r.parties && c.parties) out.push(`<span class="door__chip door__chip--none">${heads} expected</span>`);
       const inDoor = (r.checkedIn||0) + (c.checkedIn||0);
       if(inDoor) out.push(`<span class="door__chip door__chip--live">${inDoor} checked in</span>`);
@@ -510,17 +510,17 @@
         </div>`).join("");
       }
       if((c.list||[]).length){
-        h += `<div class="door__sect">Couches &middot; ${c.couches} of 5</div>`;
+        h += `<div class="door__sect">Couches &middot; ${c.couches} of ${c.total||6}</div>`;
         h += c.list.map(g => `<div class="door__row">
           <b>${esc(g.name)}</b>
           <span class="door__meta">${g.couches} couch${g.couches===1?"":"es"} &middot; ${g.guests} guest${g.guests===1?"":"s"}${g.eta?` &middot; arriving ${esc(g.eta)}`:""}${g.member?" &middot; member":""}${g.checkedIn?` &middot; ${g.checkedIn} in`:""}</span>
           ${g.held?`<span class="door__party">Still at the payment screen &mdash; this one can still fall through.</span>`:""}
         </div>`).join("");
       }
-      /* Couches belong to the DATE, not the listing: five couches serve
+      /* Couches belong to the DATE, not the listing: six couches serve
          whatever is on that night. Said here so nobody reads another
          party's couch as their own booking. */
-      if((c.list||[]).length) h += `<p class="door__note">The five couches are the room's, not this event's &mdash; on a night with two things on, both share them.</p>`;
+      if((c.list||[]).length) h += `<p class="door__note">The six couches are the room's, not this event's &mdash; on a night with two things on, both share them.</p>`;
       return h || `<div class="door__sect">Nothing booked for this night yet</div>`;
     }
   };
