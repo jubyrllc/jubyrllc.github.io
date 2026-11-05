@@ -278,7 +278,7 @@
     text-transform:uppercase;color:var(--muted)}
   .pay-sug__use{margin-left:auto}
 </style>
-<link rel="stylesheet" href="margolis-dashboard-skin.css?v=3">
+<link rel="stylesheet" href="margolis-dashboard-skin.css?v=4">
 </head>
 <body>
 
@@ -401,6 +401,7 @@
               <div id="dreqDates"></div>
               <button type="button" class="djd-readmore" id="dreqAddDate">+ Add another date</button>
             </div>
+            <div id="dreqQuote"></div>
             <p class="djd-err" id="dreqErr" style="margin:8px 0"></p>
             <button type="button" class="btn btn--green" id="dreqSubmit" style="margin-top:10px">Submit request</button>
           </div>
@@ -713,7 +714,10 @@
     if(payload.action==="nightGuests"){
       const ev = s.events.find(e => e.date === payload.date);
       if(!ev || !ev.door) throw "That is not one of your nights.";
-      return {ok:true, door: ev.door};
+      const rows = [];
+      ((ev.door.reserve||{}).list||[]).forEach(g=>rows.push({kind:"priority", name:g.name, email:g.name.split(" ")[0].toLowerCase()+"@example.com", phone:"(215) 555-0142"}));
+      ((ev.door.couch||{}).list||[]).forEach(g=>rows.push({kind:"couch", name:g.name, email:g.name.split(" ")[0].toLowerCase()+"@example.com", phone:"(267) 555-0187"}));
+      return {ok:true, contacts: rows};
     }
     if(payload.action==="myBalance"){ return {ok:true, balance:0, factor:1.34, nights:[]}; }
     if(payload.action==="saveGuestList"){
@@ -1203,8 +1207,8 @@
         <h3>${esc(ev.eventName)}</h3>
         ${withLine}
         <div class="evt__chips">${chips}</div>
-        ${archived?"":`<div class="door" data-door-for="${esc(k)}">${DOOR.chips(ev.door)}${DOOR.any(ev.door)?`<button type="button" class="door__more" data-door="${esc(k)}" data-i="${i}">${doorOpen.has(k)?"Hide names":"See who booked"}</button>`:""}</div>
-        <div class="door__list" data-door-list="${esc(k)}">${doorOpen.has(k)?(doorData[k]?DOOR.list(doorData[k]):`<div class="door__sect">Loading&hellip;</div>`):""}</div>`}
+        ${archived?"":`<div class="door" data-door-for="${esc(k)}">${DOOR.chips(ev.door)}${ev.guestContacts && DOOR.any(ev.door)?`<button type="button" class="door__more" data-door="${esc(k)}" data-i="${i}">${doorOpen.has(k)?"Hide contacts":"Guest contacts"}</button>`:""}</div>
+        <div class="door__list" data-door-list="${esc(k)}">${doorOpen.has(k)?(doorData[k]?guestContactList(doorData[k]):`<div class="door__sect">Loading&hellip;</div>`):""}</div>`}
         ${s.fullyApproved?`<div class="evt__ok" style="width:100%">All approved — the presale is off and guests go straight to your ticket link.</div>`:""}
         ${(s.payout||[]).map(p=> p.reason
           ? `<div class="evt__ok" style="width:100%">${p.netSales?`Net bar sales: $${esc(money(p.netSales))} · `:""}No check this time: ${esc(p.reason==="bar_minimum"?"bar minimum not met":p.reason==="no_agreement"?"no payout agreement":p.reason)}${p.shortfall!=null?` · short $${esc(money(p.shortfall))} of the $${esc(money(p.minimum))} minimum`:""}${p.owed?` · owed $${esc(money(p.owed))}`:""}</div>`
@@ -1303,11 +1307,67 @@
     </div>`).join("");
     box.querySelectorAll("[data-dreq-date]").forEach(el=>el.addEventListener("input", ()=>{
       dreqDateRows[+el.dataset.dreqDate] = el.value;
+      updateDreqQuote();
     }));
     box.querySelectorAll("[data-dreq-rm]").forEach(b=>b.addEventListener("click", ()=>{
       dreqDateRows.splice(+b.dataset.dreqRm, 1);
-      renderDreqDates();
+      renderDreqDates(); updateDreqQuote();
     }));
+  }
+  /* What each requested date would carry (Ruby, 2026-11-05: "let them know
+     what the bar minimum would be based on what they select, and remind
+     them of the $500 on top of bar minimum for kitchen open. if its
+     10p-2a, its $500 that they have to pay us, not a bar minimum
+     addition"). Margolis mirrors computeMinimum() in margolis.events
+     script.js (one ladder, 2026-08-28); the Patio and Fabrika read their
+     own host pages. A quote, not a contract: the confirmation sets it. */
+  const DREQ_MONEY = n => "$" + Number(n).toLocaleString("en-US");
+  function dreqMins(t){ const m = /^(\d{1,2}):(\d{2})/.exec(t||""); return m ? (+m[1])*60 + (+m[2]) : null; }
+  function dreqQuoteOne(venue, date, start, end, kitchen){
+    const d = new Date(date + "T12:00:00"), dow = d.getDay();
+    const fri = dow === 5, sat = dow === 6, wknd = fri || sat;
+    if(venue.indexOf("Fabrika") === 0){
+      return {min: sat ? 9000 : fri ? 7000 : 5000, label: "Fabrika food and beverage minimum"};
+    }
+    if(venue.indexOf("Patio") >= 0){
+      if(sat) return {min: 2500, label: "Patio minimum, kitchen included"};
+      if(fri) return {min: 2000, label: "Patio minimum, kitchen included"};
+      if(kitchen) return {min: 2000, label: "Patio minimum with the kitchen open"};
+      return {min: (dow === 0 || dow === 4) ? 1500 : 1000, label: dow === 0 || dow === 4 ? "Patio minimum" : "Patio minimum, one bartender ($1,500 with two)"};
+    }
+    if(dow === 1) return {err: "Mondays are not bookable at Margolis (a standing residency)."};
+    const s = dreqMins(start), e0 = dreqMins(end);
+    let late = false, long = false;
+    if(s !== null){
+      let e = e0; if(e !== null && e <= s) e += 1440;
+      late = wknd && (s >= 21*60 || (e !== null && e > 21*60));
+      long = !late && e !== null && (e - s) / 60 > 4.001;
+    }
+    if(late) return {min: 5000, label: "Friday/Saturday late night", kitchenFee: kitchen ? 500 : 0};
+    let min = wknd ? 2000 : 1500;
+    if(long) min += 500;
+    if(kitchen) min += 500;
+    return {min, label: (wknd ? "Friday/Saturday, finishing by 9 PM" : "Sunday to Thursday") + (long ? ", over four hours (+$500)" : "") + (kitchen ? ", kitchen open (+$500)" : "")};
+  }
+  function updateDreqQuote(){
+    const box = document.getElementById("dreqQuote");
+    if(!box) return;
+    const v = document.querySelector('input[name="dreqVenue"]:checked');
+    const venue = v ? v.value : "Margolis (inside)";
+    const start = (document.getElementById("dreqStart")||{}).value || "";
+    const end = (document.getElementById("dreqEnd")||{}).value || "";
+    const kitchen = ((document.getElementById("dreqFood")||{}).value || "") === "Kitchen service";
+    const dates = dreqDateRows.filter(Boolean).sort();
+    if(!dates.length){ box.innerHTML = ""; return; }
+    const rows = dates.map(dt => {
+      const q = dreqQuoteOne(venue, dt, start, end, kitchen);
+      const day = new Date(dt + "T12:00:00").toLocaleDateString("en-US", {weekday:"short", month:"short", day:"numeric"});
+      if(q.err) return `<div class="dq__row"><span>${esc(day)}</span><span class="dq__bad">${esc(q.err)}</span></div>`;
+      return `<div class="dq__row"><span>${esc(day)}</span><span><b>${DREQ_MONEY(q.min)}</b> <em>${esc(q.label)}</em>${q.kitchenFee ? `<br><b>+ ${DREQ_MONEY(q.kitchenFee)}</b> <em>kitchen fee, paid to us (not part of the bar minimum)</em>` : ""}</span></div>`;
+    }).join("");
+    const isMargolis = venue.indexOf("Patio") < 0 && venue.indexOf("Fabrika") !== 0;
+    box.innerHTML = `<div class="dq"><div class="dq__h">Bar minimum for each date</div>${rows}
+      <p class="dq__note">${isMargolis ? "Kitchen open adds $500 on top of the bar minimum. On a Friday or Saturday late night, the kitchen is a $500 fee you pay us instead." : "From the room's own minimums."}${start ? "" : " Add your start and end time for the exact figure."} Confirmed in writing when we approve each date.</p></div>`;
   }
   function dreqStatusPill(status){
     if(status==="approved") return `<span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--green)">Approved</span>`;
@@ -1371,7 +1431,8 @@
     renderDreqDates();
     updateDreqVenueNote();
     loadPastParties();
-    document.querySelectorAll('input[name="dreqVenue"]').forEach(r=>r.addEventListener("change", updateDreqVenueNote));
+    document.querySelectorAll('input[name="dreqVenue"]').forEach(r=>r.addEventListener("change", ()=>{ updateDreqVenueNote(); updateDreqQuote(); }));
+    ["dreqStart","dreqEnd","dreqFood"].forEach(id=>{ const el=document.getElementById(id); if(el){ el.addEventListener("input", updateDreqQuote); el.addEventListener("change", updateDreqQuote); } });
     document.getElementById("dreqParty").addEventListener("change", e=>{
       if(e.target.value==="new"){ applyPartyFields(null); return; }
       const p = (PAST_PARTIES||[])[+e.target.value];
@@ -1776,8 +1837,8 @@
     const { box, list } = doorEls(k);
     if(box && ev){
       const i = EVENTS.indexOf(ev);
-      box.innerHTML = DOOR.chips(ev.door) + (DOOR.any(ev.door)
-        ? `<button type="button" class="door__more" data-door="${esc(k)}" data-i="${i}">${doorOpen.has(k)?"Hide names":"See who booked"}</button>` : "");
+      box.innerHTML = DOOR.chips(ev.door) + (ev.guestContacts && DOOR.any(ev.door)
+        ? `<button type="button" class="door__more" data-door="${esc(k)}" data-i="${i}">${doorOpen.has(k)?"Hide contacts":"Guest contacts"}</button>` : "");
       const btn = box.querySelector("[data-door]");
       if(btn) btn.addEventListener("click", async ()=>{
         if(doorOpen.has(k)){ doorOpen.delete(k); paintDoor(k); return; }
@@ -1787,9 +1848,25 @@
     }
     if(list){
       list.innerHTML = doorOpen.has(k)
-        ? (doorData[k] ? DOOR.list(doorData[k]) : `<div class="door__sect">Loading&hellip;</div>`)
+        ? (doorData[k] ? guestContactList(doorData[k]) : `<div class="door__sect">Loading&hellip;</div>`)
         : "";
     }
+  }
+
+  /* Priority + couch guests a host may contact (Ruby, 2026-11-05): name,
+     email and phone, on Margolis ticketing nights only, once the switch in
+     margolis-dj-core.php is on. The server decides all three. */
+  function guestContactList(rows){
+    if(!Array.isArray(rows) || !rows.length) return `<div class="door__sect">No Priority or couch guests yet</div>`;
+    const sect = (kind, label) => {
+      const rs = rows.filter(r => r.kind === kind);
+      if(!rs.length) return "";
+      /* Folded by default (Ruby, 2026-11-05): a count to tap open. */
+      return `<details class="door__fold"><summary class="door__sect">${label} &middot; ${rs.length}</summary>` + rs.map(r => `<div class="door__row">
+          <b>${esc(r.name)}</b>
+          <span class="door__meta">${r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a>` : ""}${r.email && r.phone ? " &middot; " : ""}${r.phone ? `<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>` : ""}</span></div>`).join("") + `</details>`;
+    };
+    return sect("priority", "Priority Reservations") + sect("couch", "Couches");
   }
 
   async function loadDoor(ev){
@@ -1797,7 +1874,7 @@
     const k = keyOf(ev);
     try{
       const out = await api(DASH_URL, {action:"nightGuests", date:ev.date, eventName:ev.eventName});
-      doorData[k] = out.door;
+      doorData[k] = out.contacts || [];
     }catch(e){
       if(e === "auth") return;
       doorData[k] = null;
@@ -4285,5 +4362,6 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
 </script>
 <script src="https://jubyr.tools/assets/js/flyer-crop.js?v=1"></script>
 <script src="https://jubyr.tools/assets/js/face-crop.js?v=1"></script>
+<script src="https://jubyr.tools/assets/js/date-pop.js?v=1"></script>
 </body>
 </html>
