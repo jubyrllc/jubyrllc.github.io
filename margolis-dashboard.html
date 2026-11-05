@@ -278,7 +278,7 @@
     text-transform:uppercase;color:var(--muted)}
   .pay-sug__use{margin-left:auto}
 </style>
-<link rel="stylesheet" href="margolis-dashboard-skin.css?v=1">
+<link rel="stylesheet" href="margolis-dashboard-skin.css?v=3">
 </head>
 <body>
 
@@ -365,9 +365,7 @@
         <details class="djd-prof" id="dateReqBox" style="margin-top:18px">
           <summary>Request additional dates</summary>
           <div class="djd-prof__body">
-            <p class="djd-note" style="margin:0 0 14px">Run a night regularly but it's not on the
-            calendar yet? Enter it once and list every date you'd like &mdash; Margolis reviews and
-            confirms each date individually, so approving one doesn't approve them all.</p>
+            <p class="djd-note" style="margin:0 0 14px">List every date you want. We confirm each one separately.</p>
             <div class="ifield" id="dreqPartyWrap" hidden><label>Same party as&hellip;</label>
               <select id="dreqParty"><option value="new">A new party</option></select>
               <p class="djd-note" style="margin-top:6px">Picks up the name, description, times, food plan, and admission model from that night &mdash; still yours to change below.</p>
@@ -939,7 +937,7 @@
         ? `Your profile`
         : `Profile completion <span class="djd-bar"><i style="width:${p}%"></i></span> <span style="font-family:'IBM Plex Mono',monospace;font-size:13px">${p}%</span>`}</summary>
       <div class="djd-prof__body">
-        ${!complete?`<p class="djd-note" style="margin:0 0 14px"><strong>Until your profile hits 100%</strong>, your residency stays unlocked and your door charge is not paid: we can't properly file our taxes without your W9. We'll keep reminding you daily — finishing takes a few minutes.</p>`:""}
+        ${!complete?`<p class="djd-note" style="margin:0 0 14px"><strong>All payouts are held until this hits 100%.</strong> We need your W9 to file taxes.</p>`:""}
         ${editing?`<ul class="djd-check">${items.filter(([done])=>!done || profileEditMode).map(([done,label])=>`<li class="${done?"done":""}"><span class="mk">${done?"&#10003;":"&#8226;"}</span>${label}</li>`).join("")}</ul>`:""}
         ${claim?`<p class="djd-note" style="margin:0 0 4px"><strong>Residency:</strong> ${
           claim.status==="locked"
@@ -948,24 +946,23 @@
         ${(!account.hasFacePhoto || profileEditMode)?`<div class="djd-task">
           <h4>Profile photo</h4>
           <p class="djd-note" style="margin:0 0 12px">${account.hasFacePhoto
-            ? "Your photo is on file — upload a replacement below if you'd like to update it."
-            : "No rush on this — we want a good photo, not a hurried one. A high quality, professional picture of just you, no group shots."}</p>
+            ? "On file. Upload a new one to replace it."
+            : "A good photo of just you. No group shots."}</p>
           <div class="ifield"><label>Profile photo${account.hasFacePhoto?"":` <span class="req">*</span>`}</label>
             <input type="file" id="ppPhotoFace" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
-            <p class="help">${account.hasFacePhoto?"On file — pick a new file to replace it. ":""}This becomes your profile icon.</p></div>
+            <p class="help">This is your profile icon.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePhotos">${account.hasFacePhoto?"Save photo":"Upload photo"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
         ${(!(account.payableTo && account.zelle) || profileEditMode)?`<div class="djd-task">
           <h4>Payout info</h4>
-          <p class="djd-note" style="margin:0 0 12px"><strong>Door payments must go through Zelle.</strong>
-          If you do not have one, please set one up.</p>
+          <p class="djd-note" style="margin:0 0 12px"><strong>Door payments go through Zelle.</strong></p>
           <div class="ifield"><label>Make checks payable to <span class="req">*</span></label><input type="text" id="ppPayable" value="${esc(account.payableTo||"")}" placeholder="(Full Name or Business Name)"></div>
           <div class="ifield"><label>Zelle <span class="req">*</span></label><input type="text" id="ppZelle" value="${esc(account.zelle||"")}" placeholder="Phone number, email, or Zelle tag"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePayout">Save payout info <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
         ${(!account.agreementsSigned || profileEditMode)?`<div class="djd-task">
           <h4>The agreement stack</h4>
-          <p class="djd-note" style="margin:0 0 12px">${account.agreementsSigned?"Already signed and on file — resign below only if you need to update your legal name.":""} The same terms every Margolis booking runs on — the
+          <p class="djd-note" style="margin:0 0 12px">${account.agreementsSigned?"Signed. Re-sign only to change your legal name.":""} Read the
           <button type="button" class="djd-policy" data-policy-open="policyPhilosophy">booking philosophy and payout model</button>,
           the <button type="button" class="djd-policy" data-policy-open="policyMinimums">bar minimum policy</button>, and the
           <button type="button" class="djd-policy" data-policy-open="policyTerms">full event terms</button>.</p>
@@ -988,10 +985,9 @@
                on every visit. ackNights in margolis-dj-auth.php records it. -->
           <h4>How your nights work</h4>
           <ol class="djd-rules">
-            <li><strong>Every night has three parts</strong>, each on that night's card: your lineup (every DJ, with a link to their Instagram), your flyer, and your ticket link. Each needs Margolis approval.</li>
-            <li><strong>Due at least 10 days before your night.</strong> Earlier is always welcome.</li>
-            <li><strong>Until your ticket link is up</strong>, your night shows a waitlist and we direct all inquiries to our Priority Reservation. Once it's up, guests are sent to your link, and everyone on the waitlist gets an email with it.</li>
-            <li><strong>Hosting with someone?</strong> Add them on the night's Partners step with their profile code.</li>
+            <li><strong>Each night needs a lineup, flyer, and ticket link</strong>, due 10 days out. We approve each.</li>
+            <li><strong>No ticket link yet?</strong> Your night shows a waitlist, and inquiries go to our Priority Reservation.</li>
+            <li><strong>Partners</strong> are added by their profile code.</li>
           </ol>
           <div class="djd-w9 djd-w9--warn" style="margin:4px 0 14px">
             <strong>Your bar payout is held until your lineup, flyer, and ticket link are uploaded.</strong><br>
@@ -1174,7 +1170,7 @@
             <input type="url" data-f="luIg" placeholder="instagram.com/theirname" autocapitalize="none" autocorrect="off" inputmode="url">
             <p class="help">Open their profile and copy the link.</p></div>
           <div class="intake__nav" style="margin-bottom:8px"><button type="button" class="btn" data-save="lineupAdd" data-i="${i}">Add this act +</button></div>
-          <p class="help">Add each act one at a time — every event needs a fresh lineup, even for residencies; this is what we promote. Due at least 10 days before your night; earlier is always welcome.</p>
+          <p class="help">One act at a time. A fresh lineup every night, residencies included. Due 10 days out.</p>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="lineup" data-i="${i}">Submit lineup <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `)}
         </div>
@@ -1183,7 +1179,7 @@
           <div class="ifield"><label>Event flyer <span class="req">*</span></label>
             <input type="file" data-f="flyer" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
             ${s.flyerFile.value?`<p class="help">On file: ${esc(s.flyerFile.value)}</p>`:""}
-            <p class="help">JPG or PNG, 4:5 portrait (e.g. 1080×1350), up to 10 MB. Any other shape opens a crop box. <strong>No AI-generated flyers — they will not be approved.</strong> Due at least 10 days before your night. A new upload replaces the old one and goes back into review.</p></div>
+            <p class="help">JPG or PNG, 4:5 portrait (1080×1350), up to 10 MB. <strong>No AI flyers.</strong> Due 10 days out. A new upload goes back into review.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="flyer" data-i="${i}">Upload flyer <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `)}
         </div>
@@ -1191,7 +1187,7 @@
           ${gatedBody("ticket", s.ticketLink, i, k, "Your ticket link wasn't approved.", `
           <div class="ifield"><label>Ticket link <span class="req">*</span></label>
             <input type="url" data-f="ticket" placeholder="https://posh.vip/e/your-event" value="${esc(s.ticketLink.value)}">
-            <p class="help">Guests get sent here instead of our waitlist. Once your link is approved, everyone who joined the waitlist for this night gets an email with it.</p></div>
+            <p class="help">Once approved, guests go here instead of the waitlist, and the waitlist gets emailed.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="ticket" data-i="${i}">Submit link <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `)}
         </div>
@@ -1199,7 +1195,7 @@
              below and the manager view's RSVP line stay, so counts a host
              already entered still show; nothing new can be typed. -->
         <div class="evt__pane ${tab==="partners"?"on":""}" data-pane="partners">
-          <p class="evt__status">Hosting this night with someone? Add them with <strong>their profile code</strong>. They'll see this night and its sales on their own dashboard.</p>
+          <p class="evt__status">Add a partner by <strong>their profile code</strong>. They'll see this night and its sales.</p>
           ${partnerNote[keyOf(ev)]?`<p class="evt__status">${esc(partnerNote[keyOf(ev)])}</p>`:""}
           ${(s.partners||[]).length?`<p class="evt__status"><strong>On this night:</strong> ${(s.partners||[]).map(p=>esc(p.name)+(p.instagram?` (@${esc(p.instagram)})`:"")).join(", ")}</p>`:""}
           ${s.solo?`<div class="evt__collapse"><span class="lbl">No partner — solo night</span><button type="button" class="djd-readmore" data-solo-undo="1" data-i="${i}">Actually, add one</button></div>`:`
@@ -1207,7 +1203,7 @@
             <input type="checkbox" data-f="soloCheck" style="margin-top:3px">No partner for this night — I'm running it solo.
           </label>
           <div class="intake__nav" style="margin-bottom:20px"><button type="button" class="btn" data-save="solo" data-i="${i}">Confirm solo night</button></div>
-          <div class="ifield"><label>Partner's profile code <span class="req">*</span></label><input type="text" data-f="pcode" placeholder="ABC-234" maxlength="9" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" style="font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase"><p class="help">Your partner finds it by logging in at <a href="https://jubyr.com/margolis-login" target="_blank" rel="noopener">jubyr.com/margolis-login</a>. It's the short code next to their name at the top of their dashboard. No profile yet? They create one there first.</p></div>
+          <div class="ifield"><label>Partner's profile code <span class="req">*</span></label><input type="text" data-f="pcode" placeholder="ABC-234" maxlength="9" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" style="font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase"><p class="help">It's next to their name on their dashboard. No profile? They <a href="https://jubyr.com/margolis-login" target="_blank" rel="noopener">sign up</a> first.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="partner" data-i="${i}">Add partner <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `}
         </div>
@@ -1344,7 +1340,7 @@
     const solo = [], partnered = [];
     EVENTS.forEach((ev,i)=>{ (ev.partnered ? partnered : solo).push([ev,i]); });
     if(!EVENTS.length){
-      html += `<p class="djd-note" style="margin-top:20px">No upcoming nights on your account yet. Once a booking is confirmed (or your residency dates hit the calendar), they show up here automatically.</p>`;
+      html += `<p class="djd-note" style="margin-top:20px">No upcoming nights yet. Confirmed bookings and residency dates show up here.</p>`;
     } else if(!partnered.length){
       html += `<div class="djd-section">Upcoming</div>`;
       html += solo.map(([ev,i])=>eventCard(ev,i,false)).join("");
@@ -1648,7 +1644,7 @@
           ${r.door!=null ? `<div class="djd-ns__d"></div><div class="djd-ns__m" title="Margolis Door Charge rung during your party">door ${payMoney(r.door)}</div>` : ``}
           ${nsHours(r.hours)}
         </li>`).join("")}</ul>
-        <p class="djd-note" style="margin-top:14px">Margolis nights. Net bar sales off the register: no tax, tips or service charge. Co-hosts see the same figure. Minimums before Aug 28, 2026 only where one was set. Door, from Oct 22, 2026: what was rung as the Margolis Door Charge during your party. Your door charge is not paid until your profile is set up and your W9 is on file: we can't properly file our taxes without it.</p>
+        <p class="djd-note" style="margin-top:14px">Margolis nights. Net bar sales off the register: no tax, tips or service charge. Co-hosts see the same figure. Minimums before Aug 28, 2026 only where one was set. Door, from Oct 22, 2026: what was rung as the Margolis Door Charge during your party. All payouts are held until your profile is complete.</p>
       </div></details>`;
   }
 

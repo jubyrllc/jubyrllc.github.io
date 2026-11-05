@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DJ &amp; Host Login — Margolis</title>
-<meta name="description" content="Log in to manage your flyer, ticket link, and RSVP counts for your Margolis nights.">
+<meta name="description" content="Log in to manage your lineup, flyer, and ticket link for your Margolis nights.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/png" href="assets/jubyr-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=43">
 <style>
   .dj-wrap{max-width:440px;margin:0 auto}
@@ -29,30 +29,24 @@
   .dj-multi button.on{background:var(--green);border-color:var(--green);color:#fff}
   .dj-done{text-align:center;padding:20px 0}
   .dj-done .mark{width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 18px}
-  /* full-screen intro wizard */
-  .wiz{min-height:calc(100vh - 180px);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 24px 28px;text-align:center}
-  .wiz__inner{max-width:560px;width:100%}
-  .wiz__kicker{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--green);display:block;margin-bottom:16px}
-  .wiz__step{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;color:var(--muted);display:block;margin-bottom:10px}
-  .wiz__inner h2{font-size:clamp(26px,4.5vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0 0 18px}
-  .wiz__inner p{font-size:16px;line-height:1.65;color:var(--muted);margin:0 0 14px;text-align:left}
-  .wiz__inner p strong{color:var(--ink)}
-  .wiz__list{text-align:left;margin:0 0 14px;padding:0;list-style:none}
-  .wiz__list li{position:relative;padding:10px 0 10px 26px;border-bottom:1px dashed var(--line);font-size:15px;line-height:1.55;color:var(--muted)}
-  .wiz__list li:last-child{border-bottom:none}
-  .wiz__list li::before{content:"";position:absolute;left:4px;top:17px;width:7px;height:7px;border-radius:50%;background:var(--green)}
-  .wiz__list li strong{color:var(--ink)}
-  .wiz__nav{display:flex;align-items:center;gap:18px;margin-top:34px}
-  .wiz__dots{display:flex;gap:7px}
-  .wiz__dot{width:8px;height:8px;border-radius:50%;background:var(--line);transition:background .15s ease}
-  .wiz__dot.on{background:var(--green)}
-  .wiz__skip{margin-top:22px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:1px dashed var(--line);padding-bottom:2px}
-  .wiz__skip:hover{color:var(--green);border-color:var(--green)}
-  .wiz__nav .btn[hidden]{display:none}
-  .wiz__more{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--green);background:none;border:none;cursor:pointer;border-bottom:1px dashed var(--green);padding:0 0 2px}
 </style>
+<link rel="stylesheet" href="margolis-dashboard-skin.css?v=3">
 </head>
 <body>
+
+<!-- margolis.events top bar (2026-11-04 reskin, same as the dashboard).
+     The old announce strip and Jubyr nav stay in the markup, hidden by the
+     skin, because the burger script still binds to them. -->
+<div class="mgx-bar">
+  <div class="mgx-bar__in">
+    <a class="mgx-bar__home" href="https://margolis.events/" aria-label="margolis.events home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg></a>
+    <a class="mgx-bar__mark" href="https://margolis.events/margolis">Margolis</a>
+    <div class="mgx-bar__right">
+      <a class="mgx-hide-sm" href="https://margolis.events/calendar">Calendar</a>
+      <a href="https://margolis.events/host-a-public-event">Host an event</a>
+    </div>
+  </div>
+</div>
 
 <div class="announce">
   <span class="mono">Margolis &middot; 9 W Wildey St &middot; Fishtown, Philadelphia</span>
@@ -77,35 +71,20 @@
 
   <main id="top">
 
-    <!-- ===== full-screen click-through intro (cold load only) ===== -->
-    <section class="box" id="wizBox">
-      <div class="wiz">
-        <div class="wiz__inner" id="wizSlide"></div>
-        <div class="wiz__nav">
-          <button type="button" class="btn btn--ghost" id="wizBack" hidden>Back</button>
-          <div class="wiz__dots" id="wizDots" aria-hidden="true"></div>
-          <button type="button" class="btn btn--green" id="wizNext">Next steps <span class="arw" aria-hidden="true">&gt;</span></button>
-        </div>
-        <button type="button" class="wiz__skip" id="wizSkip">Already set up? Skip to login</button>
-      </div>
-    </section>
-
-    <section class="box" id="loginSection" hidden>
-      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.65)), url('assets/bg-lounge-dark.jpg')">
-        <span class="tag">DJs &amp; hosts &middot; Your Margolis account</span>
+    <section class="box" id="loginSection">
+      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.12), rgba(12,12,12,0.3)), url('assets/media/margolis/photo-25.jpg')">
+        <span class="tag">DJs &amp; hosts</span>
         <h2>One login for your nights.</h2>
-        <p>Lineup, flyer, ticket link, and RSVP counts &mdash; managed in one
-        place for every event you play with us.</p>
+        <p>Lineup, flyer, and ticket link, in one place.</p>
       </div>
 
       <div class="mg-pad dj-wrap" id="login" style="padding-top:34px;padding-bottom:44px;">
         <p class="dj-err" id="djErr"></p>
 
-        <!-- ===== sign up (default for the cold-screen audience) ===== -->
-        <form id="stepSignup">
+        <!-- ===== sign up (opened by the Sign up link or #signup) ===== -->
+        <form id="stepSignup" hidden>
           <h3 style="margin-bottom:6px">Create your account</h3>
-          <p class="dj-note" style="margin:0 0 18px">Just the essentials — the rest of your profile
-          comes after. Your account sits in awaiting review until Margolis approves it.</p>
+          <p class="dj-note" style="margin:0 0 18px">The rest of your profile comes after. We review new accounts.</p>
           <div class="ifield"><label>First name <span class="req">*</span></label><input type="text" id="suFirstName" autocomplete="given-name"></div>
           <div class="ifield"><label>Last name <span class="req">*</span></label><input type="text" id="suLastName" autocomplete="family-name"></div>
           <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="suEmail" autocomplete="email" placeholder="you@email.com"></div>
@@ -129,19 +108,18 @@
         </form>
 
         <!-- ===== login ===== -->
-        <form id="stepLogin" hidden>
+        <form id="stepLogin">
           <div class="ifield"><label>Email or mobile <span class="req">*</span></label><input type="text" id="loginEmail" autocomplete="username" inputmode="email" placeholder="you@email.com or (215) 555-1234"></div>
           <div class="ifield"><label>Password <span class="req">*</span></label><input type="password" id="loginPassword" autocomplete="current-password"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="btnLogin">Log in <span class="arw" aria-hidden="true">&gt;</span></button></div>
-          <p class="dj-note">Booked with us before? Check the email we sent when your booking was
-          confirmed — it has a temporary password. New here? <a href="#login" id="toSignup">Sign up</a>.
-          Forgot your password? <a href="/margolis-reset">Reset it</a>.</p>
+          <p class="dj-note">Booked before? Your temporary password is in your confirmation email.<br>
+          <a href="#signup" id="toSignup">Sign up</a> · <a href="/margolis-reset">Reset password</a></p>
         </form>
 
         <!-- ===== forced password set (first login) ===== -->
         <form id="stepSetPassword" hidden>
           <h3 style="margin-bottom:6px">Set your password</h3>
-          <p class="dj-note" style="margin-top:0 0 18px">You logged in with a temporary password — pick a real one now.</p>
+          <p class="dj-note" style="margin-top:0 0 18px">Pick your own password.</p>
           <div class="ifield"><label>New password <span class="req">*</span></label><input type="password" id="newPassword" autocomplete="new-password" placeholder="At least 8 characters"></div>
           <div class="ifield"><label>Confirm password <span class="req">*</span></label><input type="password" id="newPassword2" autocomplete="new-password"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="btnSetPassword">Save password <span class="arw" aria-hidden="true">&gt;</span></button></div>
@@ -150,7 +128,7 @@
         <!-- ===== short profile completion ===== -->
         <form id="stepProfile" hidden>
           <h3 style="margin-bottom:6px">Quick profile</h3>
-          <p class="dj-note" style="margin:0 0 18px">Just the basics for now — you can add rates and equipment later if you're open to private bookings.</p>
+          <p class="dj-note" style="margin:0 0 18px">Just the basics for now.</p>
           <div class="ifield"><label>First name <span class="req">*</span></label><input type="text" id="pFirstName" autocomplete="given-name"></div>
           <div class="ifield"><label>Last name <span class="req">*</span></label><input type="text" id="pLastName" autocomplete="family-name"></div>
           <div class="ifield"><label>Phone</label><input type="tel" id="pPhone" autocomplete="tel" placeholder="10-digit number"></div>
@@ -171,10 +149,9 @@
           <div class="ifield">
             <label>Other venues you primarily DJ at</label>
             <div class="dj-multi" id="venueOpts"></div>
-            <p class="help">Pick all that apply — we're always adding more to this list.</p>
+            <p class="help">Pick all that apply.</p>
           </div>
-          <p class="dj-note" style="margin:0 0 18px">Your profile photo is waiting on your dashboard.
-          Upload a high quality, professional photo of just you (no group shots). No rush, we want a good one, not a hurried one.</p>
+          <p class="dj-note" style="margin:0 0 18px">Add your photo on your dashboard: just you, no group shots.</p>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="btnProfile">Save profile <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </form>
 
@@ -187,30 +164,6 @@
       </div>
     </section>
   </main>
-</div>
-
-<div class="mgmodal" id="presaleModal" role="dialog" aria-modal="true" aria-labelledby="presaleModalTitle">
-  <div class="mgmodal__card">
-    <button type="button" class="mgmodal__close" data-presale-close aria-label="Close">&times;</button>
-    <span class="mgmodal__kicker">The presale, in full</span>
-    <h3 id="presaleModalTitle">Why we sell entry before your promo is ready.</h3>
-    <p>Guests who love Margolis commit early &mdash; often before a night&rsquo;s
-    lineup, flyer, or ticket link exists. Without a presale, those guests drift
-    to other plans and the night loses them for good. The $20 presale simply
-    holds them for your event while your promo comes together, so neither you
-    nor the venue loses potential guests while we wait.</p>
-    <p><strong>It never touches your money.</strong> You keep 100% of your
-    ticket sales and door sales, always. The presale ends the moment your
-    lineup, flyer, and ticket link are approved &mdash; from then on every
-    guest is sent to your link. Presale guests are venue-loyal turnout added
-    on top of your crowd, not taken out of it.</p>
-    <p><strong>Need a night without presale?</strong> For parties catered to
-    strict demographics &mdash; LGBTQ-only nights, guaranteed sell-outs (with
-    proof), private events, and similar &mdash; DJs and hosts may request that
-    no presale run for their night. Margolis reserves the right to deny the
-    request within reason. Ask by replying to your confirmation email or
-    writing <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>
-  </div>
 </div>
 
 <footer class="footer">
@@ -325,14 +278,6 @@
     throw "Demo: unsupported action " + payload.action;
   }
 
-  // presale policy modal — delegated, since the wizard re-renders its slides
-  document.addEventListener("click", e=>{
-    const open = e.target.closest("[data-presale-open]");
-    const modal = document.getElementById("presaleModal");
-    if(open){ e.preventDefault(); modal.classList.add("show"); return; }
-    if(e.target===modal || e.target.closest("[data-presale-close]")) modal.classList.remove("show");
-  });
-  document.addEventListener("keydown", e=>{ if(e.key==="Escape") document.getElementById("presaleModal").classList.remove("show"); });
   let profileType = "";
   let profileGenres = [];
   let profileVenues = [];
@@ -490,99 +435,12 @@
     btn.disabled = false; btn.innerHTML = `Create my account <span class="arw" aria-hidden="true">&gt;</span>`;
   });
 
-  // ---------- full-screen intro wizard ----------
-  // First visit walks through the whole process one screen at a time.
-  // Once finished (or skipped), this device goes straight to login.
-  const INTRO_KEY = "margolis-dj-intro-done";
-  const SLIDES = [
-    { kicker:"Margolis · Jubyr LLC", step:"", title:"Welcome to the new DJ & host platform.",
-      html:`<p>One login now runs everything for your nights at Margolis: your <strong>event lineup</strong>, your <strong>flyer</strong>, your <strong>ticket link</strong>, and your <strong>RSVP counts</strong> — for one-off bookings and residencies alike. It replaces the old flyer and RSVP forms entirely.</p>
-      <p>Click through the next steps — the whole process, start to finish, takes two minutes to read.</p>` },
-    { kicker:"How it works", step:"Step 1 of 6", title:"Booking your night.",
-      html:`<ul class="wiz__list">
-        <li><strong>Check the calendar and submit the booking form</strong> at jubyr.com/bookings — availability, payouts, and policies are all there.</li>
-        <li><strong>Margolis reviews and confirms your date.</strong> Bookings confirm in the order forms are received.</li>
-        <li><strong>Your confirmation email arrives</strong> with every detail of your night in writing.</li>
-      </ul>` },
-    { kicker:"How it works", step:"Step 2 of 6", title:"Your account makes it official.",
-      html:`<p>The moment your first booking is confirmed, your account is created automatically. Your login and a temporary password land in your inbox. Log in, set your own password, and complete your quick profile: DJ or host, your genres, and the other venues you play. Then, from your dashboard, add <strong>a profile photo</strong> when you have a good one: a high quality, professional photo of just you (your profile icon, no group shots). No rush on the photo, we would rather wait for a great one.</p>
-      <p><strong>Your night is not officially in the books until your profile is complete.</strong></p>
-      <p>Already have a residency with us? Your account works the same way — check your email for credentials, or write <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a> and we'll set you up.</p>` },
-    { kicker:"How it works", step:"Step 3 of 6", title:"Hosting with a partner?",
-      html:`<p><strong>Every partner on a night needs their own Margolis profile</strong> — residency or one-off, the night isn't official until everyone running it has one.</p>
-      <ul class="wiz__list">
-        <li><strong>Partner already has a profile?</strong> Type their name and Instagram handle on that night's Partners tab and they're linked automatically.</li>
-        <li><strong>Partner is new?</strong> Add their email too — a profile is created for them on the spot and their login is sent straight to their inbox.</li>
-        <li><strong>Solo nights and partnered nights stay separate</strong> on your dashboard, so a residency with a partner never mixes with your own events.</li>
-      </ul>` },
-    { kicker:"How it works", step:"Step 4 of 6", title:"Before every night.",
-      html:`<p>Fresh for every event — residencies included — you submit three things:</p>
-      <ul class="wiz__list">
-        <li><strong>Your DJ lineup</strong> for that night — this is what we promote.</li>
-        <li><strong>Your event flyer</strong> — PDF, JPG, or PNG.</li>
-        <li><strong>Your ticket link</strong> — Posh, Eventbrite, wherever you sell.</li>
-      </ul>
-      <p>Each one gets a quick Margolis approval so promo stays clean. Swapping something already approved sends it back for re-approval.</p>
-      <p><strong>All three are due at least 10 days before your night</strong> — you can submit them any time earlier. And no AI-generated flyers — they will not be approved.</p>` },
-    { kicker:"How it works", step:"Step 5 of 6", title:"The presale rule.",
-      html:`<p>Until your lineup, flyer, and ticket link are <strong>all approved</strong>, our $20 presale stays live for your night — so no guest who wants to be there misses out while things are pending.</p>
-      <p>The moment all three clear, guests are sent to your ticket link instead. <strong>You keep 100% of your ticket and door sales, always.</strong></p>
-      <p><button type="button" class="wiz__more" data-presale-open>Read the full presale policy &gt;</button></p>` },
-    { kicker:"How it works", step:"Step 6 of 6", title:"Counting down — and rebooking.",
-      html:`<p><strong>Leading up to your night:</strong> update your free RSVP and tickets-sold counts 3 days out, 2 days out, and day of — we remind you each time. Straight numbers only; the Posh scanner shows us exact ticket sales anyway.</p>
-      <p><strong>Rebooking is even easier:</strong> residency dates appear on your dashboard automatically. Booking another one-off night? Submit the booking form again — the new night attaches to your existing account the moment it's confirmed.</p>
-      <p><strong>Getting paid:</strong> your door payment or bar check is not processed until your W9 is on your profile — upload it once on your dashboard and it covers every event.</p>` },
-    { kicker:"That's the whole system", step:"", title:"You're ready.",
-      html:`<p>Questions at any point, just reply to any of our emails or write <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>. See you in the booth.</p>` },
-  ];
-  let wizIndex = 0;
-  const wizBox = document.getElementById("wizBox");
-  const loginSection = document.getElementById("loginSection");
-
-  function renderWiz(){
-    const s = SLIDES[wizIndex];
-    document.getElementById("wizSlide").innerHTML =
-      `<span class="wiz__kicker">${s.kicker}</span>` +
-      (s.step ? `<span class="wiz__step">${s.step}</span>` : "") +
-      `<h2>${s.title}</h2>` + s.html;
-    document.getElementById("wizDots").innerHTML =
-      SLIDES.map((_,i)=>`<span class="wiz__dot ${i<=wizIndex?"on":""}"></span>`).join("");
-    document.getElementById("wizBack").hidden = wizIndex === 0;
-    document.getElementById("wizNext").innerHTML =
-      wizIndex === 0 ? `Next steps <span class="arw" aria-hidden="true">&gt;</span>`
-      : wizIndex === SLIDES.length-1 ? `Sign up <span class="arw" aria-hidden="true">&gt;</span>`
-      : `Next <span class="arw" aria-hidden="true">&gt;</span>`;
-    window.scrollTo(0, 0);
-  }
-  function finishWiz(){
-    try{ localStorage.setItem(INTRO_KEY, "1"); }catch(e){}
-    wizBox.hidden = true;
-    loginSection.hidden = false;
-    window.scrollTo(0, 0);
-  }
-  document.getElementById("wizNext").addEventListener("click", ()=>{
-    if(wizIndex >= SLIDES.length-1){ finishWiz(); return; }
-    wizIndex++; renderWiz();
-  });
-  document.getElementById("wizBack").addEventListener("click", ()=>{
-    if(wizIndex > 0){ wizIndex--; renderWiz(); }
-  });
-  document.getElementById("wizSkip").addEventListener("click", ()=>{ finishWiz(); showStep("stepLogin"); });
-
-  // Returning visitors (finished the intro before, or holding a session)
-  // go straight to the login side; brand-new visitors get the walkthrough.
-  // ?intro=1 (the "Create a profile with us" link) always forces the
-  // walkthrough back up for anyone not already logged in on this device.
-  const forceIntro = new URLSearchParams(location.search).get("intro") === "1";
-  if(TOKEN){
-    wizBox.hidden = true;
-    loginSection.hidden = false;
-  } else if(forceIntro || !localStorage.getItem(INTRO_KEY)){
-    renderWiz();
-  } else {
-    wizBox.hidden = true;
-    loginSection.hidden = false;
-  }
+  /* The first-visit walkthrough was removed (Ruby, 2026-11-04). Nearly
+     everyone arrives here from an email holding a temporary password, so
+     the page opens on Log in; the rules they need are agreed once on the
+     dashboard ("How your nights work"). #signup opens the sign-up form,
+     for the link Ruby shares by hand. */
+  if(!TOKEN && /^#signup/.test(location.hash)) showStep("stepSignup");
 
   // Already have a saved session? Skip straight past the login form.
   (async function init(){
