@@ -359,7 +359,6 @@
           <a class="djd-act" id="resApply" href="https://margolis.events/apply-for-a-residency" target="_blank" rel="noopener">Apply for a residency &#8599;</a>
         </div>
         <div id="content"><p class="djd-note" style="margin-top:20px">Loading your nights&hellip;</p></div>
-        <div id="guestListBox"></div>
         <div id="payHistory"></div>
         <div id="dateReqList"></div>
         <details class="djd-prof" id="dateReqBox" style="margin-top:18px">
@@ -728,6 +727,7 @@
       demoPct(s.account); demoSave(s); return {ok:true, account:s.account};
     }
     if(payload.action==="savePayout"){ s.account.payableTo=payload.payableTo; s.account.zelle=payload.zelle; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="updateProfile"){ if("stageName" in payload) s.account.stageName=payload.stageName; if("bio" in payload) s.account.bio=payload.bio; demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="ackNights"){ s.account.nightsAck=true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="saveAgreements"){ s.account.agreementsSigned=true; s.account.smsConsent=!!payload.contactConsent; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="events"){ demoSave(s); return {ok:true, events:s.events, archive:s.archive||[], dateRequests:s.dateRequests||[]}; }
@@ -782,6 +782,11 @@
       if(!sub.partners.some(x=>x.name===p.name)) sub.partners.push(p);
       ev.partnered = true; ev.withNames = sub.partners.map(x=>x.name);
       demoSave(s); return {ok:true, submission:sub, linked:{name:p.name, by:"code"}};
+    }
+    if(payload.action==="saveEventGuestList"){
+      const ev=findEv(); const sub=ensureSub(ev);
+      sub.myGuestList = payload.reset ? null : (payload.names||[]).slice(0,20);
+      demoSave(s); return {ok:true, submission:sub};
     }
     if(payload.action==="setSolo"){
       const ev=findEv(); const sub=ensureSub(ev);
@@ -842,23 +847,26 @@
      host." One list on the profile; the door reads it live on their
      nights. Deep link: /margolis-dashboard#guest-list */
   const GL_MAX = 10;
+  const EG_MAX = 20;               // one night's own list: lifetime swaps + 1s (dj_event_guest_max)
+  let LIFETIME = [];
   function renderGuestList(account){
+    if(account && !account.isGuest) LIFETIME = (account.guestList||[]).slice(0, GL_MAX);
     const box = document.getElementById("guestListBox");
     if(!box || !account || account.isGuest) return;
-    const names = (account.guestList||[]).slice(0, GL_MAX);
-    const wasOpen = box.querySelector("details") ? box.querySelector("details").open : location.hash === "#guest-list";
+    const names = LIFETIME;
     let rows = "";
     for(let i=0;i<GL_MAX;i++){
       rows += `<div class="ifield" style="margin-bottom:6px"><input type="text" data-gl value="${esc(names[i]||"")}" placeholder="${i+1}. Full name" aria-label="Guest ${i+1}" maxlength="80" autocomplete="off"></div>`;
     }
-    box.innerHTML = `<details class="djd-prof" id="guest-list"${wasOpen?" open":""}>
-      <summary>Guest list <span class="mono" style="font-weight:400;font-size:12px;color:var(--muted)">${names.length}/${GL_MAX}</span></summary>
-      <div class="djd-prof__body">
-        <p class="djd-note" style="margin:0 0 12px">Free entry on nights you host only. Up to 10 names.</p>
+    /* The LIFETIME list (Ruby, 2026-11-04): lives in the profile, and is
+       where every night's own list starts (the night card's Guest list). */
+    box.innerHTML = `<div class="djd-task" id="guest-list">
+        <h4>Lifetime guest list <span class="mono" style="font-weight:400;font-size:12px;color:var(--muted)">${names.length}/${GL_MAX}</span></h4>
+        <p class="djd-note" style="margin:0 0 12px">Free entry on every night you host. Change it for one night on that night's card.</p>
         ${rows}
         <p class="djd-err" id="glErr" style="margin:8px 0"></p>
-        <div class="intake__nav"><button type="button" class="btn btn--green" id="glSave">Save guest list <span class="arw" aria-hidden="true">&gt;</span></button></div>
-      </div></details>`;
+        <div class="intake__nav"><button type="button" class="btn btn--green" id="glSave">Save lifetime list <span class="arw" aria-hidden="true">&gt;</span></button></div>
+      </div>`;
     document.getElementById("glSave").addEventListener("click", async (ev) => {
       const btn = ev.currentTarget, errEl = document.getElementById("glErr");
       const list = [...box.querySelectorAll("[data-gl]")].map(i => i.value.trim()).filter(Boolean);
@@ -868,7 +876,8 @@
         const out = await api(AUTH_URL, {action:"saveGuestList", names: list});
         renderGuestList(out.account);
         const b2 = document.getElementById("glSave");
-        b2.innerHTML = "Saved &#10003;"; setTimeout(() => { b2.innerHTML = 'Save guest list <span class="arw" aria-hidden="true">&gt;</span>'; }, 1600);
+        b2.innerHTML = "Saved &#10003;"; setTimeout(() => { b2.innerHTML = 'Save lifetime list <span class="arw" aria-hidden="true">&gt;</span>'; }, 1600);
+        render();
       }catch(e){ errEl.textContent = typeof e === "string" ? e : "Couldn't save. Try again."; btn.disabled = false; }
     });
     if(location.hash === "#guest-list" && !box.dataset.scrolled){
@@ -912,6 +921,7 @@
   // Once complete, the panel collapses to a one-line badge; "Profile
   // settings" reopens the same tasks in an always-editable state.
   let profileEditMode = false;
+  let croppedFace = null;           // the face crop waiting to upload
   function renderProfilePanel(account){
     document.getElementById("approvalBox").hidden = !!account.approved;
     const p = account.profilePercent ?? 0;
@@ -943,6 +953,18 @@
           claim.status==="locked"
             ? `${esc(claim.title)} — <span style="color:var(--green)">locked in</span>`
             : `${esc(claim.title)} — under review${p<100?" (complete your profile to lock it)":""}`}</p>`:""}
+        ${(!account.stageName || profileEditMode)?`<div class="djd-task">
+          <h4>Stage name and bio</h4>
+          <p class="djd-note" style="margin:0 0 12px">What guests see on margolis.events.</p>
+          <div class="ifield"><label>Stage name</label><input type="text" id="ppStage" maxlength="60" value="${esc(account.stageName||"")}" placeholder="e.g. DJ Aura"></div>
+          <div class="ifield"><label>Bio</label><textarea id="ppBio" maxlength="280" rows="3" placeholder="One or two lines about you and your sound.">${esc(account.bio||"")}</textarea>
+            <p class="help"><span id="ppBioN">${(account.bio||"").length}</span>/280</p></div>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSaveStage">Save <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        </div>`:""}
+        ${profileEditMode?`<div class="djd-task">
+          <h4>Legal name</h4>
+          <p class="djd-note" style="margin:0">${esc(account.name||"")}${account.legalNameLocked?` · <strong>Locked</strong> to your signed agreements. To change it, email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.`:""}</p>
+        </div>`:""}
         ${(!account.hasFacePhoto || profileEditMode)?`<div class="djd-task">
           <h4>Profile photo</h4>
           <p class="djd-note" style="margin:0 0 12px">${account.hasFacePhoto
@@ -962,7 +984,7 @@
         </div>`:""}
         ${(!account.agreementsSigned || profileEditMode)?`<div class="djd-task">
           <h4>The agreement stack</h4>
-          <p class="djd-note" style="margin:0 0 12px">${account.agreementsSigned?"Signed. Re-sign only to change your legal name.":""} Read the
+          <p class="djd-note" style="margin:0 0 12px">${account.agreementsSigned?"Signed and on file.":""} Read the
           <button type="button" class="djd-policy" data-policy-open="policyPhilosophy">booking philosophy and payout model</button>,
           the <button type="button" class="djd-policy" data-policy-open="policyMinimums">bar minimum policy</button>, and the
           <button type="button" class="djd-policy" data-policy-open="policyTerms">full event terms</button>.</p>
@@ -998,19 +1020,38 @@
             : `<label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:12px;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="checkbox" id="nightsAckBox" style="margin-top:3px">I understand how my nights work.</label>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppAckNights">I agree <span class="arw" aria-hidden="true">&gt;</span></button></div>`}
         </div>`:""}
+        <div id="guestListBox"></div>
       </div>
     </details>`;
+    renderGuestList(account);
     editBtn.onclick = (e)=>{
       e.preventDefault();
       profileEditMode = !profileEditMode;
       renderProfilePanel(account);
       if(profileEditMode) el.scrollIntoView({block:"start"});
     };
+    /* Picking a photo opens the round face crop (face-crop.js, Ruby
+       2026-11-04: staff have to recognise the DJ from it). What is
+       uploaded is the crop, never the raw file. */
+    const faceInput = document.getElementById("ppPhotoFace");
+    if(faceInput) faceInput.addEventListener("change", async ()=>{
+      const raw = faceInput.files && faceInput.files[0];
+      croppedFace = null;
+      if(!raw) return;
+      if(typeof window.faceCrop !== "function"){ croppedFace = raw; return; }
+      try{
+        const out = await window.faceCrop(raw);
+        if(!out){ faceInput.value = ""; return; }
+        croppedFace = out; clearErr();
+        const help = faceInput.parentElement.querySelector(".help");
+        if(help) help.textContent = "Cropped and ready. Press Upload photo.";
+      }catch(e){ faceInput.value = ""; showErr(typeof e==="string"?e:"Couldn't open that photo."); }
+    });
     const savePhotosBtn = document.getElementById("ppSavePhotos");
     if(savePhotosBtn) savePhotosBtn.addEventListener("click", async ()=>{
       const faceIn = document.getElementById("ppPhotoFace");
-      const facePick = faceIn && faceIn.files[0] || null;
-      if(!facePick) return showErr("Pick a photo first.");
+      const facePick = croppedFace || null;
+      if(!facePick) return showErr(faceIn && faceIn.files[0] ? "Crop your photo first: pick it again." : "Pick a photo first.");
       if(facePick.size > 10*1024*1024) return showErr("That photo is over 10 MB — please compress it.");
       savePhotosBtn.disabled = true;
       try{
@@ -1020,6 +1061,22 @@
       }catch(e){
         savePhotosBtn.disabled = false;
         savePhotosBtn.innerHTML = `Upload photo <span class="arw" aria-hidden="true">&gt;</span>`;
+        if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+      }
+    });
+    const bioBox = document.getElementById("ppBio");
+    if(bioBox) bioBox.addEventListener("input", ()=>{ const n=document.getElementById("ppBioN"); if(n) n.textContent = bioBox.value.length; });
+    const saveStageBtn = document.getElementById("ppSaveStage");
+    if(saveStageBtn) saveStageBtn.addEventListener("click", async ()=>{
+      const stageName = document.getElementById("ppStage").value.trim();
+      const bio = document.getElementById("ppBio").value.trim();
+      if(!stageName) return showErr("Add your stage name.");
+      saveStageBtn.disabled = true;
+      try{
+        const out = await api(AUTH_URL, {action:"updateProfile", stageName, bio});
+        clearErr(); renderProfilePanel(out.account);
+      }catch(e){
+        saveStageBtn.disabled = false;
         if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
       }
     });
@@ -1156,7 +1213,7 @@
       </div>
       ${archived?"":`<div class="evt__body">
         <div class="evt__tabs">
-          ${[["lineup","1 · Lineup"],["flyer","2 · Flyer"],["ticket","3 · Ticket link"],["partners","4 · Partners"]].map(([tk,label])=>
+          ${[["lineup","1 · Lineup"],["flyer","2 · Flyer"],["ticket","3 · Ticket link"],["partners","4 · Partners"],["guests","5 · Guest list"]].map(([tk,label])=>
             `<button type="button" class="evt__tab ${tab===tk?"on":""}" data-tab="${tk}" data-k="${esc(k)}">${label}</button>`).join("")}
         </div>
         <div class="evt__pane ${tab==="lineup"?"on":""}" data-pane="lineup">
@@ -1207,8 +1264,31 @@
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="partner" data-i="${i}">Add partner <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `}
         </div>
+        <div class="evt__pane ${tab==="guests"?"on":""}" data-pane="guests">${guestPane(ev, s, i, k)}</div>
       </div>`}
     </div>`;
+  }
+
+  /* ---------- one night's own guest list (2026-11-04) ----------
+     Starts as the lifetime list; swap names and add +1s, up to EG_MAX.
+     egDraft holds what is being typed so a re-render keeps it. */
+  const egDraft = {};
+  function egNames(s, k){
+    if(!(k in egDraft)) egDraft[k] = (Array.isArray(s.myGuestList) ? s.myGuestList : LIFETIME).slice(0, EG_MAX);
+    return egDraft[k];
+  }
+  function guestPane(ev, s, i, k){
+    const names = egNames(s, k);
+    const own = Array.isArray(s.myGuestList);
+    const rows = names.map((n, ix)=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+        <input type="text" data-eg="${ix}" data-k="${esc(k)}" value="${esc(n)}" placeholder="${LIFETIME.includes(n)?"":"+1 · "}Full name" maxlength="80" autocomplete="off" style="flex:1;padding:11px 13px;border:1px solid var(--line);border-radius:2px;background:var(--card);font:inherit;font-size:15px">
+        <button type="button" class="djd-readmore" data-eg-rm="${ix}" data-k="${esc(k)}" style="margin:0" aria-label="Remove">remove</button></div>`).join("");
+    return `<p class="evt__status">${own ? "<strong>This night has its own list.</strong>" : "Using your lifetime list."} Swap names for this night and add +1s, up to ${EG_MAX}.</p>
+      ${rows || `<p class="djd-note">No names yet. Add your lifetime list in Edit profile, or add names here.</p>`}
+      <p class="help" style="margin:4px 0 12px">${names.length}/${EG_MAX}</p>
+      ${names.length < EG_MAX ? `<button type="button" class="djd-readmore" data-eg-add data-k="${esc(k)}" style="margin:0 0 16px">+ Add a +1</button>` : ""}
+      <div class="intake__nav" style="gap:12px;flex-wrap:wrap"><button type="button" class="btn btn--green" data-save="eguests" data-i="${i}">Save this night's list <span class="arw" aria-hidden="true">&gt;</span></button>
+      ${own ? `<button type="button" class="btn btn--ghost" data-save="egreset" data-i="${i}">Use my lifetime list</button>` : ""}</div>`;
   }
 
   // ---------- date requests: one event, several candidate dates ----------
@@ -1385,6 +1465,19 @@
       if(!doorData[k]) await loadDoor(EVENTS[+b.dataset.i]);
     }));
     c.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click", ()=>save(b)));
+    c.querySelectorAll("[data-eg]").forEach(inp=>inp.addEventListener("input", ()=>{
+      const d = egDraft[inp.dataset.k]; if(d) d[+inp.dataset.eg] = inp.value;
+    }));
+    c.querySelectorAll("[data-eg-rm]").forEach(b=>b.addEventListener("click", ()=>{
+      const k = b.dataset.k; (egDraft[k]||[]).splice(+b.dataset.egRm, 1);
+      openCards.add(k); activeTab[k] = "guests"; render();
+    }));
+    c.querySelectorAll("[data-eg-add]").forEach(b=>b.addEventListener("click", ()=>{
+      const k = b.dataset.k; const d = egDraft[k] = egDraft[k] || [];
+      if(d.length < EG_MAX) d.push("");
+      openCards.add(k); activeTab[k] = "guests"; render();
+      const last = [...document.querySelectorAll(`[data-eg][data-k="${CSS.escape(k)}"]`)].pop(); if(last) last.focus();
+    }));
     c.querySelectorAll("[data-lu-rm]").forEach(b=>b.addEventListener("click", ()=>{
       const ev = EVENTS[+b.dataset.i];
       const k = keyOf(ev);
@@ -1466,6 +1559,22 @@
       const sold = card.querySelector('[data-f="rsvpSold"]').value.trim();
       if(!free && !sold) return showErr("Add at least one count.");
       payload = Object.assign({action:"saveRsvp", rsvpFree:free, rsvpSold:sold}, base);
+    }
+    if(kind==="eguests" || kind==="egreset"){
+      const k = keyOf(ev);
+      const names = (egDraft[k]||[]).map(x=>String(x||"").trim()).filter(Boolean);
+      if(kind==="eguests" && names.length > EG_MAX) return showErr(`Up to ${EG_MAX} names for one night.`);
+      btn.disabled = true;
+      try{
+        const out = await api(DASH_URL, kind==="egreset" ? Object.assign({action:"saveEventGuestList", reset:true}, base) : Object.assign({action:"saveEventGuestList", names}, base));
+        if(out.submission) ev.submission = out.submission;
+        delete egDraft[k]; clearErr();
+        openCards.add(k); activeTab[k] = "guests"; render();
+      }catch(e){
+        btn.disabled = false;
+        if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+      }
+      return;
     }
     if(kind==="partner"){
       /* By their profile code only (Ruby, 2026-11-04). No code, no
@@ -4172,5 +4281,6 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
 })();
 </script>
 <script src="https://jubyr.tools/assets/js/flyer-crop.js?v=1"></script>
+<script src="https://jubyr.tools/assets/js/face-crop.js?v=1"></script>
 </body>
 </html>
