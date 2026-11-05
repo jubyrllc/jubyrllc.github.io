@@ -468,7 +468,7 @@
         <tr><td>Couch and Priority guest contact information</td><td>Available</td><td>Not shared</td></tr>
       </tbody>
     </table></div>
-    <p>Your share of Margolis couch and Priority Reservation revenue is calculated <strong>after taxes, fees, and refunds</strong> and paid with your bar commission settlement.</p>
+    <p>Your share of Margolis couch and Priority Reservation revenue is calculated <strong>after taxes, fees, and refunds</strong> and sent separately by Zelle, never on your check.</p>
     <a class="mgmodal__more" href="https://margolis.events/host-a-public-event" target="_blank" rel="noopener">Full host page &#8599;</a>
   </div>
 </div>
@@ -785,7 +785,7 @@
     }
     if(payload.action==="saveEventGuestList"){
       const ev=findEv(); const sub=ensureSub(ev);
-      sub.myGuestList = payload.reset ? null : (payload.names||[]).slice(0,20);
+      sub.myGuestExtras = payload.reset ? [] : (payload.extras||[]).filter(n=>!(s.account.guestList||[]).includes(n)).slice(0,10);
       demoSave(s); return {ok:true, submission:sub};
     }
     if(payload.action==="setSolo"){
@@ -847,7 +847,7 @@
      host." One list on the profile; the door reads it live on their
      nights. Deep link: /margolis-dashboard#guest-list */
   const GL_MAX = 10;
-  const EG_MAX = 20;               // one night's own list: lifetime swaps + 1s (dj_event_guest_max)
+  const EG_EXTRA = 10;             // +1s a night may add on top of the lifetime list (dj_event_guest_extra_max)
   let LIFETIME = [];
   function renderGuestList(account){
     if(account && !account.isGuest) LIFETIME = (account.guestList||[]).slice(0, GL_MAX);
@@ -1269,26 +1269,29 @@
     </div>`;
   }
 
-  /* ---------- one night's own guest list (2026-11-04) ----------
-     Starts as the lifetime list; swap names and add +1s, up to EG_MAX.
-     egDraft holds what is being typed so a re-render keeps it. */
+  /* ---------- one night's guest list (2026-11-04) ----------
+     The lifetime list is on every night, fixed (Ruby: "dont allow them to
+     swap a lifetime name. only allow them to delete additions"); a night
+     adds up to EG_EXTRA +1s. egDraft holds the +1s being typed so a
+     re-render keeps them. */
   const egDraft = {};
-  function egNames(s, k){
-    if(!(k in egDraft)) egDraft[k] = (Array.isArray(s.myGuestList) ? s.myGuestList : LIFETIME).slice(0, EG_MAX);
+  function egExtras(s, k){
+    if(!(k in egDraft)) egDraft[k] = (Array.isArray(s.myGuestExtras) ? s.myGuestExtras : []).slice(0, EG_EXTRA);
     return egDraft[k];
   }
   function guestPane(ev, s, i, k){
-    const names = egNames(s, k);
-    const own = Array.isArray(s.myGuestList);
-    const rows = names.map((n, ix)=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
-        <input type="text" data-eg="${ix}" data-k="${esc(k)}" value="${esc(n)}" placeholder="${LIFETIME.includes(n)?"":"+1 · "}Full name" maxlength="80" autocomplete="off" style="flex:1;padding:11px 13px;border:1px solid var(--line);border-radius:2px;background:var(--card);font:inherit;font-size:15px">
-        <button type="button" class="djd-readmore" data-eg-rm="${ix}" data-k="${esc(k)}" style="margin:0" aria-label="Remove">remove</button></div>`).join("");
-    return `<p class="evt__status">${own ? "<strong>This night has its own list.</strong>" : "Using your lifetime list."} Swap names for this night and add +1s, up to ${EG_MAX}.</p>
-      ${rows || `<p class="djd-note">No names yet. Add your lifetime list in Edit profile, or add names here.</p>`}
-      <p class="help" style="margin:4px 0 12px">${names.length}/${EG_MAX}</p>
-      ${names.length < EG_MAX ? `<button type="button" class="djd-readmore" data-eg-add data-k="${esc(k)}" style="margin:0 0 16px">+ Add a +1</button>` : ""}
-      <div class="intake__nav" style="gap:12px;flex-wrap:wrap"><button type="button" class="btn btn--green" data-save="eguests" data-i="${i}">Save this night's list <span class="arw" aria-hidden="true">&gt;</span></button>
-      ${own ? `<button type="button" class="btn btn--ghost" data-save="egreset" data-i="${i}">Use my lifetime list</button>` : ""}</div>`;
+    const extras = egExtras(s, k);
+    const life = LIFETIME.map(n=>`<div style="display:flex;gap:8px;align-items:center;padding:9px 0;border-top:1px solid var(--line)">
+        <span style="flex:1;font-size:15px">${esc(n)}</span><span class="mono" style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">🔒 Lifetime</span></div>`).join("");
+    const rows = extras.map((n, ix)=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+        <input type="text" data-eg="${ix}" data-k="${esc(k)}" value="${esc(n)}" placeholder="+1 · Full name" maxlength="80" autocomplete="off" style="flex:1;padding:11px 13px;border:1px solid var(--line);border-radius:2px;background:var(--card);font:inherit;font-size:15px">
+        <button type="button" class="djd-readmore" data-eg-rm="${ix}" data-k="${esc(k)}" style="margin:0">remove</button></div>`).join("");
+    return `<p class="evt__status">Your lifetime list is on every night you host. Add up to ${EG_EXTRA} +1s for this night.</p>
+      ${life ? `<div style="margin:0 0 14px">${life}</div>` : `<p class="djd-note">No lifetime list yet. Add one in Edit profile.</p>`}
+      ${rows}
+      <p class="help" style="margin:4px 0 12px">${extras.length}/${EG_EXTRA} +1s</p>
+      ${extras.length < EG_EXTRA ? `<button type="button" class="djd-readmore" data-eg-add data-k="${esc(k)}" style="margin:0 0 16px">+ Add a +1</button>` : ""}
+      <div class="intake__nav"><button type="button" class="btn btn--green" data-save="eguests" data-i="${i}">Save +1s <span class="arw" aria-hidden="true">&gt;</span></button></div>`;
   }
 
   // ---------- date requests: one event, several candidate dates ----------
@@ -1474,7 +1477,7 @@
     }));
     c.querySelectorAll("[data-eg-add]").forEach(b=>b.addEventListener("click", ()=>{
       const k = b.dataset.k; const d = egDraft[k] = egDraft[k] || [];
-      if(d.length < EG_MAX) d.push("");
+      if(d.length < EG_EXTRA) d.push("");
       openCards.add(k); activeTab[k] = "guests"; render();
       const last = [...document.querySelectorAll(`[data-eg][data-k="${CSS.escape(k)}"]`)].pop(); if(last) last.focus();
     }));
@@ -1563,10 +1566,10 @@
     if(kind==="eguests" || kind==="egreset"){
       const k = keyOf(ev);
       const names = (egDraft[k]||[]).map(x=>String(x||"").trim()).filter(Boolean);
-      if(kind==="eguests" && names.length > EG_MAX) return showErr(`Up to ${EG_MAX} names for one night.`);
+      if(kind==="eguests" && names.length > EG_EXTRA) return showErr(`Up to ${EG_EXTRA} +1s for one night.`);
       btn.disabled = true;
       try{
-        const out = await api(DASH_URL, kind==="egreset" ? Object.assign({action:"saveEventGuestList", reset:true}, base) : Object.assign({action:"saveEventGuestList", names}, base));
+        const out = await api(DASH_URL, kind==="egreset" ? Object.assign({action:"saveEventGuestList", reset:true}, base) : Object.assign({action:"saveEventGuestList", extras:names}, base));
         if(out.submission) ev.submission = out.submission;
         delete egDraft[k]; clearErr();
         openCards.add(k); activeTab[k] = "guests"; render();
