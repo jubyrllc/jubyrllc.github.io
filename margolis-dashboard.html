@@ -649,6 +649,33 @@
      query string — and it is stripped from the address bar immediately,
      so it does not sit in history or get pasted along with the URL.
      Added 2026-08-21 with account.js on margolis.events. */
+  /* ---------- arriving from jubyr.tools/desk (2026-11-12) ----------
+     Ruby, already signed in on jubyr.tools with Face ID, should not tap
+     it again here. jubyr.tools/desk sends a one-time, 60-second ticket
+     in the fragment (#h=); jubyr-passkey.php trades it, once, for the
+     same DJ token + manager token a Face ID sign-in here would mint.
+     init() waits on this before deciding she is signed out. A dead
+     ticket changes nothing: the page carries on as if she typed the
+     address, Face ID button and all. */
+  const DESK_HANDOFF = (function(){
+    const m = /(?:^|[#&])h=([^&]+)/.exec(location.hash || "");
+    if(!m) return null;
+    try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){}
+    let ticket = "";
+    try{ ticket = decodeURIComponent(m[1]); }catch(e){ return null; }
+    const base = /^localhost$|^127\.0\.0\.1$/.test(location.hostname) ? "http://localhost:8721/" : "https://jubyr.tools/";
+    return fetch(base + "jubyr-passkey.php", {method:"POST", body: JSON.stringify({action:"handoffRedeem", ticket})})
+      .then(r => r.json())
+      .then(d => {
+        if(!d || !d.token || !d.mgrToken) return;
+        TOKEN = d.token;
+        localStorage.setItem("margolis-dj-token", d.token);
+        localStorage.setItem("margolis-mgr-token", d.mgrToken);
+        localStorage.setItem("margolis-faceid-device", "1");  // the login page offers Face ID from now on
+      })
+      .catch(() => {});
+  })();
+
   (function adoptHandoff(){
     const m = /(?:^|[#&])t=([^&]+)/.exec(location.hash || "");
     if(!m) return;
@@ -2010,6 +2037,7 @@
   }
 
   (async function init(){
+    if(DESK_HANDOFF) await DESK_HANDOFF;
     if(!TOKEN){ location.href = "/margolis-login"; return; }
     try{
       const me = await api(AUTH_URL, {action:"me"});
