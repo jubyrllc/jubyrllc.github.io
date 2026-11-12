@@ -112,6 +112,7 @@
           <div class="ifield"><label>Email or mobile <span class="req">*</span></label><input type="text" id="loginEmail" autocomplete="username" inputmode="email" placeholder="you@email.com or (215) 555-1234"></div>
           <div class="ifield"><label>Password <span class="req">*</span></label><input type="password" id="loginPassword" autocomplete="current-password"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="btnLogin">Log in <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          <div class="intake__nav" id="faceIdRow" hidden><button type="button" class="btn" id="btnFaceId">Face ID</button></div>
           <p class="dj-note"><span style="white-space:nowrap">Temporary password? See your confirmation email.</span><br>
           <a href="#signup" id="toSignup">Sign up</a> · <a href="/margolis-reset">Reset password</a></p>
         </form>
@@ -441,6 +442,35 @@
      dashboard ("How your nights work"). #signup opens the sign-up form,
      for the link Ruby shares by hand. */
   if(!TOKEN && /^#signup/.test(location.hash)) showStep("stepSignup");
+
+  /* Face ID (jubyr.tools/jubyr-passkey.php), on a device that has used it
+     for the manager view before, so nobody else ever sees the button. The
+     challenge is fetched before the tap: Safari only shows Face ID straight
+     from one. */
+  (function faceId(){
+    if(localStorage.getItem("margolis-faceid-device") !== "1" || !window.PublicKeyCredential) return;
+    const PK_BASE = "https://jubyr.tools/";
+    const row = document.getElementById("faceIdRow"), btn = document.getElementById("btnFaceId");
+    const s = document.createElement("script");
+    s.src = PK_BASE + "assets/js/passkey-gate.js?v=1";
+    s.onload = () => {
+      btn.textContent = JubyrPasskey.word();
+      row.hidden = false;
+      JubyrPasskey.prepare("manager", PK_BASE).catch(() => {});
+    };
+    document.head.appendChild(s);
+    btn.addEventListener("click", async ()=>{
+      clearErr(); btn.disabled = true;
+      try{
+        const d = await JubyrPasskey.signIn("manager", PK_BASE);
+        TOKEN = d.token; localStorage.setItem("margolis-dj-token", TOKEN);
+        localStorage.setItem("margolis-mgr-token", d.mgrToken);
+        const out = await api({action:"me", token: TOKEN});
+        afterAuth(out.account);
+      }catch(e){ showErr(JubyrPasskey.why(e)); }
+      btn.disabled = false;
+    });
+  })();
 
   // Already have a saved session? Skip straight past the login form.
   (async function init(){

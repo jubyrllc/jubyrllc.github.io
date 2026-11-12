@@ -1805,6 +1805,7 @@
 
   document.getElementById("logout").addEventListener("click", ()=>{
     localStorage.removeItem("margolis-dj-token");
+    localStorage.removeItem("margolis-mgr-token");
     location.href = "/margolis-login";
   });
 
@@ -2056,6 +2057,42 @@
    =================================================================== */
 (function(){
   const MGR_URL = "https://jubyr.tools/margolis-manager.php";
+
+  /* Face ID (jubyr.tools/jubyr-passkey.php, 2026-11-12). Once Ruby turns
+     Face only on, this half wants the token her passkey minted; her
+     password still opens her own nights. The passkey lives on jubyr.tools
+     and reaches here through jubyr.tools/.well-known/webauthn. */
+  const PK_BASE = "https://jubyr.tools/";
+  const MGR_TOKEN_KEY = "margolis-mgr-token";
+  const mgrTok = () => { try { return localStorage.getItem(MGR_TOKEN_KEY) || ""; } catch(e) { return ""; } };
+  function loadPasskey(){
+    if(window.JubyrPasskey) return Promise.resolve();
+    return new Promise((ok, no) => {
+      const s = document.createElement("script");
+      s.src = PK_BASE + "assets/js/passkey-gate.js?v=1"; s.onload = ok; s.onerror = no;
+      document.head.appendChild(s);
+    });
+  }
+  function faceIdPrompt(){
+    if(document.querySelector(".mgr-faceid")) return;
+    const box = document.createElement("div");
+    box.className = "mgr-faceid";
+    box.style.cssText = "margin:0 0 18px";
+    box.innerHTML = '<button type="button" class="btn btn--green">Face ID for the manager view</button><p class="dj-note" hidden></p>';
+    view.prepend(box);
+    const b = box.querySelector("button"), note = box.querySelector("p");
+    /* Fetched before the tap: Safari only shows Face ID straight from one. */
+    loadPasskey().then(() => JubyrPasskey.prepare("manager", PK_BASE)).catch(() => {});
+    b.addEventListener("click", () => {
+      if(!window.JubyrPasskey){ note.textContent = "Couldn't reach jubyr.tools."; note.hidden = false; return; }
+      b.disabled = true; note.hidden = true;
+      JubyrPasskey.signIn("manager", PK_BASE).then(d => {
+        localStorage.setItem(MGR_TOKEN_KEY, d.mgrToken);
+        localStorage.setItem("margolis-faceid-device", "1");  // the login page offers Face ID from now on
+        location.reload();
+      }).catch(e => { note.textContent = JubyrPasskey.why(e); note.hidden = false; b.disabled = false; });
+    });
+  }
   const DIMS = [["overall","Overall"],["reach","Reach"],["professionalism","Professionalism"],["craft","Craft"],["vibe","Vibe"]];
   const PARTS = [["lineup","DJ lineup"],["flyerFile","Event flyer"],["ticketLink","Ticket link"]];
 
@@ -2114,12 +2151,18 @@
        fixes, so they need different messages. */
     let r;
     try{
-      r = await fetch(MGR_URL, {method:"POST", body: JSON.stringify(Object.assign({token: TOKEN}, payload))});
+      r = await fetch(MGR_URL, {method:"POST", body: JSON.stringify(Object.assign({token: TOKEN, mgrToken: mgrTok()}, payload))});
     }catch(netErr){
       throw "Couldn't reach jubyr.tools at all — the request was blocked or the connection failed (" +
             (netErr && netErr.message ? netErr.message : "no detail") + ").";
     }
-    if(r.status === 401){ localStorage.removeItem("margolis-dj-token"); location.href = "/margolis-login"; throw "auth"; }
+    if(r.status === 401){
+      /* Face only is on and this device has no Face ID token yet: the
+         login is fine, so keep it and ask for Face ID here. */
+      const o = await r.clone().json().catch(()=>({}));
+      if(o.needPasskey){ faceIdPrompt(); throw "Sign in with Face ID for the manager view."; }
+      localStorage.removeItem("margolis-dj-token"); location.href = "/margolis-login"; throw "auth";
+    }
     const out = await r.json().catch(()=>({}));
     /* Show the server's own message when it sends one. A bare
        "Something went wrong" is the same string for a bad action, a
@@ -4183,7 +4226,7 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
         const holder = view.querySelector(`[data-flyer="${CSS.escape(name)}"]`);
         if(holder && holder.firstChild){ holder.innerHTML = ""; return; }   // tap again to close
         busy("Opening…");
-        const r = await fetch(MGR_URL, {method:"POST", body: JSON.stringify({token:TOKEN, action:"file", name})});
+        const r = await fetch(MGR_URL, {method:"POST", body: JSON.stringify({token:TOKEN, mgrToken: mgrTok(), action:"file", name})});
         if(!r.ok){ free("View flyer"); showErr("That file isn't on the server."); return; }
         const blob = await r.blob();
         const url = URL.createObjectURL(blob);
