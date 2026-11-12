@@ -2332,6 +2332,7 @@
       ${n.missing.length ? `<div class="mgr-acts">
         <button class="mgr-btn" data-act="nudge" data-key="${esc(n.nudgeKey)}" data-name="${esc(n.eventName)}" data-missing="${esc(n.missing.join(", "))}">Email them what's missing</button>
         <button class="mgr-btn mgr-btn--ghost" data-act="copytext" data-text="${esc(nudgeText(n))}">Copy text</button>
+        ${n.submissionId && n.missing.includes("Ticket link") ? `<button class="mgr-btn mgr-btn--ghost" data-act="nopresale" data-sub="${esc(n.submissionId)}" data-name="${esc(n.eventName)}">No presale</button>` : ""}
         ${n.nudgedAt?`<span class="mgr-chip">last nudged ${esc(fmtWhen(n.nudgedAt))}</span>`:""}
       </div>` : ""}
     </div>`;
@@ -4205,6 +4206,20 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
         alert(`Sent ${out.sent} reminder${out.sent===1?"":"s"}.` + (out.remaining
           ? `\n\n${out.remaining} more are waiting: the sending mailbox is capped at 100 messages a day, shared with confirmations and tickets, so this goes 25 at a time. Run it again tomorrow.`
           : ""));
+        return;
+      }
+
+      if(act === "nopresale"){
+        if(!confirm(`Mark "${btn.dataset.name}" as No presale · door only, approved?`)) return;
+        busy("Saving…");
+        try{
+          await mapi({action:"setNoPresale", submissionId:btn.dataset.sub});
+          await loadNights();
+          render();
+        }catch(e){
+          free("No presale");
+          showErr(typeof e==="string"?e:"Couldn't save that.");
+        }
         return;
       }
 
