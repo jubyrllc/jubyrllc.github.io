@@ -784,6 +784,7 @@
       demoSave(s); return {ok:true, request:req};
     }
     if(payload.action==="saveLineup"){ const ev=findEv(); const sub=ensureSub(ev); sub.lineup={value:payload.lineup,status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
+    if(payload.action==="saveNoPresale"){ const ev=findEv(); const sub=ensureSub(ev); sub.ticketLink={value:"",status:"pending",noPresale:true}; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="saveTicketLink"){ const ev=findEv(); const sub=ensureSub(ev); sub.ticketLink={value:payload.ticketLink,status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="saveFlyer"){ const ev=findEv(); const sub=ensureSub(ev); sub.flyerFile={value:payload.fileName||"flyer.png",status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="saveRsvp"){ const ev=findEv(); const sub=ensureSub(ev); if(payload.rsvpFree) sub.rsvpFree=payload.rsvpFree; if(payload.rsvpSold) sub.rsvpSold=payload.rsvpSold; demoSave(s); return {ok:true, submission:sub}; }
@@ -1251,7 +1252,7 @@
     const k = keyOf(ev);
     if(!archived && !(k in lineupDraft)) lineupDraft[k] = lineupArr(s.lineup.value).slice();
     const tab = activeTab[k] || "lineup";
-    const chips = [stchip("Lineup", s.lineup.status), stchip("Flyer", s.flyerFile.status), stchip("Ticket link", s.ticketLink.status)].join("");
+    const chips = [stchip("Lineup", s.lineup.status), stchip("Flyer", s.flyerFile.status), stchip(s.ticketLink.noPresale?"No presale":"Ticket link", s.ticketLink.status)].join("");
     const withLine = (ev.withNames||[]).length ? `<span class="evt__date" style="width:100%;color:var(--green)">With ${esc(ev.withNames.join(" + "))}</span>` : "";
     return `<div class="evt ${archived?"arch":""} ${openCards.has(k)?"open":""}" data-k="${esc(k)}" data-i="${i}">
       <div class="evt__head" ${archived?"":`data-toggle="${esc(k)}"`}>
@@ -1261,7 +1262,7 @@
         <div class="evt__chips">${chips}</div>
         ${archived?"":`<div class="door" data-door-for="${esc(k)}">${DOOR.chips(ev.door)}${ev.guestContacts && DOOR.any(ev.door)?`<button type="button" class="door__more" data-door="${esc(k)}" data-i="${i}">${doorOpen.has(k)?"Hide contacts":"Guest contacts"}</button>`:""}</div>
         <div class="door__list" data-door-list="${esc(k)}">${doorOpen.has(k)?(doorData[k]?guestContactList(doorData[k]):`<div class="door__sect">Loading&hellip;</div>`):""}</div>`}
-        ${s.fullyApproved?`<div class="evt__ok" style="width:100%">All approved — the presale is off and guests go straight to your ticket link.</div>`:""}
+        ${s.fullyApproved?`<div class="evt__ok" style="width:100%">${s.ticketLink.noPresale?"All approved. No presale: door only.":"All approved — the presale is off and guests go straight to your ticket link."}</div>`:""}
         ${(s.payout||[]).map(p=> p.reason
           ? `<div class="evt__ok" style="width:100%">${p.netSales?`Net bar sales: $${esc(money(p.netSales))} · `:""}No check this time: ${esc(p.reason==="bar_minimum"?"bar minimum not met":p.reason==="no_agreement"?"no payout agreement":p.reason)}${p.shortfall!=null?` · short $${esc(money(p.shortfall))} of the $${esc(money(p.minimum))} minimum`:""}${p.owed?` · owed $${esc(money(p.owed))}`:""}</div>`
           : `<div class="evt__ok" style="width:100%">Net bar sales: $${esc(money(p.netSales))} · ${esc(p.percent)}% · Your check: $${esc(money(p.totalPay))}${p.balanceApplied?` (after $${esc(money(p.balanceApplied))} toward your balance)`:""} · ${p.paid?"paid":"pending"}</div>`
@@ -1302,6 +1303,8 @@
             <input type="url" data-f="ticket" placeholder="https://posh.vip/e/your-event" value="${esc(s.ticketLink.value)}">
             <p class="help">Once approved, guests go here instead of the waitlist, and the waitlist gets emailed.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="ticket" data-i="${i}">Submit link <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          <div class="ifield">${s.ticketLink.noPresale?`<p class="help"><strong>No presale</strong> on file: door only.</p>`:""}
+            <button type="button" class="djd-readmore" data-save="nopresale" data-i="${i}">No presale &middot; door only</button></div>
           `)}
         </div>
         <!-- RSVP count step removed (Ruby, 2026-11-04). The saveRsvp handler
@@ -1664,6 +1667,9 @@
       const v = card.querySelector('[data-f="ticket"]').value.trim();
       if(!/^https?:\/\//i.test(v)) return showErr("Please paste the full link, starting with http.");
       payload = Object.assign({action:"saveTicketLink", ticketLink:v}, base);
+    }
+    if(kind==="nopresale"){
+      payload = Object.assign({action:"saveNoPresale"}, base);
     }
     if(kind==="solo"){
       const checked = card.querySelector('[data-f="soloCheck"]').checked;
@@ -2271,6 +2277,7 @@
   }
 
   function partValue(key, part){
+    if(key === "ticketLink" && part && part.noPresale) return `<p class="mgr-val">No presale &middot; door only</p>`;
     const v = part && part.value;
     if(!v || (Array.isArray(v) && !v.length)) return "";
     if(key === "lineup"){
@@ -2285,13 +2292,13 @@
 
   function partBlock(subId, key, label, part){
     const st = part ? (part.status || "") : "";
-    const canReview = part && part.value && st === "pending" && subId;
+    const canReview = part && (part.value || part.noPresale) && st === "pending" && subId;
     return `<div class="mgr-part">
       <div class="mgr-part__head"><span class="mgr-label">${label}</span>${statusChip(st)}</div>
       ${partValue(key, part)}
       ${canReview ? `<div class="mgr-acts">
         <button class="mgr-btn" data-act="review" data-sub="${esc(subId)}" data-part="${key}" data-decision="approved">Approve</button>
-        ${key === "ticketLink" ? `<button class="mgr-btn" data-act="review" data-sub="${esc(subId)}" data-part="${key}" data-decision="approved" data-notify="1" title="Approve, then email everyone on this night's GA list once it is live">Approve + notify</button>` : ""}
+        ${key === "ticketLink" && !part.noPresale ? `<button class="mgr-btn" data-act="review" data-sub="${esc(subId)}" data-part="${key}" data-decision="approved" data-notify="1" title="Approve, then email everyone on this night's GA list once it is live">Approve + notify</button>` : ""}
         <button class="mgr-btn mgr-btn--bad" data-act="review" data-sub="${esc(subId)}" data-part="${key}" data-decision="rejected">Reject</button>
       </div>` : ""}
     </div>`;
@@ -2310,7 +2317,7 @@
         ${n.venue?`<span class="mgr-chip mgr-chip--dark">${esc(n.venue)}</span>`:""}
         <span class="mgr-chip ${n.daysOut<=3?"mgr-chip--bad":""}">${esc(countdown(n.daysOut))}</span>
         ${late?`<span class="mgr-chip mgr-chip--bad">Past the 14-day deadline</span>`:""}
-        ${n.fullyApproved?`<span class="mgr-chip mgr-chip--ok">All three approved &middot; presale off</span>`:""}
+        ${n.fullyApproved?`<span class="mgr-chip mgr-chip--ok">All three approved &middot; ${n.ticketLink&&n.ticketLink.noPresale?"door only":"presale off"}</span>`:""}
         ${n.hostUnclaimed?`<span class="mgr-chip mgr-chip--bad">Never signed in</span>`:""}
       </div>
       <h3>${esc(n.eventName)}</h3>
@@ -2324,9 +2331,17 @@
         <p class="mgr-val">${rsvp}</p></div>
       ${n.missing.length ? `<div class="mgr-acts">
         <button class="mgr-btn" data-act="nudge" data-key="${esc(n.nudgeKey)}" data-name="${esc(n.eventName)}" data-missing="${esc(n.missing.join(", "))}">Email them what's missing</button>
+        <button class="mgr-btn mgr-btn--ghost" data-act="copytext" data-text="${esc(nudgeText(n))}">Copy text</button>
         ${n.nudgedAt?`<span class="mgr-chip">last nudged ${esc(fmtWhen(n.nudgedAt))}</span>`:""}
       </div>` : ""}
     </div>`;
+  }
+
+  /* The same chase as the email, short enough for a text. */
+  function nudgeText(n){
+    const first = String(n.hostName||"").trim().split(/\s+/)[0];
+    const need = n.missing.map(m => m === "Ticket link" ? "ticket link (or tap No presale if it's door only)" : m.toLowerCase());
+    return `Hi${first?" "+first:""}! For ${n.eventName} on ${fmtDay(n.date)} we still need your ${need.join(", ")}. Upload here: jubyr.com/margolis-dashboard`;
   }
 
   /* ---------- submissions waiting on review ---------- */
@@ -4190,6 +4205,14 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
         alert(`Sent ${out.sent} reminder${out.sent===1?"":"s"}.` + (out.remaining
           ? `\n\n${out.remaining} more are waiting: the sending mailbox is capped at 100 messages a day, shared with confirmations and tickets, so this goes 25 at a time. Run it again tomorrow.`
           : ""));
+        return;
+      }
+
+      if(act === "copytext"){
+        try{ await navigator.clipboard.writeText(btn.dataset.text); }
+        catch(e){ window.prompt("Copy this text:", btn.dataset.text); return; }
+        btn.textContent = "Copied ✓";
+        setTimeout(()=>{ btn.textContent = "Copy text"; }, 1800);
         return;
       }
 
