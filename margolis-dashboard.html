@@ -1033,7 +1033,7 @@
                on every visit. ackNights in margolis-dj-auth.php records it. -->
           <h4>How your nights work</h4>
           <ol class="djd-rules">
-            <li><strong>Each night needs a lineup, flyer, and ticket link</strong>, due 10 days out. We approve each.</li>
+            <li><strong>Each night needs a lineup, flyer, and ticket link</strong>, due 14 days out. We approve each.</li>
             <li><strong>No ticket link yet?</strong> Your night shows a waitlist, and inquiries go to our Priority Reservation.</li>
             <li><strong>Partners</strong> are added by their profile code.</li>
           </ol>
@@ -1283,7 +1283,7 @@
             <input type="url" data-f="luIg" placeholder="instagram.com/theirname" autocapitalize="none" autocorrect="off" inputmode="url">
             <p class="help">Open their profile and copy the link.</p></div>
           <div class="intake__nav" style="margin-bottom:8px"><button type="button" class="btn" data-save="lineupAdd" data-i="${i}">Add this act +</button></div>
-          <p class="help">One act at a time. A fresh lineup every night, residencies included. Due 10 days out.</p>
+          <p class="help">One act at a time. A fresh lineup every night, residencies included. Due 14 days out.</p>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="lineup" data-i="${i}">Submit lineup <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `)}
         </div>
@@ -1292,7 +1292,7 @@
           <div class="ifield"><label>Event flyer <span class="req">*</span></label>
             <input type="file" data-f="flyer" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
             ${s.flyerFile.value?`<p class="help">On file: ${esc(s.flyerFile.value)}</p>`:""}
-            <p class="help">JPG or PNG, 4:5 portrait (1080×1350), up to 10 MB. <strong>No AI flyers.</strong> Due 10 days out. A new upload goes back into review.</p></div>
+            <p class="help">JPG or PNG, 4:5 portrait (1080×1350), up to 10 MB. <strong>No AI flyers.</strong> Due 14 days out. A new upload goes back into review.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="flyer" data-i="${i}">Upload flyer <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `)}
         </div>
@@ -2266,7 +2266,7 @@
       <div class="mgr-chips">
         ${n.venue?`<span class="mgr-chip mgr-chip--dark">${esc(n.venue)}</span>`:""}
         <span class="mgr-chip ${n.daysOut<=3?"mgr-chip--bad":""}">${esc(countdown(n.daysOut))}</span>
-        ${late?`<span class="mgr-chip mgr-chip--bad">Past the 10-day deadline</span>`:""}
+        ${late?`<span class="mgr-chip mgr-chip--bad">Past the 14-day deadline</span>`:""}
         ${n.fullyApproved?`<span class="mgr-chip mgr-chip--ok">All three approved &middot; presale off</span>`:""}
         ${n.hostUnclaimed?`<span class="mgr-chip mgr-chip--bad">Never signed in</span>`:""}
       </div>
@@ -3542,7 +3542,7 @@
     const shown = new Set(late.map(n=>n.submissionId).filter(Boolean));
     const subs = (M.submissions || []).filter(s => !shown.has(s.id));
     const nothing = !waiting.length && !subs.length && !reqs.length && !late.length;
-    if(nothing) return `<div class="mgr-empty">Nothing is waiting on you. Every account is reviewed, every night inside the 10-day deadline has its lineup, flyer and ticket link, and no dates are pending.</div>`;
+    if(nothing) return `<div class="mgr-empty">Nothing is waiting on you. Every account is reviewed, every night inside the 14-day deadline has its lineup, flyer and ticket link, and no dates are pending.</div>`;
     let html = "";
     if(waiting.length){
       html += `<div class="mgr-sect">New accounts &middot; ${waiting.length}</div>` + waiting.map(accountCard).join("");
@@ -3555,7 +3555,7 @@
     }
     if(late.length){
       html += `<div class="mgr-sect">Nights that need you &middot; ${late.length}</div>`
-        + `<p class="djd-note" style="margin-bottom:14px">Past the 10-day deadline and still short something, or everything is in
+        + `<p class="djd-note" style="margin-bottom:14px">Past the 14-day deadline and still short something, or everything is in
            and waiting on your review. The daily reminder already chases the late ones; the button on each sends that list right now.</p>`
         + late.map(nightCard).join("");
     }
