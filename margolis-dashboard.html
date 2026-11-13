@@ -749,7 +749,7 @@
       if(!s.account.partnerCode) s.account.partnerCode = "KTR-482";
       demoSave(s); return {ok:true, account:s.account};
     }
-    const demoPct = a => { const c=[!!(a.name&&a.type&&a.phone),!!a.hasFacePhoto,(a.genres||[]).length>0||(a.venues||[]).length>0,!!(a.payableTo&&a.zelle),!!a.agreementsSigned,!!a.hasW9,!!a.nightsAck]; a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100); };
+    const demoPct = a => { const c=[!!(a.name&&a.type&&a.phone),!!a.hasFacePhoto,(a.genres||[]).length>0||(a.venues||[]).length>0,!!(a.payableTo&&a.zelle),!!a.agreementsSigned,!!a.hasW9,!!a.nightsAck,!!(a.stageName||"").trim()]; a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100); };
     if(payload.action==="nightGuests"){
       const ev = s.events.find(e => e.date === payload.date);
       if(!ev || !ev.door) throw "That is not one of your nights.";
@@ -973,7 +973,8 @@
     const editing = !complete || profileEditMode;
     const claim = account.claimedResidency;
     const items = [
-      [!!(account.name && account.type && account.phone), "The essentials — name, DJ or host, phone"],
+      [!!(account.name && account.type && account.phone), "The essentials — government name, DJ or host, phone"],
+      [!!(account.stageName||"").trim(), "Your stage name — the name on every flyer"],
       [!!account.hasFacePhoto, "Profile photo"],
       [(account.genres||[]).length>0 || (account.venues||[]).length>0, "Genres and venues you play"],
       [!!(account.payableTo && account.zelle), "Payout info — checks payable to + Zelle"],
@@ -1009,15 +1010,18 @@
           <p class="djd-note" id="ppAcctMsg" style="margin:10px 0 0"></p>
         </div>`:""}
         ${(!account.stageName || profileEditMode)?`<div class="djd-task">
-          <h4>Stage name and bio</h4>
-          <p class="djd-note" style="margin:0 0 12px">What guests see on margolis.events.</p>
-          <div class="ifield"><label>Stage name</label><input type="text" id="ppStage" maxlength="60" value="${esc(account.stageName||"")}" placeholder="e.g. DJ Aura"></div>
+          <h4>Your two names</h4>
+          <p class="djd-note" style="margin:0 0 12px">Margolis keeps both, and uses each in one place only.</p>
+          <div class="ifield"><label>Government name</label><input type="text" value="${esc(account.name||"")}" disabled>
+            <p class="help">As on your ID. Only on your W9, agreements and payouts. Never public.</p></div>
+          <div class="ifield"><label>Stage name <span class="req">*</span></label><input type="text" id="ppStage" maxlength="60" value="${esc(account.stageName||"")}" placeholder="e.g. DJ Aura">
+            <p class="help">The name on every flyer, lineup and margolis.events listing. Exactly how you want to appear.</p></div>
           <div class="ifield"><label>Bio</label><textarea id="ppBio" maxlength="280" rows="3" placeholder="One or two lines about you and your sound.">${esc(account.bio||"")}</textarea>
             <p class="help"><span id="ppBioN">${(account.bio||"").length}</span>/280</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSaveStage">Save <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
         ${profileEditMode?`<div class="djd-task">
-          <h4>Legal name</h4>
+          <h4>Government name</h4>
           <p class="djd-note" style="margin:0">${esc(account.name||"")}${account.legalNameLocked?` · <strong>Locked</strong> to your signed agreements. To change it, email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.`:""}</p>
         </div>`:""}
         ${(!account.hasFacePhoto || profileEditMode)?`<div class="djd-task">

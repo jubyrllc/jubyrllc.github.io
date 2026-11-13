@@ -85,8 +85,8 @@
         <form id="stepSignup" hidden>
           <h3 style="margin-bottom:6px">Create your account</h3>
           <p class="dj-note" style="margin:0 0 18px">The rest of your profile comes after. We review new accounts.</p>
-          <div class="ifield"><label>First name <span class="req">*</span></label><input type="text" id="suFirstName" autocomplete="given-name"></div>
-          <div class="ifield"><label>Last name <span class="req">*</span></label><input type="text" id="suLastName" autocomplete="family-name"></div>
+          <div class="ifield"><label>Government first name <span class="req">*</span></label><input type="text" id="suFirstName" autocomplete="given-name"></div>
+          <div class="ifield"><label>Government last name <span class="req">*</span></label><input type="text" id="suLastName" autocomplete="family-name"><p class="help">As on your ID, for your W9 and payouts. Your stage name comes next.</p></div>
           <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="suEmail" autocomplete="email" placeholder="you@email.com"></div>
           <div class="ifield"><label>Phone <span class="req">*</span></label><input type="tel" id="suPhone" autocomplete="tel" placeholder="10-digit number"></div>
           <div class="ifield">
@@ -130,8 +130,9 @@
         <form id="stepProfile" hidden>
           <h3 style="margin-bottom:6px">Quick profile</h3>
           <p class="dj-note" style="margin:0 0 18px">Just the basics for now.</p>
-          <div class="ifield"><label>First name <span class="req">*</span></label><input type="text" id="pFirstName" autocomplete="given-name"></div>
-          <div class="ifield"><label>Last name <span class="req">*</span></label><input type="text" id="pLastName" autocomplete="family-name"></div>
+          <div class="ifield"><label>Government first name <span class="req">*</span></label><input type="text" id="pFirstName" autocomplete="given-name"></div>
+          <div class="ifield"><label>Government last name <span class="req">*</span></label><input type="text" id="pLastName" autocomplete="family-name"><p class="help">As on your ID. Only on your W9, agreements and payouts.</p></div>
+          <div class="ifield"><label>Stage name <span class="req">*</span></label><input type="text" id="pStageName" maxlength="60" placeholder="e.g. DJ Aura"><p class="help">The name on every flyer, lineup and margolis.events listing.</p></div>
           <div class="ifield"><label>Phone</label><input type="tel" id="pPhone" autocomplete="tel" placeholder="10-digit number"></div>
           <div class="ifield"><label>Instagram</label><input type="text" id="pInstagram" placeholder="@yourhandle"></div>
           <div class="ifield">
@@ -303,6 +304,7 @@
     // The server sends the parts, splitting an older single-field name
     // itself, so this never has to guess where the split falls.
     document.getElementById("pFirstName").value = account.firstName || "";
+    document.getElementById("pStageName").value = account.stageName || "";
     document.getElementById("pLastName").value = account.lastName || "";
     document.getElementById("pPhone").value = account.phone || "";
     document.getElementById("pInstagram").value = account.instagram || "";
@@ -381,13 +383,15 @@
     const pPhoneVal = document.getElementById("pPhone").value.trim();
     if(!pFirst) return showErr("Please add your first name.");
     if(!pLast) return showErr("Please add your last name.");
+    const pStage = document.getElementById("pStageName").value.trim();
+    if(!pStage) return showErr("Add your stage name: the name on every flyer.");
     if(pPhoneVal && !phoneValid(pPhoneVal)) return showErr("Please add a phone number formatted like (215)-771-4222.");
     if(!profileType) return showErr("Pick DJ, event host, or both.");
     const btn = document.getElementById("btnProfile");
     btn.disabled = true; btn.textContent = "Saving…";
     try{
       const out = await api({action:"updateProfile", token: TOKEN,
-        firstName: pFirst, lastName: pLast, phone: document.getElementById("pPhone").value.trim(),
+        firstName: pFirst, lastName: pLast, stageName: pStage, phone: document.getElementById("pPhone").value.trim(),
         instagram: document.getElementById("pInstagram").value.trim().replace(/^@/,""),
         type: profileType, genres: profileGenres, venues: profileVenues});
       ACCOUNT = out.account;
