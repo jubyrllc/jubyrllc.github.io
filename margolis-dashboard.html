@@ -137,6 +137,17 @@
   .mgr-switch{display:flex;gap:0;margin:0 0 20px;border:1px solid var(--line);border-radius:999px;padding:3px;width:fit-content}
   .mgr-switch__btn{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:none;background:none;color:var(--muted);padding:8px 16px;border-radius:999px;cursor:pointer}
   .mgr-switch__btn.on{background:var(--green);color:#fff}
+  /* View as (2026-11-16): her preview of somebody else's dashboard. */
+  .va-bar{position:sticky;top:0;z-index:60;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:0 0 18px;padding:10px 14px;border-radius:10px;background:#2B2A26;color:#F6F3EA;font-size:14px}
+  .va-bar strong{font-weight:600}
+  .va-bar__tag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+  .va-bar a{margin-left:auto;color:#F6F3EA;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+  .va-pick{margin:-8px 0 20px;border:1px solid var(--line);border-radius:10px;padding:12px}
+  .va-pick input{width:100%;box-sizing:border-box;padding:9px 11px;border:1px solid var(--line);border-radius:8px;font:inherit;background:transparent;color:inherit}
+  .va-pick ul{list-style:none;margin:8px 0 0;padding:0;max-height:340px;overflow:auto}
+  .va-pick li a{display:flex;gap:10px;align-items:baseline;padding:8px 4px;border-top:1px dashed var(--line);color:inherit;text-decoration:none}
+  .va-pick li a:hover{color:var(--green)}
+  .va-pick__meta{color:var(--muted);font-size:12.5px;margin-left:auto}
   .mgr-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
   .mgr-tab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;border:1px dashed var(--line);background:#fff;color:var(--muted);padding:8px 12px;border-radius:8px;cursor:pointer}
   .mgr-tab.on{background:var(--green);border-color:var(--green);border-style:solid;color:#fff}
@@ -345,9 +356,15 @@
             <button class="djd-logout" id="logout">Log out</button>
           </span>
         </div>
+        <div class="va-bar" id="viewAsBar" hidden></div>
         <div class="mgr-switch mono" id="mgrSwitch" hidden>
           <button type="button" class="mgr-switch__btn" data-view="manager">Manager</button>
           <button type="button" class="mgr-switch__btn" data-view="host">My own nights</button>
+          <button type="button" class="mgr-switch__btn" id="viewAsBtn" aria-expanded="false">View as</button>
+        </div>
+        <div class="va-pick" id="viewAsPick" hidden>
+          <input type="search" id="viewAsQ" placeholder="Name, stage name or email" autocomplete="off">
+          <ul id="viewAsList"></ul>
         </div>
         <p class="djd-err" id="mgrErr"></p>
         <div id="mgrView" hidden></div>
@@ -553,6 +570,13 @@
 
   const AUTH_URL = "https://jubyr.tools/margolis-dj-auth.php";
   const DASH_URL = "https://jubyr.tools/margolis-dj-dashboard.php";
+  /* VIEW AS (Ruby, 2026-11-16: "a view as host screen where i can see
+     what every person sees"). ?as=<accountId> draws this page as that
+     person, read only. The server decides everything: it answers as
+     them only for a manager with a live Face ID session, and only the
+     read actions (dj_view_as in margolis-dj-core.php). Saves refuse. */
+  const VIEW_AS = (new URLSearchParams(location.search).get("as") || "").trim();
+  const mgrTokenNow = () => { try { return localStorage.getItem("margolis-mgr-token") || ""; } catch(e) { return ""; } };
   const esc = s => String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   /* 24-hour clock -> the way people say it. Mirrors mgl_time12() in
      margolis-email-lib.php and t12() in the jubyr.tools pages. Display
@@ -786,13 +810,14 @@
         minimum, minimumFrom:from, met: net!=null && minimum!=null ? net>=minimum : null,
         shortBy: net!=null && minimum!=null && net<minimum ? minimum-net : null, cancelled:false}, extra||{});
       const nights = [
+        n("2026-11-13","Kingspy Rhythm Nation",4650,5000,"ladder",{door:1240, doorFee:32.86}),
         n("2026-10-09","Kingspy Rhythm Nation",4100,5000,"ladder"),
         n("2026-09-20","Sunday Sermon",1820,1500,"ladder",{role:"partner", with:["DJ Aura"]}),
         n("2026-09-11","Kingspy Rhythm Nation",5600,5000,"ladder"),
         n("2026-03-13","Kingspy Rhythm Nation",null,null,null,{basis:"shared"}),
         n("2026-01-09","Kingspy Rhythm Nation",4200,null,null),
       ];
-      return {ok:true, from:"2026-01-01", nights, summary:{nights:5, counted:4, total:15720, average:3930, met:2, short:1, noMin:1, gap:1}};
+      return {ok:true, from:"2026-01-01", nights, summary:{nights:6, counted:5, total:20370, average:4074, met:2, short:2, noMin:1, gap:1}};
     }
     if(payload.action==="requestDates"){
       const today = new Date().toISOString().slice(0,10);
@@ -855,7 +880,8 @@
 
   async function api(url, payload){
     if(DEMO) return demoApi(payload);
-    const r = await fetch(url, {method:"POST", body: JSON.stringify(Object.assign({token: TOKEN}, payload))});
+    const extra = VIEW_AS ? {asAccount: VIEW_AS, mgrToken: mgrTokenNow()} : {};
+    const r = await fetch(url, {method:"POST", body: JSON.stringify(Object.assign({token: TOKEN}, payload, extra))});
     const out = await r.json().catch(()=>({}));
     if(r.status===401){ localStorage.removeItem("margolis-dj-token"); location.href="/margolis-login"; throw "auth"; }
     if(!r.ok) throw (out.error || "Something went wrong — try again.");
@@ -1935,9 +1961,10 @@
           <div class="djd-ns__v">${nsVerdict(r)}</div>
           ${r.minimum!=null ? `<div class="djd-ns__d"></div><div class="djd-ns__m" title="${esc(NS_FROM[r.minimumFrom]||"")}">min ${payWhole(r.minimum)}</div>` : ``}
           ${r.door!=null ? `<div class="djd-ns__d"></div><div class="djd-ns__m" title="Margolis Door Charge rung during your party">door ${payMoney(r.door)}</div>` : ``}
+          ${r.door && r.doorFee ? `<div class="djd-ns__d"></div><div class="djd-ns__m" title="Square's processing fee on those door charges only">Square fee &minus;${payMoney(r.doorFee)}</div>` : ``}
           ${nsHours(r.hours)}
         </li>`).join("")}</ul>
-        <p class="djd-note" style="margin-top:14px">Margolis nights. Net bar sales off the register: no tax, tips or service charge. Co-hosts see the same figure. Minimums before Aug 28, 2026 only where one was set. Door, from Oct 22, 2026: what was rung as the Margolis Door Charge during your party. All payouts are held until your profile is complete.</p>
+        <p class="djd-note" style="margin-top:14px">Margolis nights. Net bar sales off the register: no tax, tips or service charge. Co-hosts see the same figure. Minimums before Aug 28, 2026 only where one was set. Door, from Oct 22, 2026: what was rung as the Margolis Door Charge during your party, and Square's fee on those charges only. All payouts are held until your profile is complete.</p>
       </div></details>`;
   }
 
@@ -2047,7 +2074,17 @@
       const me = await api(AUTH_URL, {action:"me"});
       const first = (me.account.name||"").split(" ")[0] || "there";
       document.getElementById("helloText").innerHTML = `Good to see you, <strong>${esc(first)}</strong>.`;
-      loadAvatar(me.account);
+      if(VIEW_AS){
+        const bar = document.getElementById("viewAsBar");
+        const who = me.account.stageName ? `${me.account.name} (${me.account.stageName})` : me.account.name;
+        bar.innerHTML = `<span class="va-bar__tag">View as</span><span><strong>${esc(who || me.account.email)}</strong> sees this. Read only.</span><a href="${location.pathname}">Exit</a>`;
+        bar.hidden = false;
+        document.body.classList.add("djd-viewas");
+        document.title = "View as " + (me.account.name || "host") + " — Margolis";
+        /* The photo call answers for the signed-in account only, so the
+           avatar stays an initial here rather than showing her face. */
+        const av = document.getElementById("djdAvatar"); av.hidden = false; av.textContent = avatarInitial(me.account.name);
+      } else loadAvatar(me.account);
       MY_CODE = me.account.partnerCode || "";
       if(MY_CODE) document.getElementById("helloText").insertAdjacentHTML("beforeend", ` <span class="djd-mycode" title="Your partner code">${esc(MY_CODE)}</span>`);
       if(me.account.mustSetPassword || !me.account.quickProfileDone){ location.href = "/margolis-login"; return; }
@@ -2056,7 +2093,7 @@
          its own allowlist on every call, so flipping this flag in a
          console buys a view with nothing behind it. The host half below
          still loads: she has a profile and nights of her own. */
-      if(me.account.isManager && typeof window.MGR_BOOT === "function"){ window.MGR_BOOT(); }
+      if(me.account.isManager && !VIEW_AS && typeof window.MGR_BOOT === "function"){ window.MGR_BOOT(); }
       renderProfilePanel(me.account);
       renderGuestList(me.account);
       renderW9(me.account);
@@ -2072,7 +2109,8 @@
       bindBookMore();
       renderPayHistory();
     }catch(e){
-      if(e!=="auth") document.getElementById("content").innerHTML = `<p class="djd-note" style="margin-top:20px">Couldn't load your nights — refresh, or email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>`;
+      if(e!=="auth" && VIEW_AS) document.getElementById("content").innerHTML = `<p class="djd-note" style="margin-top:20px">${esc(typeof e==="string" ? e : "Couldn't load that view.")} <a href="${location.pathname}">Back to your dashboard</a></p>`;
+      else if(e!=="auth") document.getElementById("content").innerHTML = `<p class="djd-note" style="margin-top:20px">Couldn't load your nights — refresh, or email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>`;
     }
   })();
 </script>
@@ -4538,6 +4576,41 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
     const b = ev.target.closest("[data-view]");
     if(b) setView(b.dataset.view);
   });
+
+  /* View as picker: every profile, each opening its own read-only copy
+     of this page in a new tab (?as=). The list comes from
+     margolis-dj-dashboard.php viewAsPeople, behind the same Face ID. */
+  const vaBtn = document.getElementById("viewAsBtn");
+  const vaPick = document.getElementById("viewAsPick");
+  const vaQ = document.getElementById("viewAsQ");
+  const vaList = document.getElementById("viewAsList");
+  let vaPeople = null;
+  function vaDraw(){
+    const q = vaQ.value.trim().toLowerCase();
+    const rows = (vaPeople||[]).filter(p => !q || [p.name, p.stageName, p.email].join(" ").toLowerCase().includes(q)).slice(0, 80);
+    vaList.innerHTML = rows.map(p => `<li><a href="?as=${encodeURIComponent(p.id)}" target="_blank" rel="noopener">
+      <span>${esc(p.name || p.email)}${p.stageName ? ` <span class="va-pick__meta" style="margin:0">${esc(p.stageName)}</span>` : ""}</span>
+      <span class="va-pick__meta">${esc(p.guest ? "guest" : (p.type || "host"))}</span></a></li>`).join("")
+      || `<li class="djd-note" style="padding:8px 4px">Nobody matches.</li>`;
+  }
+  vaBtn.addEventListener("click", async () => {
+    vaPick.hidden = !vaPick.hidden;
+    vaBtn.classList.toggle("on", !vaPick.hidden);
+    vaBtn.setAttribute("aria-expanded", String(!vaPick.hidden));
+    if(vaPick.hidden) return;
+    vaQ.focus();
+    if(vaPeople) return vaDraw();
+    vaList.innerHTML = `<li class="djd-note" style="padding:8px 4px">Loading…</li>`;
+    try{
+      const r = await fetch("https://jubyr.tools/margolis-dj-dashboard.php", {method:"POST",
+        body: JSON.stringify({token: TOKEN, mgrToken: mgrTok(), action:"viewAsPeople"})});
+      const out = await r.json().catch(()=>({}));
+      if(!r.ok) throw (out.error || "Couldn't load the list.");
+      vaPeople = out.people || [];
+      vaDraw();
+    }catch(e){ vaList.innerHTML = `<li class="djd-err show" style="padding:8px 4px">${esc(typeof e==="string" ? e : "Couldn't load the list.")}</li>`; }
+  });
+  vaQ.addEventListener("input", vaDraw);
 
   /* Called from init() once the server says this account is a manager.
      Nothing above runs for anyone else — a DJ's dashboard never asks
