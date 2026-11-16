@@ -1608,10 +1608,10 @@
       html += `<div class="djd-section">Partnered nights</div>`;
       html += partnered.map(([ev,i])=>eventCard(ev,i,false)).join("");
     }
-    if(ARCHIVE.length){
-      html += `<div class="djd-section">Past events</div>`;
-      html += ARCHIVE.map((s,i)=>eventCard({date:s.date, eventName:s.eventName, start:"", end:"", withNames:s.withNames||[], submission:s}, i, true)).join("");
-    }
+    /* No "Past events" list (Ruby, 2026-11-16: "Past events and your
+       nights and bar sales are redundant"). Previous Event History, in
+       renderPayHistory, is the one list of past nights; it carries the
+       check line these cards used to (nsCheck, off ARCHIVE). */
     c.innerHTML = html;
     bind();
   }
@@ -1949,8 +1949,16 @@
           <div class="djd-score__k">Met minimum</div></div>
       </div>`;
     const withLine = r => (r.with||[]).length ? ` <span>&middot; with ${esc(r.with.join(", "))}</span>` : "";
+    /* Their check for the night, off the same submission the old Past
+       events card read it from (ARCHIVE, their own payout only). */
+    const nsCheck = r => {
+      const a = ARCHIVE.find(x => x.date === r.date && (x.payout||[]).length);
+      return a ? a.payout.map(p => `<div class="djd-ns__d"></div><div class="djd-ns__m">${p.reason
+        ? `no check: ${esc(p.reason==="bar_minimum"?"bar minimum not met":p.reason==="no_agreement"?"no payout agreement":p.reason)}${p.owed?` · owed ${payMoney(p.owed)}`:""}`
+        : `check ${payMoney(p.totalPay)} · ${p.paid?"paid":"pending"}`}</div>`).join("") : "";
+    };
     el.innerHTML = owe + `<details class="djd-prof" style="margin-top:18px">
-      <summary>Your nights &amp; net sales
+      <summary>Previous Event History
         <span class="djd-pill">${rows.length} since Jan 2026${rated?` &middot; ${f.met} of ${rated} met`:``}</span></summary>
       <div class="djd-prof__body">
         ${scores}
@@ -1962,9 +1970,10 @@
           ${r.minimum!=null ? `<div class="djd-ns__d"></div><div class="djd-ns__m" title="${esc(NS_FROM[r.minimumFrom]||"")}">min ${payWhole(r.minimum)}</div>` : ``}
           ${r.door!=null ? `<div class="djd-ns__d"></div><div class="djd-ns__m" title="Margolis Door Charge rung during your party">door ${payMoney(r.door)}</div>` : ``}
           ${r.door && r.doorFee ? `<div class="djd-ns__d"></div><div class="djd-ns__m" title="Square's processing fee on those door charges only">Square fee &minus;${payMoney(r.doorFee)}</div>` : ``}
+          ${nsCheck(r)}
           ${nsHours(r.hours)}
         </li>`).join("")}</ul>
-        <p class="djd-note" style="margin-top:14px">Margolis nights. Net bar sales off the register: no tax, tips or service charge. Co-hosts see the same figure. Minimums before Aug 28, 2026 only where one was set. Door, from Oct 22, 2026: what was rung as the Margolis Door Charge during your party, and Square's fee on those charges only. All payouts are held until your profile is complete.</p>
+        <p class="djd-note" style="margin-top:14px">Margolis nights. Net bar sales off the register: no tax, tips or service charge. Co-hosts see the same figure. Minimums before Aug 28, 2026 only where one was set. Door, from Oct 22, 2026: what was rung as the Margolis Door Charge during your party, and Square's fee on those charges only. Bar and door count from your start time. All payouts are held until your profile is complete.</p>
       </div></details>`;
   }
 
