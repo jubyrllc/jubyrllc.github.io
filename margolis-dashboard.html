@@ -288,6 +288,8 @@
   .pay-sug__why{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.05em;
     text-transform:uppercase;color:var(--muted)}
   .pay-sug__use{margin-left:auto}
+  /* A date Ruby sent that still needs the host (2026-11-16). */
+  .evt__offer{display:inline-block;width:auto;font-family:var(--mono,monospace);font-size:11px;letter-spacing:.08em;text-transform:uppercase;background:var(--green,#7A2438);color:#fff;padding:7px 11px;text-decoration:none;margin:6px 8px 0 0;}
 </style>
 <link rel="stylesheet" href="margolis-dashboard-skin.css?v=5">
 </head>
@@ -1317,6 +1319,7 @@
         <h3>${esc(ev.eventName)}</h3>
         ${withLine}
         <div class="evt__chips">${chips}</div>
+        ${!archived && ev.offer ? `<a class="evt__offer" href="${esc(ev.offer.url)}" target="_blank" rel="noopener">${ev.offer.state==="details"?"Add details":"Add card"} &rarr;</a><span class="evt__date" style="width:100%">${ev.offer.state==="details"?"Not booked yet: add your event details, agree to the":"Details in. Add a card on file to book it:"} $${esc(money(ev.offer.minimum))} bar minimum${ev.offer.holdUntil?` · held until ${esc(new Date(ev.offer.holdUntil).toLocaleDateString("en-US",{month:"short",day:"numeric"}))}`:""}</span>` : ""}
         ${archived?"":`<div class="door" data-door-for="${esc(k)}">${DOOR.chips(ev.door)}${ev.guestContacts && DOOR.any(ev.door)?`<button type="button" class="door__more" data-door="${esc(k)}" data-i="${i}">${doorOpen.has(k)?"Hide contacts":"Guest contacts"}</button>`:""}</div>
         <div class="door__list" data-door-list="${esc(k)}">${doorOpen.has(k)?(doorData[k]?guestContactList(doorData[k]):`<div class="door__sect">Loading&hellip;</div>`):""}</div>`}
         ${s.fullyApproved?`<div class="evt__ok" style="width:100%">${s.ticketLink.noPresale?"All approved. No presale: door only.":"All approved — the presale is off and guests go straight to your ticket link."}</div>`:""}
