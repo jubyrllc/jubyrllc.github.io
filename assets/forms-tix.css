@@ -169,3 +169,17 @@ body.ft-page{padding-bottom:68px}
 .ft-page .cbmodal__card p,.ft-page .cbmodal__card h3,.ft-page .cbmodal__card p.iw-kicker{margin:0}
 .ft-page .cbmodal__card .btn{border-radius:999px;font:500 14px/1 var(--sans);letter-spacing:0;text-transform:none;padding:13px 22px;margin-top:6px}
 .ft-page .cbmodal__card .btn .arw{display:none}
+
+/* ---------- the end-of-form button (2026-11-17) ----------
+   Ruby: "I'm worried people won't see the bar at the bottom and know to
+   click it." The bar's main button is green, and assets/forms-end.js
+   repeats it full width under the last card. */
+.ft-bar .ft-bar__r .ft-btn,.ft-bar .ft-bar__r button,.ft-bar .intake__nav .btn:not(.btn--ghost){background:var(--ft-green);border-color:var(--ft-green);color:#fff}
+.ft-bar .ft-bar__r .ft-btn:hover:not(:disabled),.ft-bar .ft-bar__r button:hover:not(:disabled),.ft-bar .intake__nav .btn:not(.btn--ghost):hover:not(:disabled){background:#4C6300;border-color:#4C6300}
+.ft-bar button:disabled,.ft-bar .btn:disabled{opacity:.55}
+.ft .form-end{margin:0;min-width:0}
+.ft .form-end[hidden]{display:none!important}
+.ft .form-end button{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;padding:0 20px;border-radius:999px;
+  border:1px solid var(--ft-green);background:var(--ft-green);color:#fff;font:600 16px/1.2 var(--sans);letter-spacing:0;text-transform:none;cursor:pointer}
+.ft .form-end button:hover:not(:disabled){background:#4C6300;border-color:#4C6300}
+.ft .form-end button:disabled{opacity:.4;cursor:default}
