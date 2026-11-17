@@ -967,7 +967,7 @@
       profile is set up and your W9 is on file: we can't properly file our taxes without it. Fill out the IRS's own
       <a href="${IRS_W9_URL}" target="_blank" rel="noopener">blank W9 form</a> (most PDF readers let
       you type directly into it and sign), then upload the completed form here.
-      <input type="file" id="w9File" accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf" style="display:block;margin-top:10px">
+      <input type="file" id="w9File" accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf" data-pill="Upload W-9">
       <div class="intake__nav" style="margin-top:10px"><button type="button" class="btn btn--green" id="w9Upload">Upload my W9 <span class="arw" aria-hidden="true">&gt;</span></button></div>`;
     document.getElementById("w9Upload").addEventListener("click", async ()=>{
       const input = document.getElementById("w9File");
@@ -1351,7 +1351,7 @@
         <div class="evt__pane ${tab==="flyer"?"on":""}" data-pane="flyer">
           ${gatedBody("flyer", s.flyerFile, i, k, "Your flyer wasn't approved.", `
           <div class="ifield"><label>Event flyer <span class="req">*</span></label>
-            <input type="file" data-f="flyer" accept=".jpg,.jpeg,.png,image/jpeg,image/png">
+            <input type="file" data-f="flyer" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-pill="Upload flyer">
             ${s.flyerFile.value?`<p class="help">On file: ${esc(s.flyerFile.value)}</p>`:""}
             <p class="help">JPG or PNG, 4:5 portrait (1080×1350), up to 10 MB. <strong>No AI flyers.</strong> Due 14 days out. A new upload goes back into review.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="flyer" data-i="${i}">Upload flyer <span class="arw" aria-hidden="true">&gt;</span></button></div>
@@ -4644,5 +4644,6 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
 <script src="https://jubyr.tools/assets/js/flyer-crop.js?v=1"></script>
 <script src="https://jubyr.tools/assets/js/face-crop.js?v=1"></script>
 <script src="https://jubyr.tools/assets/js/date-pop.js?v=1"></script>
+<script src="https://jubyr.tools/assets/js/upload-pill.js?v=1" defer></script>
 </body>
 </html>
