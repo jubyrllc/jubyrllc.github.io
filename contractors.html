@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=32">
+<!-- The margolis.events ticket-site form layout, in Jubyr's colours. -->
+<link rel="stylesheet" href="assets/forms-tix.css?v=1">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
@@ -23,7 +25,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://jubyr.com/assets/og-contractors.jpg">
 </head>
-<body>
+<body class="ft-page">
 
 <!-- announcement -->
 <div class="announce">
@@ -61,31 +63,29 @@
     </div>
   </header>
 
-  <main id="top">
-    <section class="box">
-      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.45), rgba(12,12,12,0.6)), url('assets/bg-lounge-dark.jpg')">
-        <span class="tag">Client book</span>
-        <h2>Get in the book.</h2>
-        <p>Jubyr keeps a working book of the people who make this city move.
-        Tell me what you do, and when the right project lands, I&rsquo;ll know to call you.</p>
+  <main id="top" class="ft">
+    <div class="ft-col intake">
+      <div class="ft-intro">
+        <span class="ft-eyebrow">Client book</span>
+        <h1>Get in the book.</h1>
+        <p class="ft-sub">What you do and how to book you &middot; about 3 min.</p>
       </div>
 
-      <div class="intake">
-        <div class="intake__progress" id="progress" hidden>
-          <span class="intake__count" id="stepCount"></span>
-          <div class="intake__bar"><i id="barFill" style="width:0%"></i></div>
-        </div>
-
-        <form id="intake-form" novalidate autocomplete="on">
-          <!-- honeypot: real people never see or fill this -->
-          <input type="text" name="company" value="" tabindex="-1" autocomplete="off"
-                 style="position:absolute;left:-5000px;height:0;width:0;opacity:0" aria-hidden="true">
-          <div id="host"></div>
-          <p class="intake__err" id="stepErr"></p>
+      <form id="intake-form" class="stack14" novalidate autocomplete="on">
+        <!-- honeypot: real people never see or fill this -->
+        <input type="text" name="company" value="" tabindex="-1" autocomplete="off"
+               style="position:absolute;left:-5000px;height:0;width:0;opacity:0" aria-hidden="true">
+        <div id="host" class="ft-card"></div>
+        <p class="intake__err" id="stepErr"></p>
+        <div class="ft-bar"><div class="ft-bar__in">
+          <div class="intake__progress" id="progress" hidden>
+            <span class="intake__count" id="stepCount"></span>
+            <div class="intake__bar"><i id="barFill" style="width:0%"></i></div>
+          </div>
           <div class="intake__nav" id="navBtns"></div>
-        </form>
-      </div>
-    </section>
+        </div></div>
+      </form>
+    </div>
   </main>
 </div>
 
@@ -200,7 +200,7 @@
   const phoneOk = p => phoneDigits(p).length===10;
 
   const STEPS = [
-    { title:"Who you are", sub:"The basics, in your own words.", fields:[
+    { title:"Who you are", sub:"", fields:[
       {key:"firstName", label:"First name", type:"text", required:true, autocomplete:"given-name"},
       {key:"lastName", label:"Last name", type:"text", autocomplete:"family-name"},
       {key:"business", label:"Business or brand name", type:"text"},
@@ -215,7 +215,7 @@
       {key:"whatYouDo", label:"In a sentence or two, what do you actually do?", type:"textarea", required:true},
       {key:"specialties", label:"Anything you specialize in", type:"text"}
     ]},
-    { title:"How to reach you", sub:"So the right project can find you.", fields:[
+    { title:"How to reach you", sub:"", fields:[
       {key:"email", label:"Best email", type:"email", required:true, autocomplete:"email", placeholder:"you@email.com"},
       {key:"phone", label:"Phone number", type:"tel", required:true, autocomplete:"tel", placeholder:"10-digit number"},
       {key:"bestContact", label:"Best way to reach you", type:"radio", options:["Text","Call","Email","Instagram"]},
@@ -232,7 +232,7 @@
         {key:"otherLinks", label:"Anything else worth having", type:"text"}
       ]}
     ]},
-    { title:"Rates", sub:"", note:"Nobody sees this but me. It just keeps me from wasting your time with budgets that don't fit.", fields:[
+    { title:"Rates", sub:"", note:"Only I see this.", fields:[
       {key:"paymentStructure", label:"How do you prefer to be paid?", type:"checks", options:["Hourly","Per project / flat fee","Day rate","Half day rate","Retainer / monthly","Per post","Per word","Commission","Trade / barter","Free tickets","Free for the right cause","Depends entirely","Not applicable"]},
       {key:"hourlyRate", label:"Hourly rate", type:"text", when:()=>paysBy("Hourly"), help:"Your price per hour, e.g. $75/hour."},
       {key:"dayRate", label:"Day rate", type:"text", when:()=>paysBy("Day rate")||paysBy("Half day rate"), help:"Your price per day or half day, e.g. $400 full / $250 half."},
@@ -335,8 +335,7 @@
     m.innerHTML = `<div class="cbmodal__card" role="dialog" aria-modal="true" aria-label="Welcome">
       <p class="iw-kicker">Welcome &middot; from Ruby</p>
       <h3>Let&rsquo;s Work Together</h3>
-      <p>Jubyr books DJs, photographers, designers, artists, etc. straight
-      from this book. Takes about 3 minutes.</p>
+      <p>Jubyr books DJs, photographers, designers and artists straight from this book. About 3 min.</p>
       <button type="button" class="btn btn--green" id="welcomeGo">Join the Client Book <span class="arw" aria-hidden="true">&gt;</span></button>
     </div>`;
     document.body.appendChild(m);

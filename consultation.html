@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=43">
+<!-- The margolis.events ticket-site form layout, in Jubyr's colours. -->
+<link rel="stylesheet" href="assets/forms-tix.css?v=1">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
 <meta property="og:title" content="Book a Free Consultation — Jubyr LLC">
@@ -21,93 +23,8 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://jubyr.com/assets/og-default.jpg">
-<style>
-  /* ---- Scheduler. Built on the site's own tokens so it reads as part
-     of jubyr.com rather than an embedded third party widget. ---- */
-  .sched { padding: 34px 28px 44px; max-width: 860px; margin: 0 auto; }
-  .sched__cols { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; align-items: start; }
-  @media (max-width: 760px) { .sched__cols { grid-template-columns: 1fr; gap: 26px; } }
-
-  .sched__label {
-    font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .12em;
-    text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 14px;
-  }
-
-  .calnav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .calnav span { color: var(--ink); font-size: 12px; letter-spacing: .1em; }
-  .calnav button {
-    font-family: var(--mono); font-size: 14px; line-height: 1; width: 32px; height: 32px;
-    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
-    cursor: pointer; border-radius: 999px;
-  }
-  .calnav button:hover:not(:disabled) { border-color: var(--green); color: var(--green); }
-  .calnav button:disabled { opacity: .3; cursor: default; }
-
-  .calgrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-  .calhead {
-    font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
-    color: var(--muted); text-align: center; padding-bottom: 6px;
-  }
-  .calday {
-    aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
-    font-size: 14px; color: #B9B9B0; border: 1px solid transparent; border-radius: 999px;
-  }
-  .calday--avail {
-    color: var(--ink); border-color: var(--green-line); background: var(--green-tint);
-    cursor: pointer; font-weight: 600;
-  }
-  .calday--avail:hover { border-color: var(--green); }
-  .calday.on { background: var(--green); border-color: var(--green); color: #fff; }
-
-  .times { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  @media (max-width: 330px) { .times { grid-template-columns: 1fr; } }
-  .timebtn {
-    font-family: var(--mono); font-size: 12px; letter-spacing: .06em;
-    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
-    padding: 11px 8px; cursor: pointer; border-radius: 8px;
-  }
-  .timebtn:hover { border-color: var(--green); color: var(--green); }
-  .timebtn.on { background: var(--green); border-color: var(--green); color: #fff; }
-  .times__empty { color: var(--muted); font-size: 14px; }
-
-  .sched__form { margin-top: 34px; padding-top: 28px; border-top: 1px solid var(--line); }
-  .sched__picked {
-    background: var(--green-tint); border: 1px solid var(--green-line);
-    padding: 16px 18px; margin-bottom: 26px;
-  }
-  .sched__picked strong { display: block; font-size: 17px; margin-top: 4px; }
-  .sched__picked .mono { color: var(--muted); }
-
-  .rcheck { display: flex; align-items: flex-start; gap: 10px; margin: 4px 0 22px; cursor: pointer; }
-  .rcheck input { margin-top: 4px; flex-shrink: 0; }
-  .rcheck span { color: var(--muted); font-size: 13.5px; line-height: 1.55; }
-
-  .sched__done { text-align: center; padding: 10px 0 4px; }
-  .sched__done h3 { font-size: 24px; margin-bottom: 10px; }
-  .sched__done p { color: var(--muted); font-size: 15.5px; line-height: 1.65; margin-bottom: 16px; }
-  .sched__done a.btn { margin-top: 6px; }
-
-  .sched__notice {
-    border: 1px solid var(--line); background: #FBFBF8; padding: 18px 20px;
-    color: var(--muted); font-size: 14.5px; line-height: 1.6; margin-bottom: 26px;
-  }
-  .sched__notice strong { color: var(--ink); }
-
-  /* The process, one line of three, so the calendar sits near the top of
-     the page instead of below a wall of explanation. */
-  /* The topic question is a chip group, not a select, so it needs the same
-     heading treatment .ifield gives a real <label>. */
-  .ifield > .ifield__lbl {
-    display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .12em;
-    text-transform: uppercase; color: var(--ink); margin-bottom: 9px;
-  }
-
-  .steps { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 28px; }
-  .steps li { display: flex; align-items: baseline; gap: 8px; color: var(--ink); font-size: 15px; }
-  .steps .mono { color: var(--green); font-size: 11px; letter-spacing: .1em; }
-</style>
 </head>
-<body>
+<body class="ft-page">
 
 <!-- announcement -->
 <div class="announce">
@@ -145,31 +62,17 @@
     </div>
   </header>
 
-  <main id="top">
-    <section class="box">
-      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.48), rgba(12,12,12,0.62)), url('assets/bg-lounge-dark.jpg')">
-        <span class="tag">Free consultation</span>
-        <h2>Every project begins with a conversation.</h2>
-        <p>Pick a time that is genuinely open on Ruby's calendar and it is
-        booked on the spot. Fifteen minutes on the phone, no cost, no pitch
-        deck required.</p>
+  <main id="top" class="ft">
+    <div class="ft-col">
+      <div class="ft-intro">
+        <span class="ft-eyebrow">Free consultation</span>
+        <h1>Book a 15 minute call.</h1>
+        <p class="ft-sub">Live times from Ruby&rsquo;s calendar &middot; she calls you.</p>
       </div>
-
-      <div class="sched">
-        <div style="margin-bottom:30px">
-          <span class="sched__label">How it works</span>
-          <ul class="steps">
-            <li><span class="mono">01</span><strong>Pick a time</strong></li>
-            <li><span class="mono">02</span><strong>Tell us what it's about</strong></li>
-            <li><span class="mono">03</span><strong>Ruby calls you</strong></li>
-          </ul>
-        </div>
-
-        <div id="schedWrap">
-          <p class="mg-calnote">Loading open times&hellip;</p>
-        </div>
+      <div id="schedWrap" class="stack14">
+        <p class="mg-calnote">Loading open times&hellip;</p>
       </div>
-    </section>
+    </div>
   </main>
 </div>
 
@@ -422,7 +325,7 @@
             ? "We can't read the calendar right now, so we won't guess at times."
             : configured ? "No open times in the next few weeks."
             : "Live booking is being connected right now."}</strong>
-          Fill this in and it goes straight to Ruby with the times you prefer, and she will confirm one directly.
+          Send the times that suit you and Ruby confirms one.
         </div>` + formHtml({ manual: true });
       wireForm({ manual: true });
       return;
@@ -432,22 +335,22 @@
     monthCursor.setDate(1);
 
     wrap.innerHTML =
-      `<div class="sched__cols">
-        <div>
-          <span class="sched__label">01 &middot; Pick a day</span>
+      `<div class="ft-card">
+        <div class="ft-head">Day</div>
+        <div class="ft-row">
           <div class="calnav">
             <button type="button" id="calPrev" aria-label="Previous month">&lt;</button>
-            <span class="mono" id="calMonth"></span>
+            <span id="calMonth"></span>
             <button type="button" id="calNext" aria-label="Next month">&gt;</button>
           </div>
           <div class="calgrid" id="calGrid"></div>
         </div>
-        <div>
-          <span class="sched__label">02 &middot; Pick a time <span style="text-transform:none;letter-spacing:.04em">(Eastern)</span></span>
-          <div id="timeWrap"><p class="times__empty">Pick a day and the open times show up here.</p></div>
-        </div>
       </div>
-      <div id="formWrap"></div>`;
+      <div class="ft-card">
+        <div class="ft-head">Time <span class="ft-n">${durationMin} min &middot; Eastern</span></div>
+        <div class="ft-row" id="timeWrap"><p class="times__empty">Pick a day &uarr;</p></div>
+      </div>
+      <div id="formWrap" class="stack14"></div>`;
 
     document.getElementById("calPrev").addEventListener("click", () => { monthCursor.setMonth(monthCursor.getMonth() - 1); renderMonth(); });
     document.getElementById("calNext").addEventListener("click", () => { monthCursor.setMonth(monthCursor.getMonth() + 1); renderMonth(); });
@@ -509,45 +412,49 @@
 
   function formHtml(mode) {
     const picked = (!mode.manual && selectedSlot)
-      ? `<div class="sched__picked">
-           <span class="mono">Your time</span>
-           <strong>${esc(dayLabel(selectedSlot.start))} at ${esc(timeLabel(selectedSlot.start))}</strong>
-           <span class="mono">${durationMin} minutes &middot; Eastern time</span>
+      ? `<div class="ft-card">
+           <div class="ft-head">Your call</div>
+           <div class="ft-kv"><span>Day</span><span>${esc(dayLabel(selectedSlot.start))}</span></div>
+           <div class="ft-kv"><span>Time</span><span>${esc(timeLabel(selectedSlot.start))} &middot; ${durationMin} min &middot; Eastern</span></div>
          </div>` : "";
 
-    return `<div class="sched__form">
-      ${picked}
-      <span class="sched__label">${mode.manual ? "Tell us about it" : "03 &middot; Tell us about it"}</span>
+    return `${picked}
+      <div class="ft-card">
+        <div class="ft-head">You</div>
+        <div class="ifield"><label for="fName">Your name <span class="req">*</span></label>
+          <input type="text" id="fName" autocomplete="name"></div>
+        <div class="ifield"><label for="fEmail">Email <span class="req">*</span></label>
+          <input type="email" id="fEmail" placeholder="you@email.com" autocomplete="email"></div>
+        <div class="ifield"><label for="fPhone">Phone <span class="req">*</span></label>
+          <input type="tel" id="fPhone" placeholder="The number Ruby calls" autocomplete="tel"></div>
+        <div class="ifield"><label for="fOrg">Company, venue, or project</label>
+          <input type="text" id="fOrg" placeholder="Optional"></div>
+      </div>
 
-      <div class="ifield"><label for="fName">Your name <span class="req">*</span></label>
-        <input type="text" id="fName" autocomplete="name"></div>
+      <div class="ft-card">
+        <div class="ft-head">The call</div>
+        <div class="ifield"><span class="ifield__lbl" id="fTopicLbl">What is it about? <span class="req">*</span></span>
+          <div class="iopts" id="fTopic" role="radiogroup" aria-labelledby="fTopicLbl">${
+            TOPICS.map(t => `<button type="button" class="ichip${selectedTopic === t ? " on" : ""}" data-val="${esc(t)}" role="radio" aria-checked="${selectedTopic === t}">${esc(t)}</button>`).join("")
+          }</div></div>
+        <div id="branchWrap">${branchHtml()}</div>
+        ${mode.manual ? `<div class="ifield"><label for="fPreferred">What times work for you? <span class="req">*</span></label>
+          <input type="text" id="fPreferred" placeholder="e.g. weekday afternoons, or Tuesday the 9th after 2"></div>` : ""}
+      </div>
 
-      <div class="ifield"><label for="fEmail">Email <span class="req">*</span></label>
-        <input type="email" id="fEmail" placeholder="you@email.com" autocomplete="email"></div>
-
-      <div class="ifield"><label for="fPhone">Phone number <span class="req">*</span></label>
-        <input type="tel" id="fPhone" placeholder="The number Ruby should call" autocomplete="tel">
-        <p class="help">This is a phone call. Ruby rings this number at the time you pick.</p></div>
-
-      <div class="ifield"><label for="fOrg">Company, venue, or project</label>
-        <input type="text" id="fOrg" placeholder="Optional"></div>
-
-      <div class="ifield"><span class="ifield__lbl" id="fTopicLbl">What is this call about? <span class="req">*</span></span>
-        <div class="iopts" id="fTopic" role="radiogroup" aria-labelledby="fTopicLbl">${
-          TOPICS.map(t => `<button type="button" class="ichip${selectedTopic === t ? " on" : ""}" data-val="${esc(t)}" role="radio" aria-checked="${selectedTopic === t}">${esc(t)}</button>`).join("")
-        }</div></div>
-
-      <div id="branchWrap">${branchHtml()}</div>
-
-      ${mode.manual ? `<div class="ifield"><label for="fPreferred">What times work for you? <span class="req">*</span></label>
-        <input type="text" id="fPreferred" placeholder="e.g. weekday afternoons, or Tuesday the 9th after 2"></div>` : ""}
-
-      <label class="rcheck"><input type="checkbox" id="fConsent">
-        <span>You can email, call, or text me about this inquiry, and keep me on the list for events, lineups, ticket drops and offers from Jubyr LLC. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. Unsubscribe any time. See our <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/terms" target="_blank" rel="noopener">Terms</a>.</span></label>
+      <div class="ft-card">
+        <div class="ft-head">Contact <span class="ft-n">Optional</span></div>
+        <div class="ft-row"><label class="ft-check"><input type="checkbox" id="fConsent">
+          <span>You can email, call, or text me about this inquiry, and keep me on the list for events, lineups, ticket drops and offers from Jubyr LLC. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. Unsubscribe any time. See our <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/terms" target="_blank" rel="noopener">Terms</a>.</span></label></div>
+      </div>
 
       <p class="intake__err" id="fErr"></p>
-      <button type="button" class="btn btn--green" id="fGo">${mode.manual ? "Send the request" : "Confirm my consultation"} <span class="arw" aria-hidden="true">&gt;</span></button>
-    </div>`;
+      <div class="ft-bar"><div class="ft-bar__in">
+        <div class="ft-bar__l">${mode.manual
+          ? `<b>Call request</b><small>Ruby confirms a time</small>`
+          : `<b>${esc(new Date(selectedSlot.start).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }))} &middot; ${esc(timeLabel(selectedSlot.start))}</b><small>Free &middot; ${durationMin} min &middot; Ruby calls you</small>`}</div>
+        <div class="ft-bar__r"><button type="button" class="ft-btn" id="fGo">${mode.manual ? "Send" : "Confirm"}</button></div>
+      </div></div>`;
   }
 
   // Walk the fields showing for the current topic, including any follow up
@@ -706,8 +613,8 @@
         "&body=" + encodeURIComponent(body);
       done({
         heading: "Your email app should be opening.",
-        body: "Everything is filled in already, just hit send. If nothing opened, write to " +
-              "<a href=\"mailto:ruby@jubyr.com\" style=\"color:var(--green)\">ruby@jubyr.com</a> and we will find a time.",
+        body: "It's all filled in: hit send. Nothing opened? Write to " +
+              "<a href=\"mailto:ruby@jubyr.com\" style=\"color:var(--green)\">ruby@jubyr.com</a>.",
       });
       return;
     }
@@ -735,10 +642,9 @@
       const when = dayLabel(selectedSlot.start) + " at " + timeLabel(selectedSlot.start);
       done({
         heading: "You're booked.",
-        body: "<strong>Ruby will call you at " + esc(out.phone || f.phone) + "</strong> on " + esc(when) +
-              ", Eastern time. Nothing to join and no link to click, just have your phone with you. " +
-              "The calendar invite is on its way to your inbox and it is on Ruby's calendar too. " +
-              "Need to move it, or is a different number better? Reply to that invite or write to " +
+        body: "<strong>Ruby calls " + esc(out.phone || f.phone) + "</strong> on " + esc(when) +
+              ", Eastern. No link, just your phone. The invite is in your inbox. " +
+              "To move it, reply to the invite or write to " +
               "<a href=\"mailto:ruby@jubyr.com\" style=\"color:var(--green)\">ruby@jubyr.com</a>.",
       });
     } catch (e) {
@@ -751,17 +657,18 @@
     const wrap = document.getElementById("schedWrap");
     const note = document.createElement("div");
     note.className = "sched__notice";
-    note.innerHTML = `<strong>${esc(msg)}</strong> The times below are fresh, pick another one.`;
+    note.innerHTML = `<strong>${esc(msg)}</strong> Pick another time.`;
     wrap.prepend(note);
     note.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   function done(o) {
     document.getElementById("schedWrap").innerHTML =
-      `<div class="sched__done">
+      `<div class="ft-card ft-done">
+        <div class="mark">&#10003;</div>
         <h3>${esc(o.heading)}</h3>
         <p>${o.body}</p>
-        <p style="margin-top:22px"><a class="btn btn--ghost" href="/">Back to jubyr.com <span aria-hidden="true">&gt;</span></a></p>
+        <a class="ft-btn ghost" href="/">jubyr.com</a>
       </div>`;
     document.getElementById("schedWrap").scrollIntoView({ behavior: "smooth", block: "center" });
   }

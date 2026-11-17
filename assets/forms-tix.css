@@ -1,0 +1,171 @@
+/* jubyr.com forms in the margolis.events ticket-site layout (draft 2026-11-16).
+   Same shape Ruby approved on margolis.events (assets/tix/forms.css there):
+   an intro card, one rounded card per section, pill chips, a dark bar at
+   the bottom. Jubyr's own tokens from styles.css: Schibsted Grotesk,
+   IBM Plex Mono, olive green where Margolis uses maroon.
+   Loaded after styles.css by consultation, intakeform, contractors,
+   signup and partnerships. Everything is scoped under .ft so the rest
+   of each page (nav, footer, the partnerships deck) is untouched. */
+
+.ft{
+  --ft-ground:#F4F4EF; --ft-card:#fff; --ft-ink:var(--ink,#121211); --ft-ink-2:#3E3E39;
+  --ft-muted:var(--muted,#5D5D56); --ft-line:var(--line,#DDDDD3);
+  --ft-green:var(--green,#607D00); --ft-tint:var(--green-tint,#F2F5E4); --ft-tint-line:var(--green-line,#C7D394);
+  --ft-bad:#A3261F; --ft-bad-tint:#FBE9E7;
+  background:var(--ft-ground); color:var(--ft-ink);
+  font-family:var(--sans); font-size:15px; line-height:1.5;
+}
+.ft *{box-sizing:border-box}
+/* Full bleed inside the site's .frame, so the grey ground runs edge to edge on a phone. */
+.frame > .ft{margin-left:calc(-1 * var(--gutter,28px));margin-right:calc(-1 * var(--gutter,28px))}
+.ft [hidden]{display:none!important}
+.ft-col{max-width:620px;margin:0 auto;padding:20px 16px 28px;display:grid;gap:14px;min-width:0}
+.ft-col > *{min-width:0}
+
+/* ---------- intro card ---------- */
+.ft-intro{background:var(--ft-card);border:1px solid var(--ft-line);border-radius:14px;padding:22px 20px;display:grid;gap:6px}
+.ft-eyebrow{font:500 11px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ft-green)}
+.ft .ft-intro h1{font-family:var(--sans);font-size:clamp(28px,6vw,40px);line-height:1.05;font-weight:800;letter-spacing:-.025em;margin:2px 0 0;max-width:none;color:var(--ft-ink)}
+.ft-sub{color:var(--ft-muted);font-size:14px;margin:0}
+.ft-sub a{color:var(--ft-green);text-decoration:underline;text-underline-offset:2px}
+
+/* ---------- section cards ---------- */
+.ft-card{background:var(--ft-card);border:1px solid var(--ft-line);border-radius:14px;overflow:hidden;min-width:0}
+.ft-head,.ft h2.step-title,.ft .intake h2.step-title,.ft .divider,.ft .intake .divider{display:flex;justify-content:space-between;gap:10px;margin:0;padding:10px 14px;font:500 12px/1.3 var(--mono)!important;letter-spacing:.06em!important;text-transform:uppercase;color:var(--ft-ink);border-bottom:1px solid var(--ft-line);max-width:none}
+.ft .divider,.ft .intake .divider{border-top:1px solid var(--ft-line);border-bottom:0;background:#FAFAF7;color:var(--ft-muted)}
+.ft-col.intake{max-width:620px;margin:0 auto;padding:20px 16px 28px}
+.ft .divider + .ifield{border-top:1px solid var(--ft-line)}
+.ft-head .ft-n{color:var(--ft-muted);text-transform:none;letter-spacing:0}
+
+/* One question = one row, split by thin lines. */
+.ft .ifield,.ft-row{margin:0;padding:14px;border-top:1px solid var(--ft-line);display:grid;gap:8px;min-width:0}
+.ft-head + .ifield,.ft-head + .ft-row,.ft .step-title + .ifield,.ft .step-title + .ft-note + .ifield,
+.ft-head + div > .ifield:first-child,.ft-head + div > .ft-row:first-child{border-top:0}
+.ft .ifield > label,.ft .ifield > .ifield__lbl,.ft-lbl{display:block;margin:0;font:500 14px/1.35 var(--sans);letter-spacing:0;text-transform:none;color:var(--ft-ink)}
+.ft .req{color:var(--ft-green)}
+.ft .help,.ft-help{margin:0;font-size:12.5px;line-height:1.5;color:var(--ft-muted)}
+.ft .help a,.ft-help a{color:var(--ft-green);text-decoration:underline;overflow-wrap:anywhere}
+.ft .step-sub{margin:0;padding:10px 14px 0;font-size:13px;color:var(--ft-muted)}
+.ft .step-sub + .ifield{border-top:0}
+/* A short tinted line inside a card: the "only I see this" notes. */
+.ft .note,.ft-note{margin:12px 14px 2px;padding:10px 12px;border-radius:10px;border:0;background:var(--ft-tint);color:var(--ft-ink-2);font-size:13.5px}
+.ft .note + .ifield{border-top:0}
+
+/* ---------- inputs ---------- */
+.ft input:not([type=checkbox]):not([type=radio]):not([type=file]),.ft select,.ft textarea{
+  width:100%;min-width:0;min-height:44px;margin:0;padding:9px 12px;border:1px solid var(--ft-line);border-radius:8px;
+  background:#fff;color:var(--ft-ink);font:400 16px/1.4 var(--sans);box-shadow:none;-webkit-appearance:none;appearance:none}
+.ft select{padding-right:34px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%235D5D56' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 12px center}
+.ft textarea{min-height:88px;resize:vertical}
+.ft input::placeholder,.ft textarea::placeholder{color:#9A9A92;font-style:normal}
+.ft input:focus,.ft select:focus,.ft textarea:focus{outline:2px solid var(--ft-green);outline-offset:0;border-color:transparent}
+.ft input[aria-invalid="true"],.ft textarea[aria-invalid="true"]{border-color:var(--ft-bad);background:var(--ft-bad-tint)}
+.ft-f{display:grid;gap:6px;min-width:0}
+.ft fieldset.ft-row{border:0;border-top:1px solid var(--ft-line);min-inline-size:0}
+.ft legend.ft-lbl{float:left;width:100%;padding:0;margin:0 0 8px}
+.ft legend.ft-lbl + *{clear:both}
+.ft-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+@media (max-width:480px){.ft-pair{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- chips: pills, dark when picked ---------- */
+.ft .iopts,.ft-chips{display:flex;flex-wrap:wrap;gap:6px}
+.ft .ichip,.ft-chip span{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:7px 14px;border-radius:999px;
+  border:1px solid var(--ft-line);background:#fff;color:var(--ft-ink);font:400 14px/1.25 var(--sans);letter-spacing:0;text-align:left;cursor:pointer;
+  transition:background .15s,border-color .15s,color .15s}
+.ft .ichip:hover,.ft-chip:hover span{border-color:var(--ft-ink)}
+.ft .ichip.on,.ft-chip input:checked + span{background:var(--ft-ink);border-color:var(--ft-ink);color:#fff}
+.ft .ifield > .ichip{justify-self:start}
+.ft .ichip[data-reveal]{color:var(--ft-green);border-color:var(--ft-tint-line)}
+.ft-chip{position:relative;display:inline-flex}
+.ft-chip input{position:absolute;opacity:0;width:0;height:0}
+.ft-chip input:focus-visible + span{outline:2px solid var(--ft-green);outline-offset:2px}
+.ft .subgroup{margin:0 0 6px}
+.ft .sg-label{font:500 11px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ft-muted);margin:4px 0 7px}
+.ft .scale{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.ft .scale .ichip{min-width:42px;padding:7px 0}
+.ft .scale .end{font:500 11px/1.35 var(--mono);color:var(--ft-muted);max-width:13ch}
+
+/* ---------- a tick box with its sentence ---------- */
+.ft-check{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--ft-ink-2);cursor:pointer;margin:0}
+.ft-check input{flex:none;width:18px;height:18px;margin:1px 0 0;accent-color:var(--ft-green)}
+.ft-check a{color:var(--ft-green);text-decoration:underline}
+.ft-check em{font-style:normal;color:var(--ft-muted)}
+
+/* ---------- red tint notice ---------- */
+.ft .intake__err,.ft-err{margin:0;padding:12px 14px;border-radius:10px;background:var(--ft-bad-tint);color:var(--ft-bad);font-size:14px;font-weight:500}
+.ft .intake__err{display:none}
+.ft .intake__err.show{display:block}
+/* The button lives in the bar now and can be pressed from anywhere on a
+   long step, so the error is pinned just above the bar where it is seen. */
+.ft-page .intake__err.show,.ft-page .ft-err.pin:not([hidden]){position:fixed;left:50%;transform:translateX(-50%);bottom:calc(78px + env(safe-area-inset-bottom));
+  width:min(588px,calc(100vw - 32px));z-index:41;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+
+/* Label / value lines: a choice echoed back. */
+.ft-kv{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-top:1px solid var(--ft-line);font-size:14px}
+.ft-head + .ft-kv{border-top:0}
+.ft-kv span:first-child{color:var(--ft-muted)}
+.ft-kv span:last-child{text-align:right;font-weight:600;overflow-wrap:anywhere}
+
+/* ---------- done state ---------- */
+.ft .intake__done,.ft-done{padding:26px 20px;display:grid;gap:10px;justify-items:start;text-align:left}
+.ft .intake__done .mark,.ft-done .mark{width:44px;height:44px;border-radius:50%;background:var(--ft-green);color:#fff;display:grid;place-items:center;font-size:20px;margin:0;border:0}
+.ft .intake__done h2,.ft-done h2,.ft-done h3{font-family:var(--sans);font-size:clamp(24px,5vw,30px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0;color:var(--ft-ink)}
+.ft .intake__done p,.ft-done p{margin:0;color:var(--ft-ink-2);font-size:15px;max-width:none}
+.ft-done a:not(.ft-btn){color:var(--ft-green)!important}
+.ft-foot{text-align:center;font-size:12.5px;color:var(--ft-muted)}
+.ft-foot a{color:var(--ft-green);text-decoration:underline}
+
+/* ---------- buttons ---------- */
+.ft-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:0 20px;border-radius:999px;
+  border:1px solid var(--ft-ink);background:var(--ft-ink);color:#fff;font:500 14px/1 var(--sans);letter-spacing:0;text-transform:none;text-decoration:none;white-space:nowrap;cursor:pointer}
+.ft-btn.ghost{background:transparent;color:var(--ft-ink);border-color:var(--ft-line)}
+
+/* ---------- the dark bar ---------- */
+.ft-bar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--ft-ink);color:#fff}
+.ft-bar.sticky{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));border-radius:14px}
+.ft-bar.sticky .ft-bar__in{padding:10px 10px 10px 18px}
+.ft-bar__in{max-width:620px;margin:0 auto;padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;justify-content:space-between;align-items:center;gap:12px}
+.ft-bar__l{min-width:0;display:grid;gap:2px}
+.ft-bar__l b{font:500 15px/1.3 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ft-bar__l small{font:400 12.5px/1.3 var(--sans);letter-spacing:0;text-transform:none;color:rgba(255,255,255,.66);margin:0}
+.ft-bar__r,.ft-bar .intake__nav{display:flex;gap:8px;margin:0;flex:none}
+.ft-bar .btn,.ft-bar .ft-btn,.ft-bar button[type=submit]{display:inline-flex;align-items:center;justify-content:center;min-height:42px;min-width:110px;padding:0 20px;border-radius:999px;
+  background:#fff;color:var(--ft-ink);border:1px solid #fff;font:500 14px/1 var(--sans);letter-spacing:0;text-transform:none;cursor:pointer;white-space:nowrap}
+.ft-bar .btn .arw{display:none}
+.ft-bar .btn--ghost{min-width:0;background:transparent;color:#fff;border-color:rgba(255,255,255,.3)}
+.ft-bar .btn:disabled,.ft-bar button:disabled{opacity:.5;cursor:default}
+.ft-bar .intake__progress{margin:0;display:grid;gap:5px;min-width:0}
+.ft-bar .intake__bar{height:3px;width:120px;max-width:100%;background:rgba(255,255,255,.18);border-radius:3px;overflow:hidden}
+.ft-bar .intake__bar i{background:#AFC755;height:3px}
+.ft-bar .intake__count{font:500 15px/1.3 var(--sans);letter-spacing:0;text-transform:none;color:#fff;margin:0}
+.ft-bar .intake__saved{margin:0;font:400 11.5px/1.2 var(--sans);letter-spacing:0;color:rgba(255,255,255,.66);opacity:0;transition:opacity .4s}
+.ft-bar .intake__saved.show{opacity:1}
+.ft-bar:has(.intake__nav:empty){display:none}
+body.ft-page{padding-bottom:68px}
+
+/* ---------- consultation calendar ---------- */
+.ft .calnav{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px}
+.ft .calnav span{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ft-ink)}
+.ft .calnav button{width:34px;height:34px;border-radius:50%;border:1px solid var(--ft-line);background:#fff;color:var(--ft-ink);font:400 15px/1 var(--mono);cursor:pointer}
+.ft .calnav button:disabled{opacity:.3;cursor:default}
+.ft .calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.ft .calhead{font:500 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ft-muted);text-align:center;padding-bottom:6px}
+.ft .calday{aspect-ratio:auto;height:40px;display:flex;align-items:center;justify-content:center;border-radius:999px;border:1px solid transparent;font-size:14px;color:#B9B9B0}
+.ft .calday--avail{color:var(--ft-ink);background:var(--ft-tint);border-color:var(--ft-tint-line);font-weight:600;cursor:pointer}
+.ft .calday--avail:hover{border-color:var(--ft-green)}
+.ft .calday.on{background:var(--ft-ink);border-color:var(--ft-ink);color:#fff}
+.ft .times{display:flex;flex-wrap:wrap;gap:6px}
+.ft .timebtn{min-height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--ft-line);background:#fff;color:var(--ft-ink);font:500 13px/1 var(--mono);letter-spacing:.02em;cursor:pointer}
+.ft .timebtn:hover{border-color:var(--ft-ink);color:var(--ft-ink)}
+.ft .timebtn.on{background:var(--ft-ink);border-color:var(--ft-ink);color:#fff}
+.ft .times__empty{margin:0;color:var(--ft-muted);font-size:14px}
+.ft .sched__notice{margin:0;padding:12px 14px;border-radius:10px;background:var(--ft-tint);border:1px solid var(--ft-tint-line);color:var(--ft-ink-2);font-size:14px}
+.ft .sched__notice strong{display:block;color:var(--ft-ink)}
+.ft .mg-calnote{padding:22px 14px;text-align:center;color:var(--ft-muted);font-size:14px;margin:0}
+.ft .stack14{display:grid;gap:14px}
+
+/* ---------- contractors welcome pop-up ---------- */
+.ft-page .cbmodal__card{border-radius:14px;padding:26px 22px 22px;display:grid;gap:10px;justify-items:center}
+.ft-page .cbmodal__card p,.ft-page .cbmodal__card h3,.ft-page .cbmodal__card p.iw-kicker{margin:0}
+.ft-page .cbmodal__card .btn{border-radius:999px;font:500 14px/1 var(--sans);letter-spacing:0;text-transform:none;padding:13px 22px;margin-top:6px}
+.ft-page .cbmodal__card .btn .arw{display:none}

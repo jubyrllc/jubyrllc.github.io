@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=23">
+<link rel="stylesheet" href="assets/forms-tix.css?v=1">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
@@ -23,7 +24,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://jubyr.com/assets/og-default.jpg">
 </head>
-<body>
+<body class="ft-page">
 
 <!-- announcement -->
 <div class="announce">
@@ -61,30 +62,50 @@
     </div>
   </header>
 
-  <main id="top">
-    <section class="box signup" style="background-image: url('assets/bg-windowsill.jpg')">
-      <div class="signup__inner">
-        <h1>Thank You For Being You.</h1>
-        <form id="signup-form" novalidate>
-          <input class="signup__field" type="text" name="FNAME" placeholder="First Name" autocomplete="given-name" required>
-          <input class="signup__field" type="text" name="LNAME" placeholder="Last Name" autocomplete="family-name" required>
-          <input class="signup__field" type="email" name="EMAIL" placeholder="Email Address" autocomplete="email" required>
-          <input class="signup__field" type="tel" name="PHONE" placeholder="Phone Number" autocomplete="tel">
-          <label class="signup__consent">
-            <input type="checkbox" name="SMSOK" id="signup-smsok">
-            <span>Text me updates &mdash; by checking this box, I agree to receive
-            promotional and marketing messages, notifications, and customer service
-            communications from Jubyr LLC at the number above. Message and data rates
-            may apply. Message frequency varies. Consent is not a condition of purchase.
-            Text HELP for help, STOP to cancel. You can opt out of any
-            communication at any time, and your information is never sold.</span>
-          </label>
-          <textarea class="signup__field" name="MESSAGE" placeholder="Leave a Message (optional)" rows="3"></textarea>
-          <p class="signup__note signup__note--error" id="signup-error" hidden></p>
-          <button class="signup__btn" type="submit" id="signup-submit">Submit</button>
-        </form>
+  <main id="top" class="ft">
+    <div class="ft-col">
+      <div class="ft-intro">
+        <span class="ft-eyebrow">Stay in touch</span>
+        <h1>Thank you for being you.</h1>
+        <p class="ft-sub">Events, projects and openings from Jubyr LLC.</p>
       </div>
-    </section>
+      <form id="signup-form" class="ft-col" style="padding:0" novalidate>
+        <div class="ft-card">
+          <div class="ft-head">You</div>
+          <div class="ft-row ft-pair">
+            <input type="text" name="FNAME" placeholder="First name" aria-label="First name" autocomplete="given-name" required>
+            <input type="text" name="LNAME" placeholder="Last name" aria-label="Last name" autocomplete="family-name" required>
+          </div>
+          <div class="ft-row"><input type="email" name="EMAIL" placeholder="Email" aria-label="Email" autocomplete="email" required></div>
+          <div class="ft-row"><input type="tel" name="PHONE" placeholder="Phone (for texts)" aria-label="Phone number" autocomplete="tel"></div>
+        </div>
+        <div class="ft-card">
+          <div class="ft-head">Texts <span class="ft-n">Optional</span></div>
+          <div class="ft-row">
+            <label class="ft-check">
+              <input type="checkbox" name="SMSOK" id="signup-smsok">
+              <span>Text me updates &mdash; by checking this box, I agree to receive
+              promotional and marketing messages, notifications, and customer service
+              communications from Jubyr LLC at the number above. Message and data rates
+              may apply. Message frequency varies. Consent is not a condition of purchase.
+              Text HELP for help, STOP to cancel. You can opt out of any
+              communication at any time, and your information is never sold.</span>
+            </label>
+          </div>
+        </div>
+        <div class="ft-card">
+          <div class="ft-head">Message <span class="ft-n">Optional</span></div>
+          <div class="ft-row"><textarea name="MESSAGE" placeholder="Say hi" aria-label="Message" rows="3"></textarea></div>
+        </div>
+        <p class="ft-err pin" id="signup-error" hidden></p>
+        <div class="ft-bar">
+          <div class="ft-bar__in">
+            <div class="ft-bar__l"><b>Jubyr LLC list</b><small>Email &middot; texts if ticked</small></div>
+            <div class="ft-bar__r"><button type="submit" id="signup-submit">Submit</button></div>
+          </div>
+        </div>
+      </form>
+    </div>
   </main>
 </div>
 

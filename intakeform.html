@@ -12,6 +12,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=32">
+<!-- The margolis.events ticket-site form layout, in Jubyr's colours. -->
+<link rel="stylesheet" href="assets/forms-tix.css?v=1">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
 <meta property="og:title" content="Client Intake — Jubyr LLC">
@@ -22,33 +24,8 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://jubyr.com/assets/og-default.jpg">
-<style>
-  /* This form is long by design, so it gets two small additions on top of
-     the shared intake styles: lettered dividers inside a step, and a save
-     indicator that proves the draft is being kept. Everything else reuses
-     styles.css so the page can never drift from the rest of the site. */
-  .intake .divider {
-    font-family: 'IBM Plex Mono','SF Mono',Menlo,monospace;
-    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--muted); border-top: 1px solid var(--line);
-    padding-top: 16px; margin: 32px 0 20px;
-  }
-  .intake__saved {
-    font-family: 'IBM Plex Mono','SF Mono',Menlo,monospace;
-    font-size: 11px; letter-spacing: 0.06em; color: var(--muted);
-    margin-top: 10px; opacity: 0; transition: opacity 0.4s ease;
-  }
-  .intake__saved.show { opacity: 1; }
-  .scale { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-  .scale .end {
-    font-family: 'IBM Plex Mono','SF Mono',Menlo,monospace;
-    font-size: 11px; letter-spacing: 0.06em; color: var(--muted); max-width: 13ch; line-height: 1.4;
-  }
-  .ifield select { width: 100%; }
-  .intake__legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; }
-</style>
 </head>
-<body>
+<body class="ft-page">
 
 <!-- announcement -->
 <div class="announce">
@@ -86,33 +63,30 @@
     </div>
   </header>
 
-  <main id="top">
-    <section class="box">
-      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.45), rgba(12,12,12,0.62)), url('assets/bg-velvet.jpg')">
-        <span class="tag">Client intake</span>
-        <h2>Tell me everything.</h2>
-        <p>We&rsquo;ve talked. Now I need the detail underneath it &mdash; the goals,
-        the numbers, the history, and the things you&rsquo;d only say off the record.
-        The more honest this is, the better the plan I hand back.</p>
+  <main id="top" class="ft">
+    <div class="ft-col intake">
+      <div class="ft-intro">
+        <span class="ft-eyebrow">Client intake</span>
+        <h1>Tell me everything.</h1>
+        <p class="ft-sub">Saves as you go &middot; only I read it.</p>
       </div>
 
-      <div class="intake">
-        <div class="intake__progress" id="progress" hidden>
-          <span class="intake__count" id="stepCount"></span>
-          <div class="intake__bar"><i id="barFill" style="width:0%"></i></div>
-          <p class="intake__saved" id="savedNote">Draft saved</p>
-        </div>
-
-        <form id="intake-form" novalidate autocomplete="on">
-          <!-- honeypot: real people never see or fill this -->
-          <input type="text" name="hp_field" value="" tabindex="-1" autocomplete="off"
-                 style="position:absolute;left:-5000px;height:0;width:0;opacity:0" aria-hidden="true">
-          <div id="host"></div>
-          <p class="intake__err" id="stepErr"></p>
+      <form id="intake-form" class="stack14" novalidate autocomplete="on">
+        <!-- honeypot: real people never see or fill this -->
+        <input type="text" name="hp_field" value="" tabindex="-1" autocomplete="off"
+               style="position:absolute;left:-5000px;height:0;width:0;opacity:0" aria-hidden="true">
+        <div id="host" class="ft-card"></div>
+        <p class="intake__err" id="stepErr"></p>
+        <div class="ft-bar"><div class="ft-bar__in">
+          <div class="intake__progress" id="progress" hidden>
+            <span class="intake__count" id="stepCount"></span>
+            <div class="intake__bar"><i id="barFill" style="width:0%"></i></div>
+            <p class="intake__saved" id="savedNote">Draft saved</p>
+          </div>
           <div class="intake__nav" id="navBtns"></div>
-        </form>
-      </div>
-    </section>
+        </div></div>
+      </form>
+    </div>
   </main>
 </div>
 
@@ -198,7 +172,7 @@
 
     /* ---------------------------------------------------------------- */
     { title: "You and your organization",
-      sub: "Start with the boring part. It goes at the top of everything I write for you.",
+      sub: "",
       fields: [
       {key:"firstName", label:"First name", type:"text", required:true, autocomplete:"given-name"},
       {key:"lastName", label:"Last name", type:"text", autocomplete:"family-name"},
@@ -227,7 +201,7 @@
 
     /* ---------------------------------------------------------------- */
     { title: "What you need from me",
-      sub: "Pick generously here — I'd rather see the whole picture and narrow it with you.",
+      sub: "",
       fields: [
       {key:"helpWith", label:"Where do you want help?", type:"checks", required:true, options:[
         "Concept & creative direction","Programming & booking talent","Production & run-of-show",
@@ -260,8 +234,8 @@
 
     /* ---------------------------------------------------------------- */
     { title: "Goals",
-      sub: "This is the part I'll hold you to.",
-      note: "Write more than feels necessary here. Vague goals are the single most common reason an event underperforms, and I can't fix a goal I can't see.",
+      sub: "",
+      note: "Write more than feels necessary. I can't fix a goal I can't see.",
       fields: [
       {key:"successLooks", label:"It's the morning after and it worked. What actually happened?", type:"textarea", required:true, help:"Describe the night, not the metric. Who was there, what did it feel like, what are people saying?"},
       {key:"primaryGoal", label:"If you had to name ONE primary goal", type:"radio", options:[
@@ -283,7 +257,7 @@
 
     /* ---------------------------------------------------------------- */
     { title: "Who it's for",
-      sub: "Your audience — the one you have, and the one you're after.",
+      sub: "",
       fields: [
       {key:"audienceNow", label:"Describe who actually shows up now.", type:"textarea", help:"Not the target. The real people in the room, as specifically as you can. If nobody shows up yet, say who you think will."},
       {key:"audienceWant", label:"Now describe who you WISH was in the room.", type:"textarea", required:true},
@@ -305,7 +279,7 @@
 
     /* ---------------------------------------------------------------- */
     { title: "History",
-      sub: "What you've already tried. The wins and the wreckage.",
+      sub: "",
       fields: [
       {key:"doneBefore", label:"Have you run events before?", type:"radio", required:true, options:[
         "Yes — many","Yes — a handful","Yes — one","No — this would be the first"]},
@@ -333,7 +307,7 @@
     /* ---------------------------------------------------------------- */
     { title: "Money",
       sub: "",
-      note: "Nobody sees this but me. I ask because a plan that ignores the budget isn't a plan — and because I'd rather tell you now if we're not a fit than after you've paid me.",
+      note: "Only I see this.",
       fields: [
       {key:"eventBudget", label:"Budget for the event(s) themselves", type:"select", options:[
         "Under $1,000","$1,000–5,000","$5,000–15,000","$15,000–50,000","$50,000–150,000","Over $150,000","Not set yet"]},
@@ -363,7 +337,7 @@
 
     /* ---------------------------------------------------------------- */
     { title: "Fears and friction",
-      sub: "The honest part. This is usually the most useful page in the whole form.",
+      sub: "",
       fields: [
       {key:"biggestFear", label:"What's your biggest fear about this project?", type:"textarea", required:true},
       {key:"keepsYouUp", label:"What keeps you up at night about it — even if it sounds irrational?", type:"textarea"},
@@ -384,8 +358,8 @@
 
     /* ---------------------------------------------------------------- */
     { title: "Taste",
-      sub: "What you love, what you can't stand, and what you wish existed.",
-      note: "Answer these the way you'd talk, not the way you'd write a proposal. Your taste is the thing I can't research — it has to come from you.",
+      sub: "",
+      note: "Answer the way you'd talk, not the way you'd write a proposal.",
       fields: [
       {key:"hateIndustry", label:"What do you hate about the events industry?", type:"textarea", required:true, help:"Be mean about it. Vent. This tells me more about what to build than any goal does."},
       {key:"loveIndustry", label:"And what do you genuinely love about it?", type:"textarea"},
@@ -411,7 +385,7 @@
 
     /* ---------------------------------------------------------------- */
     { title: "How we'd work together",
-      sub: "Last page. Then you're done.",
+      sub: "",
       fields: [
       {key:"involvement", label:"How involved do you want me?", type:"radio", options:[
         "Take it off my plate entirely","Work alongside me","Advise — I'll execute","Audit & recommendations only"]},
