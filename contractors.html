@@ -267,19 +267,20 @@
   function fieldHTML(f){
     if(f.when && !f.when()) return "";
     const req = f.required ? ` <span class="req">*</span>` : "";
+    const rq = f.required ? " data-req" : "";   /* grey until complete: forms-end.js */
     const help = f.help ? `<p class="help">${esc(f.help)}</p>` : "";
     const v = data[f.key];
     if(f.type==="text"||f.type==="tel"||f.type==="email"){
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label>
+      return `<div class="ifield"${rq}><label>${esc(f.label)}${req}</label>
         <input type="${f.type}" data-key="${f.key}" value="${esc(v||"")}" placeholder="${esc(f.placeholder||"")}"${f.autocomplete?` autocomplete="${f.autocomplete}"`:""}>${help}</div>`;
     }
     if(f.type==="textarea"){
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label><textarea data-key="${f.key}">${esc(v||"")}</textarea>${help}</div>`;
+      return `<div class="ifield"${rq}><label>${esc(f.label)}${req}</label><textarea data-key="${f.key}">${esc(v||"")}</textarea>${help}</div>`;
     }
     if(f.type==="masters"){
       const cur = Array.isArray(v)?v:[];
       const opts = MASTERS.map(([id,label])=>`<button type="button" class="ichip${cur.includes(id)?" on":""}" data-multi="${f.key}" data-val="${id}">${esc(label)}</button>`).join("");
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
+      return `<div class="ifield"${rq}><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
     }
     if(f.type==="disc"){
       if(!data.segs.length) return "";
@@ -291,7 +292,7 @@
         groups += `<div class="subgroup"><div class="sg-label">${esc(MASTER_NAME[m])}</div><div class="iopts">${chips}</div></div>`;
       });
       const other = `<div class="subgroup"><div class="sg-label">Other</div><input type="text" data-key="discOther" value="${esc(data.discOther||"")}" placeholder="Anything that doesn't fit above"></div>`;
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label>${groups}${other}${help}</div>`;
+      return `<div class="ifield"${rq}><label>${esc(f.label)}${req}</label>${groups}${other}${help}</div>`;
     }
     if(f.type==="styles"){
       if(!stylesPicked()) return "";
@@ -310,20 +311,20 @@
       groups += `<div class="subgroup"><div class="sg-label">Aerial apparatus</div><div class="iopts">${chips}</div></div>`;
     }
       const other = `<div class="subgroup"><div class="sg-label">Other</div><input type="text" data-key="stylesOther" value="${esc(data.stylesOther||"")}" placeholder="Any style not listed"></div>`;
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label>${groups}${other}${help}</div>`;
+      return `<div class="ifield"${rq}><label>${esc(f.label)}${req}</label>${groups}${other}${help}</div>`;
     }
     if(f.type==="checks"){
       const cur = Array.isArray(v)?v:[];
       const opts = f.options.map(o=>`<button type="button" class="ichip${cur.includes(o)?" on":""}" data-multi="${f.key}" data-val="${esc(o)}">${esc(o)}</button>`).join("");
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
+      return `<div class="ifield"${rq}><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
     }
     if(f.type==="radio"){
       const opts = f.options.map(o=>`<button type="button" class="ichip${v===o?" on":""}" data-radio="${f.key}" data-val="${esc(o)}">${esc(o)}</button>`).join("");
-      return `<div class="ifield"><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
+      return `<div class="ifield"${rq}><label>${esc(f.label)}${req}</label><div class="iopts">${opts}</div>${help}</div>`;
     }
     if(f.type==="reveal"){
       const anyFilled = f.fields.some(sf=>data[sf.key]);
-      if(!(data["__open_"+f.key] || anyFilled)) return `<div class="ifield"><button type="button" class="ichip" data-reveal="${f.key}">${esc(f.revealLabel)}</button></div>`;
+      if(!(data["__open_"+f.key] || anyFilled)) return `<div class="ifield"${rq}><button type="button" class="ichip" data-reveal="${f.key}">${esc(f.revealLabel)}</button></div>`;
       return f.fields.map(fieldHTML).join("");
     }
     return "";
@@ -477,6 +478,6 @@
 </script>
 
 <div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
-<script src="assets/forms-end.js?v=1" defer></script>
+<script src="assets/forms-end.js?v=2" defer></script>
 </body>
 </html>

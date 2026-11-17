@@ -73,11 +73,11 @@
         <div class="ft-card">
           <div class="ft-head">You</div>
           <div class="ft-row ft-pair">
-            <input type="text" name="FNAME" placeholder="First name" aria-label="First name" autocomplete="given-name" required>
+            <input type="text" name="FNAME" placeholder="First name" aria-label="First name" autocomplete="given-name" required data-req>
             <input type="text" name="LNAME" placeholder="Last name" aria-label="Last name" autocomplete="family-name" required>
           </div>
-          <div class="ft-row"><input type="email" name="EMAIL" placeholder="Email" aria-label="Email" autocomplete="email" required></div>
-          <div class="ft-row"><input type="tel" name="PHONE" placeholder="Phone (for texts)" aria-label="Phone number" autocomplete="tel"></div>
+          <div class="ft-row"><input type="email" name="EMAIL" placeholder="Email" aria-label="Email" autocomplete="email" required data-req></div>
+          <div class="ft-row"><input type="tel" name="PHONE" placeholder="Phone (for texts)" aria-label="Phone number" autocomplete="tel" data-req data-req-if="#signup-smsok"></div>
         </div>
         <div class="ft-card">
           <div class="ft-head">Texts <span class="ft-n">Optional</span></div>
@@ -276,6 +276,6 @@
 </script>
 
 <div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
-<script src="assets/forms-end.js?v=1" defer></script>
+<script src="assets/forms-end.js?v=2" defer></script>
 </body>
 </html>

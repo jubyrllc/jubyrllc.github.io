@@ -422,11 +422,11 @@
       <div class="ft-card">
         <div class="ft-head">You</div>
         <div class="ifield"><label for="fName">Your name <span class="req">*</span></label>
-          <input type="text" id="fName" autocomplete="name"></div>
+          <input type="text" id="fName" autocomplete="name" data-req></div>
         <div class="ifield"><label for="fEmail">Email <span class="req">*</span></label>
-          <input type="email" id="fEmail" placeholder="you@email.com" autocomplete="email"></div>
+          <input type="email" id="fEmail" placeholder="you@email.com" autocomplete="email" data-req></div>
         <div class="ifield"><label for="fPhone">Phone <span class="req">*</span></label>
-          <input type="tel" id="fPhone" placeholder="The number Ruby calls" autocomplete="tel"></div>
+          <input type="tel" id="fPhone" placeholder="The number Ruby calls" autocomplete="tel" data-req></div>
         <div class="ifield"><label for="fOrg">Company, venue, or project</label>
           <input type="text" id="fOrg" placeholder="Optional"></div>
       </div>
@@ -434,12 +434,12 @@
       <div class="ft-card">
         <div class="ft-head">The call</div>
         <div class="ifield"><span class="ifield__lbl" id="fTopicLbl">What is it about? <span class="req">*</span></span>
-          <div class="iopts" id="fTopic" role="radiogroup" aria-labelledby="fTopicLbl">${
+          <div class="iopts" id="fTopic" data-req role="radiogroup" aria-labelledby="fTopicLbl">${
             TOPICS.map(t => `<button type="button" class="ichip${selectedTopic === t ? " on" : ""}" data-val="${esc(t)}" role="radio" aria-checked="${selectedTopic === t}">${esc(t)}</button>`).join("")
           }</div></div>
         <div id="branchWrap">${branchHtml()}</div>
         ${mode.manual ? `<div class="ifield"><label for="fPreferred">What times work for you? <span class="req">*</span></label>
-          <input type="text" id="fPreferred" placeholder="e.g. weekday afternoons, or Tuesday the 9th after 2"></div>` : ""}
+          <input type="text" id="fPreferred" data-req placeholder="e.g. weekday afternoons, or Tuesday the 9th after 2"></div>` : ""}
       </div>
 
       <div class="ft-card">
@@ -489,7 +489,7 @@
       control = `<input type="${f.type === "date" ? "date" : "text"}" data-key="${esc(f.key)}"` +
         ` value="${esc(v || "")}" placeholder="${esc(f.placeholder || "")}">`;
     }
-    return `<div class="ifield"><span class="ifield__lbl">${esc(f.label)}` +
+    return `<div class="ifield"${f.req ? " data-req" : ""}><span class="ifield__lbl">${esc(f.label)}` +
       (f.req ? ` <span class="req">*</span>` : "") + `</span>${control}</div>`;
   }
 
@@ -678,6 +678,6 @@
 
 <div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
 <script src="https://jubyr.tools/assets/js/date-pop.js?v=1" defer></script>
-<script src="assets/forms-end.js?v=1" defer></script>
+<script src="assets/forms-end.js?v=2" defer></script>
 </body>
 </html>
