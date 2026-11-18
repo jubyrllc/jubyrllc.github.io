@@ -208,6 +208,8 @@
   .res-cal{margin-top:5px;opacity:.85}
   .res-cal .res-revert{background:none;border:none;padding:0;font:inherit;cursor:pointer}
   .res-photo{margin-bottom:9px}
+  .djd-logo{margin:0 0 12px;padding:12px;border:1px solid var(--line);border-radius:9px;display:inline-block;background:repeating-conic-gradient(#0000000d 0 25%,#0000 0 50%) 0 0/14px 14px}
+  .djd-logo img{max-width:200px;max-height:110px;display:block}
   .res-photo img{max-width:220px;width:100%;border-radius:9px;border:1px solid var(--line);display:block}
   .res-hidden{opacity:.55}
   .wind-list{margin:8px 0 12px;padding-left:18px;font-size:13.5px;line-height:1.75}
@@ -831,6 +833,7 @@
     }
     if(payload.action==="saveW9"){ s.account.hasW9 = true; demoPct(s.account, "w9"); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="savePhoto"){
+      if(payload.kind==="logo"){ s.account.hasLogo=true; demoSave(s); return {ok:true, account:s.account}; }
       s.account.hasFacePhoto=true;
       demoPct(s.account, "photo"); demoSave(s); return {ok:true, account:s.account};
     }
@@ -946,6 +949,17 @@
       el.style.backgroundImage = `url(${URL.createObjectURL(blob)})`;
       el.textContent = "";
     }catch(e){ /* fallback initial stays */ }
+  }
+
+  async function loadLogo(){
+    const el = document.getElementById("ppLogoPrev");
+    if(!el || DEMO) return;
+    try{
+      const r = await fetch(AUTH_URL, {method:"POST", body: JSON.stringify({action:"getPhoto", kind:"logo", token: TOKEN})});
+      if(!r.ok) return;
+      el.innerHTML = `<img src="${URL.createObjectURL(await r.blob())}" alt="Your logo">`;
+      el.hidden = false;
+    }catch(e){ /* preview is a nicety */ }
   }
 
   // ---------- W9 upload (gates payouts, not bookings) ----------
@@ -1151,6 +1165,15 @@
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePhotos">${account.hasFacePhoto?"Replace photo":"Upload photo"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
           <p class="djd-note" id="ppPhotoMsg" style="margin:10px 0 0"></p>
         </div>`:""}
+        <div class="djd-task" id="task-logo">
+          <!-- Logo (Ruby, 2026-11-18): optional, never counted in the
+               percent. savePhoto kind:"logo" in margolis-dj-auth.php. -->
+          <h4>Logo <span style="font-weight:400;color:var(--muted)">(optional)</span></h4>
+          <div class="djd-logo" id="ppLogoPrev"${account.hasLogo?"":" hidden"}></div>
+          <input type="file" id="ppLogoFile" accept=".png,.jpg,.jpeg,image/png,image/jpeg" hidden>
+          <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSaveLogo">${account.hasLogo?"Replace logo":"Upload logo"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          <p class="djd-note" id="ppLogoMsg" style="margin:10px 0 0">PNG or JPG. A transparent PNG works best.</p>
+        </div>
         ${(!(account.payableTo && account.zelle) || profileEditMode)?`<div class="djd-task" id="task-payout">
           <h4>Payout info</h4>
           <p class="djd-note" style="margin:0 0 12px"><strong>Door payments go through Zelle.</strong></p>
@@ -1243,6 +1266,27 @@
         croppedFace = out;
         await uploadFace(out);
       }catch(e){ faceInput.value = ""; photoMsg(typeof e==="string"?e:"Couldn't open that photo."); }
+    });
+    /* Logo: no crop, uploaded as picked. */
+    const logoInput = document.getElementById("ppLogoFile");
+    const logoBtn = document.getElementById("ppSaveLogo");
+    const logoMsg = m => { const el = document.getElementById("ppLogoMsg"); if(el) el.textContent = m; };
+    if(account.hasLogo) loadLogo();
+    if(logoBtn && logoInput) logoBtn.addEventListener("click", ()=>{ logoInput.value = ""; logoInput.click(); });
+    if(logoInput) logoInput.addEventListener("change", async ()=>{
+      const f = logoInput.files && logoInput.files[0];
+      if(!f) return;
+      if(f.size > 10*1024*1024) return logoMsg("That logo is over 10 MB. Please compress it.");
+      logoBtn.disabled = true; logoBtn.textContent = "Uploading…";
+      try{
+        const acct = (await api(AUTH_URL, {action:"savePhoto", kind:"logo", fileB64: await readFileB64(f)})).account;
+        clearErr(); renderProfilePanel(acct);
+        logoMsg("Logo saved.");
+      }catch(e){
+        logoBtn.disabled = false;
+        logoBtn.innerHTML = `Upload logo <span class="arw" aria-hidden="true">&gt;</span>`;
+        if(e!=="auth") logoMsg(typeof e==="string"?e:"Couldn't reach the server. Check your connection.");
+      }
     });
     const bioBox = document.getElementById("ppBio");
     if(bioBox) bioBox.addEventListener("input", ()=>{ const n=document.getElementById("ppBioN"); if(n) n.textContent = bioBox.value.length; });
@@ -2598,6 +2642,7 @@
         ${a.claimedResidency&&a.claimedResidency.status!=="locked"?`<button class="mgr-btn" data-act="claim" data-id="${esc(a.id)}" data-decision="lock">Lock residency</button>
           <button class="mgr-btn mgr-btn--bad" data-act="claim" data-id="${esc(a.id)}" data-decision="decline">Decline claim</button>`:""}
         ${a.photoFace?`<button class="mgr-btn mgr-btn--ghost" data-act="file" data-file="${esc(a.photoFace)}">Photo</button>`:""}
+        ${a.photoLogo?`<button class="mgr-btn mgr-btn--ghost" data-act="file" data-file="${esc(a.photoLogo)}">Logo</button>`:""}
         ${a.w9File?`<button class="mgr-btn mgr-btn--ghost" data-act="file" data-file="${esc(a.w9File)}">W9</button>`:""}
       </div>
       ${a.photoFace?`<div data-flyer="${esc(a.photoFace)}"></div>`:""}
