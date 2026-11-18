@@ -11,21 +11,22 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&text=J&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=2">
+<link rel="stylesheet" href="assets/css/site.css?v=3">
 <link rel="stylesheet" href="assets/css/chrome.css?v=2">
+<link rel="stylesheet" href="assets/forms-tix.css?v=2">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
 <meta property="og:title" content="Contact — Jubyr LLC">
 <meta property="og:description" content="Tell Jubyr LLC what you need — events, venues, booking, tools — and we'll get back to you.">
 <meta property="og:url" content="https://jubyr.com/contact">
-<meta property="og:image" content="https://jubyr.com/assets/og-default.jpg">
+<meta property="og:image" content="https://jubyr.com/assets/og-default.jpg?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://jubyr.com/assets/og-default.jpg">
+<meta name="twitter:image" content="https://jubyr.com/assets/og-default.jpg?v=2">
 </head>
-<body>
+<body class="ft-page">
 
 <header class="mnav" id="nav">
   <div class="mnav__inner">
@@ -39,7 +40,7 @@
       <nav class="mnav__links" aria-label="Primary" id="navLinks">
         <a href="/#work">Portfolio</a>
         <a href="/#services">Services</a>
-        <a class="mnav__hi" href="/consultation">Free consultation</a>
+        <a class="mnav__hi" href="/consultation">Book a free call</a>
         <div class="mnavdrop">
           <button type="button" class="mnavdrop__trigger" aria-expanded="false">Info</button>
           <div class="mnavdrop__panel">
@@ -47,7 +48,7 @@
             <a class="mnavdrop__item" href="/#reviews">Reviews</a>
             <a class="mnavdrop__item" href="/#get-involved">Get involved</a>
             <a class="mnavdrop__item" href="/resources">Resources</a>
-            <a class="mnavdrop__item" href="/contact">Contact</a>
+            <a class="mnavdrop__item" href="/contact">Send an inquiry</a>
           </div>
         </div>
       </nav>
@@ -60,7 +61,7 @@
   <nav class="mnav__mobile" id="navMobile" aria-label="Mobile">
     <a class="mnavmob__link" href="/#work">Portfolio</a>
     <a class="mnavmob__link" href="/#services">Services</a>
-    <a class="mnavmob__link mnav__hi" href="/consultation">Free consultation</a>
+    <a class="mnavmob__link mnav__hi" href="/consultation">Book a free call</a>
     <div class="mnavmob__group">
       <button type="button" class="mnavmob__head" aria-expanded="false">Info</button>
       <div class="mnavmob__sub">
@@ -68,7 +69,7 @@
         <a href="/#reviews">Reviews</a>
         <a href="/#get-involved">Get involved</a>
         <a href="/resources">Resources</a>
-        <a href="/contact">Contact</a>
+        <a href="/contact">Send an inquiry</a>
       </div>
     </div>
     <a class="mnavmob__ig" href="https://instagram.com/jubyrllc" target="_blank" rel="noopener">Instagram</a>
@@ -78,57 +79,71 @@
 
 <div class="frame">
 
-  <main id="top">
-    <section class="box signup contactform" style="background-image: url('assets/bg-velvet.jpg')">
-      <div class="signup__inner">
+  <main id="top" class="ft">
+    <div class="ft-col">
+      <div class="ft-intro">
+        <span class="ft-eyebrow">Send an inquiry</span>
         <h1>What do you need?</h1>
-        <form id="inq-form" novalidate>
-
-          <fieldset class="inq__q">
-            <legend class="inq__legend">01 &middot; This inquiry is for &middot; <em>check all that apply</em></legend>
-            <div class="choices" role="group" aria-label="Inquiry topics">
-              <label class="choice"><input type="checkbox" name="TOPIC" value="Event production"><span>Event production</span></label>
-              <label class="choice"><input type="checkbox" name="TOPIC" value="Venue &amp; hospitality consulting"><span>Venue &amp; hospitality consulting</span></label>
-              <label class="choice"><input type="checkbox" name="TOPIC" value="Booking &amp; programming"><span>Booking &amp; programming</span></label>
-              <label class="choice"><input type="checkbox" name="TOPIC" value="Custom tools &amp; design"><span>Custom tools &amp; design</span></label>
-              <label class="choice"><input type="checkbox" name="TOPIC" value="Teaching &amp; speaking"><span>Teaching &amp; speaking</span></label>
-              <label class="choice"><input type="checkbox" name="TOPIC" value="Something else"><span>Something else</span></label>
-            </div>
-          </fieldset>
-
-          <fieldset class="inq__q">
-            <legend class="inq__legend">02 &middot; What shape should it take?</legend>
-            <div class="choices" role="group" aria-label="Engagement type">
-              <label class="choice"><input type="radio" name="SHAPE" value="A single event or night"><span>A single event or night</span></label>
-              <label class="choice"><input type="radio" name="SHAPE" value="An ongoing partnership"><span>An ongoing partnership</span></label>
-              <label class="choice"><input type="radio" name="SHAPE" value="A one-time consult"><span>A one-time consult</span></label>
-              <label class="choice"><input type="radio" name="SHAPE" value="Not sure yet"><span>Not sure yet</span></label>
-            </div>
-          </fieldset>
-
-          <fieldset class="inq__q">
-            <legend class="inq__legend">03 &middot; When do you need it?</legend>
-            <div class="choices" role="group" aria-label="Timeline">
-              <label class="choice"><input type="radio" name="WHEN" value="Just exploring"><span>Just exploring</span></label>
-              <label class="choice"><input type="radio" name="WHEN" value="In the next few months"><span>In the next few months</span></label>
-              <label class="choice"><input type="radio" name="WHEN" value="Soon — I have a date"><span>Soon &mdash; I have a date</span></label>
-            </div>
-          </fieldset>
-
-          <input class="signup__field" type="text" name="NAME" placeholder="Your Name" autocomplete="name" required>
-          <input class="signup__field" type="email" name="EMAIL" placeholder="Email Address" autocomplete="email" required>
-          <textarea class="signup__field" name="DETAILS" placeholder="Any further details — venue, date, budget, the vision&hellip;" rows="4"></textarea>
-
-          <p class="signup__note signup__note--error" id="inq-error" hidden></p>
-          <button class="signup__btn" type="submit" id="inq-submit">Send inquiry</button>
-          <p class="signup__note" id="inq-done" hidden>
-            Your email app should open with everything filled in &mdash; just hit
-            send. If it doesn&rsquo;t, write us directly at
-            <a href="mailto:ruby@jubyr.com" style="color:#fff">ruby@jubyr.com</a>.
-          </p>
-        </form>
+        <p class="ft-sub">A few taps, then your email app opens with it filled in.</p>
       </div>
-    </section>
+      <form id="inq-form" class="ft-col" style="padding:0" novalidate>
+        <div class="ft-card">
+          <div class="ft-head">This inquiry is for <span class="ft-n">Check all that apply</span></div>
+          <div class="ft-row">
+            <div class="ft-chips" role="group" aria-label="Inquiry topics" data-req>
+              <label class="ft-chip"><input type="checkbox" name="TOPIC" value="Event production"><span>Event production</span></label>
+              <label class="ft-chip"><input type="checkbox" name="TOPIC" value="Venue &amp; hospitality consulting"><span>Venue &amp; hospitality consulting</span></label>
+              <label class="ft-chip"><input type="checkbox" name="TOPIC" value="Booking &amp; programming"><span>Booking &amp; programming</span></label>
+              <label class="ft-chip"><input type="checkbox" name="TOPIC" value="Custom tools &amp; design"><span>Custom tools &amp; design</span></label>
+              <label class="ft-chip"><input type="checkbox" name="TOPIC" value="Teaching &amp; speaking"><span>Teaching &amp; speaking</span></label>
+              <label class="ft-chip"><input type="checkbox" name="TOPIC" value="Something else"><span>Something else</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="ft-card">
+          <div class="ft-head">Shape <span class="ft-n">Optional</span></div>
+          <div class="ft-row">
+            <div class="ft-chips" role="group" aria-label="Engagement type">
+              <label class="ft-chip"><input type="radio" name="SHAPE" value="A single event or night"><span>A single event or night</span></label>
+              <label class="ft-chip"><input type="radio" name="SHAPE" value="An ongoing partnership"><span>An ongoing partnership</span></label>
+              <label class="ft-chip"><input type="radio" name="SHAPE" value="A one-time consult"><span>A one-time consult</span></label>
+              <label class="ft-chip"><input type="radio" name="SHAPE" value="Not sure yet"><span>Not sure yet</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="ft-card">
+          <div class="ft-head">When <span class="ft-n">Optional</span></div>
+          <div class="ft-row">
+            <div class="ft-chips" role="group" aria-label="Timeline">
+              <label class="ft-chip"><input type="radio" name="WHEN" value="Just exploring"><span>Just exploring</span></label>
+              <label class="ft-chip"><input type="radio" name="WHEN" value="In the next few months"><span>In the next few months</span></label>
+              <label class="ft-chip"><input type="radio" name="WHEN" value="Soon — I have a date"><span>Soon &mdash; I have a date</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="ft-card">
+          <div class="ft-head">You</div>
+          <div class="ft-row"><input type="text" name="NAME" placeholder="Your name" aria-label="Your name" autocomplete="name" required data-req></div>
+          <div class="ft-row"><input type="email" name="EMAIL" placeholder="Email" aria-label="Email" autocomplete="email" required data-req></div>
+        </div>
+        <div class="ft-card">
+          <div class="ft-head">Details <span class="ft-n">Optional</span></div>
+          <div class="ft-row"><textarea name="DETAILS" placeholder="Venue, date, budget, the vision&hellip;" aria-label="Details" rows="4"></textarea></div>
+        </div>
+        <p class="ft-err pin" id="inq-error" hidden></p>
+        <p class="ft-note" id="inq-done" hidden>
+          Your email app should open with everything filled in &mdash; just hit
+          send. If it doesn&rsquo;t, write us directly at
+          <a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a>.
+        </p>
+        <div class="ft-bar">
+          <div class="ft-bar__in">
+            <div class="ft-bar__l"><b>Inquiry</b><small>Ruby replies by email</small></div>
+            <div class="ft-bar__r"><button type="submit" id="inq-submit">Send inquiry</button></div>
+          </div>
+        </div>
+      </form>
+    </div>
   </main>
 </div>
 
@@ -156,7 +171,7 @@
       <div class="mfoot__col">
         <h5>Say Hi</h5>
         <ul>
-          <li><a href="/consultation">Book a free consultation</a></li>
+          <li><a href="/consultation">Book a free call</a></li>
           <li><a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a></li>
           <li><a href="https://instagram.com/jubyrllc" target="_blank" rel="noopener">@jubyrllc</a></li>
         </ul>
@@ -219,5 +234,6 @@
 
 <div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
 <script src="assets/js/site-nav.js?v=1"></script>
+<script src="assets/forms-end.js?v=3" defer></script>
 </body>
 </html>

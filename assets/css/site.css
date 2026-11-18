@@ -9,7 +9,7 @@
     --paper: #FAF7F2;
     --paper-2: #F1EBE0;
     --ink: #1B1815;
-    --muted: #8B8377;
+    --muted: #6B6358;
     --line: #E2D9C9;
     --maroon: #4C6300;
     --maroon-deep: #3A4C00;
@@ -2172,3 +2172,11 @@ h1, h2, h3, h4 { font-family: var(--serif) !important; font-weight: 500 !importa
 
 /* Green Flag + Wavelength are their own invitations: they keep their green. */
 body.keep-green { --green: #607D00; --green-hi: #607D00; --green-tint: #F2F5E4; --green-line: #C7D394; --accent-soft: #AFC755; }
+
+/* Green Flag / Wavelength: the form-standard cards sit on the brand colour */
+.gflag .ft{ background:transparent; }
+.gflag .ft-col{ padding-left:0; padding-right:0; }
+.gflag .ft-card{ text-align:left; }
+/* the end button would be green on green: white with the brand colour as text, like the old Join */
+.gflag .form-end button, .gflag .form-end .btn{ background:#fff !important; border-color:#fff !important; color:#4C6300 !important; }
+.gflag--wave .form-end button, .gflag--wave .form-end .btn{ color:#4C4C47 !important; }

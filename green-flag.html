@@ -12,21 +12,22 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&text=J&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=2">
+<link rel="stylesheet" href="assets/css/site.css?v=3">
 <link rel="stylesheet" href="assets/css/chrome.css?v=2">
+<link rel="stylesheet" href="assets/forms-tix.css?v=2">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
 <meta property="og:title" content="Green Flag — Jubyr LLC">
 <meta property="og:description" content="You're a green flag. Drop your info to stay in the loop for future gatherings of genuine folks.">
 <meta property="og:url" content="https://jubyr.com/green-flag">
-<meta property="og:image" content="https://jubyr.com/assets/og-default.jpg">
+<meta property="og:image" content="https://jubyr.com/assets/og-default.jpg?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://jubyr.com/assets/og-default.jpg">
+<meta name="twitter:image" content="https://jubyr.com/assets/og-default.jpg?v=2">
 </head>
-<body class="keep-green">
+<body class="keep-green ft-page">
 
 <header class="mnav" id="nav">
   <div class="mnav__inner">
@@ -40,7 +41,7 @@
       <nav class="mnav__links" aria-label="Primary" id="navLinks">
         <a href="/#work">Portfolio</a>
         <a href="/#services">Services</a>
-        <a class="mnav__hi" href="/consultation">Free consultation</a>
+        <a class="mnav__hi" href="/consultation">Book a free call</a>
         <div class="mnavdrop">
           <button type="button" class="mnavdrop__trigger" aria-expanded="false">Info</button>
           <div class="mnavdrop__panel">
@@ -48,7 +49,7 @@
             <a class="mnavdrop__item" href="/#reviews">Reviews</a>
             <a class="mnavdrop__item" href="/#get-involved">Get involved</a>
             <a class="mnavdrop__item" href="/resources">Resources</a>
-            <a class="mnavdrop__item" href="/contact">Contact</a>
+            <a class="mnavdrop__item" href="/contact">Send an inquiry</a>
           </div>
         </div>
       </nav>
@@ -61,7 +62,7 @@
   <nav class="mnav__mobile" id="navMobile" aria-label="Mobile">
     <a class="mnavmob__link" href="/#work">Portfolio</a>
     <a class="mnavmob__link" href="/#services">Services</a>
-    <a class="mnavmob__link mnav__hi" href="/consultation">Free consultation</a>
+    <a class="mnavmob__link mnav__hi" href="/consultation">Book a free call</a>
     <div class="mnavmob__group">
       <button type="button" class="mnavmob__head" aria-expanded="false">Info</button>
       <div class="mnavmob__sub">
@@ -69,7 +70,7 @@
         <a href="/#reviews">Reviews</a>
         <a href="/#get-involved">Get involved</a>
         <a href="/resources">Resources</a>
-        <a href="/contact">Contact</a>
+        <a href="/contact">Send an inquiry</a>
       </div>
     </div>
     <a class="mnavmob__ig" href="https://instagram.com/jubyrllc" target="_blank" rel="noopener">Instagram</a>
@@ -100,23 +101,49 @@
 
         <!-- form: revealed after Join -->
         <div class="gflag__panel gone" id="gf-formwrap" hidden>
-          <h2>Thank You For Being You.</h2>
-          <form id="gf-form" novalidate>
-            <input class="signup__field" type="text" name="FNAME" placeholder="First Name" autocomplete="given-name" required>
-            <input class="signup__field" type="text" name="LNAME" placeholder="Last Name" autocomplete="family-name" required>
-            <input class="signup__field" type="email" name="EMAIL" placeholder="Email Address" autocomplete="email" required>
-            <input class="signup__field" type="tel" name="PHONE" placeholder="Phone Number" autocomplete="tel">
-            <input class="signup__field" type="text" name="INSTAGRAM" placeholder="Instagram @" autocomplete="off">
-            <textarea class="signup__field" name="MESSAGE" placeholder="Leave a Message (optional)" rows="3"></textarea>
-            <label class="signup__consent">
-              <input type="checkbox" name="CONTACTOK" id="gf-contactok">
-              <span>Optional: Jubyr LLC may contact me about this and future
-              events by email, phone, and text message. I can opt out at any
-              time. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. My information is never sold. See our <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/terms" target="_blank" rel="noopener">Terms</a>.</span>
-            </label>
-            <p class="signup__note signup__note--error" id="gf-error" hidden></p>
-            <button class="signup__btn" type="submit" id="gf-submit">Submit</button>
-          </form>
+          <div class="ft">
+            <div class="ft-col">
+              <div class="ft-intro">
+                <span class="ft-eyebrow">Green Flag</span>
+                <h1>Thank you for being you.</h1>
+                <p class="ft-sub">No spam &mdash; just an invite when cool shit happens.</p>
+              </div>
+              <form id="gf-form" class="ft-col" style="padding:0" novalidate>
+                <div class="ft-card">
+                  <div class="ft-head">You</div>
+                  <div class="ft-row ft-pair">
+                    <input type="text" name="FNAME" placeholder="First name" aria-label="First name" autocomplete="given-name" required data-req>
+                    <input type="text" name="LNAME" placeholder="Last name" aria-label="Last name" autocomplete="family-name" required>
+                  </div>
+                  <div class="ft-row"><input type="email" name="EMAIL" placeholder="Email" aria-label="Email" autocomplete="email" required data-req></div>
+                  <div class="ft-row"><input type="tel" name="PHONE" placeholder="Phone" aria-label="Phone number" autocomplete="tel"></div>
+                  <div class="ft-row"><input type="text" name="INSTAGRAM" placeholder="Instagram @" aria-label="Instagram handle" autocomplete="off"></div>
+                </div>
+                <div class="ft-card">
+                  <div class="ft-head">Message <span class="ft-n">Optional</span></div>
+                  <div class="ft-row"><textarea name="MESSAGE" placeholder="Say hi" aria-label="Message" rows="3"></textarea></div>
+                </div>
+                <div class="ft-card">
+                  <div class="ft-head">Contact <span class="ft-n">Optional</span></div>
+                  <div class="ft-row">
+                    <label class="ft-check">
+                      <input type="checkbox" name="CONTACTOK" id="gf-contactok">
+                      <span>Jubyr LLC may contact me about this and future
+                      events by email, phone, and text message. I can opt out at any
+                      time. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. My information is never sold. See our <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/terms" target="_blank" rel="noopener">Terms</a>.</span>
+                    </label>
+                  </div>
+                </div>
+                <p class="ft-err pin" id="gf-error" hidden></p>
+                <div class="ft-bar">
+                  <div class="ft-bar__in">
+                    <div class="ft-bar__l"><b>Green Flag</b><small>Invites by email</small></div>
+                    <div class="ft-bar__r"><button type="submit" id="gf-submit">Submit</button></div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -148,7 +175,7 @@
       <div class="mfoot__col">
         <h5>Say Hi</h5>
         <ul>
-          <li><a href="/consultation">Book a free consultation</a></li>
+          <li><a href="/consultation">Book a free call</a></li>
           <li><a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a></li>
           <li><a href="https://instagram.com/jubyrllc" target="_blank" rel="noopener">@jubyrllc</a></li>
         </ul>
@@ -292,5 +319,6 @@
 
 <div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
 <script src="assets/js/site-nav.js?v=1"></script>
+<script src="assets/forms-end.js?v=3" defer></script>
 </body>
 </html>
