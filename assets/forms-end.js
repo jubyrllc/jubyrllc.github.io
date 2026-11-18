@@ -1,3 +1,70 @@
+/* Percent done, in the pinned bar (2026-11-17). Ruby: "do percentage done
+   on every single form on my website. do it in the bar thats anchored at
+   the bottom." A small track + NN% just left of the bar's action, counted
+   off the same required fields the grey gate reads, so 100% is exactly
+   when the button goes live. A form in steps ("Step 2 of 5" in
+   #stepCount, or a step list li[data-step].is-now) counts the steps
+   behind as done. Nothing required and no steps: no number. Same meter
+   on margolis.events (assets/tix/forms.js). */
+var FtPct = (function(){
+  var css = null;
+  function seen(el){ return !!el && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden'; }
+  function step(){
+    var sc = document.getElementById('stepCount');
+    if (sc && seen(sc)){
+      var m = /(\d+)\s*of\s*(\d+)/i.exec(sc.textContent || '');
+      if (m && +m[2] > 1) return {at: +m[1], of: +m[2]};
+    }
+    var now = document.querySelector('li[data-step].is-now');
+    if (now && seen(now)){
+      var all = Array.prototype.filter.call(now.parentNode.children, function(c){ return c.matches('li[data-step]'); });
+      var at = all.indexOf(now) + 1;
+      if (all.length > 1 && at > 0) return {at: at, of: all.length};
+    }
+    return null;
+  }
+  function draw(bar, go, done, total){
+    if (!bar) return;
+    var old = bar.querySelector('.ft-pct');
+    var st = step();
+    if (!go || !go.isConnected || !seen(go) || (!total && !st)){ if (old) old.remove(); return; }
+    if (!css){
+      css = document.createElement('style');
+      css.textContent = '.ft-pct{display:inline-flex;align-items:center;gap:8px;flex:none;margin-left:auto;font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap;opacity:.82}' +
+        '.ft-pct i{display:block;width:56px;height:4px;border-radius:2px;background:color-mix(in srgb,currentColor 24%,transparent);overflow:hidden}' +
+        '.ft-pct b{display:block;height:100%;width:0;border-radius:2px;background:currentColor;transition:width .25s ease}' +
+        '.ft-pct em{font-style:normal;min-width:3.2ch;text-align:right}' +
+        '.ft-pct.is-full{opacity:1}' +
+        '@media (max-width:420px){.ft-pct i{width:32px}}' +
+        '@media (prefers-reduced-motion: reduce){.ft-pct b{transition:none}}';
+      document.head.appendChild(css);
+    }
+    var here = total ? done / total : 1;
+    var f = st ? ((st.at - 1) + here) / st.of : here;
+    var pct = Math.round(Math.max(0, Math.min(1, f)) * 100);
+    /* Before the action's button group (Back + Go), inside the bar's row. */
+    var a = go;
+    while (a.parentNode && a.parentNode !== bar && Array.prototype.every.call(a.parentNode.children, function(c){ return c.matches('button, a, .ft-pct'); })) a = a.parentNode;
+    if (!old){
+      old = document.createElement('span');
+      old.className = 'ft-pct';
+      old.setAttribute('role', 'progressbar');
+      old.setAttribute('aria-label', 'Form progress');
+      old.setAttribute('aria-valuemin', '0');
+      old.setAttribute('aria-valuemax', '100');
+      old.innerHTML = '<i><b></b></i><em></em>';
+    }
+    if (old.nextSibling !== a) a.parentNode.insertBefore(old, a);
+    if (old.getAttribute('aria-valuenow') !== String(pct)){
+      old.setAttribute('aria-valuenow', String(pct));
+      old.querySelector('em').textContent = pct + '%';
+      old.querySelector('b').style.width = pct + '%';
+      old.classList.toggle('is-full', pct === 100);
+    }
+  }
+  return {draw: draw};
+})();
+
 /* The end-of-form button (2026-11-17). Ruby: "I'm worried people won't
    see the bar at the bottom and know to click it." Each form keeps its
    dark bar, and this repeats the bar's action as a full-width button
@@ -107,6 +174,21 @@
       order.forEach(function(k){ if (!groups[k].some(filled)) out.push(groups[k][0]); });
       return out.sort(function(a, b){ return a.compareDocumentPosition(b) & 4 ? -1 : 1; });
     }
+    /* [done, total] over the same marks missing() reads; a data-req-one
+       group counts once. */
+    function tally(){
+      var t = 0, d = 0, groups = {};
+      Array.prototype.forEach.call(document.querySelectorAll('[data-req]'), function(el){
+        if (!seen(el) || el.disabled) return;
+        var cond = el.getAttribute('data-req-if');
+        if (cond) { var c = document.querySelector(cond); if (!c || !filled(c)) return; }
+        var one = el.getAttribute('data-req-one');
+        if (one) { (groups[one] = groups[one] || []).push(el); return; }
+        t++; if (filled(el)) d++;
+      });
+      Object.keys(groups).forEach(function(k){ t++; if (groups[k].some(filled)) d++; });
+      return [d, t];
+    }
     function grey(el, on){
       if (on) {
         if (!el.classList.contains('is-incomplete')) el.classList.add('is-incomplete');
@@ -136,6 +218,8 @@
       if (wrap.hidden === shown) wrap.hidden = !shown;
       if (gated && gated !== p) grey(gated, false);
       gated = p;
+      var tl = tally();
+      FtPct.draw(bar, shown ? p : null, tl[0], tl[1]);
       if (!p) return;
       var t = label(p);
       var own = !!p.disabled || (p.getAttribute('aria-disabled') === 'true' && !p.hasAttribute('data-gated'));
