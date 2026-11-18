@@ -100,9 +100,9 @@
 
   <section class="stats" aria-label="Track record">
     <div><b data-live-events>468</b><span>Events produced since 2025</span></div>
-    <div><b>3.6&times;</b><span>Margolis sales growth</span></div>
+    <div><b>3.6&times;</b><span>Average sales growth</span></div>
     <div><b>+110%</b><span>Margolis web traffic after relaunch</span></div>
-    <div><b>850</b><span>Biggest night &middot; Girls Who Get It</span></div>
+    <div><b data-live-revenue>$1.1M+</b><span>Event revenue since 2025</span></div>
   </section>
 
   <!-- portfolio -->
@@ -412,20 +412,30 @@
   function watch(list){ list.forEach(function(v){ vio ? vio.observe(v) : v.setAttribute('controls',''); }); }
   watch(document.querySelectorAll('.wrow__media video'));
 
-  // Live "Events since 2025" (2026-11-18): every event that has happened
-  // since Ruby started, from jubyr.tools (one number, nothing else). The last
-  // good value is remembered so a slow or failed fetch never blanks the stat.
+  // Live stats (2026-11-18) from jubyr.tools, aggregates only:
+  //   events  - every event since Ruby started
+  //   revenue - net sales of those event nights, rounded down to $10K
+  // Last good values are remembered so a slow fetch never blanks a stat.
   (function(){
-    var el = document.querySelector('[data-live-events]'); if (!el) return;
-    var KEY = 'jubyr-events-since';
-    function show(n){ el.textContent = Number(n).toLocaleString('en-US'); }
-    try { var last = localStorage.getItem(KEY); if (last) show(last); } catch(e){}
+    var STATS = [
+      { el: document.querySelector('[data-live-events]'),  key: 'events',  fmt: function(n){ return Number(n).toLocaleString('en-US'); } },
+      { el: document.querySelector('[data-live-revenue]'), key: 'revenue', fmt: function(n){
+          return n >= 1e6 ? '$' + (Math.floor(n / 1e5) / 10).toFixed(1) + 'M+' : '$' + Math.floor(n / 1e3) + 'K+'; } }
+    ].filter(function(s){ return s.el; });
+    if (!STATS.length) return;
+    STATS.forEach(function(s){
+      try { var last = localStorage.getItem('jubyr-stat-' + s.key); if (last) s.el.textContent = s.fmt(+last); } catch(e){}
+    });
     fetch('https://jubyr.tools/jubyr-booking-count.php', {cache:'no-store'})
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(d){
-        if (!d || typeof d.events !== 'number' || d.events < 1) return;
-        show(d.events);
-        try { localStorage.setItem(KEY, String(d.events)); } catch(e){}
+        if (!d) return;
+        STATS.forEach(function(s){
+          var n = d[s.key];
+          if (typeof n !== 'number' || n < 1) return;
+          s.el.textContent = s.fmt(n);
+          try { localStorage.setItem('jubyr-stat-' + s.key, String(n)); } catch(e){}
+        });
       }).catch(function(){});
   })();
 
