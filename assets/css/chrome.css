@@ -541,3 +541,6 @@ button.mnavdrop__item:hover{color:var(--maroon);background:var(--paper-2)}
 .mfoot .status{ display:flex; align-items:center; gap:8px; background:none; border:0; padding:0;
   color:var(--muted); font-family:var(--sans); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
 .mfoot .status .dot{ width:6px; height:6px; border-radius:50%; background:var(--maroon); }
+/* 2026-11-18: plain black wordmark in the nav, no dark box */
+.mnav__logo{ background:none; padding:0; height:22px; min-width:0; }
+.mnav__logo img{ height:22px; width:auto; }

@@ -103,3 +103,6 @@
 
 /* 2026-11-18: hero buttons sit on the baseline of the text block, not mid-block */
 @media (min-width:641px){ .hero__content--split{ align-items:flex-end } }
+/* 2026-11-18: plain black wordmark in the nav, no dark box */
+.nav__logo{ background:none; padding:0; height:22px; min-width:0; }
+.nav__logo img{ height:22px; width:auto; }
