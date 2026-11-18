@@ -217,6 +217,10 @@
   }
 
   const resetToken = new URLSearchParams(location.search).get("t") || "";
+  /* &do=<key> from a sign-up reminder: carried through to the sign-in
+     page, which sends it on to the dashboard item (dj_do_link). */
+  const DO_KEY = (new URLSearchParams(location.search).get("do") || "").replace(/[^a-z0-9]/gi, "");
+  const DO_Q = DO_KEY ? "?do=" + DO_KEY : "";
 
   /* ---- ask for a link ---- */
   document.getElementById('btnAsk').addEventListener('click', async () => {
@@ -283,7 +287,7 @@
         cta.href = "https://margolis.events/margolis.html";
         note.textContent = "You're signed in. Open the profile icon in the top corner of margolis.events any time.";
       } else {
-        cta.href = "/margolis-dashboard";
+        cta.href = DO_KEY ? "/margolis-login" + DO_Q : "/margolis-dashboard";
         note.textContent = "You're signed in — straight through to your nights.";
       }
     }catch(e){
@@ -374,7 +378,7 @@
           '<p class="dj-note">Couldn\u2019t load them here. They\u2019re on <a href="https://margolis.events/host-a-public-event.html" target="_blank" rel="noopener">margolis.events</a>.</p>';
       });
     } else if(where === "set"){
-      if(linkUsed){ location.href = "/margolis-login"; return; }
+      if(linkUsed){ location.href = "/margolis-login" + DO_Q; return; }
       stepSet.hidden = false;
       document.getElementById(document.getElementById('setEmail').value ? 'pw1' : 'setEmail').focus();
     } else {

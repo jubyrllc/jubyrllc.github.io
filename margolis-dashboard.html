@@ -290,6 +290,24 @@
   .pay-sug__use{margin-left:auto}
   /* A date Ruby sent that still needs the host (2026-11-16). */
   .evt__offer{display:inline-block;width:auto;font-family:var(--mono,monospace);font-size:11px;letter-spacing:.08em;text-transform:uppercase;background:var(--green,#7A2438);color:#fff;padding:7px 11px;text-decoration:none;margin:6px 8px 0 0;}
+  /* Pinned "next" bar (2026-11-17): the % meter is FtPct's look from
+     assets/forms-end.js (grey-gate), copied so this page has no
+     dependency on that branch. */
+  .djd-next{position:fixed;left:0;right:0;bottom:0;z-index:45;background:var(--ink,#1B1815);color:#fff}
+  .djd-next[hidden]{display:none}
+  .djd-next__in{max-width:760px;margin:0 auto;padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:14px}
+  .djd-next__l{min-width:0;flex:1;display:grid;gap:2px}
+  .djd-next__l small{font:500 10.5px/1.2 var(--mono,monospace);letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+  .djd-next__l b{font:500 15px/1.3 var(--sans,sans-serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .djd-next__go{flex:none;min-height:42px;min-width:110px;padding:0 20px;border-radius:999px;background:#fff;color:var(--ink,#1B1815);border:1px solid #fff;font:500 14px/1 var(--sans,sans-serif);cursor:pointer;white-space:nowrap}
+  .djd-next .ft-pct{order:-1;display:inline-flex;align-items:center;gap:8px;flex:none;font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap;opacity:.82}
+  .djd-next .ft-pct i{display:block;width:56px;height:4px;border-radius:2px;background:color-mix(in srgb,currentColor 24%,transparent);overflow:hidden}
+  .djd-next .ft-pct b{display:block;height:100%;width:0;border-radius:2px;background:currentColor;transition:width .25s ease}
+  .djd-next .ft-pct em{font-style:normal;min-width:3.2ch;text-align:right}
+  @media (max-width:420px){.djd-next .ft-pct i{width:32px}.djd-next__go{min-width:0}}
+  @media (prefers-reduced-motion: reduce){.djd-next .ft-pct b{transition:none}}
+  body.djd-has-next{padding-bottom:76px}
+  .djd-task--on{outline:2px solid var(--maroon,#6E2A38);outline-offset:4px;transition:outline-color .6s}
 </style>
 <link rel="stylesheet" href="margolis-dashboard-skin.css?v=5">
 </head>
@@ -770,12 +788,33 @@
       if(!ev.submission) ev.submission = {date:ev.date, eventName:ev.eventName, lineup:{value:"",status:""}, flyerFile:{value:"",status:""}, ticketLink:{value:"",status:""}, rsvpFree:"", rsvpSold:"", partners:[], solo:false, fullyApproved:false};
       return ev.submission;
     };
+    /* The demo stands in for the server, so it keeps the server's
+       checklist (dj_host_checklist() in margolis-dj-core.php) and only
+       ticks items: no second formula for what counts. The seed below is
+       that list's shape, for Ruby's offline preview only. */
+    if(s.account && (!Array.isArray(s.account.hostChecklist) || !s.account.hostChecklist.length || !s.account.hostChecklist[0].short)){
+      const a = s.account;
+      s.account.hostChecklist = [
+        ["essentials","The essentials: government name, DJ or host, phone","Essentials","Finish","/margolis-login?do=essentials", !!a.quickProfileDone && !!a.phone],
+        ["stage","Your stage name: the name on every flyer","Stage name","Add","#task-stage", !!(a.stageName||"").trim()],
+        ["photo","Profile photo","Photo","Upload","#task-photo", !!a.hasFacePhoto],
+        ["genres","Genres and venues you play","Genres","Pick","/margolis-login?do=genres", (a.genres||[]).length>0||(a.venues||[]).length>0],
+        ["payout","Payout info: checks payable to + Zelle","Payout","Add","#task-payout", !!(a.payableTo&&a.zelle)],
+        ["agreements","The agreement stack, signed","Agreements","Sign","#task-agreements", !!a.agreementsSigned],
+        ["w9","W-9 on file","W-9","Upload","#w9Box", !!a.hasW9],
+        ["nights","How your nights work","Nights","Agree","#task-nights", !!a.nightsAck],
+      ].map(([key,label,short,verb,target,done])=>({key,label,short,verb,target,done}));
+    }
+    const demoPct = (a, key) => {
+      const it = a.hostChecklist.find(i=>i.key===key); if(it) it.done = true;
+      a.profilePercent = Math.round(a.hostChecklist.filter(i=>i.done).length / a.hostChecklist.length * 100);
+    };
+    if(s.account) demoPct(s.account, "");
     if(payload.action==="me"){
       if(!s.account) throw "Please log in again.";
       if(!s.account.partnerCode) s.account.partnerCode = "KTR-482";
       demoSave(s); return {ok:true, account:s.account};
     }
-    const demoPct = a => { const c=[!!(a.name&&a.type&&a.phone),!!a.hasFacePhoto,(a.genres||[]).length>0||(a.venues||[]).length>0,!!(a.payableTo&&a.zelle),!!a.agreementsSigned,!!a.hasW9,!!a.nightsAck,!!(a.stageName||"").trim()]; a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100); };
     if(payload.action==="nightGuests"){
       const ev = s.events.find(e => e.date === payload.date);
       if(!ev || !ev.door) throw "That is not one of your nights.";
@@ -790,15 +829,15 @@
       if(n.length > 10) throw "Up to 10 names.";
       s.account.guestList = n; demoSave(s); return {ok:true, account:s.account};
     }
-    if(payload.action==="saveW9"){ s.account.hasW9 = true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="saveW9"){ s.account.hasW9 = true; demoPct(s.account, "w9"); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="savePhoto"){
       s.account.hasFacePhoto=true;
-      demoPct(s.account); demoSave(s); return {ok:true, account:s.account};
+      demoPct(s.account, "photo"); demoSave(s); return {ok:true, account:s.account};
     }
-    if(payload.action==="savePayout"){ s.account.payableTo=payload.payableTo; s.account.zelle=payload.zelle; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
-    if(payload.action==="updateProfile"){ if("stageName" in payload) s.account.stageName=payload.stageName; if("bio" in payload) s.account.bio=payload.bio; demoSave(s); return {ok:true, account:s.account}; }
-    if(payload.action==="ackNights"){ s.account.nightsAck=true; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
-    if(payload.action==="saveAgreements"){ s.account.agreementsSigned=true; s.account.smsConsent=!!payload.contactConsent; demoPct(s.account); demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="savePayout"){ s.account.payableTo=payload.payableTo; s.account.zelle=payload.zelle; if(payload.payableTo&&payload.zelle) demoPct(s.account, "payout"); demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="updateProfile"){ if("stageName" in payload){ s.account.stageName=payload.stageName; if((payload.stageName||"").trim()) demoPct(s.account, "stage"); } if("bio" in payload) s.account.bio=payload.bio; demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="ackNights"){ s.account.nightsAck=true; demoPct(s.account, "nights"); demoSave(s); return {ok:true, account:s.account}; }
+    if(payload.action==="saveAgreements"){ s.account.agreementsSigned=true; s.account.smsConsent=!!payload.contactConsent; demoPct(s.account, "agreements"); demoSave(s); return {ok:true, account:s.account}; }
     if(payload.action==="events"){ demoSave(s); return {ok:true, events:s.events, archive:s.archive||[], dateRequests:s.dateRequests||[]}; }
     if(payload.action==="myPastParties"){
       return {ok:true, parties:[
@@ -987,6 +1026,63 @@
     });
   }
 
+  // ---------- pinned "next" bar (2026-11-17) ----------
+  /* Ruby: show where you are, what's left, and the one next thing. The
+     dark bar pinned to the bottom carries the profile % (the same meter
+     as FtPct in assets/forms-end.js) and one button for the first item
+     still open on the server's checklist ("W-9 → Upload"). Gone at 100%. */
+  function nextItem(account){ return (account.hostChecklist||[]).find(i => !i.done) || null; }
+  function renderNextBar(account){
+    let bar = document.getElementById("djdNext");
+    const n = nextItem(account);
+    const p = account.profilePercent ?? 0;
+    if(!n || p >= 100 || account.isGuest || account.isManager){ if(bar) bar.hidden = true; document.body.classList.remove("djd-has-next"); return; }
+    if(!bar){
+      bar = document.createElement("div");
+      bar.id = "djdNext"; bar.className = "djd-next";
+      bar.innerHTML = `<div class="djd-next__in">
+        <span class="ft-pct" role="progressbar" aria-label="Profile complete" aria-valuemin="0" aria-valuemax="100"><i><b></b></i><em></em></span>
+        <span class="djd-next__l"><small>Next</small><b></b></span>
+        <button type="button" class="djd-next__go"></button></div>`;
+      document.body.appendChild(bar);
+      bar.querySelector(".djd-next__go").addEventListener("click", () => { const it = nextItem(LAST_ACCOUNT||{}); if(it) goToItem(it); });
+    }
+    LAST_ACCOUNT = account;
+    bar.hidden = false;
+    document.body.classList.add("djd-has-next");
+    const m = bar.querySelector(".ft-pct");
+    m.setAttribute("aria-valuenow", String(p));
+    m.querySelector("em").textContent = p + "%";
+    m.querySelector("b").style.width = p + "%";
+    bar.querySelector(".djd-next__l b").textContent = n.short || n.label;
+    bar.querySelector(".djd-next__go").textContent = (n.verb || "Open") + " \u2192";
+  }
+  let LAST_ACCOUNT = null;
+  /* Opens the panel on one item and focuses its first field. Items only
+     the sign-in page's profile step asks (type, genres) go there. */
+  function goToItem(it, instant){
+    const t = it.target || "";
+    if(!t.startsWith("#")){ if(!VIEW_AS) location.href = t; return; }
+    const det = document.querySelector("#profilePanel details");
+    if(det) det.open = true;
+    const el = document.querySelector(t);
+    if(!el) return;
+    el.scrollIntoView({behavior: instant ? "auto" : "smooth", block:"center"});
+    el.classList.add("djd-task--on");
+    setTimeout(() => el.classList.remove("djd-task--on"), 1800);
+    const f = el.querySelector("input:not([disabled]):not([type=hidden]):not([type=checkbox]), textarea, button.btn, button");
+    if(f) setTimeout(() => { try{ f.focus({preventScroll:true}); }catch(e){} }, 350);
+  }
+  /* ?do=<key> from a reminder email (margolis-dj-core.php dj_do_link):
+     open straight on that item, once, then drop it from the address. */
+  const DO_KEY = (new URLSearchParams(location.search).get("do") || "").replace(/[^a-z0-9]/gi, "");
+  function openDoItem(account){
+    if(!DO_KEY) return;
+    try{ const u = new URL(location.href); u.searchParams.delete("do"); history.replaceState(null, "", u.pathname + u.search + u.hash); }catch(e){}
+    const it = (account.hostChecklist||[]).find(i => i.key === DO_KEY);
+    if(it && !it.done) setTimeout(() => goToItem(it, true), 120);
+  }
+
   // ---------- profile completion panel ----------
   // Percent bar + the "everything on the other forms" tasks: payout
   // info and the full agreement stack. W9 keeps its own banner below.
@@ -1000,16 +1096,10 @@
     const complete = p >= 100;
     const editing = !complete || profileEditMode;
     const claim = account.claimedResidency;
-    const items = [
-      [!!(account.name && account.type && account.phone), "The essentials — government name, DJ or host, phone"],
-      [!!(account.stageName||"").trim(), "Your stage name — the name on every flyer"],
-      [!!account.hasFacePhoto, "Profile photo"],
-      [(account.genres||[]).length>0 || (account.venues||[]).length>0, "Genres and venues you play"],
-      [!!(account.payableTo && account.zelle), "Payout info — checks payable to + Zelle"],
-      [!!account.agreementsSigned, "The agreement stack, signed"],
-      [!!account.hasW9, "W9 on file"],
-      [!!account.nightsAck, "How your nights work"],
-    ];
+    /* The server's list (dj_host_checklist() in margolis-dj-core.php),
+       the same one profilePercent is counted from. Never re-derived here. */
+    const items = (account.hostChecklist||[]).map(i => [!!i.done, esc(i.label)]);
+    renderNextBar(account);
     const el = document.getElementById("profilePanel");
     const editBtn = document.getElementById("profileEditToggle");
     /* Always shown (Ruby, 2026-11-05): it used to appear only at 100%,
@@ -1037,7 +1127,7 @@
           </div>
           <p class="djd-note" id="ppAcctMsg" style="margin:10px 0 0"></p>
         </div>`:""}
-        ${(!account.stageName || profileEditMode)?`<div class="djd-task">
+        ${(!account.stageName || profileEditMode)?`<div class="djd-task" id="task-stage">
           <h4>Your two names</h4>
           <p class="djd-note" style="margin:0 0 12px">Margolis keeps both, and uses each in one place only.</p>
           <div class="ifield"><label>Government name</label><input type="text" value="${esc(account.name||"")}" disabled>
@@ -1052,7 +1142,7 @@
           <h4>Government name</h4>
           <p class="djd-note" style="margin:0">${esc(account.name||"")}${account.legalNameLocked?` · <strong>Locked</strong> to your signed agreements. To change it, email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.`:""}</p>
         </div>`:""}
-        ${(!account.hasFacePhoto || profileEditMode)?`<div class="djd-task">
+        ${(!account.hasFacePhoto || profileEditMode)?`<div class="djd-task" id="task-photo">
           <h4>Profile photo</h4>
           <p class="djd-note" style="margin:0 0 12px">${account.hasFacePhoto
             ? "On file. Upload a new one to replace it."
@@ -1061,14 +1151,14 @@
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePhotos">${account.hasFacePhoto?"Replace photo":"Upload photo"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
           <p class="djd-note" id="ppPhotoMsg" style="margin:10px 0 0"></p>
         </div>`:""}
-        ${(!(account.payableTo && account.zelle) || profileEditMode)?`<div class="djd-task">
+        ${(!(account.payableTo && account.zelle) || profileEditMode)?`<div class="djd-task" id="task-payout">
           <h4>Payout info</h4>
           <p class="djd-note" style="margin:0 0 12px"><strong>Door payments go through Zelle.</strong></p>
           <div class="ifield"><label>Make checks payable to <span class="req">*</span></label><input type="text" id="ppPayable" value="${esc(account.payableTo||"")}" placeholder="(Full Name or Business Name)"></div>
           <div class="ifield"><label>Zelle <span class="req">*</span></label><input type="text" id="ppZelle" value="${esc(account.zelle||"")}" placeholder="Phone number, email, or Zelle tag"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePayout">Save payout info <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
-        ${(!account.agreementsSigned || profileEditMode)?`<div class="djd-task">
+        ${(!account.agreementsSigned || profileEditMode)?`<div class="djd-task" id="task-agreements">
           <h4>The agreement stack</h4>
           <p class="djd-note" style="margin:0 0 12px">${account.agreementsSigned?"Signed and on file.":""} Read the
           <button type="button" class="djd-policy" data-policy-open="policyPhilosophy">booking philosophy and payout model</button>,
@@ -1087,7 +1177,7 @@
           <div class="ifield" style="margin-top:6px"><label>Electronic signature (full legal name) <span class="req">*</span></label><input type="text" id="agSig" autocomplete="name" value="${account.agreementsSigned?esc(account.name||""):""}"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSignAgreements">${account.agreementsSigned?"Update signature":"Sign the agreements"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
-        ${(!account.nightsAck || profileEditMode)?`<div class="djd-task">
+        ${(!account.nightsAck || profileEditMode)?`<div class="djd-task" id="task-nights">
           <!-- "How your nights work" (Ruby, 2026-11-04): agreed once, as part of
                setup. It replaced the paragraph that sat at the top of the page
                on every visit. ackNights in margolis-dj-auth.php records it. -->
@@ -2099,7 +2189,7 @@
       } else loadAvatar(me.account);
       MY_CODE = me.account.partnerCode || "";
       if(MY_CODE) document.getElementById("helloText").insertAdjacentHTML("beforeend", ` <span class="djd-mycode" title="Your partner code">${esc(MY_CODE)}</span>`);
-      if(me.account.mustSetPassword || !me.account.quickProfileDone){ location.href = "/margolis-login"; return; }
+      if(me.account.mustSetPassword || !me.account.quickProfileDone){ location.href = "/margolis-login" + (DO_KEY ? "?do=" + DO_KEY : ""); return; }
       /* Manager (Ruby): the same page grows a second half. The server
          decides this — margolis-manager.php checks the account against
          its own allowlist on every call, so flipping this flag in a
@@ -2109,6 +2199,7 @@
       renderProfilePanel(me.account);
       renderGuestList(me.account);
       renderW9(me.account);
+      openDoItem(me.account);
       const out = await api(DASH_URL, {action:"events"});
       EVENTS = out.events || [];
       ARCHIVE = out.archive || [];

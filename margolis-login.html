@@ -230,9 +230,9 @@
   function demoRecompute(a){
     // photo is a dashboard task now, not part of the quick gate
     a.quickProfileDone = !!(a.name && a.type);
-    const c = [!!(a.name&&a.type&&a.phone), !!a.hasFacePhoto,
-      (a.genres||[]).length>0||(a.venues||[]).length>0, !!(a.payableTo&&a.zelle), !!a.agreementsSigned, !!a.hasW9];
-    a.profilePercent = Math.round(c.filter(Boolean).length/c.length*100);
+    /* No percent formula here: the dashboard's demo re-seeds the
+       server-shaped checklist from these fields and counts it. */
+    delete a.hostChecklist;
   }
   async function demoApi(payload){
     const s = demoState();
@@ -292,11 +292,18 @@
     return out;
   }
 
+  /* ?do=<key> from a reminder email (dj_do_link in margolis-dj-core.php).
+     Carried to the dashboard, which opens on that item. The two items
+     only this page's profile step asks (DJ or host, genres) open it
+     here instead, once. */
+  let DO_KEY = (new URLSearchParams(location.search).get("do") || "").replace(/[^a-z0-9]/gi, "");
   function afterAuth(account){
     ACCOUNT = account;
     if(account.mustSetPassword){ showStep("stepSetPassword"); return; }
     if(!account.quickProfileDone){ openProfileStep(account); return; }
-    location.href = "/margolis-dashboard";
+    const it = DO_KEY && (account.hostChecklist||[]).find(i => i.key === DO_KEY);
+    if(it && !it.done && /^\/margolis-login/.test(it.target||"")){ DO_KEY = ""; openProfileStep(account); return; }
+    location.href = "/margolis-dashboard" + (DO_KEY ? "?do=" + DO_KEY : "");
   }
 
   async function openProfileStep(account){
