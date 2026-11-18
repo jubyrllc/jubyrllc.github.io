@@ -10,8 +10,10 @@
 <link rel="apple-touch-icon" href="assets/jubyr-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=32">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&text=J&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css?v=1">
+<link rel="stylesheet" href="assets/css/chrome.css?v=1">
 <!-- The margolis.events ticket-site form layout, in Jubyr's colours. -->
 <link rel="stylesheet" href="assets/forms-tix.css?v=2">
 <meta property="og:type" content="website">
@@ -27,41 +29,56 @@
 </head>
 <body class="ft-page">
 
-<!-- announcement -->
-<div class="announce">
-  <span class="mono">Jubyr LLC &middot; Experience design studio &middot; Philadelphia</span>
-  <a class="mono" href="mailto:ruby@jubyr.com">Questions? Email me <span aria-hidden="true">&gt;</span></a>
-</div>
+<header class="mnav" id="nav">
+  <div class="mnav__inner">
+    <div class="mnav__brand">
+      <a class="mnav__home" href="/" aria-label="Home" title="Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"></path></svg>
+      </a>
+    </div>
+    <a class="mnav__logo" href="/"><span class="mnav__logo--text">JUBYR LLC</span></a>
+    <div class="mnav__actions">
+      <nav class="mnav__links" aria-label="Primary" id="navLinks">
+        <a href="/#work">Portfolio</a>
+        <a href="/#services">Services</a>
+        <a class="mnav__hi" href="/consultation">Free consultation</a>
+        <div class="mnavdrop">
+          <button type="button" class="mnavdrop__trigger" aria-expanded="false">Info</button>
+          <div class="mnavdrop__panel">
+            <a class="mnavdrop__item" href="/#approach">Approach</a>
+            <a class="mnavdrop__item" href="/#reviews">Reviews</a>
+            <a class="mnavdrop__item" href="/#get-involved">Get involved</a>
+            <a class="mnavdrop__item" href="/resources">Resources</a>
+            <a class="mnavdrop__item" href="/contact">Contact</a>
+          </div>
+        </div>
+      </nav>
+      <a class="mnav__ig" href="https://instagram.com/jubyrllc" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      </a>
+      <button class="mnav__burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </div>
+  <nav class="mnav__mobile" id="navMobile" aria-label="Mobile">
+    <a class="mnavmob__link" href="/#work">Portfolio</a>
+    <a class="mnavmob__link" href="/#services">Services</a>
+    <a class="mnavmob__link mnav__hi" href="/consultation">Free consultation</a>
+    <div class="mnavmob__group">
+      <button type="button" class="mnavmob__head" aria-expanded="false">Info</button>
+      <div class="mnavmob__sub">
+        <a href="/#approach">Approach</a>
+        <a href="/#reviews">Reviews</a>
+        <a href="/#get-involved">Get involved</a>
+        <a href="/resources">Resources</a>
+        <a href="/contact">Contact</a>
+      </div>
+    </div>
+    <a class="mnavmob__ig" href="https://instagram.com/jubyrllc" target="_blank" rel="noopener">Instagram</a>
+  </nav>
+</header>
+
 
 <div class="frame">
-
-  <!-- nav -->
-  <header>
-    <nav class="nav" aria-label="Main">
-      <a class="nav__logo" href="/" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
-      <ul class="nav__links mono">
-        <li><a href="/">Home</a></li>
-        <li><a href="/#approach">Approach</a></li>
-        <li><a href="/#services">Services</a></li>
-        <li><a href="/#portfolio">Portfolio</a></li>
-        <li><a href="/#get-involved">Get involved</a></li>
-        <li><a href="/resources">Resources</a></li>
-        <li><a href="/contact">Contact</a></li>
-      </ul>
-      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
-        <span></span><span></span><span></span>
-      </button>
-    </nav>
-    <div class="mobilemenu mono" id="mobilemenu">
-      <a href="/">Home</a>
-      <a href="/#approach">Approach</a>
-      <a href="/#services">Services</a>
-      <a href="/#portfolio">Portfolio</a>
-      <a href="/#get-involved">Get involved</a>
-      <a href="/resources">Resources</a>
-      <a href="/contact">Contact</a>
-    </div>
-  </header>
 
   <main id="top" class="ft">
     <div class="ft-col intake">
@@ -90,58 +107,45 @@
   </main>
 </div>
 
-<!-- footer -->
-<footer class="footer">
-  <div class="footer__inner">
-    <div class="footer__top">
-      <div class="footer__logo">
-        <img src="assets/jubyr-logo-white.png?v=2" alt="Jubyr LLC" width="97" height="30">
-        <p>An experience design studio. We help organizations shape how people feel — before, during, and after every interaction.</p>
+<footer class="mfoot">
+  <div class="mfoot__inner">
+    <div class="mfoot__top">
+      <div class="mfoot__brand">
+        <img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" class="mfoot__logo">
+        <p>An experience design studio. We help organizations shape how people feel &mdash; before, during, and after every interaction.</p>
       </div>
-      <div>
+      <div class="mfoot__col">
         <h5>Explore</h5>
         <ul>
-          <li><a href="/#approach">Approach</a></li>
+          <li><a href="/#work">Portfolio</a></li>
           <li><a href="/#services">Services</a></li>
-          <li><a href="/#portfolio">Portfolio</a></li>
+          <li><a href="/#approach">Approach</a></li>
           <li><a href="/signup">Stay in touch</a></li>
+          <li><a href="/resources">Resources</a></li>
         </ul>
       </div>
-      <div>
-        <h5>Based in</h5>
-        <address class="addr">
-          Philadelphia, PA
-        </address>
+      <div class="mfoot__col">
+        <h5>Based In</h5>
+        <address>Philadelphia, PA</address>
       </div>
-      <div>
-        <h5>Say hi</h5>
+      <div class="mfoot__col">
+        <h5>Say Hi</h5>
         <ul>
           <li><a href="/consultation">Book a free consultation</a></li>
           <li><a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a></li>
-          <li><a href="https://instagram.com/jubyrllc" rel="noopener">Instagram</a></li>
+          <li><a href="https://instagram.com/jubyrllc" target="_blank" rel="noopener">@jubyrllc</a></li>
         </ul>
       </div>
     </div>
-    <div class="footer__bottom">
+    <div class="mfoot__bottom">
       <span class="status"><span class="dot" aria-hidden="true"></span> Now booking &mdash; consulting &amp; productions</span>
-      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="/privacy" style="color:inherit">Privacy</a> &middot; <a href="/terms" style="color:inherit">Terms</a> &middot; <a href="/sms" style="color:inherit">Messaging</a></span>
+      <span class="mfoot__legal">&copy; 2026 Jubyr LLC &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a> &middot; <a href="/sms">SMS</a></span>
     </div>
   </div>
 </footer>
 
+
 <script>
-  // mobile menu
-  const burger = document.querySelector('.nav__burger');
-  const menu = document.getElementById('mobilemenu');
-  burger.addEventListener('click', () => {
-    const open = menu.classList.toggle('open');
-    burger.setAttribute('aria-expanded', open);
-    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-  });
-  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    menu.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
-  }));
 
   // ===================================================================
   // Consulting intake — the deep-dive form sent to a prospect AFTER the
@@ -646,5 +650,6 @@
 <div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
 <script src="https://jubyr.tools/assets/js/date-pop.js?v=1" defer></script>
 <script src="assets/forms-end.js?v=3" defer></script>
+<script src="assets/js/site-nav.js?v=1"></script>
 </body>
 </html>

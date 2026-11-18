@@ -1,0 +1,534 @@
+/* chrome.css: the margolis.events nav bar + footer, renamed .mnav / .mfoot so
+   they never collide with the old .nav / .footer rules in site.css. */
+@media (prefers-reduced-motion: reduce){
+  .payoff{transition:none}
+  .payoff__spinner{animation:none;border-top-color:rgba(244,238,228,0.22)}
+}
+
+/* ---------- nav ---------- */
+.mnav{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(250,247,242,0.88);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid transparent;
+  transition:border-color .2s ease;
+}
+.mnav.is-scrolled{border-bottom-color:var(--line)}
+.mnav__inner{
+  /* wider cap than the page's content max-width (--maxw) — five nav
+     items at Kith's 12px/3px-tracking spec plus the venue switcher
+     genuinely need more room than the 1400px content column allows;
+     the nav bar is chrome, not editorial content, so it's fine for it
+     to stretch further on large screens instead of being squeezed. */
+  max-width:1800px;
+  margin:0 auto;
+  padding:0 var(--gutter);
+  height:34px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  column-gap:20px;
+  align-items:center;
+}
+/* Kith-style inverted logo badge — solid ink box, white wordmark inside,
+   sized small/compact rather than being the dominant nav element. */
+.mnav__logo{
+  justify-self:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--ink);
+  padding:5px 9px;
+  /* 76px was a hard width, which was fine while every wordmark was one
+     short word (MARGOLIS / FABRIKA). The shared pages say MARGOLIS
+     EVENTS now and that ran straight out of the box, so the badge
+     grows to whatever it holds and 76px is only the floor — short
+     wordmarks still sit in exactly the box they did before. */
+  min-width:76px;
+  height:13px;
+  box-sizing:content-box;
+}
+.mnav__logo img{max-width:100%;max-height:100%;width:auto;height:auto;display:block}
+.mnav__logo:hover{opacity:0.82}
+.mnav__logo:hover img{opacity:0.72}
+.mnav__logo--text{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.08em;
+  color:var(--on-dark);
+  white-space:nowrap;
+}
+.mnav__brand{
+  justify-self:start;
+  display:flex;
+  align-items:center;
+  gap:22px;
+}
+.mnav__home{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:22px;height:22px;
+  flex:0 0 auto;
+  background:none;
+  border:none;
+  padding:0;
+  color:var(--ink);
+  cursor:pointer;
+}
+.mnav__home:hover{color:var(--maroon)}
+.mnav__home svg{width:18px;height:18px;display:block}
+.mnav__venues{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.mnav__venue{
+  font-family:var(--sans);
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+  position:relative;
+  padding-bottom:4px;
+  white-space:nowrap;
+}
+.mnav__venue.is-on{color:var(--ink)}
+.mnav__venue.is-on::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:-9px;
+  height:2px;
+  background:var(--maroon);
+}
+.mnav__venue.is-soon{opacity:0.4;cursor:default}
+
+/* Ruby, 2026-09-05: Compare Venues is a fourth tab in the switcher and
+   it behaves exactly like the three venues — grey when you are not on
+   it, and when you are, the same is-on bar in the same coordinated
+   colour (maroon here, #AFC755 under body.venue-patio, --maroon
+   #D98A2E under body.venue-fabrika). So it carries no styling of its
+   own on desktop: .mnav__venue and .mnav__venue.is-on above already say
+   everything. The class stays as a hook for the mobile sizing below,
+   which is a width problem, not a colour one. */
+
+@media (max-width:520px){
+  .mnav__brand{gap:14px}
+  .mnav__venues{gap:12px}
+}
+/* Ruby, 2026-08-22: "put more space between navigation buttons — the
+   Margolis / The Patio / Fabrika spacing is great." So this is the
+   venue switcher's own 18px (.mnav__venues above), not a new number:
+   the two rows sit at either end of the same bar in the same type, and
+   now they're set to the same rhythm too. */
+.mnav__links{
+  display:flex;
+  gap:18px;
+}
+/* Ruby, 2026-08-14: match the venue-switcher's type (.mnav__venue below)
+   exactly — same family/size/tracking — so the whole nav bar (venue
+   switcher, top-level links, dropdown triggers, and the dropdown panel
+   items) reads as one consistent set.
+
+   Direct children only. Unscoped, this also caught every <a> inside a
+   .mnavdrop__panel and overrode .mnavdrop__item's padding — panel rows
+   came out 11px top / 4px bottom instead of 11/11, and picked up the
+   bar's hover underline as well. The panel has its own rules; the bar
+   shouldn't reach into it. */
+.mnav__links > a,
+.mnavdrop__trigger,
+.mnav__linkinert{
+  font-family:var(--sans);
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.06em;
+  line-height:15px;
+  text-transform:uppercase;
+  color:var(--ink);
+  position:relative;
+  padding:5px 0 4px; /* equal above + below so labels centre on the icons (Ruby, 2026-10-22) */
+  white-space:nowrap;
+}
+.mnav__links > a::after,
+.mnavdrop__trigger::after,
+.mnav__linkinert::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:1px;
+  background:var(--maroon);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .18s ease;
+}
+.mnav__links > a:hover::after,
+.mnavdrop__trigger:hover::after{transform:scaleX(1)}
+/* The one highlighted bar link, Membership (Ruby, 2026-11-16). */
+.mnav__links > a.mnav__hi,.mnav__mobile .mnavmob__link.mnav__hi{color:var(--gold)}
+
+/* Category dropdown triggers (Book Us / Resources) — same type scale as
+   the plain .mnav__links a items so the row reads as one consistent set,
+   just with a click-open panel instead of a straight link. Ruby,
+   2026-08-22: "get rid of the arrows on the navigation bar." The caret
+   glyph is gone; the underline-on-hover the triggers share with the
+   plain links is the affordance now, and the panel itself is the rest
+   of it. */
+.mnavdrop{position:relative}
+.mnavdrop__trigger{
+  display:flex;
+  align-items:center;
+  background:none;
+  border:none;
+  padding:5px 0 4px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.mnavdrop__trigger:hover{color:var(--maroon)}
+.mnavdrop__panel{
+  position:absolute;
+  top:calc(100% + 14px);
+  left:50%;
+  transform:translateX(-50%);
+  min-width:210px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  box-shadow:0 12px 28px rgba(27,24,21,0.1);
+  padding:8px 0;
+  opacity:0;
+  pointer-events:none;
+  transform:translateX(-50%) translateY(-4px);
+  transition:opacity .15s ease, transform .15s ease;
+}
+.mnavdrop.is-open .mnavdrop__panel{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.mnavdrop__item{
+  display:block;
+  padding:11px 20px;
+  font-family:var(--sans);
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+  white-space:nowrap;
+  cursor:default;
+}
+/* real destinations (Host a Public Event / Throw a Private Event) read
+   as actual links — everything else in these panels stays muted/inert
+   until it has somewhere to go */
+a.mnavdrop__item{color:var(--ink);cursor:pointer}
+a.mnavdrop__item:hover{color:var(--maroon);background:var(--paper-2)}
+/* Search is a button, not a link (it opens the overlay), so it needs
+   the UA button chrome stripped — everything else about the row, type
+   included, comes from .mnavdrop__item above so the two can't drift. */
+button.mnavdrop__item{
+  width:100%;
+  text-align:left;
+  background:none;
+  border:none;
+  color:var(--ink);
+  cursor:pointer;
+}
+button.mnavdrop__item:hover{color:var(--maroon);background:var(--paper-2)}
+
+/* Venue heading inside a panel — "Margolis", "The Patio", "Fabrika"
+   above the rows that belong to them. The same bar is on every page
+   now (tools/build-nav.js), which means a row like "Host a Public
+   Event" can't rely on which page you're standing on to say which
+   venue it means; these say it. Smaller and lighter than the rows
+   themselves so the panel still reads as a list, not as four lists. */
+.mnavdrop__label{
+  display:block;
+  padding:10px 20px 4px;
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  opacity:0.7;
+  white-space:nowrap;
+}
+.mnavdrop__label + .mnavdrop__item{padding-top:5px}
+.mnavdrop__item + .mnavdrop__label{
+  margin-top:6px;
+  border-top:1px solid var(--line);
+  padding-top:12px;
+}
+
+/* top-level item with no built destination yet — same type scale as
+   the real links (shared rule above), just muted/non-interactive */
+.mnav__linkinert{color:var(--muted);cursor:default}
+
+.mnav__actions{
+  justify-self:end;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.mnav__ig{color:var(--ink);display:flex}
+.mnav__burger{
+  display:none;
+  width:32px;height:32px;
+  flex:0 0 auto;
+  background:none;border:none;cursor:pointer;
+  flex-direction:column;justify-content:center;gap:6px;
+}
+.mnav__burger span{display:block;height:1px;width:100%;background:var(--ink)}
+.mnav__mobile{
+  display:none;
+  flex-direction:column;
+  gap:2px;
+  padding:8px var(--gutter) 22px;
+  border-top:1px solid var(--line);
+}
+/* No hairline between rows (Ruby, 2026-10-02: "get rid of the lines
+   between each option"). This blanket rule caught EVERY link in the
+   mobile panel, so each item inside a collapsible group was ruled off
+   as well as the groups themselves - four lines inside Events, four
+   inside Book, and so on. The group separator on .mnavmob__group is the
+   only rule the panel needs; the rows read off their indent. */
+.mnav__mobile a,
+.mnavmob__searchitem{
+  padding:14px 0;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+}
+.mnav__mobile .btn{margin-top:14px;width:max-content}
+.mnavmob__venues{
+  display:flex;
+  border-bottom:1px solid var(--line);
+  margin-bottom:6px;
+}
+.mnav__mobile .mnavmob__venues a{
+  flex:1;
+  text-align:center;
+  padding:12px 4px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:0.06em;
+  color:var(--muted);
+  border-bottom:none;
+}
+.mnav__mobile .mnavmob__venues a.is-on{color:var(--ink)}
+/* "Compare Venues" is twice the label of the three venue names, so at
+   four equal flex:1 cells it wrapped to two lines and dragged the whole
+   switcher to 62px tall. It gets a wider cell and a smaller, tighter
+   setting, which holds it on one line at 375px — the three venue names
+   still clear their own width at flex:1. Colour is deliberately not set
+   here: the row's own rules already grey it, and .is-on above must stay
+   free to darken it on venues.html. */
+.mnav__mobile .mnavmob__venues a.is-compare{
+  flex:1.35;
+  font-size:10px;
+  letter-spacing:0.02em;
+  white-space:nowrap;
+}
+
+.mnavmob__group{border-bottom:1px solid var(--line)}
+/* A bar link with no dropdown (Tickets, Calendar) - same row as a group
+   head, minus the +. */
+.mnav__mobile .mnavmob__link{
+  display:block;padding:14px 0;border-bottom:1px solid var(--line);
+  font-family:var(--sans);font-size:10px;font-weight:500;
+  letter-spacing:0.06em;text-transform:uppercase;color:var(--ink);
+}
+.mnavmob__head{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 0;
+  font-family:var(--sans);
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--ink);
+  background:none;
+  border:none;
+  cursor:pointer;
+}
+.mnavmob__head::after{content:"+";font-size:15px;font-weight:400}
+.mnavmob__group.is-open .mnavmob__head::after{content:"\2212"}
+.mnavmob__sub{display:none;flex-direction:column;padding-bottom:10px}
+.mnavmob__group.is-open .mnavmob__sub{display:flex}
+.mnavmob__sub span, .mnavmob__sub a, .mnavmob__searchitem{
+  display:block;
+  padding:9px 0 9px 14px;
+  font-family:var(--sans);
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.mnavmob__sub a{color:var(--ink)}
+/* Mobile twin of .mnavdrop__label — the venue a group of rows belongs
+   to. Overrides the shared ".mnavmob__sub span" row above, which is
+   sized for items you can tap. */
+.mnavmob__sub .mnavmob__label{
+  padding:10px 0 2px 14px;
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:0.14em;
+  color:var(--muted);
+  opacity:0.7;
+}
+.mnavmob__sub a + .mnavmob__label{margin-top:6px;border-top:1px solid var(--line);padding-top:12px}
+/* Same row as its neighbours; it's a button only because it opens the
+   overlay rather than navigating, so it carries no type or spacing of
+   its own — it's listed alongside .mnav__mobile a above and in the
+   phone media query, and the only thing here is stripping the UA
+   button chrome. (It used to keep a shared bottom hairline; those came
+   off the whole panel on 2026-10-02.) */
+.mnavmob__searchitem{
+  width:100%;
+  text-align:left;
+  background:none;
+  /* all four sides, not three: the bottom used to be the shared hairline
+     and is now the browser's default button border, which is exactly the
+     line we just took off every row around it. */
+  border:none;
+  color:var(--ink);
+  cursor:pointer;
+}
+.mnavmob__inert{
+  display:block;
+  padding:14px 0;
+  font-family:var(--sans);
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  border-bottom:1px solid var(--line);
+}
+
+/* Lowered from 1560px, 2026-08-14: that threshold was tuned for the old
+   Kith-spec 12px/3px-tracking nav type. Now that .mnav__links/.mnavdrop__
+   trigger/.mnavdrop__item match .mnav__venue's much narrower 10px/0.06em
+   type (Ruby's font-unification request), the row needs far less room —
+   re-verified empirically overlap resolves by ~1100px, comfortable
+   margin by 1200px. (Margolis used to be the widest of the three item
+   sets on account of a "Cocktail Classes" top-level link; that moved
+   into Book Us on 2026-08-22, so all three now run the same width.) Was needlessly forcing the burger menu on most normal laptop
+   widths (1280–1560px) even though the full row now fits — Ruby: "the
+   navigation bars for all 3 venues are missing most of their options"
+   was this, not a missing-link bug. */
+@media (max-width:1200px){
+  .mnav__links{display:none}
+  .mnav__actions .btn--fill{display:none}
+  .mnav__burger{display:flex}
+  .mnav__mobile.is-open{display:flex}
+}
+
+/* Ruby, 2026-08-13: wants the venue switcher visible in the main bar
+   whenever there's realistically room for it — including the "desktop
+   but not ultra-wide" range (768–1560px) where .mnav__links has already
+   collapsed to the burger — and only actually gone on true mobile,
+   where .mnavmob__venues in the burger menu is the only way to switch. */
+@media (max-width:640px){
+  .mnav__venues{display:none}
+}
+
+/* ---------- hero ---------- */
+
+.mfoot{
+  background:var(--paper-2);
+  border-top:1px solid var(--line);
+}
+.mfoot__inner{
+  max-width:var(--maxw);
+  margin:0 auto;
+  padding:64px var(--gutter) 30px;
+}
+.mfoot__top{
+  display:grid;
+  grid-template-columns:1.6fr 1fr 1fr 1fr 1.2fr;
+  gap:32px;
+  padding-bottom:48px;
+}
+/* The wordmark and the four column headings share a baseline, and the
+   credit line below it shares a baseline with each column's first row.
+   Neither happened on its own: h5 was carrying the browser's own
+   1.67em top margin (18.37px at 11px), which landed the headings
+   ~3px above the wordmark's baseline and then threw the second row
+   out by ~8px. Both numbers below are measured against a 34px
+   wordmark - change .mfoot__logo's height and they need re-measuring. */
+.mfoot__logo{height:34px;width:auto;margin-bottom:27px}
+.mfoot__admin{
+  font-size:10px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+/* The credit points at jubyr.com — underlined, because the global
+   a{text-decoration:none} would otherwise leave it indistinguishable
+   from the words around it. */
+.mfoot__admin a{border-bottom:1px solid var(--line);transition:color .15s ease,border-color .15s ease}
+.mfoot__admin a:hover{color:var(--maroon);border-color:var(--maroon)}
+.mfoot__desc{
+  color:var(--muted);
+  font-size:14px;
+  max-width:32ch;
+  line-height:1.55;
+}
+.mfoot__col h5{
+  margin-top:22px;        /* sits the heading on the wordmark's baseline */
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--ink);
+  margin-bottom:16px;
+  font-weight:500;
+}
+.mfoot__col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+.mfoot__col a{font-size:14px;color:var(--muted);transition:color .15s ease}
+.mfoot__col a:hover{color:var(--ink)}
+.mfoot__col address{font-size:14px;color:var(--muted);line-height:1.6}
+
+.mfoot__bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+  font-size:12px;
+  color:var(--muted);
+}
+.mfoot, .mfoot .mfoot__col h5, .mfoot .mfoot__admin, .mfoot .status,
+.mfoot .signup input, .mfoot .btn{font-family:var(--sans)}
+.mfoot .mfoot__col h5, .mfoot .mfoot__admin, .mfoot .mfoot__bottom,
+.mfoot .status, .mfoot .btn{font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.mfoot .mfoot__col a, .mfoot .mfoot__col address, .mfoot .mfoot__desc,
+.mfoot .signup input{font-size:13px}
+@media (max-width:760px){.mfoot .signup input{font-size:16px}} /* iOS zooms into anything smaller */
+
+@media (max-width:960px){
+  .mfoot__top{grid-template-columns:1fr 1fr;row-gap:36px}
+  .mfoot__brand{grid-column:1 / -1}
+  /* The brand takes its own row here, so there is no wordmark beside
+     the headings to share a baseline with - the 22px becomes a gap. */
+  .mfoot__col h5{margin-top:0}
+}
+@media (max-width:520px){
+  .mfoot__top{grid-template-columns:1fr}
+}
+
+/* ============================================================
+   Booking system — ported functionality from the live Margolis
+   site (venue picker → reveal-gated pricing → live calendar →
+   multi-step form). Visual language kept in the mock's own
+   paper/maroon/serif tokens.
+   ============================================================ */
+/* 130px below the panel put most of a screen of nothing between the
+   last thing a host reads and the guide link under it. */
+.mfoot__brand p{color:var(--muted);font-size:13px;line-height:1.6;max-width:32ch;margin:0}
+.mfoot .footer__legal a, .mfoot__legal a{color:inherit}
+
+.mnav a, .mfoot a{text-decoration:none}
+.mfoot address{font-style:normal}
+.mfoot__legal a{text-decoration:underline;text-underline-offset:2px}

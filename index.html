@@ -9,8 +9,10 @@
 <link rel="apple-touch-icon" href="assets/jubyr-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=30">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&text=J&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/mgl.css?v=1">
+<link rel="stylesheet" href="assets/css/jubyr.css?v=1">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
@@ -25,738 +27,402 @@
 </head>
 <body>
 
-<!-- announcement -->
-<div class="announce">
-  <span class="mono">Jubyr LLC &middot; Experience design studio &middot; Philadelphia</span>
-  <a class="mono" href="/consultation">Free consultation <span aria-hidden="true">&gt;</span></a>
-</div>
-
-<div class="frame">
-
-  <!-- nav -->
-  <header>
-    <nav class="nav" aria-label="Main">
-      <a class="nav__logo" href="#top" aria-label="Jubyr LLC — home"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="97" height="30"></a>
-      <ul class="nav__links mono">
-        <li><a href="#approach">Approach</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#portfolio">Portfolio</a></li>
-        <li><a href="#reviews">Reviews</a></li>
-        <li><a href="#get-involved">Get involved</a></li>
-        <li><a href="/resources">Resources</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobilemenu">
-        <span></span><span></span><span></span>
-      </button>
-    </nav>
-    <div class="mobilemenu mono" id="mobilemenu">
-      <a href="#approach">Approach</a>
-      <a href="#services">Services</a>
-      <a href="#portfolio">Portfolio</a>
-      <a href="#reviews">Reviews</a>
-      <a href="#get-involved">Get involved</a>
-      <a href="/resources">Resources</a>
-      <a href="#contact">Contact</a>
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <div class="nav__brand">
+      <a class="nav__home" href="#top" aria-label="Home" title="Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"></path></svg>
+      </a>
     </div>
-  </header>
-
-  <main id="top">
-
-    <!-- hero -->
-    <section class="box hero hero--photo">
-      <div class="hero__copy">
-        <h1>Designing experiences that people remember.</h1>
-        <p class="hero__aff">Experience design &middot; Philadelphia</p>
-        <p class="hero__desc">
-          Events, venues, hospitality, and the tools behind them —
-          designed around one question: how should people feel?
-        </p>
-        <div class="hero__cta">
-          <a class="btn btn--onvideo" href="/consultation">Free consultation <span class="arw" aria-hidden="true">&gt;</span></a>
-          <a class="btn btn--ghost" href="#portfolio">See the work <span aria-hidden="true">&gt;</span></a>
+    <a class="nav__logo" href="#top"><span class="nav__logo--text">JUBYR LLC</span></a>
+    <div class="nav__actions">
+      <nav class="nav__links" aria-label="Primary" id="navLinks">
+        <a href="#work">Portfolio</a>
+        <a href="#services">Services</a>
+        <a class="nav__hi" href="/consultation">Free consultation</a>
+        <div class="navdrop">
+          <button type="button" class="navdrop__trigger" aria-expanded="false">Info</button>
+          <div class="navdrop__panel">
+            <a class="navdrop__item" href="#approach">Approach</a>
+            <a class="navdrop__item" href="#reviews">Reviews</a>
+            <a class="navdrop__item" href="#get-involved">Get involved</a>
+            <a class="navdrop__item" href="/resources">Resources</a>
+            <a class="navdrop__item" href="/contact">Contact</a>
+          </div>
         </div>
+      </nav>
+      <a class="nav__ig" href="https://instagram.com/jubyrllc" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      </a>
+      <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </div>
+  <nav class="nav__mobile" id="navMobile" aria-label="Mobile">
+    <a class="navmob__link" href="#work">Portfolio</a>
+    <a class="navmob__link" href="#services">Services</a>
+    <a class="navmob__link nav__hi" href="/consultation">Free consultation</a>
+    <div class="navmob__group">
+      <button type="button" class="navmob__head" aria-expanded="false">Info</button>
+      <div class="navmob__sub">
+        <a href="#approach">Approach</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#get-involved">Get involved</a>
+        <a href="/resources">Resources</a>
+        <a href="/contact">Contact</a>
       </div>
-      <figure class="hero__portrait">
-        <img src="assets/hero-ruby.jpg" alt="Ruby Johnston, founder of Jubyr LLC" fetchpriority="high">
-        <span class="cluster__tag">Ruby Johnston &middot; Founder</span>
-      </figure>
-    </section>
+    </div>
+    <a class="navmob__ig" href="https://instagram.com/jubyrllc" target="_blank" rel="noopener">Instagram</a>
+  </nav>
+</header>
 
-    <!-- the numbers -->
-    <section class="strip strip--4 reveal" aria-label="Track record" style="border-top:none">
-      <div><span class="strip__k">Avg sales increase &middot; Margolis</span><span class="strip__v">3.6X</span></div>
-      <div><span class="strip__k">Partnerships &amp; relationships</span><span class="strip__v">6 Venues</span></div>
-      <div><span class="strip__k">Event revenue produced</span><span class="strip__v">$521K+</span></div>
-      <div><span class="strip__k">On Google</span><span class="strip__v">5 Stars</span></div>
-    </section>
+<main id="top">
 
-    <div class="gap"></div>
-
-    <!-- approach -->
-    <section class="box" id="approach">
-      <div class="sechead sechead--photo sechead--fitw reveal" style="background-image: linear-gradient(rgba(12,12,12,0.45), rgba(12,12,12,0.6)), url('assets/bg-windows-night.jpg?v=3')">
-        <span class="tag">Approach</span>
-        <h2>People remember how a room made them feel. We design that.</h2>
+  <!-- hero: the KWN film, Margolis hero layout -->
+  <section class="hero">
+    <div class="hero__frame">
+      <img src="assets/poster-kwn.jpg" alt="Guests at the KWN afterparty produced by Jubyr LLC" class="hero__img is-active">
+      <video class="hero__video" autoplay muted loop playsinline poster="assets/poster-kwn.jpg">
+        <source src="assets/hero.mp4" type="video/mp4">
+      </video>
+      <div class="hero__scrim" style="z-index:2"></div>
+      <span class="framenote framenote--light" aria-hidden="true">JBR &middot; 01</span>
+    </div>
+    <div class="hero__content hero__content--split">
+      <div class="hero__text">
+        <span class="tag tag--light">Experience design studio &middot; Philadelphia</span>
+        <h1 class="hero__head">Designing experiences that people remember.</h1>
+        <p class="hero__body">Events, venues, hospitality, and the tools behind them &mdash; designed around one question: how should people feel?</p>
       </div>
-      <div class="expander expander--lead reveal" aria-label="Principles" style="border-top:none">
-        <details>
-          <summary><span class="xk">01</span><span class="xt">Everything communicates.</span></summary>
-          <div class="expander__body">
-            <p>Nothing in a room is neutral. Silence communicates. Waiting
-            communicates. Pricing, lighting, music, the temperature of a
-            greeting — every detail teaches people how seriously you take
-            them. So we design behavior before aesthetics: what people do
-            and feel first, how it looks second.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">02</span><span class="xt">Memory is designed.</span></summary>
-          <div class="expander__body">
-            <p>Great experiences don&rsquo;t happen by accident — they emerge from
-            hundreds of intentional decisions working together. Consistency
-            builds trust; surprise builds delight; both are necessary. And
-            the best systems are invisible: guests rarely notice good
-            operations, but they always notice bad ones.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">03</span><span class="xt">Belonging is the point.</span></summary>
-          <div class="expander__body">
-            <p>Don&rsquo;t ask who your customer is — ask who feels comfortable
-            becoming one. The strongest communities are participants, not
-            audiences: people support what they help create. Every room we
-            design starts with who should feel welcome inside it.</p>
-          </div>
-        </details>
+      <div class="hero__ctas">
+        <a href="/consultation" class="btn btn--ghost-dark hero__cta">Free consultation</a>
+        <a href="#work" class="btn btn--ghost-dark hero__cta">See the work</a>
       </div>
-      <div class="expander reveal" style="border-top:none">
-        <details>
-          <summary><span class="xk">Founder</span><span class="xt">Ruby Johnston</span><span class="xs">— from rhetoric to rooms</span></summary>
-          <div class="expander__body">
-            <p>Ruby holds a Master&rsquo;s in Rhetoric — the study of the art and
-            science of communication — and taught it for years at the
-            university level. Her approach applies that science to physical
-            space: light, sound, temperature, taste, feel, and texture all
-            communicate to consumers, and Jubyr designs what they say to
-            maximize the experience.</p>
-            <p>As Director of Experience at Margolis Philadelphia, her approach
-            has driven a 3.6&times; average increase in sales in just over a year.
-            She founded Jubyr LLC in 2026 to bring that philosophy beyond a
-            single venue — consulting, producing, and teaching from strategy
-            through show night.</p>
-          </div>
-        </details>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <div class="gap"></div>
+  <section class="stats" aria-label="Track record">
+    <div><b>3.6&times;</b><span>Avg sales increase &middot; Margolis</span></div>
+    <div><b>6</b><span>Venue partnerships</span></div>
+    <div><b>$521K+</b><span>Event revenue produced</span></div>
+    <div><b>5.0 &#9733;</b><span>On Google</span></div>
+  </section>
 
-    <!-- services -->
-    <section class="box" id="services">
-      <div class="sechead sechead--photo reveal" style="background-image: linear-gradient(rgba(12,12,12,0.45), rgba(12,12,12,0.6)), url('assets/bg-glassware.jpg?v=2')">
-        <span class="tag">Services</span>
-        <h2>Seven ways we work.</h2>
-        <p>Open any service for the details.</p>
-      </div>
-      <div class="expander reveal">
-        <details>
-          <summary><span class="xk">01</span><span class="xt">Experience design</span><span class="xs">— behavior before aesthetics</span></summary>
-          <div class="expander__body">
-            <p>We help organizations intentionally shape how people experience
-            their business. Whether designing a neighborhood cocktail bar or a
-            multi-room music venue, our work begins with human behavior rather
-            than aesthetics.</p>
-            <p>Deliverables include guest journey mapping, environmental
-            strategy, programming concepts, behavioral design, customer
-            experience audits, and creative direction.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">02</span><span class="xt">Hospitality consulting</span><span class="xs">— hospitality is a language</span></summary>
-          <div class="expander__body">
-            <p>Hospitality is a language. It communicates generosity,
-            competence, curiosity, and care long before anyone tastes a drink.</p>
-            <p>We work with hospitality businesses to improve service systems,
-            operational efficiency, menu development, staff culture,
-            programming, guest retention, and long-term positioning.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">03</span><span class="xt">Venue strategy</span><span class="xs">— known for more than what you sell</span></summary>
-          <div class="expander__body">
-            <p>A venue should become known for more than what it sells.</p>
-            <p>We help venues identify their cultural role within a city,
-            develop recurring programming, strengthen community relationships,
-            improve operations, and create experiences people actively seek
-            out.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">04</span><span class="xt">Event production</span><span class="xs">— connection over attendance</span></summary>
-          <div class="expander__body">
-            <p>We produce events that prioritize connection over attendance.
-            Rather than beginning with ticket sales, we begin with purpose.</p>
-            <p>Why should this event exist? Who should leave different than
-            when they arrived? Every production is designed around that
-            answer.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">05</span><span class="xt">Creative direction</span><span class="xs">— one cohesive creative system</span></summary>
-          <div class="expander__body">
-            <p>From brand partnerships to physical environments, we help
-            organizations develop cohesive creative systems that extend across
-            design, programming, communication, and guest experience.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">06</span><span class="xt">Speaking &amp; education</span><span class="xs">— workshops and talks</span></summary>
-          <div class="expander__body">
-            <p>Ruby speaks on experience design, hospitality, rhetoric,
-            behavioral psychology, community building, and the future of
-            cultural spaces.</p>
-            <p>Workshops are designed for hospitality professionals,
-            universities, creative organizations, and leadership teams.</p>
-          </div>
-        </details>
-        <details>
-          <summary><span class="xk">07</span><span class="xt">Design Studio</span><span class="xs">— custom sites &amp; tools</span></summary>
-          <div class="expander__body">
-            <p>The same design philosophy, applied to software. The Design
-            Studio builds professional interfaces that centralize your
-            workflow, streamline productivity, and make daily operations feel
-            as considered as a well-run room.</p>
-            <p>Every site is designed beginning to end — trademark HTML,
-            product design, and a signature look carried across brands:
-            workflow home pages, client books &amp; rosters, event ops tools.</p>
-          </div>
-        </details>
-      </div>
-    </section>
+  <!-- portfolio -->
+  <section id="work">
+    <div class="jhead reveal">
+      <span class="tag">Portfolio</span>
+      <h2>How should people feel?</h2>
+      <p>Events booked start to finish &mdash; venue, talent, bar, staff, and show night.</p>
+    </div>
+    <div class="work">
 
-    <div class="gap"></div>
-    <div class="gap--dashes" aria-hidden="true"></div>
-
-    <!-- portfolio -->
-    <section class="box" id="portfolio">
-      <div class="sechead sechead--photo reveal" style="background-image: linear-gradient(rgba(12,12,12,0.45), rgba(12,12,12,0.6)), url('assets/bg-lounge-dark.jpg')">
-        <span class="tag">Portfolio</span>
-        <h2>How should people feel?</h2>
-        <p>
-          Events booked start to finish — venue alignment, talent, bar
-          strategy, staffing, and on-site execution, balancing creative
-          vision with real revenue outcomes.
-        </p>
-      </div>
-
-      <!-- 2 Chainz -->
-      <div class="feature reveal-right" id="two-chainz" style="border-top:1px dashed var(--line)">
-        <div class="feature__copy">
-          <span class="feature__meta">$30K revenue &middot; ~800 guests &middot; Fabrika &middot; Sep 2026</span>
-          <h3>2 Chainz <span class="hl">Birthday Party</span></h3>
-          <p>
-            A national headliner&rsquo;s birthday brought to Fabrika and run as one
-            night end to end &mdash; venue and talent alignment, bar strategy,
-            staffing, and on-site execution at full capacity.
-          </p>
+      <article class="wrow reveal">
+        <div class="wrow__fig"><b>$30K</b><span>Sep 2026</span></div>
+        <div>
+          <span class="wrow__meta">~800 guests &middot; Fabrika</span>
+          <h3>2 Chainz Birthday Party</h3>
+          <p>A national headliner&rsquo;s birthday at Fabrika, run end to end &mdash; venue and talent, bar strategy, staffing, and execution at full capacity.</p>
         </div>
-        <div class="feature__media">
-          <video muted loop playsinline preload="none" poster="assets/poster-2-chainz.jpg">
-            <source src="assets/video-2-chainz.mp4" type="video/mp4">
-          </video>
-        </div>
-      </div>
+        <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/poster-2-chainz.jpg"><source src="assets/video-2-chainz.mp4" type="video/mp4"></video></div>
+      </article>
 
-      <!-- KWN -->
-      <div class="feature reveal-right" id="kwn">
-        <div class="feature__copy">
-          <span class="feature__meta">$25K revenue &middot; ~700 guests &middot; Apr 2026</span>
-          <h3>KWN <span class="hl">Official Afterparty</span></h3>
-          <p>
-            Fabrika and Margolis became one layered, multi-room experience —
-            DJs, performers, aerialists, and vendor partners, with ticketing,
-            sponsorships, and VIP programming designed as a single system.
-          </p>
+      <article class="wrow reveal">
+        <div class="wrow__fig"><b>$25K</b><span>Apr 2026</span></div>
+        <div>
+          <span class="wrow__meta">~700 guests &middot; Fabrika + Margolis</span>
+          <h3>KWN Official Afterparty</h3>
+          <p>Two venues as one multi-room night &mdash; DJs, performers, aerialists, and vendors, with ticketing, sponsors, and VIP designed as a single system.</p>
         </div>
-        <div class="feature__media">
-          <video muted loop playsinline preload="none" poster="assets/poster-kwn.jpg">
-            <source src="assets/hero.mp4" type="video/mp4">
-          </video>
-        </div>
-      </div>
+        <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/poster-kwn.jpg"><source src="assets/hero.mp4" type="video/mp4"></video></div>
+      </article>
 
-      <!-- Leon Thomas -->
-      <div class="feature reveal-right" id="leon-thomas">
-        <div class="feature__copy">
-          <span class="feature__meta">$20K revenue &middot; Fabrika &middot; Nov 2025</span>
-          <h3>Leon Thomas <span class="hl">Afterparty</span></h3>
-          <p>
-            Full-lifecycle production of the Leon Thomas &amp; Ty Dolla $ign
-            afterparty — deal structure, pricing, venue booking, talent
-            curation, and artist hospitality, connected into one seamless night.
-          </p>
+      <article class="wrow reveal">
+        <div class="wrow__fig"><b>$20K</b><span>Nov 2025</span></div>
+        <div>
+          <span class="wrow__meta">Fabrika</span>
+          <h3>Leon Thomas Afterparty</h3>
+          <p>The Leon Thomas &amp; Ty Dolla $ign afterparty &mdash; deal, pricing, venue, talent, and artist hospitality, connected into one night.</p>
         </div>
-        <div class="feature__media">
-          <video muted loop playsinline preload="none" poster="assets/poster-leon.jpg">
-            <source src="assets/video-leon-thomas.mp4" type="video/mp4">
-          </video>
-        </div>
-      </div>
+        <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/poster-leon.jpg"><source src="assets/video-leon-thomas.mp4" type="video/mp4"></video></div>
+      </article>
 
-      <!-- hidden rest of portfolio -->
-      <div class="portfolio-more" id="portfolio-more">
+      <div class="work__more" id="workMore">
 
-        <!-- Girls Who Get It -->
-        <div class="feature reveal-right" id="girls-who-get-it">
-          <div class="feature__copy">
-            <span class="feature__meta">$15K revenue &middot; Summer series 2026 &middot; Fabrika</span>
-            <h3>Girls Who <span class="hl">Get It</span></h3>
-            <p>
-              The City of Sisterly Affection — a limited summer series
-              celebrating feminine energy with all-female lineups and a
-              women-owned vendor market. Website designed beginning to end:
-              trademark HTML, product design, and the brand&rsquo;s signature look.
-            </p>
+        <article class="wrow">
+          <div class="wrow__fig"><b>$15K</b><span>Summer 2026</span></div>
+          <div>
+            <span class="wrow__meta">Summer series &middot; Fabrika</span>
+            <h3>Girls Who Get It</h3>
+            <p>All-female lineups and a women-owned vendor market. Website designed beginning to end.</p>
           </div>
-          <div class="feature__media">
-            <video muted loop playsinline preload="none" poster="assets/poster-gwgi.jpg">
-              <source src="assets/video-gwgi.mp4" type="video/mp4">
-            </video>
-          </div>
-        </div>
+          <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/poster-gwgi.jpg"><source src="assets/video-gwgi.mp4" type="video/mp4"></video></div>
+        </article>
 
-        <!-- Percy -->
-        <div class="feature reveal-right" id="percy">
-          <div class="feature__copy">
-            <span class="feature__meta">Booking consultant &middot; Since 2026</span>
-            <h3>Percy <span class="hl">Sound Lounge</span></h3>
-            <p>
-              Booking and events partner for the glamorous 70s-inspired
-              restaurant, bar, and sound lounge — programming nights around
-              its Altec Lansing &ldquo;Voice of the Theatre&rdquo; system and
-              weekly vinyl series.
-            </p>
+        <article class="wrow">
+          <div class="wrow__fig"><b>3.6&times;</b><span>Since 2025</span></div>
+          <div>
+            <span class="wrow__meta">Consulting &amp; production partner</span>
+            <h3>Margolis Philadelphia</h3>
+            <p>Programming, cocktail development, hospitality systems, and payouts &mdash; through Ruby&rsquo;s role as Director of Experience.</p>
           </div>
-          <div class="feature__media">
-            <img src="assets/venue-percy.webp" alt="Percy's 70s-inspired sound lounge with orange armchairs, parquet floors, and Altec Lansing speakers" loading="lazy">
-            <span class="cluster__tag">Percy &middot; the sound lounge</span>
-          </div>
-        </div>
+          <div class="wrow__media"><img src="assets/film-13.webp" alt="A pink cocktail on a copper table surrounded by plants at Margolis" loading="lazy"></div>
+        </article>
 
-        <!-- Margolis -->
-        <div class="feature reveal-right" id="margolis">
-          <div class="feature__copy">
-            <span class="feature__meta">3.6&times; average sales increase &middot; Since 2025</span>
-            <h3>Margolis <span class="hl">Philadelphia</span></h3>
-            <p>
-              As consulting and production partner — and through Ruby&rsquo;s role as
-              Director of Experience — Jubyr supports programming, cocktail
-              development, hospitality systems, and professional payouts.
-            </p>
+        <article class="wrow">
+          <div class="wrow__fig"><b>$7.5K</b><span>Oct 2025</span></div>
+          <div>
+            <span class="wrow__meta">Margolis</span>
+            <h3>Giveon&rsquo;s Band Jam</h3>
+            <p>A three-hour DJ set from On Da 1 and Sweet Thang flowing into a live jam by Giveon&rsquo;s tour band.</p>
           </div>
-          <div class="feature__media">
-            <img src="assets/film-13.webp" alt="A pink cocktail on a copper table surrounded by plants at Margolis" loading="lazy">
-            <span class="cluster__tag">Margolis &middot; autumn menu</span>
-          </div>
-        </div>
+          <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/poster-giveon.jpg"><source src="assets/video-giveon-sweet-thang.mp4" type="video/mp4"></video></div>
+        </article>
 
-        <!-- Fabrika -->
-        <div class="feature reveal-right" id="fabrika">
-          <div class="feature__copy">
-            <span class="feature__meta">Venue partner &middot; Since 2025</span>
-            <h3>Fabrika <span class="hl">Systems</span></h3>
-            <p>
-              Operational systems supporting promoters, artists, and staff —
-              clearer event structures, financial models, hospitality standards,
-              and scalable production workflows for every stakeholder.
-            </p>
+        <article class="wrow">
+          <div class="wrow__fig"><b>$6K</b><span>Jan 2026</span></div>
+          <div>
+            <span class="wrow__meta">With DJ AMH &times; Bukz</span>
+            <h3>Sample and Sounds 011</h3>
+            <p>A hip hop and R&amp;B night rooted in intention and community.</p>
           </div>
-          <div class="feature__media">
-            <img src="assets/film-34.webp" alt="Hands squeezing citrus over a rocks glass at the bar" loading="lazy">
-            <span class="cluster__tag">Operations &middot; by hand</span>
-          </div>
-        </div>
+          <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/poster-sas.jpg"><source src="assets/video-sample-and-sounds.mp4" type="video/mp4"></video></div>
+        </article>
 
-        <!-- Sample and Sounds -->
-        <div class="feature reveal-right" id="sample-and-sounds">
-          <div class="feature__copy">
-            <span class="feature__meta">$6K revenue &middot; Jan 2026</span>
-            <h3>Sample and Sounds <span class="hl">011</span></h3>
-            <p>
-              Curated with DJ AMH in collaboration with Bukz — a hip hop and
-              R&amp;B experience rooted in intention, community, and the mission
-              to influence and create culture.
-            </p>
+        <article class="wrow">
+          <div class="wrow__fig"><b>2026</b><span>Since</span></div>
+          <div>
+            <span class="wrow__meta">Booking consultant</span>
+            <h3>Percy Sound Lounge</h3>
+            <p>Booking and events for the 70s-inspired sound lounge &mdash; nights built around its Altec Lansing system and weekly vinyl series.</p>
           </div>
-          <div class="feature__media">
-            <video muted loop playsinline preload="none" poster="assets/poster-sas.jpg">
-              <source src="assets/video-sample-and-sounds.mp4" type="video/mp4">
-            </video>
-          </div>
-        </div>
+          <div class="wrow__media"><img src="assets/venue-percy.webp" alt="Percy's 70s-inspired sound lounge with orange armchairs and Altec Lansing speakers" loading="lazy"></div>
+        </article>
 
-        <!-- Giveon -->
-        <div class="feature reveal-right" id="giveon">
-          <div class="feature__copy">
-            <span class="feature__meta">$7.5K revenue &middot; Margolis &middot; Oct 2025</span>
-            <h3>Giveon&rsquo;s <span class="hl">Band Jam</span></h3>
-            <p>
-              A one-of-one after-hours night with On Da 1 and Sweet Thang: a
-              three-hour DJ set flowing into a live jam session by Giveon&rsquo;s
-              tour band — a format that drove exceptional energy and bar sales.
-            </p>
+        <article class="wrow">
+          <div class="wrow__fig"><b>2025</b><span>Since</span></div>
+          <div>
+            <span class="wrow__meta">Venue partner</span>
+            <h3>Fabrika Systems</h3>
+            <p>Event structures, financial models, hospitality standards, and production workflows for promoters, artists, and staff.</p>
           </div>
-          <div class="feature__media">
-            <video muted loop playsinline preload="none" poster="assets/poster-giveon.jpg">
-              <source src="assets/video-giveon-sweet-thang.mp4" type="video/mp4">
-            </video>
-          </div>
-        </div>
+          <div class="wrow__media"><img src="assets/film-34.webp" alt="Hands squeezing citrus over a rocks glass at the bar" loading="lazy"></div>
+        </article>
 
-        <!-- Part of Me -->
-        <div class="feature reveal-right" id="part-of-me">
-          <div class="feature__copy">
-            <span class="feature__meta">Industry night &middot; Pardon Me &times; Jubyr</span>
-            <h3>Part <span class="hl">of Me</span></h3>
-            <p>
-              An industry night built around nostalgia, memory, and hospitality.
-              Every drink joins a larger emotional narrative — music, pacing,
-              lighting, and beverage design working together.
-            </p>
+        <article class="wrow">
+          <div class="wrow__fig"><b>PDF</b><span>Pitch</span></div>
+          <div>
+            <span class="wrow__meta">Industry night &middot; Pardon Me &times; Jubyr</span>
+            <h3>Part of Me</h3>
+            <p>Nostalgia, memory, and hospitality &mdash; every drink part of one story. <a class="link-arrow link-arrow--ink" href="assets/part-of-me-pitch.pdf" target="_blank" rel="noopener">Open the pitch <span aria-hidden="true">&rarr;</span></a></p>
           </div>
-          <div class="feature__media">
-            <a href="assets/part-of-me-pitch.pdf" target="_blank" rel="noopener" aria-label="Open the full Part of Me pitch deck (PDF)">
-              <img src="assets/pitch-part-of-me.webp" alt="The Part of Me pitch cover — a hand-drawn bird logo on torn paper" loading="lazy">
-            </a>
-            <span class="cluster__tag">Flip through the pitch &middot; PDF</span>
-          </div>
-        </div>
+          <div class="wrow__media"><img src="assets/pitch-part-of-me.webp" alt="The Part of Me pitch cover, a hand-drawn bird logo on torn paper" loading="lazy"></div>
+        </article>
 
-        <!-- Green Flag Project -->
-        <div class="feature reveal-right" id="green-flag-project">
-          <div class="feature__copy">
-            <span class="feature__meta">Community initiative &middot; Ongoing</span>
-            <h3>Green Flag <span class="hl">Project</span></h3>
-            <p>
-              Can meaningful community be built around character instead of
-              demographic identity? Invitations go to people for how they move
-              through the world — generosity, curiosity, creativity, integrity.
-            </p>
+        <article class="wrow">
+          <div class="wrow__fig"><b>&infin;</b><span>Ongoing</span></div>
+          <div>
+            <span class="wrow__meta">Community initiative</span>
+            <h3>Green Flag Project</h3>
+            <p>Invitations go to people for how they move through the world &mdash; generosity, curiosity, creativity, integrity.</p>
           </div>
-          <div class="feature__media">
-            <img src="assets/film-30.webp" alt="A coupe glass held against a green satin dress" loading="lazy">
-            <span class="cluster__tag">Curated &middot; by values</span>
-          </div>
-        </div>
+          <div class="wrow__media"><img src="assets/film-30.webp" alt="A coupe glass held against a green satin dress" loading="lazy"></div>
+        </article>
 
-        <!-- App Library (Design Studio) -->
-        <div class="feature reveal-right" id="app-library">
-          <div class="feature__copy">
-            <span class="feature__meta">Jubyr LLC Design Studio &middot; In development</span>
-            <h3>The App <span class="hl">Library</span></h3>
-            <p>
-              A custom home page for the whole operation — tools, client work,
-              and sites on one searchable, clickable screen. Designed beginning
-              to end: trademark HTML, product design, and a signature look
-              carried across every brand.
-            </p>
+        <article class="wrow">
+          <div class="wrow__fig"><b>Soon</b><span>Pre-release</span></div>
+          <div>
+            <span class="wrow__meta">Jubyr LLC Design Studio</span>
+            <h3>The App Library</h3>
+            <p>One home page for the whole operation &mdash; tools, client work, and sites on one searchable screen.</p>
           </div>
-          <div class="feature__media">
-            <img src="assets/design-app-library.webp" alt="The App Library — a custom workflow home page built by the Jubyr LLC Design Studio" loading="lazy">
-            <span class="cluster__tag">Design Studio &middot; pre-release</span>
-          </div>
-        </div>
+          <div class="wrow__media"><img src="assets/design-app-library.webp" alt="The App Library, a custom workflow home page built by the Jubyr LLC Design Studio" loading="lazy"></div>
+        </article>
 
-        <!-- Ration -->
-        <div class="feature reveal-right" id="ration">
-          <div class="feature__copy">
-            <span class="feature__meta">Product studio &middot; First release</span>
-            <h3>Ration <span class="hl">Objects</span></h3>
-            <!-- The first release is deliberately not described here, and the
-                 reason is deliberately not spelled out either: this comment
-                 ships in the served HTML, and the carrier content scan behind
-                 the A2P messaging registration reads this page's source. Two
-                 campaign rejections came from product copy on Jubyr domains.
-                 Ration is an unrelated side project and does not get to block
-                 the venues' text messaging. Full copy lives in the project
-                 folder and goes back up on Ration's own domain, never a Jubyr
-                 one. See the twilio-sms-setup notes before changing this. -->
-            <p>
-              A product studio exploring intentional living through beautifully
-              made everyday objects. The first release is in development.
-            </p>
+        <!-- Ration: copy kept minimal on purpose (A2P content scan, see twilio-sms-setup notes). -->
+        <article class="wrow">
+          <div class="wrow__fig"><b>Soon</b><span>First release</span></div>
+          <div>
+            <span class="wrow__meta">Product studio</span>
+            <h3>Ration Objects</h3>
+            <p>A product studio exploring intentional living through beautifully made everyday objects. The first release is in development.</p>
           </div>
-          <div class="feature__media">
-            <img src="assets/film-15.webp" alt="A dark cocktail on copper with a leaf shadow across it" loading="lazy">
-            <span class="cluster__tag">Coming soon</span>
-          </div>
-        </div>
+          <div class="wrow__media"><img src="assets/film-15.webp" alt="A dark cocktail on copper with a leaf shadow across it" loading="lazy"></div>
+        </article>
 
       </div>
 
-      <div class="portfolio-toggle reveal">
-        <button class="btn" id="portfolio-btn" type="button" aria-expanded="false" aria-controls="portfolio-more">View entire portfolio <span class="arw" aria-hidden="true">&gt;</span></button>
+      <div class="work__foot">
+        <button type="button" class="btn btn--ghost" id="workBtn" aria-expanded="false" aria-controls="workMore">Expand</button>
+        <a class="btn btn--fill" href="/contact">Send an inquiry &rarr;</a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <div class="gap"></div>
+  <div class="section-gap"></div>
 
-    <!-- reviews -->
-    <section class="box" id="reviews">
-      <div class="sechead sechead--photo reveal" style="background-image: linear-gradient(rgba(12,12,12,0.45), rgba(12,12,12,0.6)), url('assets/bg-windowsill.jpg')">
-        <span class="tag">Word of mouth</span>
-        <h2>Five stars, on the record.</h2>
-        <a class="tag tag--link" href="https://www.google.com/maps/place/Jubyr+LLC/data=!4m2!3m1!1s0x0:0x35c4c5329b7561e3" target="_blank" rel="noopener">5.0 on Google &middot; 8 reviews &gt;</a>
+  <!-- reviews over a photo -->
+  <section class="testimonials testimonials--photo reveal" id="reviews">
+    <img class="testimonials__bg" src="assets/bg-windowsill.jpg" alt="" loading="lazy">
+    <div class="testimonials__head">
+      <h2>5.0 <span class="testimonials__stars" aria-hidden="true">&#9733;</span> on Google</h2>
+      <p><a href="https://www.google.com/maps/place/Jubyr+LLC/data=!4m2!3m1!1s0x0:0x35c4c5329b7561e3" target="_blank" rel="noopener">Read all 8 Google reviews &rarr;</a></p>
+    </div>
+    <div class="testimonials__track">
+      <figure class="review-card"><div class="review-card__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>Hands down the best experience I&rsquo;ve had in Philly in years. Jubyr LLC really got it right&hellip; You can feel the intention, the creativity, and the energy the moment you walk in.</blockquote><figcaption><span class="review-card__name">Candace Wilburn</span><span class="review-card__meta">Google review</span></figcaption></figure>
+      <figure class="review-card"><div class="review-card__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>The eye for curation whether it&rsquo;s the atmosphere, the guest experience, or the overall flow of an event is genuinely impressive. Every detail feels considered, nothing feels accidental.</blockquote><figcaption><span class="review-card__name">5to9 Consulting</span><span class="review-card__meta">Google review</span></figcaption></figure>
+      <figure class="review-card"><div class="review-card__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>Everything JubyrLLC creates is gold. Good music, good bartenders and always, a beautiful environment. 10/10</blockquote><figcaption><span class="review-card__name">robb klassen</span><span class="review-card__meta">Google review</span></figcaption></figure>
+      <figure class="review-card"><div class="review-card__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>Working with Ruby means things get done. From the level of professionalism and keen eye for detail to her curation and execution, she is in a league of her own&hellip; I mean, aerialists in the club? Yuuuup.</blockquote><figcaption><span class="review-card__name">Valerie Thai</span><span class="review-card__meta">Google review</span></figcaption></figure>
+      <figure class="review-card"><div class="review-card__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>Wonderful company that throws wonderful events!! I&rsquo;ve been to a few already, namely an experimental menu tasting that was very interesting and fun! Food, people, dancing, games, events, and overall experience 10/10</blockquote><figcaption><span class="review-card__name">Logan Murray</span><span class="review-card__meta">Google review</span></figcaption></figure>
+      <figure class="review-card"><div class="review-card__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>Not only is Ruby an incredible force of a being, her events go OFF. Ruby has phillys best interests at heart and it shows through her craft. Anything Ruby puts together is worth showing up for!</blockquote><figcaption><span class="review-card__name">Ivanna Baez</span><span class="review-card__meta">Google review</span></figcaption></figure>
+      <figure class="review-card"><div class="review-card__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>They have a gift for curating the feeling of a space, and I admire working with people who value hard work and take pride in seeing a job through to completion. Pleasure to work with!</blockquote><figcaption><span class="review-card__name">Shewit Mikael</span><span class="review-card__meta">Google review</span></figcaption></figure>
+      <figure class="review-card"><div class="review-card__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>Easily one of the most well-executed events I&rsquo;ve experienced since moving to Philadelphia. From the music to the entertainment, every detail was thoughtfully curated&mdash;there wasn&rsquo;t a single dull moment all night.</blockquote><figcaption><span class="review-card__name">Andrew Zigmont</span><span class="review-card__meta">Google review</span></figcaption></figure>
+    </div>
+  </section>
+
+  <div class="section-gap"></div>
+
+  <!-- founder, Margolis "about" split -->
+  <section class="about reveal" id="approach">
+    <div class="about__frame">
+      <img src="assets/hero-ruby.jpg" alt="Ruby Johnston, founder of Jubyr LLC" loading="lazy">
+    </div>
+    <div class="about__content">
+      <span class="tag">Ruby Johnston &middot; Founder</span>
+      <h2>People remember how a room made them feel.</h2>
+      <p>A Master&rsquo;s in Rhetoric, years teaching it at university, now applied to physical space: light, sound, taste, and texture all communicate.</p>
+      <p>As Director of Experience at Margolis, a 3.6&times; average sales increase in just over a year. Jubyr LLC, founded 2026, takes it beyond one venue.</p>
+      <div class="faqgroup" style="margin-top:22px">
+        <details class="faqitem"><summary><span><span class="faqitem__n">01</span>Everything communicates.</span></summary><div class="faqitem__body"><p>Nothing in a room is neutral. Silence, waiting, pricing, lighting, music, the temperature of a greeting &mdash; every detail teaches people how seriously you take them. Behavior first, aesthetics second.</p></div></details>
+        <details class="faqitem"><summary><span><span class="faqitem__n">02</span>Memory is designed.</span></summary><div class="faqitem__body"><p>Great experiences emerge from hundreds of intentional decisions. Consistency builds trust; surprise builds delight. Guests rarely notice good operations, but always notice bad ones.</p></div></details>
+        <details class="faqitem"><summary><span><span class="faqitem__n">03</span>Belonging is the point.</span></summary><div class="faqitem__body"><p>Don&rsquo;t ask who your customer is &mdash; ask who feels comfortable becoming one. People support what they help create.</p></div></details>
       </div>
-      <div class="quotestrip__hint reveal" aria-hidden="true">Scroll &rarr;</div>
-      <div class="quotestrip reveal" role="list" aria-label="Google reviews">
-        <blockquote role="listitem">
-          <span class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p>&ldquo;Hands down the best experience I&rsquo;ve had in Philly in years.
-          Jubyr LLC really got it right&hellip; You can feel the intention, the
-          creativity, and the energy the moment you walk in.&rdquo;</p>
-          <footer>Candace Wilburn &middot; on Google</footer>
-        </blockquote>
-        <blockquote role="listitem">
-          <span class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p>&ldquo;The eye for curation whether it&rsquo;s the atmosphere, the guest
-          experience, or the overall flow of an event is genuinely impressive.
-          Every detail feels considered, nothing feels accidental.&rdquo;</p>
-          <footer>5to9 Consulting &middot; on Google</footer>
-        </blockquote>
-        <blockquote role="listitem">
-          <span class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p>&ldquo;Everything JubyrLLC creates is gold. Good music, good
-          bartenders and always, a beautiful environment. 10/10&rdquo;</p>
-          <footer>robb klassen &middot; on Google</footer>
-        </blockquote>
-        <blockquote role="listitem">
-          <span class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p>&ldquo;Working with Ruby means things get done. From the level of
-          professionalism and keen eye for detail to her curation and
-          execution, she is in a league of her own&hellip; I mean, aerialists in
-          the club? Yuuuup.&rdquo;</p>
-          <footer>Valerie Thai &middot; on Google</footer>
-        </blockquote>
-        <blockquote role="listitem">
-          <span class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p>&ldquo;Wonderful company that throws wonderful events!! I&rsquo;ve been to
-          a few already, namely an experimental menu tasting that was very
-          interesting and fun! Food, people, dancing, games, events, and
-          overall experience 10/10&rdquo;</p>
-          <footer>Logan Murray &middot; on Google</footer>
-        </blockquote>
-        <blockquote role="listitem">
-          <span class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p>&ldquo;Not only is Ruby an incredible force of a being, her events go
-          OFF. Ruby has phillys best interests at heart and it shows through
-          her craft. Anything Ruby puts together is worth showing up for!&rdquo;</p>
-          <footer>Ivanna Baez &middot; on Google</footer>
-        </blockquote>
-        <blockquote role="listitem">
-          <span class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p>&ldquo;They have a gift for curating the feeling of a space, and I
-          admire working with people who value hard work and take pride in
-          seeing a job through to completion. Pleasure to work with!&rdquo;</p>
-          <footer>Shewit Mikael &middot; on Google</footer>
-        </blockquote>
-        <blockquote role="listitem">
-          <span class="stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          <p>&ldquo;Easily one of the most well-executed events I&rsquo;ve experienced
-          since moving to Philadelphia. From the music to the entertainment,
-          every detail was thoughtfully curated&mdash;there wasn&rsquo;t a single
-          dull moment all night.&rdquo;</p>
-          <footer>Andrew Zigmont &middot; on Google</footer>
-        </blockquote>
+    </div>
+  </section>
+
+  <div class="section-gap"></div>
+
+  <!-- services, Margolis FAQ accordion -->
+  <section class="faqsec reveal" id="services">
+    <div class="faqsec__head">
+      <span class="tag">Services</span>
+      <h2>Seven ways we work.</h2>
+    </div>
+    <div class="faqgroup">
+      <details class="faqitem"><summary><span><span class="faqitem__n">01</span>Experience design <small>behavior before aesthetics</small></span></summary><div class="faqitem__body"><p>From a neighborhood cocktail bar to a multi-room music venue, the work begins with human behavior.</p><p>Guest journey mapping, environmental strategy, programming concepts, behavioral design, experience audits, creative direction.</p></div></details>
+      <details class="faqitem"><summary><span><span class="faqitem__n">02</span>Hospitality consulting <small>hospitality is a language</small></span></summary><div class="faqitem__body"><p>Service systems, operational efficiency, menu development, staff culture, programming, guest retention, and long-term positioning.</p></div></details>
+      <details class="faqitem"><summary><span><span class="faqitem__n">03</span>Venue strategy <small>known for more than what you sell</small></span></summary><div class="faqitem__body"><p>Your venue&rsquo;s cultural role in the city, recurring programming, community relationships, operations, and nights people seek out.</p></div></details>
+      <details class="faqitem"><summary><span><span class="faqitem__n">04</span>Event production <small>connection over attendance</small></span></summary><div class="faqitem__body"><p>We start with purpose, not ticket sales. Why should this event exist? Who should leave different than when they arrived?</p></div></details>
+      <details class="faqitem"><summary><span><span class="faqitem__n">05</span>Creative direction <small>one cohesive system</small></span></summary><div class="faqitem__body"><p>Brand partnerships to physical environments &mdash; one creative system across design, programming, communication, and guest experience.</p></div></details>
+      <details class="faqitem"><summary><span><span class="faqitem__n">06</span>Speaking &amp; education <small>workshops and talks</small></span></summary><div class="faqitem__body"><p>Experience design, hospitality, rhetoric, behavioral psychology, community building, and the future of cultural spaces &mdash; for hospitality teams, universities, and leadership.</p></div></details>
+      <details class="faqitem"><summary><span><span class="faqitem__n">07</span>Design Studio <small>custom sites &amp; tools</small></span></summary><div class="faqitem__body"><p>The same philosophy, applied to software: workflow home pages, client books and rosters, event ops tools &mdash; designed beginning to end.</p></div></details>
+    </div>
+  </section>
+
+  <!-- work with us, Margolis split banner -->
+  <section class="banner banner--split reveal" id="contact">
+    <div class="banner__frame">
+      <img src="assets/bg-glassware.jpg" alt="Glassware racked above the bar" loading="lazy">
+      <div class="banner__scrim banner__scrim--full"></div>
+      <span class="framenote framenote--light" aria-hidden="true">JBR &middot; 12</span>
+    </div>
+    <div class="banner__content banner__split">
+      <div class="banner__col">
+        <h2>Let&rsquo;s create something people remember.</h2>
+        <p>Every project begins with a conversation.</p>
+        <div class="banner__links"><a href="/consultation" class="link-arrow">Schedule a free call <span aria-hidden="true">&rarr;</span></a></div>
       </div>
-    </section>
-
-    <!-- contact -->
-    <section class="finale" id="contact">
-      <h2 class="reveal">Let&rsquo;s create something people remember.</h2>
-      <p class="reveal">Every project begins with a conversation.</p>
-      <div class="finale__cta reveal">
-        <a class="btn btn--green" href="/contact">Send an inquiry <span class="arw" aria-hidden="true">&gt;</span></a>
-        <a class="btn btn--ghost" href="/consultation">Schedule a free call <span aria-hidden="true">&gt;</span></a>
+      <div class="banner__col banner__col--divider">
+        <h2>Already know what you need?</h2>
+        <p>Tell us the room, the date, and the feeling.</p>
+        <div class="banner__links"><a href="/contact" class="link-arrow">Send an inquiry <span aria-hidden="true">&rarr;</span></a></div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <div class="gap"></div>
+  <!-- ways in -->
+  <section id="get-involved">
+    <div class="jhead reveal">
+      <span class="tag">Get involved</span>
+      <h2>Four ways in.</h2>
+    </div>
+    <div class="ways reveal">
+      <a class="way" href="/signup"><span class="way__k">For everyone</span><h3>Stay in touch</h3><p>Event invites, early access, and updates.</p><span class="way__go">Join the list &rarr;</span></a>
+      <a class="way" href="/contractors"><span class="way__k">Artists &amp; contractors</span><h3>Join the client book</h3><p>DJs, photographers, designers, builders &mdash; get called when productions need you.</p><span class="way__go">Get in the book &rarr;</span></a>
+      <a class="way" href="https://margolis.events/"><span class="way__k">DJs, hosts &amp; promoters</span><h3>Venue bookings</h3><p>Margolis, The Patio, and Fabrika &mdash; live availability and every booking form.</p><span class="way__go">Open the booking tool &rarr;</span></a>
+      <a class="way" href="https://margolis.events/#events"><span class="way__k">For guests</span><h3>Reservations</h3><p>Lock in entry to an upcoming Margolis night.</p><span class="way__go">Browse events &rarr;</span></a>
+    </div>
+  </section>
 
-    <!-- ways in -->
-    <section class="box" id="get-involved">
-      <div class="sechead reveal">
-        <span class="tag">Get involved</span>
-        <h2>Four ways in.</h2>
-        <p>Whether you want the invites, a seat in the client book, a
-        reservation, or a night booked at the venue &mdash; there&rsquo;s a
-        door for you.</p>
-      </div>
-      <div class="paths paths--4 reveal" style="padding:26px 28px 30px">
-        <a class="path" href="/signup">
-          <span class="path__kicker">01 &middot; For everyone</span>
-          <h3>Stay in touch</h3>
-          <p>Event invites, early access, and updates.</p>
-          <span class="path__go">Join the list <span aria-hidden="true">&gt;</span></span>
-        </a>
-        <a class="path" href="/contractors">
-          <span class="path__kicker">02 &middot; For artists and independent contractors</span>
-          <h3>Join the client book</h3>
-          <p>DJs, photographers, designers, builders &mdash; introduce yourself
-          and your craft, and get called when productions need you.</p>
-          <span class="path__go">Get in the book <span aria-hidden="true">&gt;</span></span>
-        </a>
-        <a class="path" href="https://margolis.events/">
-          <span class="path__kicker">03 &middot; For DJs, hosts &amp; promoters</span>
-          <h3>Venue bookings</h3>
-          <p>Margolis, The Patio, and Fabrika &mdash; live availability and
-          every booking form in our dedicated booking software.</p>
-          <span class="path__go">Open the booking tool <span aria-hidden="true">&gt;</span></span>
-        </a>
-        <a class="path" href="https://margolis.events/#buyTickets">
-          <span class="path__kicker">04 &middot; For guests</span>
-          <h3>Reservations</h3>
-          <p>Lock in entry to an upcoming Margolis night before the
-          host&rsquo;s ticket link goes live.</p>
-          <span class="path__go">Browse events <span aria-hidden="true">&gt;</span></span>
-        </a>
-      </div>
-    </section>
-  </main>
-</div>
+</main>
 
-<!-- long-scroll section navigation -->
-<nav class="scrollnav mono" aria-label="Page sections">
-  <a href="#top" data-spy="top"><span class="scrollnav__dot" aria-hidden="true"></span><span class="scrollnav__label">Top</span></a>
-  <a href="#approach" data-spy="approach"><span class="scrollnav__dot" aria-hidden="true"></span><span class="scrollnav__label">Approach</span></a>
-  <a href="#services" data-spy="services"><span class="scrollnav__dot" aria-hidden="true"></span><span class="scrollnav__label">Services</span></a>
-  <a href="#portfolio" data-spy="portfolio"><span class="scrollnav__dot" aria-hidden="true"></span><span class="scrollnav__label">Portfolio</span></a>
-  <a href="#reviews" data-spy="reviews"><span class="scrollnav__dot" aria-hidden="true"></span><span class="scrollnav__label">Reviews</span></a>
-  <a href="#contact" data-spy="contact"><span class="scrollnav__dot" aria-hidden="true"></span><span class="scrollnav__label">Contact</span></a>
-  <a href="#get-involved" data-spy="get-involved"><span class="scrollnav__dot" aria-hidden="true"></span><span class="scrollnav__label">Join</span></a>
-</nav>
-
-<!-- footer -->
-<footer class="footer">
+<footer class="footer" id="visit">
   <div class="footer__inner">
     <div class="footer__top">
-      <div class="footer__logo">
-        <img src="assets/jubyr-logo-white.png?v=2" alt="Jubyr LLC" width="97" height="30">
-        <p>An experience design studio. We help organizations shape how people feel — before, during, and after every interaction.</p>
+      <div class="footer__brand">
+        <img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" class="footer__logo">
+        <p>An experience design studio. We help organizations shape how people feel &mdash; before, during, and after every interaction.</p>
       </div>
-      <div>
+      <div class="footer__col">
         <h5>Explore</h5>
         <ul>
-          <li><a href="#approach">Approach</a></li>
+          <li><a href="#work">Portfolio</a></li>
           <li><a href="#services">Services</a></li>
-          <li><a href="#portfolio">Portfolio</a></li>
+          <li><a href="#approach">Approach</a></li>
           <li><a href="#reviews">Reviews</a></li>
-          <li><a href="#get-involved">Get involved</a></li>
+          <li><a href="/resources">Resources</a></li>
         </ul>
       </div>
-      <div>
-        <h5>Based in</h5>
-        <address class="addr">
-          Philadelphia, PA
-        </address>
+      <div class="footer__col">
+        <h5>Based In</h5>
+        <address>Philadelphia, PA</address>
       </div>
-      <div>
-        <h5>Say hi</h5>
+      <div class="footer__col">
+        <h5>Say Hi</h5>
         <ul>
           <li><a href="/consultation">Book a free consultation</a></li>
           <li><a href="mailto:ruby@jubyr.com">ruby@jubyr.com</a></li>
-          <li><a href="https://instagram.com/jubyrllc" rel="noopener">Instagram</a></li>
+          <li><a href="https://instagram.com/jubyrllc" target="_blank" rel="noopener">@jubyrllc</a></li>
         </ul>
       </div>
     </div>
     <div class="footer__bottom">
       <span class="status"><span class="dot" aria-hidden="true"></span> Now booking &mdash; consulting &amp; productions</span>
-      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="/privacy" style="color:inherit">Privacy</a> &middot; <a href="/terms" style="color:inherit">Terms</a> &middot; <a href="/sms" style="color:inherit">Messaging</a></span>
+      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a> &middot; <a href="/sms">SMS</a></span>
     </div>
   </div>
 </footer>
 
+<script src="assets/js/nav.js?v=1"></script>
 <script>
-  // mobile menu
-  const burger = document.querySelector('.nav__burger');
-  const menu = document.getElementById('mobilemenu');
-  burger.addEventListener('click', () => {
-    const open = menu.classList.toggle('open');
-    burger.setAttribute('aria-expanded', open);
-    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-  });
-  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    menu.classList.remove('open');
-    burger.setAttribute('aria-expanded', 'false');
-  }));
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // portfolio expand/collapse
-  const moreWrap = document.getElementById('portfolio-more');
-  const moreBtn = document.getElementById('portfolio-btn');
-  moreBtn.addEventListener('click', () => {
-    const open = moreWrap.classList.toggle('open');
-    moreBtn.setAttribute('aria-expanded', open);
-    moreBtn.innerHTML = open
-      ? 'Collapse portfolio <span class="arw" aria-hidden="true">&gt;</span>'
-      : 'View entire portfolio <span class="arw" aria-hidden="true">&gt;</span>';
-    if (!open) {
-      document.getElementById('portfolio').scrollIntoView();
-      moreWrap.querySelectorAll('video').forEach(v => v.pause());
-    }
+  // Expand / collapse the rest of the portfolio (Margolis "Expand" button)
+  var more = document.getElementById('workMore'), btn = document.getElementById('workBtn');
+  btn.addEventListener('click', function(){
+    var open = more.classList.toggle('is-open');
+    btn.setAttribute('aria-expanded', open);
+    btn.textContent = open ? 'Collapse' : 'Expand';
+    if (open) watch(more.querySelectorAll('video'));
+    else { document.getElementById('work').scrollIntoView(); more.querySelectorAll('video').forEach(function(v){ v.pause(); }); }
   });
 
-  // long-scroll nav: track the section in view, glide on click
-  const spyLinks = [...document.querySelectorAll('.scrollnav a')];
-  const spySections = spyLinks.map(a => ({
-    link: a,
-    el: a.dataset.spy === 'top' ? document.body : document.getElementById(a.dataset.spy)
-  })).filter(x => x.el);
-  const setActive = link => spyLinks.forEach(a => a.classList.toggle('is-active', a === link));
-  let spyTick = false;
-  const updateSpy = () => {
-    spyTick = false;
-    const pos = window.scrollY + window.innerHeight * 0.35;
-    let current = spySections[0];
-    for (const sct of spySections) {
-      const top = sct.el === document.body ? 0 : sct.el.getBoundingClientRect().top + window.scrollY;
-      if (top <= pos) current = sct;
-    }
-    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 40) {
-      current = spySections[spySections.length - 1];
-    }
-    setActive(current.link);
-  };
-  window.addEventListener('scroll', () => {
-    if (!spyTick) { spyTick = true; requestAnimationFrame(updateSpy); }
-  }, { passive: true });
-  spyLinks.forEach(a => a.addEventListener('click', () => setActive(a)));
-  updateSpy();
+  // portfolio films play only while on screen
+  var vio = ('IntersectionObserver' in window && !reduced) ? new IntersectionObserver(function(es){
+    es.forEach(function(e){ e.isIntersecting ? e.target.play().catch(function(){}) : e.target.pause(); });
+  }, {threshold:.25}) : null;
+  function watch(list){ list.forEach(function(v){ vio ? vio.observe(v) : v.setAttribute('controls',''); }); }
+  watch(document.querySelectorAll('.wrow__media video'));
 
-  // ambient video: autoplay looped while on screen, pause off screen
-  const vids = document.querySelectorAll('.feature__media video');
-  if (!reducedMotion && 'IntersectionObserver' in window) {
-    const vio = new IntersectionObserver((entries) => {
-      entries.forEach(e => { e.isIntersecting ? e.target.play().catch(()=>{}) : e.target.pause(); });
-    }, { threshold: 0.25 });
-    vids.forEach(v => vio.observe(v));
-  } else {
-    vids.forEach(v => v.setAttribute('controls', ''));
-  }
-
-  // scroll reveal
-  if (!reducedMotion && 'IntersectionObserver' in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal, .reveal-right').forEach(el => io.observe(el));
-  } else {
-    document.querySelectorAll('.reveal, .reveal-right').forEach(el => el.classList.add('in'));
-  }
+  // Margolis scroll reveal (.reveal -> .is-visible)
+  var els = document.querySelectorAll('.reveal');
+  if (!reduced && 'IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, {threshold:.12});
+    els.forEach(function(el){ io.observe(el); });
+  } else els.forEach(function(el){ el.classList.add('is-visible'); });
+})();
 </script>
 
 <div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
