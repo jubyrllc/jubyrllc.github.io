@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jubyr LLC — Designing experiences that people remember</title>
+<script src="assets/js/analytics.js?v=1"></script>
 <meta name="description" content="Jubyr LLC is an experience design studio in Philadelphia. Events, venues, hospitality systems, and custom tools — designed around how people feel.">
 <link rel="icon" type="image/png" href="assets/jubyr-icon.png?v=2">
 <link rel="apple-touch-icon" href="assets/jubyr-icon.png?v=2">
@@ -100,7 +101,7 @@
   <section class="stats" aria-label="Track record">
     <div><b>3.6&times;</b><span>Avg sales increase &middot; Margolis</span></div>
     <div><b>6</b><span>Venue partnerships</span></div>
-    <div><b data-live-bookings>50</b><span>Bookings confirmed</span></div>
+    <div><b data-live-events>468</b><span>Events since 2025</span></div>
     <div><b>5.0 &#9733;</b><span>On Google</span></div>
   </section>
 
@@ -411,20 +412,20 @@
   function watch(list){ list.forEach(function(v){ vio ? vio.observe(v) : v.setAttribute('controls',''); }); }
   watch(document.querySelectorAll('.wrow__media video'));
 
-  // Live "Bookings confirmed" (2026-11-18): one number from jubyr.tools, no
-  // details. Last good value is remembered so a slow or failed fetch never
-  // leaves the stat blank on a return visit.
+  // Live "Events since 2025" (2026-11-18): every event that has happened
+  // since Ruby started, from jubyr.tools (one number, nothing else). The last
+  // good value is remembered so a slow or failed fetch never blanks the stat.
   (function(){
-    var el = document.querySelector('[data-live-bookings]'); if (!el) return;
-    var KEY = 'jubyr-bookings-confirmed';
+    var el = document.querySelector('[data-live-events]'); if (!el) return;
+    var KEY = 'jubyr-events-since';
     function show(n){ el.textContent = Number(n).toLocaleString('en-US'); }
     try { var last = localStorage.getItem(KEY); if (last) show(last); } catch(e){}
     fetch('https://jubyr.tools/jubyr-booking-count.php', {cache:'no-store'})
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(d){
-        if (!d || typeof d.confirmed !== 'number') return;
-        show(d.confirmed);
-        try { localStorage.setItem(KEY, String(d.confirmed)); } catch(e){}
+        if (!d || typeof d.events !== 'number' || d.events < 1) return;
+        show(d.events);
+        try { localStorage.setItem(KEY, String(d.events)); } catch(e){}
       }).catch(function(){});
   })();
 
