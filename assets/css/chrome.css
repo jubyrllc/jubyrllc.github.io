@@ -532,3 +532,12 @@ button.mnavdrop__item:hover{color:var(--maroon);background:var(--paper-2)}
 .mnav a, .mfoot a{text-decoration:none}
 .mfoot address{font-style:normal}
 .mfoot__legal a{text-decoration:underline;text-underline-offset:2px}
+
+/* ---- 2026-11-18 ---- */
+.mnav__links > a.mnav__hi, .mnav__mobile .mnavmob__link.mnav__hi{ color:var(--maroon) }
+.mnav__logo{ height:16px; padding:6px 11px; }
+.mnav__logo img{ height:16px; width:auto; }
+/* footer status: the quiet Margolis dot + text, same as the home page */
+.mfoot .status{ display:flex; align-items:center; gap:8px; background:none; border:0; padding:0;
+  color:var(--muted); font-family:var(--sans); font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+.mfoot .status .dot{ width:6px; height:6px; border-radius:50%; background:var(--maroon); }

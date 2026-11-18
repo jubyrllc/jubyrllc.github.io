@@ -3,24 +3,25 @@
 @font-face{font-family:"Margolis J";font-style:normal;font-weight:300 700;font-display:swap;src:url(../fonts/j-newsreader.woff2) format("woff2");unicode-range:U+004A}
 @font-face{font-family:"Margolis J";font-style:italic;font-weight:300 700;font-display:swap;src:url(../fonts/j-newsreader-italic.woff2) format("woff2");unicode-range:U+004A}
   :root {
-    /* Margolis tokens (Ruby 2026-11-17: jubyr.com mimics margolis.events).
-       --green* names kept so every existing rule follows; they hold maroon now. */
+    /* Margolis tokens (Ruby 2026-11-17: jubyr.com mimics margolis.events), with
+       Jubyr's own olive (#4C6300, the form-standard green) in place of Margolis
+       maroon so the site never reads as a Margolis page (2026-11-18). */
     --paper: #FAF7F2;
     --paper-2: #F1EBE0;
     --ink: #1B1815;
     --muted: #8B8377;
     --line: #E2D9C9;
-    --maroon: #6E2A38;
-    --maroon-deep: #4A1B24;
+    --maroon: #4C6300;
+    --maroon-deep: #3A4C00;
     --gold: #8A6A28;
     --on-dark: #F4EEE4;
     --on-dark-muted: rgba(244,238,228,0.72);
-    --green: #6E2A38;
-    --green-hi: #6E2A38;
-    --green-tint: #F1EBE0;
-    --green-line: #E2D9C9;
+    --green: #4C6300;
+    --green-hi: #4C6300;
+    --green-tint: #EEF0DF;
+    --green-line: #C7D394;
     --pink: #F5B8E3;
-    --accent-soft: #C48E99;
+    --accent-soft: #AFC755;
     --serif: "Margolis J", "Fraunces", Georgia, "Times New Roman", serif;
     --sans: "Inter", "Helvetica Neue", Arial, sans-serif;
     --mono: "IBM Plex Mono", "SF Mono", Menlo, monospace;

@@ -87,3 +87,16 @@
 /* founder photo sits a bit higher in the 4:5 frame */
 .about__frame img{object-position:center 25%}
 .footer__brand p{color:var(--muted);font-size:13px;line-height:1.6;max-width:32ch;margin:0}
+
+/* ---- 2026-11-18: Jubyr's own accent, not Margolis maroon ---- */
+:root{ --maroon:#4C6300; --maroon-deep:#3A4C00; --green:#4C6300; --green-tint:#EEF0DF; --green-line:#C7D394; }
+.nav__links > a.nav__hi, .nav__mobile .navmob__link.nav__hi{ color:var(--maroon) }
+/* wordmark in the nav pill */
+.nav__logo{ height:16px; padding:6px 11px; }
+.nav__logo img{ height:16px; width:auto; }
+/* hero still: keep the chess table in frame on phones */
+@media (max-width:640px){ .hero__img{ object-position:52% 50% } }
+.footer .dot{ background:var(--maroon) }
+/* a row with no revenue keeps the column but stays empty */
+.wrow__fig:empty{ align-self:stretch; border-right-color:transparent }
+@media (max-width:560px){ .wrow__fig:empty{ display:none } }

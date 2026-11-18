@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&text=J&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/mgl.css?v=1">
-<link rel="stylesheet" href="assets/css/jubyr.css?v=1">
+<link rel="stylesheet" href="assets/css/mgl.css?v=2">
+<link rel="stylesheet" href="assets/css/jubyr.css?v=2">
 <script id="mcjs">!function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/32214a4fe6b97ad520b643c6d/0e9c3508eead05fac799ff222.js");</script>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
@@ -34,7 +34,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"></path></svg>
       </a>
     </div>
-    <a class="nav__logo" href="#top"><span class="nav__logo--text">JUBYR LLC</span></a>
+    <a class="nav__logo" href="#top" aria-label="Jubyr LLC home"><img src="assets/jubyr-logo-white.png?v=2" alt="Jubyr LLC" width="52" height="16"></a>
     <div class="nav__actions">
       <nav class="nav__links" aria-label="Primary" id="navLinks">
         <a href="#work">Portfolio</a>
@@ -77,13 +77,10 @@
 
 <main id="top">
 
-  <!-- hero: the KWN film, Margolis hero layout -->
+  <!-- hero: a designed room, not a show (2026-11-18); KWN film stays in the work rows -->
   <section class="hero">
     <div class="hero__frame">
-      <img src="assets/poster-kwn.jpg" alt="Guests at the KWN afterparty produced by Jubyr LLC" class="hero__img is-active">
-      <video class="hero__video" autoplay muted loop playsinline poster="assets/poster-kwn.jpg">
-        <source src="assets/hero.mp4" type="video/mp4">
-      </video>
+      <img src="assets/bg-lounge-dark.jpg" alt="A candlelit lounge: two guests over a chess board between brick walls and bookshelves" class="hero__img is-active" fetchpriority="high">
       <div class="hero__scrim" style="z-index:2"></div>
       <span class="framenote framenote--light" aria-hidden="true">JBR &middot; 01</span>
     </div>
@@ -159,9 +156,9 @@
         </article>
 
         <article class="wrow">
-          <div class="wrow__fig"><b>3.6&times;</b><span>Since 2025</span></div>
+          <div class="wrow__fig"><b>3.6&times;</b><span>Sales</span></div>
           <div>
-            <span class="wrow__meta">Consulting &amp; production partner</span>
+            <span class="wrow__meta">Consulting &amp; production partner &middot; Since 2025</span>
             <h3>Margolis Philadelphia</h3>
             <p>Programming, cocktail development, hospitality systems, and payouts &mdash; through Ruby&rsquo;s role as Director of Experience.</p>
           </div>
@@ -189,9 +186,9 @@
         </article>
 
         <article class="wrow">
-          <div class="wrow__fig"><b>2026</b><span>Since</span></div>
+          <div class="wrow__fig" aria-hidden="true"></div>
           <div>
-            <span class="wrow__meta">Booking consultant</span>
+            <span class="wrow__meta">Booking consultant &middot; Since 2026</span>
             <h3>Percy Sound Lounge</h3>
             <p>Booking and events for the 70s-inspired sound lounge &mdash; nights built around its Altec Lansing system and weekly vinyl series.</p>
           </div>
@@ -199,9 +196,9 @@
         </article>
 
         <article class="wrow">
-          <div class="wrow__fig"><b>2025</b><span>Since</span></div>
+          <div class="wrow__fig" aria-hidden="true"></div>
           <div>
-            <span class="wrow__meta">Venue partner</span>
+            <span class="wrow__meta">Venue partner &middot; Since 2025</span>
             <h3>Fabrika Systems</h3>
             <p>Event structures, financial models, hospitality standards, and production workflows for promoters, artists, and staff.</p>
           </div>
@@ -209,7 +206,7 @@
         </article>
 
         <article class="wrow">
-          <div class="wrow__fig"><b>PDF</b><span>Pitch</span></div>
+          <div class="wrow__fig" aria-hidden="true"></div>
           <div>
             <span class="wrow__meta">Industry night &middot; Pardon Me &times; Jubyr</span>
             <h3>Part of Me</h3>
@@ -219,9 +216,9 @@
         </article>
 
         <article class="wrow">
-          <div class="wrow__fig"><b>&infin;</b><span>Ongoing</span></div>
+          <div class="wrow__fig" aria-hidden="true"></div>
           <div>
-            <span class="wrow__meta">Community initiative</span>
+            <span class="wrow__meta">Community initiative &middot; Ongoing</span>
             <h3>Green Flag Project</h3>
             <p>Invitations go to people for how they move through the world &mdash; generosity, curiosity, creativity, integrity.</p>
           </div>
@@ -229,9 +226,9 @@
         </article>
 
         <article class="wrow">
-          <div class="wrow__fig"><b>Soon</b><span>Pre-release</span></div>
+          <div class="wrow__fig" aria-hidden="true"></div>
           <div>
-            <span class="wrow__meta">Jubyr LLC Design Studio</span>
+            <span class="wrow__meta">Jubyr LLC Design Studio &middot; Pre-release</span>
             <h3>The App Library</h3>
             <p>One home page for the whole operation &mdash; tools, client work, and sites on one searchable screen.</p>
           </div>
@@ -240,9 +237,9 @@
 
         <!-- Ration: copy kept minimal on purpose (A2P content scan, see twilio-sms-setup notes). -->
         <article class="wrow">
-          <div class="wrow__fig"><b>Soon</b><span>First release</span></div>
+          <div class="wrow__fig" aria-hidden="true"></div>
           <div>
-            <span class="wrow__meta">Product studio</span>
+            <span class="wrow__meta">Product studio &middot; In development</span>
             <h3>Ration Objects</h3>
             <p>A product studio exploring intentional living through beautifully made everyday objects. The first release is in development.</p>
           </div>
