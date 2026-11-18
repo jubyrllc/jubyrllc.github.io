@@ -100,3 +100,6 @@
 /* a row with no revenue keeps the column but stays empty */
 .wrow__fig:empty{ align-self:stretch; border-right-color:transparent }
 @media (max-width:560px){ .wrow__fig:empty{ display:none } }
+
+/* 2026-11-18: hero buttons sit on the baseline of the text block, not mid-block */
+@media (min-width:641px){ .hero__content--split{ align-items:flex-end } }
