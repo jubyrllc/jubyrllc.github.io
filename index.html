@@ -100,7 +100,7 @@
   <section class="stats" aria-label="Track record">
     <div><b>3.6&times;</b><span>Avg sales increase &middot; Margolis</span></div>
     <div><b>6</b><span>Venue partnerships</span></div>
-    <div><b>~800</b><span>Guests at one night</span></div>
+    <div><b data-live-bookings>50</b><span>Bookings confirmed</span></div>
     <div><b>5.0 &#9733;</b><span>On Google</span></div>
   </section>
 
@@ -410,6 +410,23 @@
   }, {threshold:.25}) : null;
   function watch(list){ list.forEach(function(v){ vio ? vio.observe(v) : v.setAttribute('controls',''); }); }
   watch(document.querySelectorAll('.wrow__media video'));
+
+  // Live "Bookings confirmed" (2026-11-18): one number from jubyr.tools, no
+  // details. Last good value is remembered so a slow or failed fetch never
+  // leaves the stat blank on a return visit.
+  (function(){
+    var el = document.querySelector('[data-live-bookings]'); if (!el) return;
+    var KEY = 'jubyr-bookings-confirmed';
+    function show(n){ el.textContent = Number(n).toLocaleString('en-US'); }
+    try { var last = localStorage.getItem(KEY); if (last) show(last); } catch(e){}
+    fetch('https://jubyr.tools/jubyr-booking-count.php', {cache:'no-store'})
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if (!d || typeof d.confirmed !== 'number') return;
+        show(d.confirmed);
+        try { localStorage.setItem(KEY, String(d.confirmed)); } catch(e){}
+      }).catch(function(){});
+  })();
 
   // Margolis scroll reveal (.reveal -> .is-visible)
   var els = document.querySelectorAll('.reveal');
