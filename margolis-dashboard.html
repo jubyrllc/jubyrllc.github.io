@@ -30,6 +30,8 @@
   .stchip--none{background:#F1F1EC;color:var(--muted)}
   .stchip--pending{background:#FCF3DC;color:#8A6400}
   .stchip--approved{background:#EAF3E4;color:#3F6B21}
+  .ls__n.bad{color:#B3261E}
+  .ls__n.ok{color:#3F6B21}
   .stchip--rejected{background:#FBEAE8;color:#A03A2E}
   .evt__body{border-top:1px dashed var(--line);padding:0 20px 20px;display:none}
   .evt.open .evt__body{display:block}
@@ -881,6 +883,7 @@
     }
     if(payload.action==="saveLineup"){ const ev=findEv(); const sub=ensureSub(ev); sub.lineup={value:payload.lineup,status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="saveNoPresale"){ const ev=findEv(); const sub=ensureSub(ev); sub.ticketLink={value:"",status:"pending",noPresale:true}; demoSave(s); return {ok:true, submission:sub}; }
+    if(payload.action==="saveListing"){ const ev=findEv(); ev.listing={short:payload.short, long:payload.long, by:"host"}; demoSave(s); return {ok:true, listing:ev.listing}; }
     if(payload.action==="saveTicketLink"){ const ev=findEv(); const sub=ensureSub(ev); sub.ticketLink={value:payload.ticketLink,status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="saveFlyer"){ const ev=findEv(); const sub=ensureSub(ev); sub.flyerFile={value:payload.fileName||"flyer.png",status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="saveRsvp"){ const ev=findEv(); const sub=ensureSub(ev); if(payload.rsvpFree) sub.rsvpFree=payload.rsvpFree; if(payload.rsvpSold) sub.rsvpSold=payload.rsvpSold; demoSave(s); return {ok:true, submission:sub}; }
@@ -1397,6 +1400,35 @@
   // Lineups are singular acts (name + IG), not one typed-out list — the
   // in-progress set for each event lives here until it's submitted.
   const lineupDraft = {};
+  /* The host's own listing (Ruby, 2026-11-19): two lines that go on
+     margolis.events exactly as typed, no approval step. Same limits as
+     the booking form (margolis-listing-lib.php on jubyr.tools and
+     assets/js/host-listing.js on margolis.events): short 50-80, long
+     200-400, with a few characters of give past the target. */
+  const LS_LIM = {short:{min:50, target:80, max:85}, long:{min:190, floor:200, target:400, max:420}};
+  const lsDraft = {};
+  const lsLen = t => String(t||"").replace(/\s+/g," ").trim().length;
+  function lsCount(kind, t){
+    const L = LS_LIM[kind], n = lsLen(t);
+    if(!n) return {c:"", m:`${L.floor||L.min}&ndash;${L.target} characters`};
+    if(n < L.min) return {c:"bad", m:`${n} / ${L.target} &middot; ${L.min-n} more to go`};
+    if(n > L.max) return {c:"bad", m:`${n} / ${L.target} &middot; cut ${n-L.max}`};
+    if(n > L.target) return {c:"", m:`${n} / ${L.target} &middot; a little over, trim if you can`};
+    return {c:"ok", m:`${n} / ${L.target}`};
+  }
+  const lsDone = ev => !!(ev.listing && ev.listing.short && ev.listing.long);
+  function listingPane(ev, i, k){
+    const d = lsDraft[k] || (lsDraft[k] = {short:(ev.listing&&ev.listing.short)||"", long:(ev.listing&&ev.listing.long)||""});
+    const sc = lsCount("short", d.short), lc = lsCount("long", d.long);
+    return `<p class="evt__status"><strong>This is exactly how your night appears on margolis.events.</strong> It goes live the moment you save, with no edits from us. Check spelling, names and @handles.</p>
+      <div class="ifield"><label>Short description <span class="req">*</span></label>
+        <textarea rows="2" data-ls="short" data-k="${esc(k)}" maxlength="${LS_LIM.short.max}" spellcheck="true" placeholder="The line under your event on the calendar and on the flyer">${esc(d.short)}</textarea>
+        <p class="help ls__n ${sc.c}" data-ls-n="short">${sc.m}</p></div>
+      <div class="ifield"><label>Long description <span class="req">*</span></label>
+        <textarea rows="5" data-ls="long" data-k="${esc(k)}" maxlength="${LS_LIM.long.max}" spellcheck="true" placeholder="Who is playing, what it sounds like, what the room is like an hour in. Opens when a guest taps More details.">${esc(d.long)}</textarea>
+        <p class="help ls__n ${lc.c}" data-ls-n="long">${lc.m}</p></div>
+      <div class="intake__nav"><button type="button" class="btn btn--green" data-save="listing" data-i="${i}">${lsDone(ev)?"Update":"Publish"} descriptions <span class="arw" aria-hidden="true">&gt;</span></button></div>`;
+  }
   let MY_CODE = "";                 // this account's own partner code, from `me`
   const partnerNote = {};           // date|name -> who the last partner add linked to
   const lineupArr = v => Array.isArray(v) ? v : (v ? [{name:String(v), instagram:""}] : []);
@@ -1444,8 +1476,8 @@
     const s = ev.submission || {lineup:{value:"",status:""}, flyerFile:{value:"",status:""}, ticketLink:{value:"",status:""}, rsvpFree:"", rsvpSold:"", partners:[], fullyApproved:false};
     const k = keyOf(ev);
     if(!archived && !(k in lineupDraft)) lineupDraft[k] = lineupArr(s.lineup.value).slice();
-    const tab = activeTab[k] || "lineup";
-    const chips = [stchip("Lineup", s.lineup.status), stchip("Flyer", s.flyerFile.status), stchip(s.ticketLink.noPresale?"No presale":"Ticket link", s.ticketLink.status)].join("");
+    const tab = activeTab[k] || (lsDone(ev) ? "lineup" : "listing");
+    const chips = [`<span class="stchip stchip--${lsDone(ev)?"approved":"none"}">Descriptions · ${lsDone(ev)?"live":"missing"}</span>`, stchip("Lineup", s.lineup.status), stchip("Flyer", s.flyerFile.status), stchip(s.ticketLink.noPresale?"No presale":"Ticket link", s.ticketLink.status)].join("");
     const withLine = (ev.withNames||[]).length ? `<span class="evt__date" style="width:100%;color:var(--green)">With ${esc(ev.withNames.join(" + "))}</span>` : "";
     return `<div class="evt ${archived?"arch":""} ${openCards.has(k)?"open":""}" data-k="${esc(k)}" data-i="${i}">
       <div class="evt__head" ${archived?"":`data-toggle="${esc(k)}"`}>
@@ -1464,9 +1496,10 @@
       </div>
       ${archived?"":`<div class="evt__body">
         <div class="evt__tabs">
-          ${[["lineup","1 · Lineup"],["flyer","2 · Flyer"],["ticket","3 · Ticket link"],["partners","4 · Partners"],["guests","5 · Guest list"]].map(([tk,label])=>
+          ${[["listing","1 · Descriptions"],["lineup","2 · Lineup"],["flyer","3 · Flyer"],["ticket","4 · Ticket link"],["partners","5 · Partners"],["guests","6 · Guest list"]].map(([tk,label])=>
             `<button type="button" class="evt__tab ${tab===tk?"on":""}" data-tab="${tk}" data-k="${esc(k)}">${label}</button>`).join("")}
         </div>
+        <div class="evt__pane ${tab==="listing"?"on":""}" data-pane="listing">${listingPane(ev, i, k)}</div>
         <div class="evt__pane ${tab==="lineup"?"on":""}" data-pane="lineup">
           ${gatedBody("lineup", s.lineup, i, k, "Your lineup wasn't approved.", `
           ${(lineupDraft[k]||[]).length?`<ul class="djd-check" style="margin-bottom:14px">${lineupDraft[k].map((a,ai)=>
@@ -1778,6 +1811,12 @@
       if(!doorData[k]) await loadDoor(EVENTS[+b.dataset.i]);
     }));
     c.querySelectorAll("[data-save]").forEach(b=>b.addEventListener("click", ()=>save(b)));
+    c.querySelectorAll("[data-ls]").forEach(inp=>inp.addEventListener("input", ()=>{
+      const kind = inp.dataset.ls, d = lsDraft[inp.dataset.k] || (lsDraft[inp.dataset.k] = {short:"", long:""});
+      d[kind] = inp.value;
+      const n = inp.parentNode.querySelector("[data-ls-n]"), r = lsCount(kind, inp.value);
+      if(n){ n.className = "help ls__n " + r.c; n.innerHTML = r.m; }
+    }));
     c.querySelectorAll("[data-eg]").forEach(inp=>inp.addEventListener("input", ()=>{
       const d = egDraft[inp.dataset.k]; if(d) d[+inp.dataset.eg] = inp.value;
     }));
@@ -1861,6 +1900,25 @@
       const v = card.querySelector('[data-f="ticket"]').value.trim();
       if(!/^https?:\/\//i.test(v)) return showErr("Please paste the full link, starting with http.");
       payload = Object.assign({action:"saveTicketLink", ticketLink:v}, base);
+    }
+    if(kind==="listing"){
+      const d = lsDraft[keyOf(ev)] || {short:"", long:""};
+      const sn = lsLen(d.short), ln = lsLen(d.long);
+      if(sn < LS_LIM.short.min) return showErr(`Short description needs at least ${LS_LIM.short.min} characters. You're at ${sn}.`);
+      if(sn > LS_LIM.short.max) return showErr(`Short description is ${sn} characters. Keep it to ${LS_LIM.short.target}.`);
+      if(ln < LS_LIM.long.min) return showErr(`Long description needs at least ${LS_LIM.long.floor} characters. You're at ${ln}.`);
+      if(ln > LS_LIM.long.max) return showErr(`Long description is ${ln} characters. Keep it to ${LS_LIM.long.target}.`);
+      btn.disabled = true; btn.textContent = "Publishing…";
+      try{
+        const out = await api(DASH_URL, Object.assign({action:"saveListing", short:d.short, long:d.long}, base));
+        ev.listing = out.listing || {short:d.short, long:d.long};
+        delete lsDraft[keyOf(ev)];
+        openCards.add(keyOf(ev)); activeTab[keyOf(ev)] = "listing"; render();
+      }catch(e){
+        btn.disabled = false; btn.innerHTML = orig;
+        if(e!=="auth") showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection.");
+      }
+      return;
     }
     if(kind==="nopresale"){
       payload = Object.assign({action:"saveNoPresale"}, base);
