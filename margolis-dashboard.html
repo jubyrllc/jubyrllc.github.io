@@ -1411,7 +1411,7 @@
   function lsCount(kind, t){
     const L = LS_LIM[kind], n = lsLen(t);
     if(!n) return {c:"", m:`${L.floor||L.min}&ndash;${L.target} characters`};
-    if(n < L.min) return {c:"bad", m:`${n} / ${L.target} &middot; ${L.min-n} more to go`};
+    if(n < L.min) return {c:"bad", m:`${n} / ${L.target} &middot; ${(L.floor||L.min)-n} more to go`};
     if(n > L.max) return {c:"bad", m:`${n} / ${L.target} &middot; cut ${n-L.max}`};
     if(n > L.target) return {c:"", m:`${n} / ${L.target} &middot; a little over, trim if you can`};
     return {c:"ok", m:`${n} / ${L.target}`};
