@@ -94,6 +94,15 @@
 .room__film{aspect-ratio:16/9;border-radius:14px}
 .room__strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .room__strip img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;display:block}
+.near{padding:10px 26px 20px}
+.near ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px}
+.near li{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.near__n{font-size:16px;font-weight:500}
+.near__n small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:400;margin-top:3px}
+.near__d{font-family:var(--serif);font-size:30px;line-height:1;white-space:nowrap}
+.near__d small{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:4px}
+.near .is-near .near__d,.near .is-near .near__n{color:var(--maroon)}
+.near .src{display:block;margin-top:14px}
 .lb-sec{padding-bottom:12px}
 .lb-end{padding:70px var(--gutter) 90px;max-width:var(--maxw);margin:0 auto}
 .lb-end h2{font-size:clamp(30px,4vw,48px);margin:0 0 10px}
@@ -104,7 +113,8 @@
   .acts{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:640px){
-  .vs{grid-template-columns:minmax(0,1fr)}
+  .vs,.near ul{grid-template-columns:minmax(0,1fr)}
+  .near{padding:6px 20px 18px}
   .rate{padding:22px}
   .bar{grid-template-columns:minmax(0,100px) minmax(0,1fr) 34px;gap:10px}
   .bar__v{font-size:19px}
@@ -134,7 +144,7 @@
     </div>
     <div class="hero__content">
       <div class="hero__text">
-        <span class="tag tag--light">Fabrika &middot; Philadelphia &middot; Afterparty or standalone event</span>
+        <span class="tag tag--light">Fabrika &middot; Fishtown, one block from the Fillmore &middot; Afterparty or standalone event</span>
         <h1 class="hero__head">Most rooms sell you fans. <em>We sell you a function.</em></h1>
         <p class="hero__body">Something to actually enjoy and be celebrated at after your event. Not just somewhere everyone is staring.</p>
       </div>
@@ -164,6 +174,30 @@
           <img src="assets/fabrika-deck/dancers.jpg" alt="Dancers on the round stage in the middle of the room" loading="lazy">
           <img src="assets/fabrika-deck/lights.jpg" alt="Performer under beams of white light" loading="lazy">
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- near the stages -->
+  <section class="lb-sec">
+    <div class="jhead reveal">
+      <span class="tag">Location</span>
+      <h2>One block from the Fillmore.</h2>
+      <p>Walk off the stage and into the party. Fabrika is in Fishtown, minutes from every major room in the city.</p>
+    </div>
+    <div class="lb">
+      <div class="lb-card near reveal">
+        <ul>
+          <li class="is-near"><span class="near__n">The Fillmore<small>One block &middot; 6 min walk</small></span><span class="near__d">0.3<small>mi</small></span></li>
+          <li><span class="near__n">Franklin Music Hall<small>7 min drive</small></span><span class="near__d">1.5<small>mi</small></span></li>
+          <li><span class="near__n">The Met Philadelphia<small>8 min drive</small></span><span class="near__d">1.7<small>mi</small></span></li>
+          <li><span class="near__n">Union Transfer<small>9 min drive</small></span><span class="near__d">1.9<small>mi</small></span></li>
+          <li><span class="near__n">Liacouras Center<small>10 min drive</small></span><span class="near__d">1.9<small>mi</small></span></li>
+          <li><span class="near__n">The TLA<small>10 min drive</small></span><span class="near__d">2.3<small>mi</small></span></li>
+          <li><span class="near__n">Xfinity Mobile Arena<small>13 min drive</small></span><span class="near__d">7.9<small>mi</small></span></li>
+          <li><span class="near__n">Lincoln Financial Field<small>14 min drive</small></span><span class="near__d">8.2<small>mi</small></span></li>
+        </ul>
+        <span class="src">From 1108 Frankford Ave &middot; Google Maps miles</span>
       </div>
     </div>
   </section>
