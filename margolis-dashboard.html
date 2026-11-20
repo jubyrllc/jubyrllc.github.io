@@ -303,7 +303,9 @@
   .djd-next__l{min-width:0;flex:1;display:grid;gap:2px}
   .djd-next__l small{font:500 10.5px/1.2 var(--mono,monospace);letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.62)}
   .djd-next__l b{font:500 15px/1.3 var(--sans,sans-serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .djd-next__go{flex:none;min-height:42px;min-width:110px;padding:0 20px;border-radius:999px;background:#fff;color:var(--ink,#1B1815);border:1px solid #fff;font:500 14px/1 var(--sans,sans-serif);cursor:pointer;white-space:nowrap}
+  /* Accent-filled like every form bar (2026-11-19, CLAUDE-web-design.md §5), never a white pill on black. */
+  .djd-next__go{flex:none;min-height:42px;min-width:110px;padding:0 20px;border-radius:999px;background:var(--green,#6E2A38);color:#fff;border:1px solid var(--green,#6E2A38);font:500 14px/1 var(--sans,sans-serif);cursor:pointer;white-space:nowrap}
+  .djd-next__go:hover{background:var(--maroon-deep,#4A1B24);border-color:var(--maroon-deep,#4A1B24)}
   .djd-next .ft-pct{order:-1;display:inline-flex;align-items:center;gap:8px;flex:none;font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap;opacity:.82}
   .djd-next .ft-pct i{display:block;width:56px;height:4px;border-radius:2px;background:color-mix(in srgb,currentColor 24%,transparent);overflow:hidden}
   .djd-next .ft-pct b{display:block;height:100%;width:0;border-radius:2px;background:currentColor;transition:width .25s ease}
@@ -313,7 +315,8 @@
   body.djd-has-next{padding-bottom:76px}
   .djd-task--on{outline:2px solid var(--maroon,#6E2A38);outline-offset:4px;transition:outline-color .6s}
 </style>
-<link rel="stylesheet" href="margolis-dashboard-skin.css?v=5">
+<link rel="stylesheet" href="assets/forms-tix.css?v=3">
+<link rel="stylesheet" href="margolis-dashboard-skin.css?v=6">
 </head>
 <body>
 
@@ -416,47 +419,61 @@
         <div id="dateReqList"></div>
         <details class="djd-prof" id="dateReqBox" style="margin-top:18px">
           <summary>Request additional dates</summary>
-          <div class="djd-prof__body">
-            <p class="djd-note" style="margin:0 0 14px">List every date you want. We confirm each one separately.</p>
-            <div class="ifield" id="dreqPartyWrap" hidden><label>Same party as&hellip;</label>
-              <select id="dreqParty"><option value="new">A new party</option></select>
-              <p class="djd-note" style="margin-top:6px">Picks up the name, description, times, food plan, and admission model from that night &mdash; still yours to change below.</p>
-            </div>
-            <div class="ifield"><label>Event name <span class="req">*</span></label>
-              <input type="text" id="dreqName" placeholder="e.g. Kingspy Rhythm Nation"></div>
-            <div class="ifield"><label>Event description</label>
-              <textarea id="dreqDesc" rows="3" placeholder="What's the concept, and who's it for?"></textarea></div>
-            <div class="ifield"><label>Venue</label>
-              <div style="display:flex;gap:16px;margin-top:6px;flex-wrap:wrap">
-                <label style="display:flex;gap:6px;align-items:center;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="radio" name="dreqVenue" value="Margolis (inside)" checked> Margolis</label>
-                <label style="display:flex;gap:6px;align-items:center;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="radio" name="dreqVenue" value="The Patio"> The Patio</label>
-                <label style="display:flex;gap:6px;align-items:center;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="radio" name="dreqVenue" value="Fabrika"> Fabrika</label>
+          <!-- Ticket-site form look (2026-11-19): one card per section,
+               venue as chips. Every id and name the script reads is the same. -->
+          <div class="djd-prof__body ft" data-gate>
+            <p class="ft-note" style="margin:0">List every date you want. We confirm each one separately.</p>
+            <div class="ft-card">
+              <div class="ft-head">The event</div>
+              <div class="ifield" id="dreqPartyWrap" hidden><label>Same party as&hellip;</label>
+                <select id="dreqParty"><option value="new">A new party</option></select>
+                <p class="help">Picks up the name, description, times, food plan, and admission model from that night &mdash; still yours to change below.</p>
               </div>
-              <p class="djd-note" id="dreqVenueNote" style="margin-top:8px"></p>
+              <div class="ifield"><label>Event name <span class="req">*</span></label>
+                <input type="text" id="dreqName" data-req placeholder="e.g. Kingspy Rhythm Nation"></div>
+              <div class="ifield"><label>Event description</label>
+                <textarea id="dreqDesc" rows="3" placeholder="What's the concept, and who's it for?"></textarea></div>
             </div>
-            <div style="display:flex;gap:12px;flex-wrap:wrap">
-              <div class="ifield" style="flex:1;min-width:140px"><label>Usual start time</label><input type="time" id="dreqStart"></div>
-              <div class="ifield" style="flex:1;min-width:140px"><label>Usual end time</label><input type="time" id="dreqEnd"></div>
-            </div>
-            <div id="dreqOpsWrap" style="display:flex;gap:12px;flex-wrap:wrap">
-              <div class="ifield" style="flex:1;min-width:160px"><label>Food plan</label>
-                <select id="dreqFood">
-                  <option value="">Not sure yet</option>
-                  <option value="Kitchen service">Kitchen service</option>
-                  <option value="No food service">No food service</option>
-                  <option value="Outside catering">Outside catering</option>
-                </select>
+            <div class="ft-card">
+              <div class="ft-head">Venue</div>
+              <div class="ifield">
+                <div class="ft-chips" role="radiogroup" aria-label="Venue">
+                  <label class="ft-chip"><input type="radio" name="dreqVenue" value="Margolis (inside)" checked><span>Margolis</span></label>
+                  <label class="ft-chip"><input type="radio" name="dreqVenue" value="The Patio"><span>The Patio</span></label>
+                  <label class="ft-chip"><input type="radio" name="dreqVenue" value="Fabrika"><span>Fabrika</span></label>
+                </div>
+                <p class="help" id="dreqVenueNote"></p>
               </div>
-              <div class="ifield" style="flex:1;min-width:160px"><label>Admission model</label><input type="text" id="dreqCover" placeholder="e.g. $20 at the door"></div>
-              <div class="ifield" style="flex:1;min-width:140px"><label>Anticipated guest count</label><input type="text" inputmode="numeric" id="dreqGuests" placeholder="e.g. 120"></div>
             </div>
-            <div class="ifield"><label>Dates you&rsquo;d like to request <span class="req">*</span></label>
-              <div id="dreqDates"></div>
-              <button type="button" class="djd-readmore" id="dreqAddDate">+ Add another date</button>
+            <div class="ft-card">
+              <div class="ft-head">The night <span class="ft-n">Optional</span></div>
+              <div class="ft-row ft-pair">
+                <div class="ifield"><label>Usual start time</label><input type="time" id="dreqStart"></div>
+                <div class="ifield"><label>Usual end time</label><input type="time" id="dreqEnd"></div>
+              </div>
+              <div class="ft-row ft-pair3" id="dreqOpsWrap">
+                <div class="ifield"><label>Food plan</label>
+                  <select id="dreqFood">
+                    <option value="">Not sure yet</option>
+                    <option value="Kitchen service">Kitchen service</option>
+                    <option value="No food service">No food service</option>
+                    <option value="Outside catering">Outside catering</option>
+                  </select>
+                </div>
+                <div class="ifield"><label>Admission model</label><input type="text" id="dreqCover" placeholder="e.g. $20 at the door"></div>
+                <div class="ifield"><label>Anticipated guest count</label><input type="text" inputmode="numeric" id="dreqGuests" placeholder="e.g. 120"></div>
+              </div>
             </div>
-            <div id="dreqQuote"></div>
-            <p class="djd-err" id="dreqErr" style="margin:8px 0"></p>
-            <button type="button" class="btn btn--green" id="dreqSubmit" style="margin-top:10px">Submit request</button>
+            <div class="ft-card">
+              <div class="ft-head">Dates <span class="ft-n">At least one</span></div>
+              <div class="ifield" data-req><label>Dates you&rsquo;d like to request <span class="req">*</span></label>
+                <div id="dreqDates"></div>
+                <button type="button" class="djd-readmore" id="dreqAddDate">+ Add another date</button>
+              </div>
+              <div class="ft-row" id="dreqQuoteRow"><div id="dreqQuote"></div></div>
+            </div>
+            <p class="djd-err" id="dreqErr" style="margin:0"></p>
+            <div class="intake__nav dreq-go"><button type="button" class="btn btn--green" id="dreqSubmit">Submit request</button></div>
           </div>
         </details>
         </div><!-- /#hostView -->
@@ -988,8 +1005,8 @@
     }
     /* The LIFETIME list (Ruby, 2026-11-04): lives in the profile, and is
        where every night's own list starts (the night card's Guest list). */
-    box.innerHTML = `<div class="djd-task" id="guest-list">
-        <h4>Lifetime guest list <span class="mono" style="font-weight:400;font-size:12px;color:var(--muted)">${names.length}/${GL_MAX}</span></h4>
+    box.innerHTML = `<div class="djd-task ft ft-card" id="guest-list" data-gate>
+        <h4 class="ft-head">Lifetime guest list <span class="ft-n">${names.length}/${GL_MAX}</span></h4>
         <p class="djd-note" style="margin:0 0 12px">Free entry on every night you host. Change it for one night on that night's card.</p>
         ${rows}
         <p class="djd-err" id="glErr" style="margin:8px 0"></p>
@@ -1019,12 +1036,17 @@
     box.hidden = false;
     if(account.hasW9){ box.hidden = true; box.innerHTML = ""; return; }
     box.className = "djd-w9 djd-w9--warn";
-    box.innerHTML = `<strong>Your W9 is missing.</strong> Your door charge is not paid until your
-      profile is set up and your W9 is on file: we can't properly file our taxes without it. Fill out the IRS's own
+    /* One section card (ticket-site form look, 2026-11-19). */
+    box.innerHTML = `<div class="djd-task ft ft-card" data-gate>
+      <h4 class="ft-head">W-9 <span class="ft-n">Missing</span></h4>
+      <div class="djd-w9 djd-w9--warn"><strong>Your W9 is missing.</strong> Your door charge is not paid until your
+      profile is set up and your W9 is on file: we can't properly file our taxes without it.</div>
+      <p class="djd-note">Fill out the IRS's own
       <a href="${IRS_W9_URL}" target="_blank" rel="noopener">blank W9 form</a> (most PDF readers let
-      you type directly into it and sign), then upload the completed form here.
-      <input type="file" id="w9File" accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf" data-pill="Upload W-9">
-      <div class="intake__nav" style="margin-top:10px"><button type="button" class="btn btn--green" id="w9Upload">Upload my W9 <span class="arw" aria-hidden="true">&gt;</span></button></div>`;
+      you type directly into it and sign), then upload the completed form here.</p>
+      <div class="ifield" data-req><input type="file" id="w9File" accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf" data-pill="Upload W-9"></div>
+      <div class="intake__nav"><button type="button" class="btn btn--green" id="w9Upload">Upload my W9 <span class="arw" aria-hidden="true">&gt;</span></button></div>
+      </div>`;
     document.getElementById("w9Upload").addEventListener("click", async ()=>{
       const input = document.getElementById("w9File");
       const file = input.files && input.files[0];
@@ -1134,33 +1156,34 @@
           claim.status==="locked"
             ? `${esc(claim.title)} — <span style="color:var(--green)">locked in</span>`
             : `${esc(claim.title)} — under review${p<100?" (complete your profile to lock it)":""}`}</p>`:""}
-        ${profileEditMode?`<div class="djd-task">
-          <h4>Account</h4>
-          <div class="ifield"><label>Email</label><input type="email" value="${esc(account.email||"")}" disabled></div>
+        ${profileEditMode?`<div class="djd-task ft ft-card" data-gate>
+          <h4 class="ft-head">Account</h4>
+          <div class="ft-kv"><span>Email</span><span>${esc(account.email||"")}</span></div>
           <div class="ifield"><label>Phone</label><input type="tel" id="ppPhone" value="${esc(account.phone||"")}" placeholder="(215)-771-4222"></div>
           <div class="intake__nav" style="gap:12px;flex-wrap:wrap">
             <button type="button" class="btn btn--green" id="ppSavePhone">Save phone <span class="arw" aria-hidden="true">&gt;</span></button>
-            <button type="button" class="btn" id="ppResetPw">Email me a password link</button>
+            <button type="button" class="btn btn--ghost" id="ppResetPw">Email me a password link</button>
           </div>
           <p class="djd-note" id="ppAcctMsg" style="margin:10px 0 0"></p>
         </div>`:""}
-        ${(!account.stageName || profileEditMode)?`<div class="djd-task" id="task-stage">
-          <h4>Your two names</h4>
+        ${(!account.stageName || profileEditMode)?`<div class="djd-task ft ft-card" id="task-stage" data-gate>
+          <h4 class="ft-head">Your two names</h4>
           <p class="djd-note" style="margin:0 0 12px">Margolis keeps both, and uses each in one place only.</p>
-          <div class="ifield"><label>Government name</label><input type="text" value="${esc(account.name||"")}" disabled>
-            <p class="help">As on your ID. Only on your W9, agreements and payouts. Never public.</p></div>
-          <div class="ifield"><label>Stage name <span class="req">*</span></label><input type="text" id="ppStage" maxlength="60" value="${esc(account.stageName||"")}" placeholder="e.g. DJ Aura">
+          <div class="ft-kv"><span>Government name</span><span>${esc(account.name||"")}</span></div>
+          <p class="djd-note" style="margin-top:6px!important">As on your ID. Only on your W9, agreements and payouts. Never public.</p>
+          <div class="ifield"><label>Stage name <span class="req">*</span></label><input type="text" id="ppStage" data-req maxlength="60" value="${esc(account.stageName||"")}" placeholder="e.g. DJ Aura">
             <p class="help">The name on every flyer, lineup and margolis.events listing. Exactly how you want to appear.</p></div>
           <div class="ifield"><label>Bio</label><textarea id="ppBio" maxlength="280" rows="3" placeholder="One or two lines about you and your sound.">${esc(account.bio||"")}</textarea>
             <p class="help"><span id="ppBioN">${(account.bio||"").length}</span>/280</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSaveStage">Save <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
-        ${profileEditMode?`<div class="djd-task">
-          <h4>Government name</h4>
-          <p class="djd-note" style="margin:0">${esc(account.name||"")}${account.legalNameLocked?` · <strong>Locked</strong> to your signed agreements. To change it, email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.`:""}</p>
+        ${profileEditMode?`<div class="djd-task ft ft-card">
+          <h4 class="ft-head">Government name</h4>
+          <div class="ft-kv"><span>Name</span><span>${esc(account.name||"")}</span></div>
+          ${account.legalNameLocked?`<p class="djd-note"><strong>Locked</strong> to your signed agreements. To change it, email <a href="mailto:ruby@margolisphilly.com">ruby@margolisphilly.com</a>.</p>`:""}
         </div>`:""}
-        ${(!account.hasFacePhoto || profileEditMode)?`<div class="djd-task" id="task-photo">
-          <h4>Profile photo</h4>
+        ${(!account.hasFacePhoto || profileEditMode)?`<div class="djd-task ft ft-card" id="task-photo" data-gate>
+          <h4 class="ft-head">Profile photo</h4>
           <p class="djd-note" style="margin:0 0 12px">${account.hasFacePhoto
             ? "On file. Upload a new one to replace it."
             : "A good photo of just you. No group shots."}</p>
@@ -1168,24 +1191,24 @@
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePhotos">${account.hasFacePhoto?"Replace photo":"Upload photo"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
           <p class="djd-note" id="ppPhotoMsg" style="margin:10px 0 0"></p>
         </div>`:""}
-        <div class="djd-task" id="task-logo">
+        <div class="djd-task ft ft-card" id="task-logo" data-gate>
           <!-- Logo (Ruby, 2026-11-18): optional, never counted in the
                percent. savePhoto kind:"logo" in margolis-dj-auth.php. -->
-          <h4>Logo <span style="font-weight:400;color:var(--muted)">(optional)</span></h4>
+          <h4 class="ft-head">Logo <span class="ft-n">Optional</span></h4>
           <div class="djd-logo" id="ppLogoPrev"${account.hasLogo?"":" hidden"}></div>
           <input type="file" id="ppLogoFile" accept=".png,.jpg,.jpeg,image/png,image/jpeg" hidden>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSaveLogo">${account.hasLogo?"Replace logo":"Upload logo"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
           <p class="djd-note" id="ppLogoMsg" style="margin:10px 0 0">PNG or JPG. A transparent PNG works best.</p>
         </div>
-        ${(!(account.payableTo && account.zelle) || profileEditMode)?`<div class="djd-task" id="task-payout">
-          <h4>Payout info</h4>
+        ${(!(account.payableTo && account.zelle) || profileEditMode)?`<div class="djd-task ft ft-card" id="task-payout" data-gate>
+          <h4 class="ft-head">Payout info</h4>
           <p class="djd-note" style="margin:0 0 12px"><strong>Door payments go through Zelle.</strong></p>
-          <div class="ifield"><label>Make checks payable to <span class="req">*</span></label><input type="text" id="ppPayable" value="${esc(account.payableTo||"")}" placeholder="(Full Name or Business Name)"></div>
-          <div class="ifield"><label>Zelle <span class="req">*</span></label><input type="text" id="ppZelle" value="${esc(account.zelle||"")}" placeholder="Phone number, email, or Zelle tag"></div>
+          <div class="ifield"><label>Make checks payable to <span class="req">*</span></label><input type="text" id="ppPayable" data-req value="${esc(account.payableTo||"")}" placeholder="(Full Name or Business Name)"></div>
+          <div class="ifield"><label>Zelle <span class="req">*</span></label><input type="text" id="ppZelle" data-req value="${esc(account.zelle||"")}" placeholder="Phone number, email, or Zelle tag"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSavePayout">Save payout info <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
-        ${(!account.agreementsSigned || profileEditMode)?`<div class="djd-task" id="task-agreements">
-          <h4>The agreement stack</h4>
+        ${(!account.agreementsSigned || profileEditMode)?`<div class="djd-task ft ft-card" id="task-agreements" data-gate>
+          <h4 class="ft-head">The agreement stack</h4>
           <p class="djd-note" style="margin:0 0 12px">${account.agreementsSigned?"Signed and on file.":""} Read the
           <button type="button" class="djd-policy" data-policy-open="policyPhilosophy">booking philosophy and payout model</button>,
           the <button type="button" class="djd-policy" data-policy-open="policyMinimums">bar minimum policy</button>, and the
@@ -1199,27 +1222,27 @@
              ["agMins","I understand and agree to the Bar Minimum Policy"],
              ["agAll","I have read and agree to all event policies and terms"],
              ["agConsent","Optional: text and email me about events, lineups, ticket drops and offers from Jubyr LLC. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. Never required to book, and your information is never sold."]].map(([id,label])=>
-            `<label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:9px;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="checkbox" id="${id}"${(id==="agConsent" ? !!account.smsConsent : !!account.agreementsSigned)?" checked":""} style="margin-top:3px">${label}</label>`).join("")}
-          <div class="ifield" style="margin-top:6px"><label>Electronic signature (full legal name) <span class="req">*</span></label><input type="text" id="agSig" autocomplete="name" value="${account.agreementsSigned?esc(account.name||""):""}"></div>
+            `<label class="ft-row ft-check"><input type="checkbox" id="${id}"${id==="agConsent"?"":" data-req"}${(id==="agConsent" ? !!account.smsConsent : !!account.agreementsSigned)?" checked":""}><span>${label}</span></label>`).join("")}
+          <div class="ifield"><label>Electronic signature (full legal name) <span class="req">*</span></label><input type="text" id="agSig" data-req autocomplete="name" value="${account.agreementsSigned?esc(account.name||""):""}"></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppSignAgreements">${account.agreementsSigned?"Update signature":"Sign the agreements"} <span class="arw" aria-hidden="true">&gt;</span></button></div>
         </div>`:""}
-        ${(!account.nightsAck || profileEditMode)?`<div class="djd-task" id="task-nights">
+        ${(!account.nightsAck || profileEditMode)?`<div class="djd-task ft ft-card" id="task-nights" data-gate>
           <!-- "How your nights work" (Ruby, 2026-11-04): agreed once, as part of
                setup. It replaced the paragraph that sat at the top of the page
                on every visit. ackNights in margolis-dj-auth.php records it. -->
-          <h4>How your nights work</h4>
+          <h4 class="ft-head">How your nights work</h4>
           <ol class="djd-rules">
             <li><strong>Each night needs a lineup, flyer, and ticket link</strong>, due 14 days out. We approve each.</li>
             <li><strong>No ticket link yet?</strong> Your night shows a waitlist, and inquiries go to our Priority Reservation.</li>
             <li><strong>Partners</strong> are added by their profile code.</li>
           </ol>
-          <div class="djd-w9 djd-w9--warn" style="margin:4px 0 14px">
+          <div class="djd-w9 djd-w9--warn" style="margin:12px 14px 14px!important">
             <strong>Your bar payout is held until your lineup, flyer, and ticket link are uploaded.</strong><br>
             <strong>All payouts are held until your profile is complete.</strong>
           </div>
           ${account.nightsAck
             ? `<p class="djd-note" style="margin:0">Agreed and on file.</p>`
-            : `<label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:12px;cursor:pointer;font-size:13.5px;color:var(--muted)"><input type="checkbox" id="nightsAckBox" style="margin-top:3px">I understand how my nights work.</label>
+            : `<label class="ft-row ft-check"><input type="checkbox" id="nightsAckBox" data-req><span>I understand how my nights work.</span></label>
           <div class="intake__nav"><button type="button" class="btn btn--green" id="ppAckNights">I agree <span class="arw" aria-hidden="true">&gt;</span></button></div>`}
         </div>`:""}
         <div id="guestListBox"></div>
@@ -1422,10 +1445,10 @@
     const sc = lsCount("short", d.short), lc = lsCount("long", d.long);
     return `<p class="evt__status"><strong>This is exactly how your night appears on margolis.events.</strong> It goes live the moment you save, with no edits from us. Check spelling, names and @handles.</p>
       <div class="ifield"><label>Short description <span class="req">*</span></label>
-        <textarea rows="2" data-ls="short" data-k="${esc(k)}" maxlength="${LS_LIM.short.max}" spellcheck="true" placeholder="The line under your event on the calendar and on the flyer">${esc(d.short)}</textarea>
+        <textarea rows="2" data-req data-ls="short" data-k="${esc(k)}" maxlength="${LS_LIM.short.max}" spellcheck="true" placeholder="The line under your event on the calendar and on the flyer">${esc(d.short)}</textarea>
         <p class="help ls__n ${sc.c}" data-ls-n="short">${sc.m}</p></div>
       <div class="ifield"><label>Long description <span class="req">*</span></label>
-        <textarea rows="5" data-ls="long" data-k="${esc(k)}" maxlength="${LS_LIM.long.max}" spellcheck="true" placeholder="Who is playing, what it sounds like, what the room is like an hour in. Opens when a guest taps More details.">${esc(d.long)}</textarea>
+        <textarea rows="5" data-req data-ls="long" data-k="${esc(k)}" maxlength="${LS_LIM.long.max}" spellcheck="true" placeholder="Who is playing, what it sounds like, what the room is like an hour in. Opens when a guest taps More details.">${esc(d.long)}</textarea>
         <p class="help ls__n ${lc.c}" data-ls-n="long">${lc.m}</p></div>
       <div class="intake__nav"><button type="button" class="btn btn--green" data-save="listing" data-i="${i}">${lsDone(ev)?"Update":"Publish"} descriptions <span class="arw" aria-hidden="true">&gt;</span></button></div>`;
   }
@@ -1499,8 +1522,8 @@
           ${[["listing","1 · Descriptions"],["lineup","2 · Lineup"],["flyer","3 · Flyer"],["ticket","4 · Ticket link"],["partners","5 · Partners"],["guests","6 · Guest list"]].map(([tk,label])=>
             `<button type="button" class="evt__tab ${tab===tk?"on":""}" data-tab="${tk}" data-k="${esc(k)}">${label}</button>`).join("")}
         </div>
-        <div class="evt__pane ${tab==="listing"?"on":""}" data-pane="listing">${listingPane(ev, i, k)}</div>
-        <div class="evt__pane ${tab==="lineup"?"on":""}" data-pane="lineup">
+        <div class="evt__pane ft ${tab==="listing"?"on":""}" data-gate data-pane="listing">${listingPane(ev, i, k)}</div>
+        <div class="evt__pane ft ${tab==="lineup"?"on":""}" data-gate data-pane="lineup">
           ${gatedBody("lineup", s.lineup, i, k, "Your lineup wasn't approved.", `
           ${(lineupDraft[k]||[]).length?`<ul class="djd-check" style="margin-bottom:14px">${lineupDraft[k].map((a,ai)=>
             `<li class="done"><span class="mk">&#9835;</span>${esc(a.name)}${a.instagram?` <a href="https://instagram.com/${esc(a.instagram)}" target="_blank" rel="noopener" style="color:var(--muted)">@${esc(a.instagram)}</a>`:""}
@@ -1510,24 +1533,24 @@
           <div class="ifield"><label>Link to their Instagram <span class="req">*</span></label>
             <input type="url" data-f="luIg" placeholder="instagram.com/theirname" autocapitalize="none" autocorrect="off" inputmode="url">
             <p class="help">Open their profile and copy the link.</p></div>
-          <div class="intake__nav" style="margin-bottom:8px"><button type="button" class="btn" data-save="lineupAdd" data-i="${i}">Add this act +</button></div>
+          <div class="intake__nav" style="margin-bottom:8px"><button type="button" class="btn btn--ghost" data-save="lineupAdd" data-i="${i}">Add this act +</button></div>
           <p class="help">One act at a time. A fresh lineup every night, residencies included. Due 14 days out.</p>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="lineup" data-i="${i}">Submit lineup <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `)}
         </div>
-        <div class="evt__pane ${tab==="flyer"?"on":""}" data-pane="flyer">
+        <div class="evt__pane ft ${tab==="flyer"?"on":""}" data-gate data-pane="flyer">
           ${gatedBody("flyer", s.flyerFile, i, k, "Your flyer wasn't approved.", `
-          <div class="ifield"><label>Event flyer <span class="req">*</span></label>
+          <div class="ifield" data-req><label>Event flyer <span class="req">*</span></label>
             <input type="file" data-f="flyer" accept=".jpg,.jpeg,.png,image/jpeg,image/png" data-pill="Upload flyer">
             ${s.flyerFile.value?`<p class="help">On file: ${esc(s.flyerFile.value)}</p>`:""}
             <p class="help">JPG or PNG, 4:5 portrait (1080×1350), up to 10 MB. <strong>No AI flyers.</strong> Due 14 days out. A new upload goes back into review.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="flyer" data-i="${i}">Upload flyer <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `)}
         </div>
-        <div class="evt__pane ${tab==="ticket"?"on":""}" data-pane="ticket">
+        <div class="evt__pane ft ${tab==="ticket"?"on":""}" data-gate data-pane="ticket">
           ${gatedBody("ticket", s.ticketLink, i, k, "Your ticket link wasn't approved.", `
           <div class="ifield"><label>Ticket link <span class="req">*</span></label>
-            <input type="url" data-f="ticket" placeholder="https://posh.vip/e/your-event" value="${esc(s.ticketLink.value)}">
+            <input type="url" data-req data-f="ticket" placeholder="https://posh.vip/e/your-event" value="${esc(s.ticketLink.value)}">
             <p class="help">Once approved, guests go here instead of the waitlist, and the waitlist gets emailed.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="ticket" data-i="${i}">Submit link <span class="arw" aria-hidden="true">&gt;</span></button></div>
           <div class="ifield">${s.ticketLink.noPresale?`<p class="help"><strong>No presale</strong> on file: door only.</p>`:""}
@@ -1537,20 +1560,20 @@
         <!-- RSVP count step removed (Ruby, 2026-11-04). The saveRsvp handler
              below and the manager view's RSVP line stay, so counts a host
              already entered still show; nothing new can be typed. -->
-        <div class="evt__pane ${tab==="partners"?"on":""}" data-pane="partners">
+        <div class="evt__pane ft ${tab==="partners"?"on":""}" data-gate data-pane="partners">
           <p class="evt__status">Add a partner by <strong>their profile code</strong>. They'll see this night and its sales.</p>
           ${partnerNote[keyOf(ev)]?`<p class="evt__status">${esc(partnerNote[keyOf(ev)])}</p>`:""}
           ${(s.partners||[]).length?`<p class="evt__status"><strong>On this night:</strong> ${(s.partners||[]).map(p=>esc(p.name)+(p.instagram?` (@${esc(p.instagram)})`:"")).join(", ")}</p>`:""}
           ${s.solo?`<div class="evt__collapse"><span class="lbl">No partner — solo night</span><button type="button" class="djd-readmore" data-solo-undo="1" data-i="${i}">Actually, add one</button></div>`:`
-          <label style="display:flex;gap:9px;align-items:flex-start;margin-bottom:16px;cursor:pointer;font-size:13.5px;color:var(--muted)">
-            <input type="checkbox" data-f="soloCheck" style="margin-top:3px">No partner for this night — I'm running it solo.
+          <label class="ft-check" style="margin:0 0 12px">
+            <input type="checkbox" data-f="soloCheck"><span>No partner for this night — I'm running it solo.</span>
           </label>
-          <div class="intake__nav" style="margin-bottom:20px"><button type="button" class="btn" data-save="solo" data-i="${i}">Confirm solo night</button></div>
-          <div class="ifield"><label>Partner's profile code <span class="req">*</span></label><input type="text" data-f="pcode" placeholder="ABC-234" maxlength="9" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" style="font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase"><p class="help">It's next to their name on their dashboard. No profile? They <a href="https://jubyr.com/margolis-login" target="_blank" rel="noopener">sign up</a> first.</p></div>
+          <div class="intake__nav" style="margin-bottom:20px"><button type="button" class="btn btn--ghost" data-save="solo" data-i="${i}">Confirm solo night</button></div>
+          <div class="ifield"><label>Partner's profile code <span class="req">*</span></label><input type="text" data-req data-f="pcode" placeholder="ABC-234" maxlength="9" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" style="font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase"><p class="help">It's next to their name on their dashboard. No profile? They <a href="https://jubyr.com/margolis-login" target="_blank" rel="noopener">sign up</a> first.</p></div>
           <div class="intake__nav"><button type="button" class="btn btn--green" data-save="partner" data-i="${i}">Add partner <span class="arw" aria-hidden="true">&gt;</span></button></div>
           `}
         </div>
-        <div class="evt__pane ${tab==="guests"?"on":""}" data-pane="guests">${guestPane(ev, s, i, k)}</div>
+        <div class="evt__pane ft ${tab==="guests"?"on":""}" data-gate data-pane="guests">${guestPane(ev, s, i, k)}</div>
       </div>`}
     </div>`;
   }
@@ -1570,7 +1593,7 @@
     const life = LIFETIME.map(n=>`<div style="display:flex;gap:8px;align-items:center;padding:9px 0;border-top:1px solid var(--line)">
         <span style="flex:1;font-size:15px">${esc(n)}</span><span class="mono" style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">🔒 Lifetime</span></div>`).join("");
     const rows = extras.map((n, ix)=>`<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
-        <input type="text" data-eg="${ix}" data-k="${esc(k)}" value="${esc(n)}" placeholder="+1 · Full name" maxlength="80" autocomplete="off" style="flex:1;padding:11px 13px;border:1px solid var(--line);border-radius:2px;background:var(--card);font:inherit;font-size:15px">
+        <input type="text" data-eg="${ix}" data-k="${esc(k)}" value="${esc(n)}" placeholder="+1 · Full name" maxlength="80" autocomplete="off" style="flex:1;min-width:0">
         <button type="button" class="djd-readmore" data-eg-rm="${ix}" data-k="${esc(k)}" style="margin:0">remove</button></div>`).join("");
     return `<p class="evt__status">Your lifetime list is on every night you host. Add up to ${EG_EXTRA} +1s for this night.</p>
       ${life ? `<div style="margin:0 0 14px">${life}</div>` : `<p class="djd-note">No lifetime list yet. Add one in Edit profile.</p>`}
@@ -4938,5 +4961,7 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
 <script src="https://jubyr.tools/assets/js/date-pop.js?v=1"></script>
 <script src="https://jubyr.tools/assets/js/residency-invites.js?v=2"></script>
 <script src="https://jubyr.tools/assets/js/upload-pill.js?v=1" defer></script>
+<!-- Grey until complete + NN% meter, one per small form (data-gate). -->
+<script src="assets/forms-end.js?v=4" data-scope="[data-gate]" defer></script>
 </body>
 </html>
