@@ -19,6 +19,7 @@
 <meta property="og:url" content="https://jubyr.com/resources">
 <meta property="og:image" content="https://jubyr.com/assets/og-default.jpg?v=2">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/forms-tix.css?v=3">
 <style>
   :root{
     --paper:#FAF7F2; --card:#FFFFFF; --ink:#1B1815; --muted:#8B8377; --line:#E2D9C9;
@@ -77,17 +78,16 @@
   .filters button span{color:var(--muted);margin-left:6px}
   .filters button[aria-pressed="true"] span{color:#C9B48A}
 
-  .note{background:var(--card);border:1px solid var(--line);padding:24px 26px;margin:0 0 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:26px}
-  .note__k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0 0 6px}
-  .note h2{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.1;margin:0 0 8px}
-  .note p.help{margin:0 0 16px;color:var(--muted);font-size:13px}
-  .ifield{margin:0 0 12px}
-  .ifield label{display:block;font-size:12px;font-weight:600;letter-spacing:.03em;margin:0 0 6px}
-  .ifield input{width:100%;font:inherit;font-size:14px;padding:12px 13px;background:var(--paper);border:1px solid var(--line);border-radius:2px;color:var(--ink)}
-  .ifield input:focus{outline:none;border-color:var(--gold)}
-  .msg{margin:0;background:var(--paper);border:1px solid var(--line);padding:18px 20px;font-family:var(--serif);font-size:17px;line-height:1.55}
+  /* The message builder in the ticket-site form look (2026-11-19,
+     CLAUDE-web-design.md §5): section cards from assets/forms-tix.css.
+     No bar: it sends nothing, the DM buttons below do the copying. */
+  .note.ft{background:none;margin:0 0 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+  .note .ft-card > .ft-note{margin:12px 14px 2px}
+  .note .ft-note + .ifield{border-top:0}
+  .msg{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;font-family:var(--serif);font-size:17px;line-height:1.55}
   .msg .slot{color:var(--gold);font-style:italic}
-  .note__msg{display:flex;flex-direction:column;gap:12px}
+  .note .ft-btn{width:100%;min-height:48px}
+  .note .ft-btn .btn__note{font-family:var(--mono);font-size:13px}
 
   .group{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:0 0 10px;margin:34px 0 14px;border-bottom:1px solid var(--line)}
   .group:first-child{margin-top:0}
@@ -132,7 +132,7 @@
 
   @media (max-width:760px){
     :root{--gut:16px}
-    .note{grid-template-columns:1fr;padding:20px 18px;gap:18px}
+    .note.ft{grid-template-columns:minmax(0,1fr)}
     .pc{grid-template-columns:72px minmax(0,1fr);padding:18px 16px 18px 0;gap:0 16px}
     .pc__big{font-size:32px}
     .pc__buy{grid-column:1 / -1;padding:16px 0 0 16px}
@@ -188,18 +188,18 @@
       <h2 class="vh">Who's in the book</h2>
       <div class="filters" id="filters" role="group" aria-label="Filter by what they do"></div>
 
-      <div class="note">
-        <div>
-          <p class="note__k">Your message</p>
-          <h2>Fill this in once.</h2>
-          <p class="help">Every DM button copies this with their role filled in, then opens their Instagram. Paste it and send.</p>
+      <div class="note ft">
+        <div class="ft-card">
+          <div class="ft-head">Your message <span class="ft-n">Fill this in once</span></div>
+          <p class="ft-note">Every DM button copies this with their role filled in, then opens their Instagram. Paste it and send.</p>
           <div class="ifield"><label for="fDate">Date</label><input id="fDate" type="text" placeholder="Saturday, Nov 22" autocomplete="off"></div>
           <div class="ifield"><label for="fEvent">Event</label><input id="fEvent" type="text" placeholder="my birthday dinner" autocomplete="off"></div>
           <div class="ifield"><label for="fBudget">Budget</label><input id="fBudget" type="text" placeholder="$400" autocomplete="off"></div>
         </div>
-        <div class="note__msg">
-          <p class="msg" id="msg"></p>
-          <button class="btn" id="copyMsg" type="button">Copy message <span class="btn__note" aria-hidden="true">&#x2398;</span></button>
+        <div class="ft-card">
+          <div class="ft-head">Preview</div>
+          <div class="ft-row"><p class="msg" id="msg"></p></div>
+          <div class="ft-row"><button class="ft-btn" id="copyMsg" type="button">Copy message <span class="btn__note" aria-hidden="true">&#x2398;</span></button></div>
         </div>
       </div>
 
