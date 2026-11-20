@@ -2378,6 +2378,10 @@
   const PARTS = [["lineup","DJ lineup"],["flyerFile","Event flyer"],["ticketLink","Ticket link"]];
 
   const view = document.getElementById("mgrView");
+  /* The 2027 invite list: one widget shared with jubyr.tools
+     (residency-invites.js), not a third copy. Attached lazily because
+     mapi is declared further down. */
+  window.addEventListener("load", () => { if(window.ResidencyInvites && view){ window.ResidencyInvites.attach(view, mapi, () => render()); if(M.tab === "res") render(); } });
   const hostView = document.getElementById("hostView");
   const switcher = document.getElementById("mgrSwitch");
   const errEl = document.getElementById("mgrErr");
@@ -3670,7 +3674,7 @@
 
     const chip = (k, label, n) => `<button type="button" class="mgr-chip${(M.resAppScope||"pending")===k?" mgr-chip--dark":""}" data-act="resappscope" data-scope="${k}">${label}${n?" "+n:""}</button>`;
 
-    let h = `<div class="mgr-card">
+    let h = (window.ResidencyInvites ? window.ResidencyInvites.html() : "") + `<div class="mgr-card">
       <h3>${year} residency applications</h3>
       <div class="mgr-meta">Hosts pick a first night, hours and how often on <a class="mgr-link" href="https://margolis.events/apply-for-a-residency" target="_blank" rel="noopener">margolis.events/apply-for-a-residency</a>.
       <b>Nothing reaches the public site until you confirm it.</b></div>
@@ -4932,6 +4936,7 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
 <script src="https://jubyr.tools/assets/js/flyer-crop.js?v=1"></script>
 <script src="https://jubyr.tools/assets/js/face-crop.js?v=1"></script>
 <script src="https://jubyr.tools/assets/js/date-pop.js?v=1"></script>
+<script src="https://jubyr.tools/assets/js/residency-invites.js?v=1"></script>
 <script src="https://jubyr.tools/assets/js/upload-pill.js?v=1" defer></script>
 </body>
 </html>
