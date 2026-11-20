@@ -59,7 +59,8 @@
 .acts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 .act{margin:0}
 .act__img{aspect-ratio:4/5;border-radius:12px;overflow:hidden;background:#14110f}
-.act__img img{width:100%;height:100%;object-fit:cover;display:block}
+.act__img img,.act__img video{width:100%;height:100%;object-fit:cover;display:block}
+.act__img video{object-position:38% center}
 .act__img--empty{display:grid;place-items:center;background:var(--paper-2);border:1px dashed var(--line);font-size:34px}
 .act figcaption{margin-top:10px;font-family:var(--serif);font-size:20px}
 .act figcaption span{display:block;font-family:var(--sans);font-size:13px;color:var(--muted);margin-top:2px}
@@ -81,6 +82,8 @@
 .wrow .strip{grid-column:1 / -1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .strip img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;display:block}
 .strip .wide{grid-column:span 2;aspect-ratio:auto;height:100%}
+.strip__film{grid-column:1 / -1;aspect-ratio:21/9;border-radius:10px;overflow:hidden;background:#14110f}
+.strip__film video{width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block}
 .snd{position:absolute;right:10px;bottom:10px;z-index:2;width:34px;height:34px;border-radius:999px;border:0;background:rgba(20,17,15,.72);color:#fff;display:grid;place-items:center;cursor:pointer}
 .snd .w{opacity:.25}.snd.on .w{opacity:1}
 .also{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
@@ -142,7 +145,7 @@
     <div><b>4.9</b><span>Google rating &middot; 3,965 reviews</span></div>
     <div><b>800</b><span>Person venue</span></div>
     <div><b>1</b><span>Private balcony for your team</span></div>
-    <div><b>6</b><span>Headliners hosted</span></div>
+    <div><b>5</b><span>Headliners hosted</span></div>
   </section>
 
   <!-- the room -->
@@ -233,7 +236,7 @@
     <div class="lb">
       <div class="acts reveal">
         <figure class="act"><div class="act__img"><img src="assets/fabrika-deck/kwn-aerial.jpg" alt="Aerialist in a hoop above the crowd" loading="lazy"></div><figcaption>Aerialists</figcaption></figure>
-        <figure class="act"><div class="act__img"><img src="assets/fabrika-deck/fire.jpg" alt="Fire performer spinning flaming fans" loading="lazy"></div><figcaption>Fire</figcaption></figure>
+        <figure class="act"><div class="act__img"><video muted loop playsinline autoplay preload="metadata" poster="assets/fabrika-deck/fire-poster.jpg" aria-label="Fire performer spinning flaming fans"><source src="assets/fabrika-deck/fire.mp4" type="video/mp4"></video></div><figcaption>Fire</figcaption></figure>
         <figure class="act"><div class="act__img"><img src="assets/fabrika-deck/mask.jpg" alt="Masked performer singing on the floor" loading="lazy"></div><figcaption>Live performers</figcaption></figure>
         <figure class="act"><div class="act__img"><img src="assets/fabrika-deck/chainz-dj.jpg" alt="DJ in the booth under blue light" loading="lazy"></div><figcaption>Curated DJs</figcaption></figure>
       </div>
@@ -314,6 +317,7 @@
         <div class="strip">
           <img class="wide" src="assets/fabrika-deck/leon-stage.jpg" alt="Leon Thomas and Ty Dolla $ign in the DJ booth" loading="lazy">
           <img src="assets/fabrika-deck/leon-guests.jpg" alt="Guests in a section with bottles" loading="lazy">
+          <div class="strip__film"><video muted loop playsinline preload="metadata" poster="assets/fabrika-deck/ty-poster.jpg" aria-label="Ty Dolla $ign in the room"><source src="assets/fabrika-deck/ty.mp4" type="video/mp4"></video></div>
         </div>
       </article>
 
@@ -327,12 +331,6 @@
         <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/fabrika-deck/skrilla-poster.jpg"><source src="assets/fabrika-deck/skrilla.mp4" type="video/mp4"></video><button class="snd" type="button" title="Sound" aria-label="Sound on"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w" d="M16 9a4 4 0 0 1 0 6"/></svg></button></div>
       </article>
 
-    </div>
-    <div class="lb">
-      <div class="also reveal">
-        <span class="tag">Also through our doors</span>
-        <span class="chip">Smino</span>
-      </div>
     </div>
   </section>
 
@@ -364,7 +362,7 @@
   var vio = ('IntersectionObserver' in window && !reduced) ? new IntersectionObserver(function(es){
     es.forEach(function(e){ e.isIntersecting ? e.target.play().catch(function(){}) : e.target.pause(); });
   }, {threshold:.25}) : null;
-  document.querySelectorAll('.wrow__media video').forEach(function(v){ vio ? vio.observe(v) : v.setAttribute('controls',''); });
+  document.querySelectorAll('.wrow__media video, .act__img video, .strip__film video').forEach(function(v){ vio ? vio.observe(v) : v.setAttribute('controls',''); });
 
   // sound: one film at a time
   document.querySelectorAll('.snd').forEach(function(b){ b.addEventListener('click', function(){
