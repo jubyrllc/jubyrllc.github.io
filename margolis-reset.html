@@ -15,31 +15,42 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=43">
+<link rel="stylesheet" href="assets/forms-tix.css?v=3">
 <style>
-  .dj-wrap{max-width:440px;margin:0 auto}
-  .dj-err{color:#A03A2E;font-size:14px;margin:0 0 14px;display:none}
-  .dj-err.show{display:block}
-  .dj-ok{color:var(--muted);font-size:14px;line-height:1.6;margin:0 0 14px;display:none}
-  .dj-ok.show{display:block}
-  .dj-note{color:var(--muted);font-size:13.5px;line-height:1.55;margin-top:14px}
-  .dj-note a{color:var(--green)}
-  .dj-done{text-align:center;padding:20px 0}
-  .dj-steps{margin:0 0 22px;padding-left:22px;line-height:1.6;font-size:15px}
-  .dj-steps li{margin-bottom:8px}
-  .dj-btns{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-  .dj-terms h4{margin:26px 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
-  .dj-terms h4:first-child{margin-top:0}
-  .dj-term{margin:0 0 14px}
-  .dj-term b{display:block;font-size:15px;margin-bottom:3px}
-  .dj-term p{margin:0;font-size:14.5px;line-height:1.6}
-  .dj-term details{margin-top:6px;font-size:13.5px;color:var(--muted)}
-  .dj-term summary{cursor:pointer;color:var(--green)}
-  .dj-term table{width:100%;border-collapse:collapse;margin:8px 0;font-size:13px}
-  .dj-term th,.dj-term td{text-align:left;padding:6px 8px;border-bottom:1px solid rgba(127,127,127,.25);vertical-align:top}
-  .dj-done .mark{width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 18px}
+  /* Ticket-site form look (2026-11-19): the shape is assets/forms-tix.css;
+     only this page's own pieces are here. */
+  .dj-err,.dj-ok{display:none}
+  .dj-err.show,.dj-ok.show{display:block}
+  .ft .ft-col .ft-col{width:100%}
+  .ft .ft-intro.sechead{text-align:left;padding:22px 20px}
+  .ft .ft-intro.sechead h2{font-family:var(--sans);font-size:clamp(28px,6vw,40px);line-height:1.05;font-weight:800;letter-spacing:-.025em;max-width:none;margin:2px 0 0;color:var(--ft-ink)}
+  .ft .ft-intro.sechead p{max-width:none;margin:0;font-size:14px;color:var(--ft-muted)}
+  .ft .ft-card > .dj-note{margin:0;padding:12px 14px 0;color:var(--ft-muted);font-size:13.5px;line-height:1.5}
+  .ft .ft-card > .dj-note + .ifield{border-top:0}
+  .ft .ft-head h3.rs-head{font:inherit;letter-spacing:inherit;margin:0}
+  .ft .ft-head a{color:var(--ft-green);text-decoration:underline}
+  .ft .rs-h{font-family:var(--sans);font-size:20px;font-weight:700;letter-spacing:-.01em;line-height:1.2;margin:0}
+  .ft .dj-steps{margin:0;padding:12px 14px 14px 36px;line-height:1.55;font-size:14.5px}
+  .ft .dj-steps li{margin-bottom:6px}
+  .ft .dj-terms h4{margin:0;padding:10px 14px;border-top:1px solid var(--ft-line);background:#FAFAF7;font:500 12px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ft-muted)}
+  .ft .dj-terms h4:first-child{border-top:0}
+  .ft .dj-terms > .dj-note{margin:0;padding:14px;color:var(--ft-muted)}
+  .ft .dj-term{margin:0;padding:12px 14px;border-top:1px solid var(--ft-line)}
+  .ft .dj-term b{display:block;font-size:15px;margin-bottom:3px}
+  .ft .dj-term p{margin:0;font-size:14.5px;line-height:1.6}
+  .ft .dj-term details{margin-top:6px;font-size:13.5px;color:var(--ft-muted)}
+  .ft .dj-term summary{cursor:pointer;color:var(--ft-green)}
+  .ft .dj-term table{width:100%;border-collapse:collapse;margin:8px 0;font-size:13px;display:block;overflow-x:auto}
+  .ft .dj-term th,.ft .dj-term td{text-align:left;padding:6px 8px;border-bottom:1px solid rgba(127,127,127,.25);vertical-align:top}
+  .ft .ft-bar .ft-bar__r{margin-left:auto}
+  .ft .ft-bar .btn--ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.3);min-width:0}
+  @media (max-width:420px){ .ft .ft-bar .dj-btns .btn{padding:0 14px;min-width:0} .ft #stepWelcome .ft-bar__l,.ft #stepTerms .ft-bar__l{display:none} }
+  .ft .ft-done .dj-note{color:var(--ft-ink-2);font-size:15px;margin:0}
+  .ft .rs-cta{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;margin-top:6px;border-radius:999px;border:1px solid var(--ft-green);background:var(--ft-green);color:#fff;font:600 16px/1.2 var(--sans);letter-spacing:0;text-transform:none;text-decoration:none}
+  .ft .rs-cta .arw{display:none}
 </style>
 </head>
-<body>
+<body class="ft-page">
 
 <div class="announce">
   <span class="mono">Margolis &middot; 9 W Wildey St &middot; Fishtown, Philadelphia</span>
@@ -62,100 +73,131 @@
     </div>
   </header>
 
-  <main id="top">
-    <section class="box">
-      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.5), rgba(12,12,12,0.65)), url('assets/bg-lounge-dark.jpg')">
-        <span class="tag">Margolis &middot; Your account</span>
+  <main id="top" class="ft">
+    <!-- Ticket-site form look (2026-11-19, CLAUDE-web-design.md §5): intro
+         card, one card per section, the dark bar with the action + percent
+         (assets/forms-end.js). The script still finds .sechead h2/p,
+         #stepSet h3/.dj-note and every id it used before. -->
+    <div class="ft-col">
+      <div class="ft-intro sechead">
+        <span class="ft-eyebrow">Margolis &middot; Your account</span>
         <h2>Reset your password.</h2>
-        <p>The same account whether you come here as a guest or run nights
-        with us &mdash; one password for both.</p>
+        <p class="ft-sub">The same account whether you come here as a guest or run nights with us &mdash; one password for both.</p>
       </div>
 
-      <div class="mg-pad dj-wrap" style="padding-top:34px;padding-bottom:44px;">
-        <p class="dj-err" id="err"></p>
-        <p class="dj-ok" id="ok"></p>
+      <p class="dj-err ft-err" id="err"></p>
+      <p class="dj-ok ft-note" id="ok" style="margin:0"></p>
 
+      <div class="ft-col" id="steps" style="padding:0">
         <!-- Asking for a link. This is what the "Forgot your password?"
              links point at, so it has to stand on its own with no token
              in the URL at all. -->
-        <form id="stepAsk" hidden>
-          <h3 style="margin-bottom:6px">Send me a reset link</h3>
-          <p class="dj-note" style="margin:0 0 18px">Enter the email on your account and we&rsquo;ll
-          email you a link. The link is good for two hours.</p>
-          <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="askEmail" autocomplete="email" placeholder="you@email.com"></div>
-          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnAsk">Send the link <span class="arw" aria-hidden="true">&gt;</span></button></div>
-          <p class="dj-note">Remembered it? <a href="/margolis-login">Log in</a>.</p>
+        <form id="stepAsk" class="ft-col" style="padding:0" hidden>
+          <div class="ft-card">
+            <div class="ft-head">Send me a reset link <span class="ft-n">Good for 2 hours</span></div>
+            <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="askEmail" autocomplete="email" placeholder="you@email.com" data-req>
+              <p class="help">The email on your account. We&rsquo;ll email you a link.</p></div>
+          </div>
+          <p class="ft-foot">Remembered it? <a href="/margolis-login">Log in</a>.</p>
+          <div class="ft-bar"><div class="ft-bar__in">
+            <div class="ft-bar__l"><b>Reset link</b><small>By email</small></div>
+            <div class="ft-bar__r intake__nav"><button type="button" class="btn btn--green" id="btnAsk">Send the link <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          </div></div>
         </form>
 
         <!-- The cold screen (2026-10-26): a new host's invite link opens
              here first, before any form. Plain password resets skip it. -->
-        <div id="stepWelcome" hidden>
-          <h3 style="margin-bottom:6px" id="welcomeHead">Welcome to your Margolis profile.</h3>
-          <p class="dj-note" style="margin:0 0 18px">Here you&rsquo;ll see every night you&rsquo;re on, and your past nights once they&rsquo;ve happened. Setup takes about 5 minutes:</p>
-          <ol class="dj-steps">
-            <li>Add your email and pick a password.</li>
-            <li>Confirm your legal name, Instagram and Zelle.</li>
-            <li>Add your photo and genres, sign the agreements, upload your W9. Your door charge isn&rsquo;t paid until your W9 is on file.</li>
-            <li>Send your lineup, flyer and ticket link 10+ days before your night.</li>
-            <li>Add up to 10 guest list names. Free entry on nights you host.</li>
-            <li>Keep RSVP and ticket counts current. We staff the door and bar against them.</li>
-          </ol>
-          <div class="intake__nav dj-btns">
-            <button type="button" class="btn btn--green" data-go="terms">See the deal <span class="arw" aria-hidden="true">&gt;</span></button>
-            <button type="button" class="btn btn--ghost" data-go="set" id="btnSkip">Skip to sign up <span class="arw" aria-hidden="true">&gt;</span></button>
+        <div id="stepWelcome" class="ft-col" style="padding:0" hidden>
+          <div class="ft-card">
+            <div class="ft-row">
+              <h3 class="rs-h" id="welcomeHead">Welcome to your Margolis profile.</h3>
+              <p class="help">Every night you&rsquo;re on, and your past nights once they&rsquo;ve happened.</p>
+            </div>
+            <div class="ft-head">Setup <span class="ft-n">About 5 minutes</span></div>
+            <ol class="dj-steps">
+              <li>Add your email and pick a password.</li>
+              <li>Confirm your legal name, Instagram and Zelle.</li>
+              <li>Add your photo and genres, sign the agreements, upload your W9. Your door charge isn&rsquo;t paid until your W9 is on file.</li>
+              <li>Send your lineup, flyer and ticket link 10+ days before your night.</li>
+              <li>Add up to 10 guest list names. Free entry on nights you host.</li>
+              <li>Keep RSVP and ticket counts current. We staff the door and bar against them.</li>
+            </ol>
           </div>
+          <div class="ft-bar"><div class="ft-bar__in">
+            <div class="ft-bar__l"><b>Your profile</b><small>Read the deal first</small></div>
+            <div class="ft-bar__r intake__nav dj-btns">
+              <button type="button" class="btn btn--ghost" data-go="set" id="btnSkip">Skip to sign up <span class="arw" aria-hidden="true">&gt;</span></button>
+              <button type="button" class="btn btn--green" data-go="terms">See the deal <span class="arw" aria-hidden="true">&gt;</span></button>
+            </div>
+          </div></div>
         </div>
 
         <!-- The deal (2026-10-26). Never typed here: read live from
              margolis.events/assets/js/info-data.js, the same file /info
              and site search answer from, so it can't drift from the
              public Host a Public Event terms. -->
-        <div id="stepTerms" hidden>
-          <h3 style="margin-bottom:6px">The deal</h3>
-          <p class="dj-note" style="margin:0 0 20px">Same terms as <a href="https://margolis.events/host-a-public-event.html" target="_blank" rel="noopener">margolis.events</a>.</p>
-          <div class="dj-terms" id="termsBody"><p class="dj-note">Loading&hellip;</p></div>
-          <div class="intake__nav dj-btns" style="margin-top:22px">
-            <button type="button" class="btn btn--green" data-go="set" id="btnTermsNext">Continue to sign up <span class="arw" aria-hidden="true">&gt;</span></button>
-            <button type="button" class="btn btn--ghost" data-go="welcome">Back</button>
+        <div id="stepTerms" class="ft-col" style="padding:0" hidden>
+          <div class="ft-card">
+            <div class="ft-head">The deal <span class="ft-n">Same as <a href="https://margolis.events/host-a-public-event.html" target="_blank" rel="noopener">margolis.events</a></span></div>
+            <div class="dj-terms" id="termsBody"><p class="dj-note">Loading&hellip;</p></div>
           </div>
+          <div class="ft-bar"><div class="ft-bar__in">
+            <div class="ft-bar__l"><b>The deal</b><small>Then sign up</small></div>
+            <div class="ft-bar__r intake__nav dj-btns">
+              <button type="button" class="btn btn--ghost" data-go="welcome">Back</button>
+              <button type="button" class="btn btn--green" data-go="set" id="btnTermsNext">Continue to sign up <span class="arw" aria-hidden="true">&gt;</span></button>
+            </div>
+          </div></div>
         </div>
 
         <!-- Setting the new password, reached from the emailed link. -->
-        <form id="stepSet" hidden>
-          <h3 style="margin-bottom:6px">Choose a new password</h3>
-          <p class="dj-note" style="margin:0 0 18px">Once you save it, the old one stops working
-          everywhere &mdash; here and on margolis.events.</p>
-          <div class="ifield" id="setEmailRow" hidden><label>Email <span class="req">*</span></label><input type="email" id="setEmail" autocomplete="email" placeholder="you@email.com"></div>
-          <div class="ifield"><label>New password <span class="req">*</span></label><input type="password" id="pw1" autocomplete="new-password" placeholder="At least 8 characters"></div>
-          <div class="ifield"><label>Confirm password <span class="req">*</span></label><input type="password" id="pw2" autocomplete="new-password"></div>
-          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnSet">Save my password <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        <form id="stepSet" class="ft-col" style="padding:0" hidden>
+          <div class="ft-card">
+            <div class="ft-head"><h3 class="rs-head">Choose a new password</h3></div>
+            <p class="dj-note">Once you save it, the old one stops working everywhere &mdash; here and on margolis.events.</p>
+            <div class="ifield" id="setEmailRow" hidden><label>Email <span class="req">*</span></label><input type="email" id="setEmail" autocomplete="email" placeholder="you@email.com" data-req></div>
+            <div class="ifield"><label>New password <span class="req">*</span></label><input type="password" id="pw1" autocomplete="new-password" placeholder="At least 8 characters" data-req></div>
+            <div class="ifield"><label>Confirm password <span class="req">*</span></label><input type="password" id="pw2" autocomplete="new-password" data-req></div>
+          </div>
+          <div class="ft-bar"><div class="ft-bar__in">
+            <div class="ft-bar__l"><b>New password</b><small>At least 8 characters</small></div>
+            <div class="ft-bar__r intake__nav"><button type="button" class="btn btn--green" id="btnSet">Save my password <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          </div></div>
         </form>
 
         <!-- Claiming a profile Ruby made by mobile (2026-10-22): once the
              password is saved, the four things she needs from them. Shown
              only while email, Instagram or Zelle is missing, so a plain
              password reset goes straight through. -->
-        <form id="stepDetails" hidden>
-          <h3 style="margin-bottom:6px">Your details</h3>
-          <p class="dj-note" style="margin:0 0 18px">Legal name as it goes on your W9. Payouts go to your Zelle.</p>
-          <div class="ifield"><label>Legal first name <span class="req">*</span></label><input type="text" id="dFirst" autocomplete="given-name"></div>
-          <div class="ifield"><label>Legal last name <span class="req">*</span></label><input type="text" id="dLast" autocomplete="family-name"></div>
-          <div class="ifield" id="dEmailRow"><label>Email <span class="req">*</span></label><input type="email" id="dEmail" autocomplete="email" placeholder="you@email.com"></div>
-          <div class="ifield"><label>Instagram <span class="req">*</span></label><input type="text" id="dIg" autocapitalize="none" placeholder="@yourhandle"></div>
-          <div class="ifield"><label>Zelle <span class="req">*</span></label><input type="text" id="dZelle" autocapitalize="none" placeholder="Email or mobile your Zelle is under"></div>
-          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnDetails">Save <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        <form id="stepDetails" class="ft-col" style="padding:0" hidden>
+          <div class="ft-card">
+            <div class="ft-head">Your details <span class="ft-n">For your W9 + payouts</span></div>
+            <p class="dj-note">Legal name as it goes on your W9. Payouts go to your Zelle.</p>
+            <div class="ifield"><label>Legal first name <span class="req">*</span></label><input type="text" id="dFirst" autocomplete="given-name" data-req></div>
+            <div class="ifield"><label>Legal last name <span class="req">*</span></label><input type="text" id="dLast" autocomplete="family-name" data-req></div>
+            <div class="ifield" id="dEmailRow"><label>Email <span class="req">*</span></label><input type="email" id="dEmail" autocomplete="email" placeholder="you@email.com" data-req></div>
+          </div>
+          <div class="ft-card">
+            <div class="ft-head">Where we find + pay you</div>
+            <div class="ifield"><label>Instagram <span class="req">*</span></label><input type="text" id="dIg" autocapitalize="none" placeholder="@yourhandle" data-req></div>
+            <div class="ifield"><label>Zelle <span class="req">*</span></label><input type="text" id="dZelle" autocapitalize="none" placeholder="Email or mobile your Zelle is under" data-req></div>
+          </div>
+          <div class="ft-bar"><div class="ft-bar__in">
+            <div class="ft-bar__l"><b>Your details</b><small>Last step</small></div>
+            <div class="ft-bar__r intake__nav"><button type="button" class="btn btn--green" id="btnDetails">Save <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          </div></div>
         </form>
 
         <div id="stepDone" hidden>
-          <div class="dj-done">
+          <div class="ft-card ft-done dj-done">
             <div class="mark" aria-hidden="true">&#10003;</div>
-            <h3 style="margin-bottom:8px">Password saved.</h3>
-            <p class="dj-note" id="doneNote" style="margin-top:0"></p>
-            <p style="margin-top:22px"><a class="btn btn--green" id="doneCta" href="/margolis-dashboard">Continue <span class="arw" aria-hidden="true">&gt;</span></a></p>
+            <h3>Password saved.</h3>
+            <p class="dj-note" id="doneNote"></p>
+            <a class="btn btn--green rs-cta" id="doneCta" href="/margolis-dashboard">Continue <span class="arw" aria-hidden="true">&gt;</span></a>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   </main>
 </div>
 
@@ -433,5 +475,6 @@
     stepAsk.hidden = false;
   }
 </script>
+<script src="assets/forms-end.js?v=4" data-bar="#steps > :not([hidden]) .ft-bar" defer></script>
 </body>
 </html>
