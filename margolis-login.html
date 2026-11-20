@@ -382,7 +382,7 @@
       TOKEN = out.token; localStorage.setItem("margolis-dj-token", TOKEN);
       afterAuth(out.account);
     }catch(e){ showErr(typeof e==="string"?e:"Couldn't reach the server — check your connection."); }
-    btn.disabled = false; btn.textContent = "Log in >";
+    btn.disabled = false; btn.textContent = "Log in";
   });
 
   document.getElementById("btnSetPassword").addEventListener("click", async ()=>{
