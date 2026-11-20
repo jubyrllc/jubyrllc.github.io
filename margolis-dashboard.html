@@ -2512,6 +2512,7 @@
     M.resAppYear = r.year || 2027;
     M.resAppDeadline = r.deadline || "";
     M.resAppDecideBy = r.decideBy || "";
+    M.resAppWindows = r.windows || {};
   }
   async function loadOpenDates(){
     M.openDates = await mapi({action:"openDates", months: M.odMonths});
@@ -3609,14 +3610,63 @@
     return `<p class="mgr-meta" style="margin-top:8px${late ? ";color:#9B2C2C" : ""}">${close} &middot; ${decide} &middot; <b>${nPending}</b> waiting on you</p>`;
   }
 
+  /* Counter offers and Rebook (Ruby, 2026-11-19). Mirrors jubyr.tools'
+     assets/js/residency-admin.js; change both. */
+  const RA_DAYS = [["tue","Tuesday"],["wed","Wednesday"],["thu","Thursday"],["fri","Friday"],["sat","Saturday"],["sun","Sunday"]];
+  const RA_WEEKS = [["1","First"],["2","Second"],["3","Third"],["L","Last"]];
+  const RA_CADENCE = [["monthly","Every month"],["bimonthly","Every other month"],["quarterly","Once a season"],["weekly","Every week"],["biweekly","Every other week"]];
+  const raWeekly = c => c === "weekly" || c === "biweekly";
+  const raDate = d => { const [y,m,dd] = d.split("-").map(Number);
+    return new Date(y, m-1, dd).toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}); };
+
+  function offeredLine(t){
+    return `<p class="mgr-meta" style="margin-top:8px"><b>You offered:</b> ${esc(t.slotWords)} &middot; ${esc(t.shape)} &middot; ${esc(t.hoursWords)} &middot; $${Number(t.minimum).toLocaleString("en-US")} min &middot; ${t.dateCount} night${t.dateCount===1?"":"s"}</p>
+      <p class="mgr-meta" style="margin-top:4px">${(t.dates||[]).map(raDate).join(" &middot; ")}</p>`;
+  }
+
+  function counterDraft(a){
+    M.resAppCtr = M.resAppCtr || {};
+    if(!M.resAppCtr[a.id]){
+      const t = a.counterTerms || {};
+      M.resAppCtr[a.id] = {day: t.day || a.day || "fri", week: t.week || a.week || "1",
+        cadence: t.cadence || a.cadence || "monthly", window: t.window || a.window || "",
+        minimum: t.counterMin || ""};
+    }
+    const d = M.resAppCtr[a.id];
+    const wins = (M.resAppWindows||{})[d.day] || {};
+    if(!wins[d.window]) d.window = Object.keys(wins).pop() || "";
+    return d;
+  }
+
+  function counterForm(a){
+    const d = counterDraft(a);
+    const wins = (M.resAppWindows||{})[d.day] || {};
+    const ladder = wins[d.window] ? wins[d.window].minimum + (a.kitchen ? 500 : 0) : 0;
+    const sel = (field, opts, val) => `<select data-resapp-ctr="${field}" data-id="${esc(a.id)}">${
+      opts.map(([v,l]) => `<option value="${esc(v)}"${v===val?" selected":""}>${esc(l)}</option>`).join("")}</select>`;
+    return `<div class="res-edit">
+      <p class="mgr-meta" style="margin-bottom:10px"><b>Counter.</b> What you'd give them instead. Taken nights are left out on their own.</p>
+      <div class="mgr-row2">
+        <div class="mgr-field"><label>Night</label>${sel("day", RA_DAYS, d.day)}</div>
+        ${raWeekly(d.cadence) ? "" : `<div class="mgr-field"><label>Week</label>${sel("week", RA_WEEKS, d.week)}</div>`}
+        <div class="mgr-field"><label>How often</label>${sel("cadence", RA_CADENCE, d.cadence)}</div>
+      </div>
+      <div class="mgr-row2">
+        <div class="mgr-field"><label>Hours</label>${sel("window", Object.entries(wins).map(([k,w]) => [k, w.words]), d.window)}</div>
+        <div class="mgr-field"><label>Minimum a night</label><input inputmode="numeric" data-resapp-ctr="minimum" data-id="${esc(a.id)}" value="${esc(d.minimum)}" placeholder="$${ladder.toLocaleString("en-US")} (the usual)"></div>
+      </div>
+    </div>`;
+  }
+
   function renderResidencyApps(){
     const apps = M.resApps || [];
     const year = M.resAppYear || 2027;
     const c = M.resAppCnt || {};
     const pending = apps.filter(a => a.status === "pending");
-    const show = M.resAppScope === "all" ? apps
-               : M.resAppScope === "confirmed" ? apps.filter(a => a.status === "confirmed")
-               : pending;
+    const scope = M.resAppScope || "pending";
+    const show = scope === "all" ? apps
+               : scope === "pending" ? pending
+               : apps.filter(a => a.status === scope);
 
     const chip = (k, label, n) => `<button type="button" class="mgr-chip${(M.resAppScope||"pending")===k?" mgr-chip--dark":""}" data-act="resappscope" data-scope="${k}">${label}${n?" "+n:""}</button>`;
 
@@ -3627,6 +3677,8 @@
       ${resDeadlineLine(pending.length)}
       <div class="mgr-chips" style="margin-top:10px">
         ${chip("pending","Pending", c.pending||0)}
+        ${chip("rebook","Rebook", c.rebook||0)}
+        ${chip("countered","Countered", c.countered||0)}
         ${chip("confirmed","Confirmed", c.confirmed||0)}
         ${chip("all","All", apps.length)}
       </div>`;
@@ -3649,6 +3701,8 @@
       });
       const badge = a.status === "confirmed" ? `<span class="mgr-chip mgr-chip--ok">Confirmed</span>`
                   : a.status === "declined"  ? `<span class="mgr-chip mgr-chip--bad">Declined</span>`
+                  : a.status === "countered" ? `<span class="mgr-chip mgr-chip--warn">Countered · waiting on them</span>`
+                  : a.status === "rebook"    ? `<span class="mgr-chip mgr-chip--dark">Rebook · needs another night</span>`
                   : `<span class="mgr-chip mgr-chip--warn">Pending</span>`;
       return `<div class="mgr-card" style="margin-top:12px">
         <div class="mgr-chips">${badge}
@@ -3670,14 +3724,21 @@
           <p style="margin-top:10px;white-space:pre-wrap">${esc(a.about||"")}</p>
           <p class="mgr-meta" style="margin-top:8px"><b>${dateList.length} night${dateList.length===1?"":"s"} in ${year}:</b> ${dateList.join(" &middot; ")}</p>
           ${a.note?`<p class="mgr-meta" style="margin-top:6px"><b>Your note:</b> ${esc(a.note)}</p>`:""}
+          ${a.counterTerms && a.status === "countered" ? offeredLine(a.counterTerms) : ""}
+          ${M.resAppCounter === a.id ? counterForm(a) : ""}
           <div class="mgr-field" style="margin-top:10px">
             <label>A line to them, in the email (optional)</label>
-            <textarea rows="2" data-resapp-note placeholder="Goes into the confirmation or the decline, above the dates."></textarea>
+            <textarea rows="2" data-resapp-note="${esc(a.id)}" placeholder="Goes into the email, above the dates.">${esc((M.resAppNoteDraft||{})[a.id]||"")}</textarea>
           </div>
           <label class="res-check"><input type="checkbox" data-resapp-email checked> Email them this decision</label>
           <div class="mgr-acts" style="margin-top:10px">
-            ${a.status !== "confirmed" ? `<button class="mgr-btn" data-act="resappdecide" data-id="${esc(a.id)}" data-decision="confirm">Confirm &amp; publish</button>` : ""}
-            ${a.status !== "declined" ? `<button class="mgr-btn mgr-btn--bad" data-act="resappdecide" data-id="${esc(a.id)}" data-decision="decline">Decline</button>` : ""}
+            ${M.resAppCounter === a.id ? `<button class="mgr-btn" data-act="resappdecide" data-id="${esc(a.id)}" data-decision="counter">Send counter</button>
+            <button class="mgr-btn mgr-btn--ghost" data-act="resappcounter" data-id="${esc(a.id)}">Cancel counter</button>` : `
+            ${a.status === "countered" && a.counterTerms ? `<button class="mgr-btn" data-act="resappdecide" data-id="${esc(a.id)}" data-decision="accept">They accepted &middot; publish</button>` : ""}
+            ${a.status !== "confirmed" ? `<button class="mgr-btn${a.status === "countered" ? " mgr-btn--ghost" : ""}" data-act="resappdecide" data-id="${esc(a.id)}" data-decision="confirm">Confirm &amp; publish${a.status === "countered" ? " as asked" : ""}</button>` : ""}
+            ${a.status !== "confirmed" ? `<button class="mgr-btn mgr-btn--ghost" data-act="resappcounter" data-id="${esc(a.id)}">${a.status === "countered" ? "Change counter" : "Counter"}</button>` : ""}
+            ${a.status !== "confirmed" && a.status !== "rebook" ? `<button class="mgr-btn mgr-btn--ghost" data-act="resappdecide" data-id="${esc(a.id)}" data-decision="rebook" title="You want them, on a different night">Rebook</button>` : ""}
+            ${a.status !== "declined" ? `<button class="mgr-btn mgr-btn--bad" data-act="resappdecide" data-id="${esc(a.id)}" data-decision="decline">Decline</button>` : ""}`}
             ${a.status !== "pending" ? `<button class="mgr-btn mgr-btn--ghost" data-act="resappdecide" data-id="${esc(a.id)}" data-decision="reopen">Put back to pending</button>` : ""}
             <button class="mgr-btn mgr-btn--ghost" data-act="resappopen" data-id="${esc(a.id)}">Close</button>
           </div>` : `
@@ -4064,6 +4125,12 @@
   /* A file input and a search box never reach the click handler, so
      they get their own listeners on the same delegated element. */
   view.addEventListener("change", async (ev) => {
+    const ctr = ev.target.closest("select[data-resapp-ctr]");
+    if(ctr){
+      const d = (M.resAppCtr||{})[ctr.dataset.id];
+      if(d){ d[ctr.dataset.resappCtr] = ctr.value; render(); }
+      return;
+    }
     const el = ev.target.closest("[data-res-photo]");
     if(!el || !el.files || !el.files[0]) return;
     const key = el.dataset.resPhoto;
@@ -4090,6 +4157,13 @@
   });
 
   view.addEventListener("input", (ev) => {
+    const t = ev.target;
+    if(t.matches && t.matches("[data-resapp-note]")){
+      (M.resAppNoteDraft = M.resAppNoteDraft || {})[t.dataset.resappNote] = t.value; return;
+    }
+    if(t.matches && t.matches("input[data-resapp-ctr]")){
+      const d = (M.resAppCtr||{})[t.dataset.id]; if(d) d.minimum = t.value; return;
+    }
     if(ev.target.id !== "resSearch") return;
     M.resSearch = ev.target.value;
     M.resOpen = null;
@@ -4275,8 +4349,17 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
 
       if(act === "resappscope"){ M.resAppScope = btn.dataset.scope; render(); return; }
 
+      if(act === "resappcounter"){
+        const id = btn.dataset.id;
+        M.resAppCounter = (M.resAppCounter === id) ? null : id;
+        if(M.resAppCounter) delete (M.resAppCtr = M.resAppCtr || {})[id];
+        render();
+        return;
+      }
+
       if(act === "resappopen"){
         M.resAppOpen = (M.resAppOpen === btn.dataset.id) ? null : btn.dataset.id;
+        M.resAppCounter = null;
         render();
         return;
       }
@@ -4297,14 +4380,25 @@ Repeating nights get an end date, one-offs are deleted. Everything before ${from
           if(!confirm(`Confirm ${a.name} on the ${a.slotWords.toLowerCase()} — ${a.dateCount} night${a.dateCount===1?"":"s"} in ${M.resAppYear}?\n\nThis publishes them to margolis.events.`)) return;
         }
         if(decision === "decline" && a && !confirm(`Decline ${a.name}?`)) return;
+        if(decision === "accept" && a && a.counterTerms){
+          const t = a.counterTerms;
+          if(!confirm(`${a.name} accepted ${t.slotWords} — ${t.dateCount} night${t.dateCount===1?"":"s"}, ${t.hoursWords}?\n\nThis confirms them on those terms.`)) return;
+        }
+        if(decision === "rebook" && a && !confirm(`Move ${a.name} to Rebook?${mailEl && mailEl.checked ? "\n\nThey get an email saying you want them on another night." : ""}`)) return;
+        const ctr = decision === "counter" ? (M.resAppCtr||{})[id] : null;
         M.resAppMsg = M.resAppMsg || {};
         busy("Saving…");
         try{
           const out = await mapi({action:"residencyAppDecide", id, decision,
-            note: noteEl ? noteEl.value : "", email: !!(mailEl && mailEl.checked)});
+            note: noteEl ? noteEl.value : "", email: !!(mailEl && mailEl.checked),
+            ...(ctr ? {counter: ctr} : {})});
+          if(M.resAppNoteDraft) delete M.resAppNoteDraft[id];
+          M.resAppCounter = null;
           await Promise.all([loadResidencyApps(), loadResidencies()]);
           M.resAppMsg[id] = [
-            decision === "confirm" ? "Confirmed." : decision === "decline" ? "Declined." : "Back to pending.",
+            ({confirm:"Confirmed.", accept:"Confirmed on your counter.", decline:"Declined.",
+              counter:"Counter sent.", rebook:"Moved to Rebook."})[decision] || "Back to pending.",
+            out.skipped ? `${out.skipped} taken night${out.skipped===1?"":"s"} left out.` : "",
             out.publishNote || "",
             (out.released && out.released.length) ? "Hold released: " + out.released.join(", ") + "." : "",
             (mailEl && mailEl.checked) ? (out.emailed ? "Host emailed." : "The email did NOT go — tell them yourself.") : "No email sent.",
