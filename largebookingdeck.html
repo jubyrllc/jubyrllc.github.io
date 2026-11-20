@@ -6,7 +6,7 @@
 <title>Fabrika — Large Bookings</title>
 <meta name="robots" content="noindex, nofollow">
 <script src="assets/js/analytics.js?v=1"></script>
-<meta name="description" content="Fabrika, Philadelphia. An 800-person room with a private balcony portion, aerialists, fire and live acts. Afterparty or standalone event.">
+<meta name="description" content="Fabrika, Philadelphia. A room with a private balcony portion, aerialists, fire and live acts. Afterparty or standalone event.">
 <link rel="icon" type="image/png" href="assets/jubyr-icon.png?v=2">
 <link rel="apple-touch-icon" href="assets/jubyr-icon.png?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="Jubyr LLC">
 <meta property="og:title" content="Fabrika — Large Bookings">
 <meta property="og:description" content="Most rooms sell you fans. We sell you a function.">
-<meta property="og:image" content="https://jubyr.com/assets/fabrika-deck/hero-flash.jpg">
+<meta property="og:image" content="https://jubyr.com/assets/fabrika-deck/p-ty.jpg">
 <style>
 /* largebookingdeck: page-only additions on the Margolis look (mgl.css + jubyr.css) */
 .lb{max-width:var(--maxw);margin:0 auto;padding:0 var(--gutter)}
@@ -72,7 +72,7 @@
 .offer__lead p{color:var(--muted);font-size:16px;line-height:1.6;margin:0}
 .offer__lead p b{color:var(--ink);font-weight:600}
 .cap{padding:30px;display:grid;gap:10px;border-color:var(--maroon)}
-.cap__num{font-family:var(--serif);font-weight:500;font-size:clamp(70px,9vw,120px);line-height:.9;color:var(--maroon)}
+.cap__num{font-family:var(--serif);font-weight:500;font-size:clamp(48px,6vw,80px);line-height:.9;color:var(--maroon)}
 .cap__note{color:var(--muted);font-size:14px;line-height:1.55;margin:0}
 .cap ul{list-style:none;margin:6px 0 0;padding:0}
 .cap li{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-top:1px solid var(--line);font-size:15px}
@@ -103,6 +103,12 @@
 .near__d small{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:4px}
 .near .is-near .near__d,.near .is-near .near__n{color:var(--maroon)}
 .near .src{display:block;margin-top:14px}
+
+/* hero: photo on the right half on wide screens so the headline never sits on a face */
+@media (min-width:901px){
+  .hero__frame .hero__img{left:auto;right:0;width:58%;object-position:center 22%;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 28%);mask-image:linear-gradient(90deg,transparent 0,#000 28%)}
+  .hero__frame{background:#14110f}
+}
 .lb-sec{padding-bottom:12px}
 .lb-end{padding:70px var(--gutter) 90px;max-width:var(--maxw);margin:0 auto}
 .lb-end h2{font-size:clamp(30px,4vw,48px);margin:0 0 10px}
@@ -138,7 +144,7 @@
 
   <section class="hero">
     <div class="hero__frame">
-      <img src="assets/fabrika-deck/hero-flash.jpg" alt="Aerialists in hoops above the Fabrika crowd under the chandelier" class="hero__img is-active" fetchpriority="high" style="object-position:center 40%">
+      <img src="assets/fabrika-deck/p-ty.jpg" alt="Ty Dolla $ign smiling and pointing at Fabrika" class="hero__img is-active" fetchpriority="high" style="object-position:center 22%">
       <div class="hero__scrim" style="z-index:2"></div>
       <span class="framenote framenote--light" aria-hidden="true">FBK &middot; 01</span>
     </div>
@@ -153,28 +159,9 @@
 
   <section class="stats" aria-label="Fabrika at a glance">
     <div><b>4.9</b><span>Google rating &middot; 3,965 reviews</span></div>
-    <div><b>800</b><span>Person venue</span></div>
-    <div><b>1</b><span>Private balcony portion for your team</span></div>
-    <div><b>4</b><span>Headliners hosted</span></div>
-  </section>
-
-  <!-- the room -->
-  <section class="lb-sec">
-    <div class="jhead reveal">
-      <span class="tag">The room</span>
-      <h2>800 guests below. Your team above.</h2>
-      <p>A private portion of the balcony sits over the floor: your own section, apart from the masses, with the whole show in view.</p>
-    </div>
-    <div class="lb">
-      <div class="room reveal">
-        <div class="room__film wrow__media"><video muted loop playsinline preload="none" poster="assets/fabrika-deck/fabrika-room-poster.jpg"><source src="assets/fabrika-deck/fabrika-room.mp4" type="video/mp4"></video><button class="snd" type="button" title="Sound" aria-label="Sound on"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w" d="M16 9a4 4 0 0 1 0 6"/></svg></button></div>
-        <div class="room__strip">
-          <img src="assets/fabrika-deck/p-jersey.jpg" alt="Two guests smiling, one in a white football jersey" loading="lazy">
-          <img src="assets/fabrika-deck/p-denim.jpg" alt="Two friends posing, one in a denim jacket" loading="lazy">
-          <img src="assets/fabrika-deck/p-handface.jpg" alt="Guest with a hand over her face and red lips" loading="lazy">
-        </div>
-      </div>
-    </div>
+    <div><b>0.3 mi</b><span>From the Fillmore</span></div>
+    <div><b>Balcony</b><span>Private portion for your team</span></div>
+    <div><b>2 Chainz</b><span>Ty Dolla $ign &middot; Leon Thomas &middot; KWN</span></div>
   </section>
 
   <!-- near the stages -->
@@ -197,6 +184,25 @@
           <li><span class="near__n">Xfinity Mobile Arena<small>13 min drive</small></span><span class="near__d">7.9<small>mi</small></span></li>
         </ul>
         <span class="src">From 1108 Frankford Ave &middot; Google Maps miles</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- the room -->
+  <section class="lb-sec">
+    <div class="jhead reveal">
+      <span class="tag">The room</span>
+      <h2>The floor below. Your team above.</h2>
+      <p>A private portion of the balcony sits over the floor: your own section, apart from the masses, with the whole show in view.</p>
+    </div>
+    <div class="lb">
+      <div class="room reveal">
+        <div class="room__film wrow__media"><video muted loop playsinline preload="none" poster="assets/fabrika-deck/room-night-poster.jpg"><source src="assets/fabrika-deck/room-night.mp4" type="video/mp4"></video><button class="snd" type="button" title="Sound" aria-label="Sound on"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w" d="M16 9a4 4 0 0 1 0 6"/></svg></button></div>
+        <div class="room__strip">
+          <img src="assets/fabrika-deck/p-jersey.jpg" alt="Two guests smiling, one in a white football jersey" loading="lazy">
+          <img src="assets/fabrika-deck/p-denim.jpg" alt="Two friends posing, one in a denim jacket" loading="lazy">
+          <img src="assets/fabrika-deck/p-handface.jpg" alt="Guest with a hand over her face and red lips" loading="lazy">
+        </div>
       </div>
     </div>
   </section>
@@ -224,7 +230,7 @@
           <span class="tag">Fabrika</span>
           <h3>Walk into a world.</h3>
           <ul>
-            <li>An <b>800-person</b> room, built to breathe</li>
+            <li>A room <b>built to breathe</b>, never sold to the max</li>
             <li>A <b>private balcony portion</b> for you and your team, apart from the floor</li>
             <li>The show is all around you, not just on you</li>
             <li>Aerialists, fire, live acts, a hand-picked DJ</li>
@@ -287,10 +293,10 @@
         </div>
         <div class="lb-card cap">
           <span class="tag">Headline appearance &middot; 2&ndash;3 songs</span>
-          <div class="cap__num">$15K</div>
-          <p class="cap__note">Our ceiling for major artists, including a 2&ndash;3 song performance. Everything past it goes into the room around you.</p>
+          <div class="cap__num">The night.</div>
+          <p class="cap__note">Your appearance and a 2&ndash;3 song performance, with the room built around you. Terms go through your team.</p>
           <ul>
-            <li><span>Appearance + 2&ndash;3 songs</span><span>Up to $15K</span></li>
+            <li><span>Appearance + 2&ndash;3 songs</span><span>Through your agent</span></li>
             <li><span>Private balcony portion for your team</span><span>Included</span></li>
             <li><span>Aerialists &amp; fire</span><span>On us</span></li>
             <li><span>Live performers &amp; DJs</span><span>On us</span></li>
@@ -349,7 +355,7 @@
         <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/poster-leon.jpg"><source src="assets/video-leon-thomas.mp4" type="video/mp4"></video><button class="snd" type="button" title="Sound" aria-label="Sound on"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w" d="M16 9a4 4 0 0 1 0 6"/></svg></button></div>
         <div class="strip">
           <img class="wide" src="assets/fabrika-deck/leon-stage.jpg" alt="Leon Thomas and Ty Dolla $ign in the DJ booth" loading="lazy">
-          <img src="assets/fabrika-deck/p-ty.jpg" alt="Ty Dolla $ign smiling and pointing" loading="lazy">
+          <img src="assets/fabrika-deck/p-ty2.jpg" alt="Ty Dolla $ign in the crowd" loading="lazy">
           <img src="assets/fabrika-deck/p-chalks.jpg" alt="Guest in a beanie and sunglasses smiling at the table" loading="lazy">
           <img src="assets/fabrika-deck/p-orange.jpg" alt="Guest in an orange wig and blue track jacket" loading="lazy">
           <img src="assets/fabrika-deck/p-greenhood.jpg" alt="Two guests with drinks, one in a green hoodie" loading="lazy">
@@ -362,7 +368,7 @@
 
   <section class="lb-end reveal">
     <h2>Celebrated, not stared at.</h2>
-    <p>Fabrika &middot; Philadelphia &middot; 800 guests &middot; private balcony portion</p>
+    <p>Fabrika &middot; Philadelphia &middot; one block from the Fillmore &middot; private balcony portion</p>
   </section>
 
 </main>
