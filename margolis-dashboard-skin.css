@@ -3,7 +3,10 @@
    Ruby: the dashboard was "really ugly and outdated" next to the
    new margolis.events. This file reskins it in that site's language
    (warm paper, Fraunces heads, Inter body, Plex Mono micro-labels,
-   maroon accent, 2px corners, solid hairlines instead of dashes)
+   maroon accent, solid hairlines instead of dashes).
+   2026-11-19: corners moved to the ticket-site form standard
+   (CLAUDE-web-design.md §5): cards 14px, inputs 8px, buttons, tabs
+   and chips 999px pills)
    without touching a line of the page's script or markup classes.
    Also loaded by margolis-login.html (the login and sign-up page),
    whose own pieces are at the bottom of this file.
@@ -55,7 +58,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:-0.01em}
 .mgx-bar__home{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;color:var(--ink)}
 .mgx-bar__home svg{width:20px;height:20px}
 .mgx-bar__mark{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-  background:var(--ink);color:var(--paper);padding:7px 16px;border-radius:2px;text-decoration:none}
+  background:var(--ink);color:var(--paper);padding:7px 16px;border-radius:999px;text-decoration:none}
 .mgx-bar__right{justify-self:end;display:flex;gap:18px;align-items:center}
 .mgx-bar__right a{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--ink);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
@@ -103,7 +106,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:-0.01em}
 
 /* ---------- cards ---------- */
 .evt,.mgr-card,.djd-prof,.mgr-fold,.pay-sum,.pay-tbl{
-  background:var(--card);border:1px solid var(--line);border-radius:2px;box-shadow:none}
+  background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:none}
 .evt{margin-bottom:14px;transition:border-color .18s ease}
 .evt:hover{border-color:#CFC3AE}
 .evt.open{border-color:var(--ink)}
@@ -111,27 +114,27 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:-0.01em}
 .evt__head h3{font-family:var(--serif);font-weight:500;font-size:24px;line-height:1.15;margin:2px 0 6px}
 .evt__date{font-size:11px;letter-spacing:.1em;color:var(--gold)}
 .evt__body{border-top:1px solid var(--line);padding:0 22px 22px}
-.evt__collapse,.res-cal-note,.pay-sug{border:1px solid var(--line);border-radius:2px;background:var(--paper)}
+.evt__collapse,.res-cal-note,.pay-sug{border:1px solid var(--line);border-radius:10px;background:var(--paper)}
 .evt__collapse .lbl{color:var(--gold)}
 .arch{opacity:.6}
 
 /* step tabs: a quiet segmented row, ink when on (like the ticket rows) */
 .evt__tabs{gap:6px;margin:18px 0}
-.evt__tab,.mgr-tab{border:1px solid var(--line);border-radius:2px;background:transparent;
+.evt__tab,.mgr-tab{border:1px solid var(--line);border-radius:999px;background:transparent;
   color:var(--muted);padding:9px 13px;letter-spacing:.08em}
 .evt__tab:hover,.mgr-tab:hover{border-color:var(--ink);color:var(--ink)}
 .evt__tab.on,.mgr-tab.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
-.mgr-tab b{background:var(--maroon);border-radius:2px}
+.mgr-tab b{background:var(--maroon);border-radius:999px}
 
 /* manager / own-nights switch */
 /* the inline display:flex beat the hidden attribute, so non-managers saw the toggle */
 .mgr-switch[hidden]{display:none}
-.mgr-switch{border-radius:2px;border-color:var(--line);padding:3px;background:var(--card)}
-.mgr-switch__btn{border-radius:2px;letter-spacing:.1em}
+.mgr-switch{border-radius:999px;border-color:var(--line);padding:3px;background:var(--card)}
+.mgr-switch__btn{border-radius:999px;letter-spacing:.1em}
 .mgr-switch__btn.on{background:var(--ink);color:var(--paper)}
 
 /* ---------- status chips: flat, square, mono ---------- */
-.stchip,.door__chip,.mgr-chip,.djd-pill{border-radius:2px;letter-spacing:.08em}
+.stchip,.door__chip,.mgr-chip,.djd-pill{border-radius:999px;letter-spacing:.08em}
 .stchip--none,.door__chip--none,.mgr-chip,.djd-pill{background:var(--chip-bg);color:var(--muted)}
 .stchip--pending,.door__chip--live,.mgr-chip--warn{background:var(--warn-bg);color:var(--warn)}
 .stchip--approved,.door__chip,.mgr-chip--ok{background:var(--ok-bg);color:var(--ok)}
@@ -158,7 +161,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:-0.01em}
 .djd-task h4{font-family:var(--serif);font-weight:500;font-size:18px}
 
 /* ---------- numbers ---------- */
-.djd-scores,.pay-stats{border-radius:2px}
+.djd-scores,.pay-stats{border-radius:14px}
 .djd-score,.pay-stat{background:var(--card)}
 .djd-score__n,.pay-stat__n,.pay-sum__n{font-family:var(--serif);font-weight:400;font-size:30px;letter-spacing:-.01em}
 .pay-stat__n{font-size:24px}
@@ -167,24 +170,28 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:-0.01em}
 .djd-score--under .djd-score__n,.djd-band--under,.pay-band--under{color:var(--bad)}
 .djd-hr i{background:var(--maroon)}
 
-/* ---------- buttons: the site's uppercase Inter, 2px corners ---------- */
-.btn,.btn--green{font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.08em;
-  padding:14px 26px;border-radius:2px;background:var(--maroon);border-color:var(--maroon);color:#F4EEE4}
+/* ---------- buttons: pills, sentence case (form standard, 2026-11-19) ---------- */
+.btn,.btn--green{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;
+  font-family:var(--sans);font-size:14px;font-weight:500;letter-spacing:0;text-transform:none;line-height:1.2;
+  padding:0 22px;border-radius:999px;background:var(--maroon);border:1px solid var(--maroon);color:#F4EEE4;cursor:pointer;text-decoration:none}
+.btn .arw{display:none}
+.btn:disabled{opacity:.55;cursor:default}
 .btn:hover,.btn--green:hover{background:var(--maroon-deep);border-color:var(--maroon-deep);color:#F4EEE4}
 .btn--ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
 .btn--ghost:hover{background:var(--ink);color:var(--paper)}
-.djd-act{font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.08em;border-radius:2px;
-  padding:12px 18px;background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.djd-act{font-family:var(--sans);font-size:14px;font-weight:500;letter-spacing:0;text-transform:none;border-radius:999px;
+  padding:11px 18px;background:transparent;color:var(--ink);border:1px solid var(--ink)}
 .djd-act:hover{background:var(--ink);color:var(--paper)}
 .djd-act:first-child{background:var(--maroon);border-color:var(--maroon);color:#F4EEE4}
 .djd-act:first-child:hover{background:var(--maroon-deep);border-color:var(--maroon-deep)}
-.mgr-btn{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.08em;border-radius:2px;
+.mgr-btn{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.08em;border-radius:999px;
   background:var(--maroon);border-color:var(--maroon);color:#F4EEE4}
 .mgr-btn:hover{background:var(--maroon-deep)}
 .mgr-btn--ghost{background:transparent;color:var(--ink);border-color:var(--line)}
 .mgr-btn--ghost:hover{border-color:var(--ink);background:transparent}
 .mgr-btn--bad{background:transparent;color:var(--bad);border-color:#E3C3BC}
-.pay-open,.pay-seg button,.mgr-star{border-radius:2px}
+.pay-open,.pay-seg button{border-radius:999px}
+.mgr-star{border-radius:8px}
 .pay-open--go,.mgr-star.on{background:var(--maroon);border-color:var(--maroon)}
 .pay-seg button.on{background:var(--ink)}
 
@@ -194,12 +201,13 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:500;letter-spacing:-0.01em}
 .ifield input[type="text"],.ifield input[type="email"],.ifield input[type="tel"],.ifield input[type="time"],
 .ifield input[type="url"],.ifield input[type="number"],.ifield input[type="password"],.ifield input[type="date"],.ifield textarea,.ifield select,
 .mgr-field input,.mgr-field select,.mgr-field textarea,.mgr-search{
-  border:1px solid var(--line);border-radius:2px;background:var(--card);font-family:var(--sans);font-size:15px}
+  border:1px solid var(--line);border-radius:8px;background:var(--card);font-family:var(--sans);font-size:15px;min-height:44px}
+.ifield textarea,.mgr-field textarea{min-height:88px}
 .ifield input:focus,.ifield textarea:focus,.ifield select:focus,
 .mgr-field input:focus,.mgr-field textarea:focus,.mgr-search:focus{outline:none;border-color:var(--ink)}
 input[type=file]{font-family:var(--sans);font-size:13px;color:var(--muted)}
 input[type=file]::file-selector-button{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.08em;
-  text-transform:uppercase;background:transparent;color:var(--ink);border:1px solid var(--ink);border-radius:2px;
+  text-transform:uppercase;background:transparent;color:var(--ink);border:1px solid var(--ink);border-radius:999px;
   padding:9px 14px;margin-right:12px;cursor:pointer}
 input[type=file]::file-selector-button:hover{background:var(--ink);color:var(--paper)}
 input[type=radio],input[type=checkbox]{accent-color:var(--maroon)}
@@ -207,11 +215,11 @@ input[type=radio],input[type=checkbox]{accent-color:var(--maroon)}
 /* ---------- tables ---------- */
 .djd-pay th,.pay-hist th,.pay-hd{color:var(--muted)}
 .pay-hd,.pay-rw--open,.pay-panel{background:var(--paper)}
-.mgr-flyer,.res-photo img{border-radius:2px}
+.mgr-flyer,.res-photo img{border-radius:10px}
 
 /* ---------- presale modal ---------- */
 .mgmodal{background:rgba(27,24,21,.55)}
-.mgmodal__card{background:var(--paper);border-radius:2px;border:1px solid var(--line)}
+.mgmodal__card{background:var(--paper);border-radius:14px;border:1px solid var(--line)}
 .mgmodal__card h3{font-family:var(--serif);font-weight:500}
 .mgmodal__kicker{font-family:var(--mono);color:var(--gold)}
 
@@ -253,18 +261,9 @@ input[type=radio],input[type=checkbox]{accent-color:var(--maroon)}
 .footer__bottom{border-top:none}
 .footer__legal,.footer .status{font-family:var(--mono);font-size:11px;letter-spacing:.06em}
 
-/* ---------- margolis-login.html ---------- */
-.ifield input[type="password"]{width:100%;padding:12px 14px;color:var(--ink);outline:none}
-.dj-wrap{max-width:460px}
-.dj-wrap h3{font-family:var(--serif);font-weight:500;font-size:28px;letter-spacing:-.01em}
-.dj-note{color:var(--muted);font-size:14px;line-height:1.6}
-.dj-note a,.rcheck a{color:var(--maroon);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
-.dj-err{border:1px solid var(--bad);border-left-width:2px;border-radius:2px;background:var(--bad-bg);color:var(--bad);font-weight:500;font-size:14px}
-.dj-chiprow button,.dj-multi button{border:1px solid var(--line);border-radius:2px;background:var(--card);color:var(--ink);
-  font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;font-size:11.5px}
-.dj-chiprow button:hover,.dj-multi button:hover{border-color:var(--ink)}
-.dj-chiprow button.on,.dj-multi button.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
-.dj-multi button{text-transform:none;letter-spacing:.02em;font-size:12.5px}
+/* ---------- margolis-login.html ----------
+   The form itself is assets/forms-tix.css (.ft); this file only gives it
+   the Margolis tokens, see the form-standard block at the end. */
 .dj-done .mark{background:var(--maroon);color:var(--paper)}
 
 /* folded guest-contact groups */
@@ -274,7 +273,7 @@ input[type=radio],input[type=checkbox]{accent-color:var(--maroon)}
 .door__fold[open] summary::after{transform:rotate(90deg)}
 
 /* bar minimum quote on Request additional dates */
-.dq{border:1px solid var(--line);background:var(--paper);padding:12px 14px;margin:6px 0 4px}
+.dq{border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:12px 14px;margin:6px 0 4px}
 .dq__h{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .dq__row{display:grid;grid-template-columns:110px 1fr;gap:4px 12px;padding:7px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.45}
 .dq__row b{font-family:var(--serif);font-weight:500;font-size:17px}
@@ -295,3 +294,96 @@ input[type=radio],input[type=checkbox]{accent-color:var(--maroon)}
 #content,#payHistory,#dateReqBox,#profilePanel{scroll-margin-top:110px}
 @media (max-width:520px){ .mgx-sub{gap:6px 16px} }
 .djd-task{scroll-margin-top:110px}
+
+/* ============================================================
+   Ticket-site form look on Margolis pages (2026-11-19)
+   CLAUDE-web-design.md §5. assets/forms-tix.css draws the shape
+   under .ft; it reads --ink/--line/--muted/--green, which :root
+   above already maps to Margolis, so only its few fixed Jubyr
+   colours and the headline face are swapped here. Used by
+   margolis-login.html and the host side of margolis-dashboard.html.
+   ============================================================ */
+.ft{--ft-ground:var(--paper);--ft-card:var(--card);--ft-ink-2:#4A433B;--ft-bad:var(--bad);--ft-bad-tint:var(--bad-bg)}
+.frame > .ft{margin-left:0;margin-right:0}
+.ft .ft-col .ft-col{width:100%}
+.ft .ft-intro h1,.ft .ft-intro h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,6vw,42px);letter-spacing:-.02em;line-height:1.05;margin:2px 0 0;max-width:none;color:var(--ft-ink);text-align:left}
+.ft .ft-done h3{font-family:var(--serif);font-weight:500;font-size:clamp(24px,5vw,30px);margin:0}
+.ft input:focus,.ft select:focus,.ft textarea:focus{outline-color:var(--ink)}
+.ft-bar .ft-bar__r .ft-btn:hover:not(:disabled),.ft-bar .ft-bar__r button:hover:not(:disabled),.ft-bar .intake__nav .btn:not(.btn--ghost):hover:not(:disabled),
+.ft .form-end button:hover:not(:disabled){background:var(--maroon-deep);border-color:var(--maroon-deep)}
+.ft-bar .ft-bar__r .btn{min-height:42px;font-size:14px}
+.ft .ifield > label{font:500 14px/1.35 var(--sans);letter-spacing:0;text-transform:none;color:var(--ft-ink)}
+.ft .ifield input[disabled]{background:var(--paper-2);color:var(--muted)}
+.ft .ft-foot a,.ft .ft-check a{color:var(--maroon)}
+.ft .dj-err a{color:inherit}
+/* chips the scripts build as plain <button>s: pills, ink when picked */
+.ft .dj-chiprow,.ft .dj-multi{display:flex;flex-wrap:wrap;gap:6px;margin:0}
+.ft .dj-chiprow button,.ft .dj-multi button{flex:none;display:inline-flex;align-items:center;min-height:38px;padding:7px 14px;
+  border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);font:400 14px/1.25 var(--sans);
+  letter-spacing:0;text-transform:none;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.ft .dj-chiprow button:hover,.ft .dj-multi button:hover{border-color:var(--ink)}
+.ft .dj-chiprow button.on,.ft .dj-multi button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.ft .dj-alt{margin:0}
+.ft .dj-alt .btn{width:100%}
+.btn--ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+
+/* ---------- dashboard, host side ---------- */
+/* Section cards: .djd-task / #w9Box / the date request, one card each,
+   a mono header row, rows split by thin lines, the action at the foot. */
+.ft-card.djd-task{border:1px solid var(--line);border-top-style:solid;padding:0;margin:0}
+.ft-card > .ft-head,.ft-card > h4.ft-head{font-family:var(--mono)!important;font-weight:500!important;font-size:12px!important;margin:0}
+.ft-card > .djd-note,.ft-card > .djd-rules,.ft-card > .djd-w9,.ft-card > .djd-logo,.ft-card > .djd-check,.ft-card > .djd-err{margin:12px 14px 0!important}
+.ft-card > .djd-note{margin-bottom:12px!important}
+.ft-card > .djd-note + .ft-kv{margin-top:-2px}
+.ft-card > .djd-rules{padding-left:34px}
+.ft-card > .djd-w9{padding:10px 12px;border-radius:10px;border-left:0}
+.ft-card > .djd-check{padding:0}
+.ft-card > .djd-err.show{padding:10px 12px;border-radius:10px;background:var(--bad-bg);color:var(--bad)}
+.ft-card > .djd-note + .ifield,.ft-card > .djd-w9 + .ifield{border-top:0;margin-top:2px}
+.ft .ft-row.ft-check{display:flex;padding:12px 14px;font-size:13.5px;color:var(--ft-ink-2)}
+.ft-card .intake__nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px 12px;margin:0;padding:12px 14px 14px;border-top:1px solid var(--line)}
+.ft-card .intake__nav .btn--green{flex:0 1 auto}
+@media (max-width:520px){ .ft-card .intake__nav .btn--green{flex:1 1 100%} .ft-card .intake__nav .ft-pct{margin-left:auto} }
+.ft-card .ft-pct,.evt__pane .ft-pct{color:var(--ink)}
+.ft-card .ifield .djd-readmore{justify-self:start}
+/* the lifetime guest list: ten short rows, no lines between them */
+#guest-list .ifield{padding:5px 14px;border-top:0}
+#guest-list .ifield:first-of-type{padding-top:12px}
+/* the panel itself: summary card on top, then one card per thing owed */
+#profilePanel > .djd-prof{background:none;border:0;padding:0;margin:18px 0 4px}
+#profilePanel > .djd-prof > summary{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+#profilePanel .djd-prof__body{border-top:0;padding:14px 0 0;display:grid;gap:14px}
+#profilePanel .djd-prof__body > .djd-note{margin:0!important;padding:10px 12px;border-radius:10px;background:var(--green-tint);color:var(--ink)}
+#profilePanel .djd-prof__body > .djd-check{margin:0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 16px}
+#profilePanel .djd-prof__body > .djd-check li + li{border-top:1px solid var(--line)}
+#guestListBox:empty{display:none}
+#w9Box.djd-w9{padding:0;margin:18px 0 4px;background:none;border:0}
+.ft-kv span:last-child{font-weight:500}
+/* request additional dates */
+#dateReqBox.djd-prof{background:none;border:0;padding:0}
+#dateReqBox > summary{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+#dateReqBox .djd-prof__body{border-top:0;padding:14px 0 0;display:grid;gap:14px;background:none}
+#dateReqBox .ft-row > .djd-note{margin:0!important}
+#dateReqBox .dq{margin:0}
+#dateReqBox #dreqDates input{min-width:0}
+.ft .ft-pair .ifield{padding:0;border:0}
+.ft .ft-pair3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (max-width:560px){ .ft .ft-pair3{grid-template-columns:minmax(0,1fr)} }
+.ft .ft-pair3 .ifield{padding:0;border:0}
+.ft .ft-sub-lbl{font:500 13px/1.3 var(--sans);color:var(--muted)}
+.djd-end{display:flex;width:100%;min-height:54px;font-size:16px;font-weight:600}
+/* night cards: each step pane is a short form of rows */
+.evt__pane.ft{background:none;font-size:inherit}
+.evt__pane.ft .ifield{padding:14px 0;border-top:1px solid var(--line)}
+.evt__pane.ft .evt__status + .ifield{border-top:0}
+.evt__pane.ft .intake__nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px 12px;margin:4px 0 8px}
+.evt__pane.ft input[type=checkbox]{accent-color:var(--maroon)}
+.evt__tab{min-height:36px;letter-spacing:.06em}
+#dreqQuoteRow:has(#dreqQuote:empty){display:none}
+#dreqErr:not(:empty),#glErr:not(:empty){display:block;padding:10px 12px;border-radius:10px;background:var(--bad-bg);color:var(--bad)}
+.dreq-go{display:flex;align-items:center;gap:12px;margin:0}
+.dreq-go .btn{flex:1;min-height:54px;font-size:16px;font-weight:600}
+.dreq-go .ft-pct{color:var(--ink)}
+/* the View-as strip and picker set display:flex/block inline, which beat
+   [hidden]: hosts saw an empty dark bar under the greeting */
+.va-bar[hidden],.va-pick[hidden]{display:none}

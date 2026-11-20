@@ -12,27 +12,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=43">
 <style>
-  .dj-wrap{max-width:440px;margin:0 auto}
-  .dj-tag{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-  .dj-err{color:#A03A2E;font-size:15px;font-weight:600;line-height:1.45;margin:0 0 18px;padding:14px 16px;border:2px solid #A03A2E;border-radius:4px;background:#FBEFEF;display:none}
-  .dj-err a{color:#A03A2E;font-weight:700}
+  .dj-err{display:none}
   .dj-err.show{display:block}
-  .dj-note{color:var(--muted);font-size:13.5px;line-height:1.55;margin-top:14px}
-  .dj-note a{color:var(--green)}
-  .dj-chiprow{display:flex;gap:10px;margin-bottom:6px}
-  .dj-chiprow button{flex:1;border:1px dashed var(--line);background:#fff;padding:14px;font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.04em;cursor:pointer;transition:border-color .15s ease,background .15s ease,color .15s ease}
-  .dj-chiprow button:hover{border-color:var(--green)}
-  .dj-chiprow button.on{background:var(--green);border-color:var(--green);color:#fff}
-  .dj-multi{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
-  .dj-multi button{border:1px dashed var(--line);background:#fff;padding:8px 13px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;cursor:pointer;transition:border-color .15s ease,background .15s ease,color .15s ease}
-  .dj-multi button:hover{border-color:var(--green)}
-  .dj-multi button.on{background:var(--green);border-color:var(--green);color:#fff}
-  .dj-done{text-align:center;padding:20px 0}
-  .dj-done .mark{width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 18px}
+  .dj-err a{color:inherit;font-weight:600}
 </style>
-<link rel="stylesheet" href="margolis-dashboard-skin.css?v=5">
+<link rel="stylesheet" href="assets/forms-tix.css?v=3">
+<link rel="stylesheet" href="margolis-dashboard-skin.css?v=6">
 </head>
-<body>
+<body class="ft-page">
 
 <!-- margolis.events top bar (2026-11-04 reskin, same as the dashboard).
      The old announce strip and Jubyr nav stay in the markup, hidden by the
@@ -69,102 +56,142 @@
     </div>
   </header>
 
-  <main id="top">
-
-    <section class="box" id="loginSection">
-      <div class="sechead sechead--photo" style="background-image: linear-gradient(rgba(12,12,12,0.12), rgba(12,12,12,0.3)), url('assets/media/margolis/photo-25.jpg')">
-        <span class="tag">DJs &amp; hosts</span>
-        <h2>One login for your nights.</h2>
-        <p>Lineup, flyer, and ticket link, in one place.</p>
+  <main id="top" class="ft">
+    <!-- Ticket-site form look (2026-11-19, CLAUDE-web-design.md §5): logo
+         row, intro card, one card per section, chips, the dark bar with the
+         action + percent (assets/forms-end.js). Every id the script reads
+         is unchanged. -->
+    <div class="ft-col" id="loginSection">
+      <div class="ft-top"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="71" height="22"><span class="ft-top__tag">Login</span></div>
+      <div class="ft-intro">
+        <span class="ft-eyebrow">DJs &amp; hosts</span>
+        <h1>One login for your nights.</h1>
+        <p class="ft-sub">Lineup, flyer, and ticket link, in one place.</p>
       </div>
 
-      <div class="mg-pad dj-wrap" id="login" style="padding-top:34px;padding-bottom:44px;">
-        <p class="dj-err" id="djErr"></p>
+      <div class="ft-col dj-wrap" id="login" style="padding:0">
+        <p class="dj-err ft-err" id="djErr"></p>
 
         <!-- ===== sign up (opened by the Sign up link or #signup) ===== -->
-        <form id="stepSignup" hidden>
-          <h3 style="margin-bottom:6px">Create your account</h3>
-          <p class="dj-note" style="margin:0 0 18px">The rest of your profile comes after. We review new accounts.</p>
-          <div class="ifield"><label>Government first name <span class="req">*</span></label><input type="text" id="suFirstName" autocomplete="given-name"></div>
-          <div class="ifield"><label>Government last name <span class="req">*</span></label><input type="text" id="suLastName" autocomplete="family-name"><p class="help">As on your ID, for your W9 and payouts. Your stage name comes next.</p></div>
-          <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="suEmail" autocomplete="email" placeholder="you@email.com"></div>
-          <div class="ifield"><label>Phone <span class="req">*</span></label><input type="tel" id="suPhone" autocomplete="tel" placeholder="10-digit number"></div>
-          <div class="ifield">
-            <label>DJ, event host, or both? <span class="req">*</span></label>
-            <div class="dj-chiprow" id="suTypeRow">
-              <button type="button" data-sutype="dj">DJ</button>
-              <button type="button" data-sutype="host">Event host</button>
-              <button type="button" data-sutype="both">Both</button>
+        <form id="stepSignup" class="ft-col" style="padding:0" hidden>
+          <div class="ft-card">
+            <div class="ft-head">Create your account <span class="ft-n">We review new accounts</span></div>
+            <div class="ifield"><label>Government first name <span class="req">*</span></label><input type="text" id="suFirstName" autocomplete="given-name" data-req></div>
+            <div class="ifield"><label>Government last name <span class="req">*</span></label><input type="text" id="suLastName" autocomplete="family-name" data-req><p class="help">As on your ID, for your W9 and payouts. Your stage name comes next.</p></div>
+            <div class="ifield"><label>Email <span class="req">*</span></label><input type="email" id="suEmail" autocomplete="email" placeholder="you@email.com" data-req></div>
+            <div class="ifield"><label>Phone <span class="req">*</span></label><input type="tel" id="suPhone" autocomplete="tel" placeholder="10-digit number" data-req></div>
+          </div>
+          <div class="ft-card">
+            <div class="ft-head">You are <span class="ft-n">Pick one</span></div>
+            <div class="ifield">
+              <div class="dj-chiprow ft-chips" id="suTypeRow" role="group" aria-label="DJ, event host, or both" data-req>
+                <button type="button" data-sutype="dj">DJ</button>
+                <button type="button" data-sutype="host">Event host</button>
+                <button type="button" data-sutype="both">Both</button>
+              </div>
             </div>
           </div>
-          <div class="ifield"><label>Password <span class="req">*</span></label><input type="password" id="suPassword" autocomplete="new-password" placeholder="At least 8 characters"></div>
-          <div class="ifield"><label>Confirm password <span class="req">*</span></label><input type="password" id="suPassword2" autocomplete="new-password"></div>
-          <label class="rcheck" style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px;cursor:pointer">
-            <input type="checkbox" id="suConsent" style="margin-top:3px;flex-shrink:0">
-            <span style="color:var(--muted);font-size:13.5px;line-height:1.55">Optional: text and email me about events, lineups, ticket drops and offers from Jubyr LLC. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. Never required to book, and your information is never sold. See our <a href="https://jubyr.com/privacy" target="_blank" rel="noopener">Privacy Policy</a> and <a href="https://jubyr.com/terms" target="_blank" rel="noopener">Terms</a>.</span>
-          </label>
-          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnSignup">Create my account <span class="arw" aria-hidden="true">&gt;</span></button></div>
-          <p class="dj-note">Already have an account? <a href="#login" id="toLogin">Log in</a>.</p>
+          <div class="ft-card">
+            <div class="ft-head">Password</div>
+            <div class="ifield"><label>Password <span class="req">*</span></label><input type="password" id="suPassword" autocomplete="new-password" placeholder="At least 8 characters" data-req></div>
+            <div class="ifield"><label>Confirm password <span class="req">*</span></label><input type="password" id="suPassword2" autocomplete="new-password" data-req></div>
+          </div>
+          <div class="ft-card">
+            <div class="ft-head">Updates <span class="ft-n">Optional</span></div>
+            <div class="ft-row">
+              <label class="ft-check rcheck">
+                <input type="checkbox" id="suConsent">
+                <span>Optional: text and email me about events, lineups, ticket drops and offers from Jubyr LLC. Message frequency varies; message and data rates may apply. Reply STOP to opt out, HELP for help. Never required to book, and your information is never sold. See our <a href="https://jubyr.com/privacy" target="_blank" rel="noopener">Privacy Policy</a> and <a href="https://jubyr.com/terms" target="_blank" rel="noopener">Terms</a>.</span>
+              </label>
+            </div>
+          </div>
+          <p class="ft-foot">Already have an account? <a href="#login" id="toLogin">Log in</a>.</p>
+          <div class="ft-bar">
+            <div class="ft-bar__in">
+              <div class="ft-bar__l"><b>New account</b><small>DJ or host</small></div>
+              <div class="ft-bar__r intake__nav"><button type="button" class="btn btn--green" id="btnSignup">Create my account <span class="arw" aria-hidden="true">&gt;</span></button></div>
+            </div>
+          </div>
         </form>
 
         <!-- ===== login ===== -->
-        <form id="stepLogin">
-          <div class="ifield"><label>Email or mobile <span class="req">*</span></label><input type="text" id="loginEmail" autocomplete="username" inputmode="email" placeholder="you@email.com or (215) 555-1234"></div>
-          <div class="ifield"><label>Password <span class="req">*</span></label><input type="password" id="loginPassword" autocomplete="current-password"></div>
-          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnLogin">Log in <span class="arw" aria-hidden="true">&gt;</span></button></div>
-          <div class="intake__nav" id="faceIdRow" hidden><button type="button" class="btn" id="btnFaceId">Face ID</button></div>
-          <p class="dj-note"><span style="white-space:nowrap">Temporary password? See your confirmation email.</span><br>
+        <form id="stepLogin" class="ft-col" style="padding:0">
+          <div class="ft-card">
+            <div class="ft-head">Log in</div>
+            <div class="ifield"><label>Email or mobile <span class="req">*</span></label><input type="text" id="loginEmail" autocomplete="username" inputmode="email" placeholder="you@email.com or (215) 555-1234" data-req></div>
+            <div class="ifield"><label>Password <span class="req">*</span></label><input type="password" id="loginPassword" autocomplete="current-password" data-req></div>
+          </div>
+          <div class="intake__nav dj-alt" id="faceIdRow" hidden><button type="button" class="btn btn--ghost" id="btnFaceId">Face ID</button></div>
+          <p class="ft-foot"><span style="white-space:nowrap">Temporary password? See your confirmation email.</span><br>
           <a href="#signup" id="toSignup">Sign up</a> · <a href="/margolis-reset">Reset password</a></p>
+          <div class="ft-bar">
+            <div class="ft-bar__in">
+              <div class="ft-bar__l"><b>Log in</b><small>Your Margolis nights</small></div>
+              <div class="ft-bar__r intake__nav"><button type="button" class="btn btn--green" id="btnLogin">Log in <span class="arw" aria-hidden="true">&gt;</span></button></div>
+            </div>
+          </div>
         </form>
 
         <!-- ===== forced password set (first login) ===== -->
-        <form id="stepSetPassword" hidden>
-          <h3 style="margin-bottom:6px">Set your password</h3>
-          <p class="dj-note" style="margin-top:0 0 18px">Pick your own password.</p>
-          <div class="ifield"><label>New password <span class="req">*</span></label><input type="password" id="newPassword" autocomplete="new-password" placeholder="At least 8 characters"></div>
-          <div class="ifield"><label>Confirm password <span class="req">*</span></label><input type="password" id="newPassword2" autocomplete="new-password"></div>
-          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnSetPassword">Save password <span class="arw" aria-hidden="true">&gt;</span></button></div>
+        <form id="stepSetPassword" class="ft-col" style="padding:0" hidden>
+          <div class="ft-card">
+            <div class="ft-head">Set your password <span class="ft-n">Pick your own</span></div>
+            <div class="ifield"><label>New password <span class="req">*</span></label><input type="password" id="newPassword" autocomplete="new-password" placeholder="At least 8 characters" data-req></div>
+            <div class="ifield"><label>Confirm password <span class="req">*</span></label><input type="password" id="newPassword2" autocomplete="new-password" data-req></div>
+          </div>
+          <div class="ft-bar">
+            <div class="ft-bar__in">
+              <div class="ft-bar__l"><b>New password</b><small>At least 8 characters</small></div>
+              <div class="ft-bar__r intake__nav"><button type="button" class="btn btn--green" id="btnSetPassword">Save password <span class="arw" aria-hidden="true">&gt;</span></button></div>
+            </div>
+          </div>
         </form>
 
         <!-- ===== short profile completion ===== -->
-        <form id="stepProfile" hidden>
-          <h3 style="margin-bottom:6px">Quick profile</h3>
-          <p class="dj-note" style="margin:0 0 18px">Just the basics for now.</p>
-          <div class="ifield"><label>Government first name <span class="req">*</span></label><input type="text" id="pFirstName" autocomplete="given-name"></div>
-          <div class="ifield"><label>Government last name <span class="req">*</span></label><input type="text" id="pLastName" autocomplete="family-name"><p class="help">As on your ID. Only on your W9, agreements and payouts.</p></div>
-          <div class="ifield"><label>Stage name <span class="req">*</span></label><input type="text" id="pStageName" maxlength="60" placeholder="e.g. DJ Aura"><p class="help">The name on every flyer, lineup and margolis.events listing.</p></div>
-          <div class="ifield"><label>Phone</label><input type="tel" id="pPhone" autocomplete="tel" placeholder="10-digit number"></div>
-          <div class="ifield"><label>Instagram</label><input type="text" id="pInstagram" placeholder="@yourhandle"></div>
-          <div class="ifield">
-            <label>DJ, event host, or both? <span class="req">*</span></label>
-            <div class="dj-chiprow">
-              <button type="button" data-type="dj">DJ</button>
-              <button type="button" data-type="host">Event host</button>
-              <button type="button" data-type="both">Both</button>
+        <form id="stepProfile" class="ft-col" style="padding:0" hidden>
+          <div class="ft-card">
+            <div class="ft-head">Quick profile <span class="ft-n">Just the basics</span></div>
+            <div class="ifield"><label>Government first name <span class="req">*</span></label><input type="text" id="pFirstName" autocomplete="given-name" data-req></div>
+            <div class="ifield"><label>Government last name <span class="req">*</span></label><input type="text" id="pLastName" autocomplete="family-name" data-req><p class="help">As on your ID. Only on your W9, agreements and payouts.</p></div>
+            <div class="ifield"><label>Stage name <span class="req">*</span></label><input type="text" id="pStageName" maxlength="60" placeholder="e.g. DJ Aura" data-req><p class="help">The name on every flyer, lineup and margolis.events listing.</p></div>
+            <div class="ifield"><label>Phone</label><input type="tel" id="pPhone" autocomplete="tel" placeholder="10-digit number"></div>
+            <div class="ifield"><label>Instagram</label><input type="text" id="pInstagram" placeholder="@yourhandle"></div>
+          </div>
+          <div class="ft-card">
+            <div class="ft-head">You are <span class="ft-n">Pick one</span></div>
+            <div class="ifield">
+              <div class="dj-chiprow ft-chips" role="group" aria-label="DJ, event host, or both" data-req>
+                <button type="button" data-type="dj">DJ</button>
+                <button type="button" data-type="host">Event host</button>
+                <button type="button" data-type="both">Both</button>
+              </div>
             </div>
           </div>
-          <div class="ifield">
-            <label id="genresLabel">Genres you play</label>
-            <div class="dj-multi" id="genreOpts"></div>
-            <p class="help">Pick all that apply.</p>
+          <div class="ft-card">
+            <div class="ft-head"><span id="genresLabel">Genres you play</span> <span class="ft-n">All that apply</span></div>
+            <div class="ifield"><div class="dj-multi ft-chips" id="genreOpts"></div></div>
           </div>
-          <div class="ifield">
-            <label>Other venues you primarily DJ at</label>
-            <div class="dj-multi" id="venueOpts"></div>
-            <p class="help">Pick all that apply.</p>
+          <div class="ft-card">
+            <div class="ft-head">Other venues you primarily DJ at <span class="ft-n">All that apply</span></div>
+            <div class="ifield"><div class="dj-multi ft-chips" id="venueOpts"></div></div>
           </div>
-          <p class="dj-note" style="margin:0 0 18px">Add your photo on your dashboard: just you, no group shots.</p>
-          <div class="intake__nav"><button type="button" class="btn btn--green" id="btnProfile">Save profile <span class="arw" aria-hidden="true">&gt;</span></button></div>
+          <p class="ft-note" style="margin:0">Add your photo on your dashboard: just you, no group shots.</p>
+          <div class="ft-bar">
+            <div class="ft-bar__in">
+              <div class="ft-bar__l"><b>Quick profile</b><small>Then your dashboard</small></div>
+              <div class="ft-bar__r intake__nav"><button type="button" class="btn btn--green" id="btnProfile">Save profile <span class="arw" aria-hidden="true">&gt;</span></button></div>
+            </div>
+          </div>
         </form>
 
         <!-- ===== done ===== -->
-        <div class="dj-done" id="stepDone" hidden>
+        <div class="ft-card ft-done dj-done" id="stepDone" hidden>
           <div class="mark">&#10003;</div>
           <h3 id="doneHeading">You're all set.</h3>
           <p class="dj-note" id="doneBody"></p>
         </div>
       </div>
-    </section>
+    </div>
   </main>
 </div>
 
@@ -492,5 +519,6 @@
     }catch(e){ localStorage.removeItem("margolis-dj-token"); TOKEN=""; }
   })();
 </script>
+<script src="assets/forms-end.js?v=4" data-bar="#login > form:not([hidden]) .ft-bar" defer></script>
 </body>
 </html>
