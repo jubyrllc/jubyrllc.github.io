@@ -902,7 +902,7 @@
     if(payload.action==="saveNoPresale"){ const ev=findEv(); const sub=ensureSub(ev); sub.ticketLink={value:"",status:"pending",noPresale:true}; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="saveListing"){ const ev=findEv(); ev.listing={short:payload.short, long:payload.long, by:"host"}; demoSave(s); return {ok:true, listing:ev.listing}; }
     if(payload.action==="saveTicketLink"){ const ev=findEv(); const sub=ensureSub(ev); sub.ticketLink={value:payload.ticketLink,status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
-    if(payload.action==="saveFlyer"){ const ev=findEv(); const sub=ensureSub(ev); sub.flyerFile={value:payload.fileName||"flyer.png",status:"pending"}; demoSave(s); return {ok:true, submission:sub}; }
+    if(payload.action==="saveFlyer"){ const ev=findEv(); const sub=ensureSub(ev); sub.flyerFile={value:payload.fileName||"flyer.png",status:"pending"}; demoSave(s); /* demo stand-in for the DJs the server reads off the flyer */ return {ok:true, submission:sub, flyerDjs:[{name:"DJ Aura",instagram:"djaura",known:true},{name:"Kingspy",instagram:"kingspy",known:true},{name:"Nova Reign",instagram:"",known:false}]}; }
     if(payload.action==="saveRsvp"){ const ev=findEv(); const sub=ensureSub(ev); if(payload.rsvpFree) sub.rsvpFree=payload.rsvpFree; if(payload.rsvpSold) sub.rsvpSold=payload.rsvpSold; demoSave(s); return {ok:true, submission:sub}; }
     if(payload.action==="addEventPartner"){
       /* Demo: these two addresses stand in for partners who already
@@ -1423,6 +1423,9 @@
   // Lineups are singular acts (name + IG), not one typed-out list — the
   // in-progress set for each event lives here until it's submitted.
   const lineupDraft = {};
+  /* DJs read off an uploaded flyer (2026-11-20) land in lineupDraft
+     marked fromFlyer; this holds the one-line note for that night. */
+  const flyerNote = {};
   /* The host's own listing (Ruby, 2026-11-19): two lines that go on
      margolis.events exactly as typed, no approval step. Same limits as
      the booking form (margolis-listing-lib.php on jubyr.tools and
@@ -1526,8 +1529,9 @@
         <div class="evt__pane ft ${tab==="lineup"?"on":""}" data-gate data-pane="lineup">
           ${gatedBody("lineup", s.lineup, i, k, "Your lineup wasn't approved.", `
           ${(lineupDraft[k]||[]).length?`<ul class="djd-check" style="margin-bottom:14px">${lineupDraft[k].map((a,ai)=>
-            `<li class="done"><span class="mk">&#9835;</span>${esc(a.name)}${a.instagram?` <a href="https://instagram.com/${esc(a.instagram)}" target="_blank" rel="noopener" style="color:var(--muted)">@${esc(a.instagram)}</a>`:""}
+            `<li class="done"><span class="mk">&#9835;</span>${esc(a.name)}${a.instagram?` <a href="https://instagram.com/${esc(a.instagram)}" target="_blank" rel="noopener" style="color:var(--muted)">@${esc(a.instagram)}</a>`:(a.fromFlyer?` <button type="button" class="djd-readmore" data-lu-fix="${ai}" data-i="${i}">+ Instagram</button>`:"")}${a.fromFlyer?` <span style="color:var(--muted);font-size:12px">· from flyer${a.known?"":" · new"}</span>`:""}
              <button type="button" class="djd-readmore" data-lu-rm="${ai}" data-i="${i}" style="margin-left:8px">remove</button></li>`).join("")}</ul>`:""}
+          ${flyerNote[k]?`<p class="evt__status">${esc(flyerNote[k])}</p>`:""}
           <div class="ifield"><label>DJ name <span class="req">*</span></label>
             <input type="text" data-f="luName" placeholder="Exactly as it should appear on the flyer"></div>
           <div class="ifield"><label>Link to their Instagram <span class="req">*</span></label>
@@ -1860,6 +1864,16 @@
       openCards.add(k); activeTab[k] = "lineup";
       render();
     }));
+    /* A flyer name with no handle: back into the boxes, Instagram next. */
+    c.querySelectorAll("[data-lu-fix]").forEach(b=>b.addEventListener("click", ()=>{
+      const ev = EVENTS[+b.dataset.i];
+      const k = keyOf(ev);
+      const [a] = (lineupDraft[k]||[]).splice(+b.dataset.luFix, 1);
+      openCards.add(k); activeTab[k] = "lineup";
+      render();
+      const card = document.querySelector(`.evt[data-k="${CSS.escape(k)}"]`);
+      if(card && a){ card.querySelector('[data-f="luName"]').value = a.name; card.querySelector('[data-f="luIg"]').focus(); }
+    }));
     c.querySelectorAll("[data-edit-part]").forEach(b=>b.addEventListener("click", ()=>{
       const ev = EVENTS[+b.dataset.i];
       const k = keyOf(ev);
@@ -1891,6 +1905,28 @@
     });
   }
 
+  /* The DJs the server read off a just-uploaded flyer go into this
+     night's Lineup draft (not saved): the host checks them and presses
+     Submit lineup. Names already in the draft are skipped. */
+  function takeFlyerDjs(ev, djs){
+    if(!Array.isArray(djs) || !djs.length) return;
+    const k = keyOf(ev);
+    const key = n => String(n||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+    const d = lineupDraft[k] = lineupDraft[k] || lineupArr((ev.submission||{}).lineup?.value).slice();
+    const have = new Set(d.map(a=>key(a.name)));
+    const haveIg = new Set(d.map(a=>a.instagram).filter(Boolean));
+    let added = 0;
+    djs.forEach(a=>{
+      if(!a || !a.name || have.has(key(a.name)) || (a.instagram && haveIg.has(a.instagram))) return;
+      d.push({name:a.name, instagram:a.instagram||"", fromFlyer:true, known:!!a.known});
+      have.add(key(a.name)); added++;
+    });
+    if(!added) return;
+    flyerNote[k] = `${added} found on your flyer. Check them, then Submit lineup.`;
+    activeTab[k] = "lineup";
+    openEditPart.add(k + "|lineup");
+  }
+
   async function save(btn){
     clearErr();
     const kind = btn.dataset.save;
@@ -1917,7 +1953,9 @@
       const typedName = card.querySelector('[data-f="luName"]').value.trim();
       if(typedName) return showErr('Press "Add this act +" first, then submit.');
       if(!acts.length) return showErr("Add at least one act to your lineup first.");
-      payload = Object.assign({action:"saveLineup", lineup:acts}, base);
+      const noIg = acts.find(a=>a.fromFlyer && !a.instagram);
+      if(noIg) return showErr(`Add ${noIg.name}'s Instagram (+ Instagram), or remove them.`);
+      payload = Object.assign({action:"saveLineup", lineup:acts.map(a=>({name:a.name, instagram:a.instagram}))}, base);
     }
     if(kind==="ticket"){
       const v = card.querySelector('[data-f="ticket"]').value.trim();
@@ -2026,6 +2064,8 @@
       if(out.submission) ev.submission = out.submission;
       openEditPart.delete(keyOf(ev) + "|" + kind);
       openCards.add(keyOf(ev));
+      if(kind==="lineup") delete flyerNote[keyOf(ev)];
+      if(kind==="flyer") takeFlyerDjs(ev, out.flyerDjs);
       render();
     }catch(e){
       btn.disabled = false; btn.innerHTML = orig;
