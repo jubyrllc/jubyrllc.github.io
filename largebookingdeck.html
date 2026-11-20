@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabrika — Large Bookings</title>
+<meta name="robots" content="noindex, nofollow">
+<script src="assets/js/analytics.js?v=1"></script>
+<meta name="description" content="Fabrika, Philadelphia. An 800-person room with a private balcony, aerialists, fire and live acts. Afterparty or standalone event.">
+<link rel="icon" type="image/png" href="assets/jubyr-icon.png?v=2">
+<link rel="apple-touch-icon" href="assets/jubyr-icon.png?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&text=J&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/mgl.css?v=2">
+<link rel="stylesheet" href="assets/css/jubyr.css?v=4">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jubyr LLC">
+<meta property="og:title" content="Fabrika — Large Bookings">
+<meta property="og:description" content="Most rooms sell you fans. We sell you a function.">
+<meta property="og:image" content="https://jubyr.com/assets/fabrika-deck/fab-aerial.jpg">
+<style>
+/* largebookingdeck: page-only additions on the Margolis look (mgl.css + jubyr.css) */
+.lb{max-width:var(--maxw);margin:0 auto;padding:0 var(--gutter)}
+.lb-card{background:#fff;border:1px solid var(--line);border-radius:14px}
+.hero__head em{font-style:italic}
+
+/* two columns: the usual vs Fabrika */
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.vs .lb-card{padding:26px 26px 22px;display:grid;gap:12px;align-content:start}
+.vs h3{font-size:24px;margin:0}
+.vs ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.vs li{position:relative;padding-left:22px;font-size:15px;line-height:1.5;color:var(--muted)}
+.vs li::before{content:"\2013";position:absolute;left:0}
+.vs .is-us{border-color:var(--maroon)}
+.vs .is-us h3{color:var(--maroon)}
+.vs .is-us li{color:var(--ink)}
+.vs .is-us li::before{content:"\2726";color:var(--maroon)}
+.vs .is-us li b{font-weight:600}
+
+/* ratings */
+.rate{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:32px;align-items:center;padding:30px}
+.rate__big{font-family:var(--serif);font-weight:500;font-size:clamp(84px,11vw,150px);line-height:.9;color:var(--maroon)}
+.rate__stars{color:var(--maroon);letter-spacing:.12em;margin-top:8px}
+.rate__sub{color:var(--muted);font-size:14px;margin-top:8px;line-height:1.5}
+.bars{display:grid;gap:16px}
+.bar{display:grid;grid-template-columns:minmax(0,140px) minmax(0,1fr) 40px;gap:14px;align-items:center}
+.bar__n{font-size:15px;font-weight:500}
+.bar__n small{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:400;margin-top:2px}
+.bar__t{height:10px;background:var(--paper-2);border-radius:999px;overflow:hidden}
+.bar__f{height:100%;background:#B9B0A2;border-radius:999px}
+.bar.is-us .bar__f{background:var(--maroon)}
+.bar__v{font-family:var(--serif);font-size:22px;text-align:right}
+.bar.is-us .bar__v{color:var(--maroon)}
+.src{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* the acts */
+.acts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.act{margin:0}
+.act__img{aspect-ratio:4/5;border-radius:12px;overflow:hidden;background:#14110f}
+.act__img img{width:100%;height:100%;object-fit:cover;display:block}
+.act__img--empty{display:grid;place-items:center;background:var(--paper-2);border:1px dashed var(--line);font-size:34px}
+.act figcaption{margin-top:10px;font-family:var(--serif);font-size:20px}
+.act figcaption span{display:block;font-family:var(--sans);font-size:13px;color:var(--muted);margin-top:2px}
+
+/* the offer */
+.offer{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:center}
+.offer__lead{display:grid;gap:14px}
+.offer__lead h2{font-size:clamp(30px,4vw,48px);margin:0}
+.offer__lead p{color:var(--muted);font-size:16px;line-height:1.6;margin:0}
+.offer__lead p b{color:var(--ink);font-weight:600}
+.cap{padding:30px;display:grid;gap:10px;border-color:var(--maroon)}
+.cap__num{font-family:var(--serif);font-weight:500;font-size:clamp(70px,9vw,120px);line-height:.9;color:var(--maroon)}
+.cap__note{color:var(--muted);font-size:14px;line-height:1.55;margin:0}
+.cap ul{list-style:none;margin:6px 0 0;padding:0}
+.cap li{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-top:1px solid var(--line);font-size:15px}
+.cap li span:last-child{color:var(--muted);text-align:right;white-space:nowrap}
+
+/* history: work rows plus a photo strip */
+.wrow .strip{grid-column:1 / -1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.strip img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;display:block}
+.strip .wide{grid-column:span 2;aspect-ratio:auto;height:100%}
+.snd{position:absolute;right:10px;bottom:10px;z-index:2;width:34px;height:34px;border-radius:999px;border:0;background:rgba(20,17,15,.72);color:#fff;display:grid;place-items:center;cursor:pointer}
+.snd .w{opacity:.25}.snd.on .w{opacity:1}
+.also{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
+.also .tag{margin-right:4px}
+.chip{background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 18px;font-family:var(--serif);font-size:19px}
+
+.room{display:grid;gap:10px}
+.room__film{aspect-ratio:16/9;border-radius:14px}
+.room__strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.room__strip img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:10px;display:block}
+.lb-sec{padding-bottom:12px}
+.lb-end{padding:70px var(--gutter) 90px;max-width:var(--maxw);margin:0 auto}
+.lb-end h2{font-size:clamp(30px,4vw,48px);margin:0 0 10px}
+.lb-end p{color:var(--muted);margin:0;font-size:16px}
+
+@media (max-width:900px){
+  .rate,.offer{grid-template-columns:minmax(0,1fr)}
+  .acts{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .vs{grid-template-columns:minmax(0,1fr)}
+  .rate{padding:22px}
+  .bar{grid-template-columns:minmax(0,100px) minmax(0,1fr) 34px;gap:10px}
+  .bar__v{font-size:19px}
+  .wrow .strip,.room__strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .strip .wide{grid-column:1 / -1}
+  .cap{padding:22px}
+}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <div class="nav__brand"></div>
+    <a class="nav__logo" href="/" aria-label="Jubyr LLC"><img src="assets/jubyr-logo.png?v=2" alt="Jubyr LLC" width="71" height="22"></a>
+    <div class="nav__actions"></div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="hero__frame">
+      <img src="assets/fabrika-deck/fab-aerial.jpg" alt="An aerialist above the Fabrika floor in white spotlights" class="hero__img is-active" fetchpriority="high" style="object-position:center 30%">
+      <div class="hero__scrim" style="z-index:2"></div>
+      <span class="framenote framenote--light" aria-hidden="true">FBK &middot; 01</span>
+    </div>
+    <div class="hero__content">
+      <div class="hero__text">
+        <span class="tag tag--light">Fabrika &middot; Philadelphia &middot; Afterparty or standalone event</span>
+        <h1 class="hero__head">Most rooms sell you fans. <em>We sell you a function.</em></h1>
+        <p class="hero__body">Something to actually enjoy and be celebrated at after your event. Not just somewhere everyone is staring.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Fabrika at a glance">
+    <div><b>4.9</b><span>Google rating &middot; 3,965 reviews</span></div>
+    <div><b>800</b><span>Person venue</span></div>
+    <div><b>1</b><span>Private balcony for your team</span></div>
+    <div><b>6</b><span>Headliners hosted</span></div>
+  </section>
+
+  <!-- the room -->
+  <section class="lb-sec">
+    <div class="jhead reveal">
+      <span class="tag">The room</span>
+      <h2>800 guests below. Your team above.</h2>
+      <p>A private balcony sits over the floor: your own section, apart from the masses, with the whole show in view.</p>
+    </div>
+    <div class="lb">
+      <div class="room reveal">
+        <div class="room__film wrow__media"><video muted loop playsinline preload="none" poster="assets/fabrika-deck/fabrika-room-poster.jpg"><source src="assets/fabrika-deck/fabrika-room.mp4" type="video/mp4"></video><button class="snd" type="button" title="Sound" aria-label="Sound on"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w" d="M16 9a4 4 0 0 1 0 6"/></svg></button></div>
+        <div class="room__strip">
+          <img src="assets/fabrika-deck/room-above.jpg" alt="The Fabrika floor seen from above" loading="lazy">
+          <img src="assets/fabrika-deck/heart-hoop.jpg" alt="Aerialist in a neon heart hoop over the room" loading="lazy">
+          <img src="assets/fabrika-deck/dancers.jpg" alt="Dancers on the round stage in the middle of the room" loading="lazy">
+          <img src="assets/fabrika-deck/lights.jpg" alt="Performer under beams of white light" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the difference -->
+  <section class="lb-sec">
+    <div class="jhead reveal">
+      <span class="tag">Afterparty or standalone</span>
+      <h2>Not a walk-through. A party.</h2>
+      <p>Book Fabrika for the afterparty, or as the event itself. Either way, the night is built around you.</p>
+    </div>
+    <div class="lb">
+      <div class="vs reveal">
+        <div class="lb-card">
+          <span class="tag">The usual</span>
+          <h3>Pull up. Get stared at.</h3>
+          <ul>
+            <li>Packed room sold to the max</li>
+            <li>Phones in your face all night</li>
+            <li>A DJ and a bottle parade</li>
+            <li>You are the only show</li>
+          </ul>
+        </div>
+        <div class="lb-card is-us">
+          <span class="tag">Fabrika</span>
+          <h3>Walk into a world.</h3>
+          <ul>
+            <li>An <b>800-person</b> room, built to breathe</li>
+            <li>A <b>private balcony</b> for you and your team, fully apart from the floor</li>
+            <li>The show is all around you, not just on you</li>
+            <li>Aerialists, fire, live acts, a hand-picked DJ</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ratings -->
+  <section class="lb-sec">
+    <div class="jhead reveal">
+      <span class="tag">The room people rate</span>
+      <h2>A full point above the rest.</h2>
+      <p>Google ratings for the rooms Philly afterparties run through.</p>
+    </div>
+    <div class="lb">
+      <div class="lb-card rate reveal">
+        <div>
+          <div class="rate__big">4.9</div>
+          <div class="rate__stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="rate__sub">Fabrika, from 3,965 Google reviews.</p>
+        </div>
+        <div class="bars">
+          <div class="bar is-us"><div class="bar__n">Fabrika<small>3,965 reviews</small></div><div class="bar__t"><div class="bar__f" style="width:98%"></div></div><div class="bar__v">4.9</div></div>
+          <div class="bar"><div class="bar__n">Concourse<small>1,029 reviews</small></div><div class="bar__t"><div class="bar__f" style="width:78%"></div></div><div class="bar__v">3.9</div></div>
+          <div class="bar"><div class="bar__n">Mr. Ivy<small>57 reviews</small></div><div class="bar__t"><div class="bar__f" style="width:76%"></div></div><div class="bar__v">3.8</div></div>
+          <div class="bar"><div class="bar__n">NOTO<small>759 reviews</small></div><div class="bar__t"><div class="bar__f" style="width:56%"></div></div><div class="bar__v">2.8</div></div>
+          <span class="src">Google Maps &middot; read Nov 19, 2026</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the acts -->
+  <section class="lb-sec">
+    <div class="jhead reveal">
+      <span class="tag">What a Fabrika night is</span>
+      <h2>A function, not a floor.</h2>
+      <p>Every act here is paid by us, booked for you, and built into the night.</p>
+    </div>
+    <div class="lb">
+      <div class="acts reveal">
+        <figure class="act"><div class="act__img"><img src="assets/fabrika-deck/kwn-aerial.jpg" alt="Aerialist in a hoop above the crowd" loading="lazy"></div><figcaption>Aerialists</figcaption></figure>
+        <figure class="act"><div class="act__img"><img src="assets/fabrika-deck/fire.jpg" alt="Fire performer spinning flaming fans" loading="lazy"></div><figcaption>Fire</figcaption></figure>
+        <figure class="act"><div class="act__img"><img src="assets/fabrika-deck/mask.jpg" alt="Masked performer singing on the floor" loading="lazy"></div><figcaption>Live performers</figcaption></figure>
+        <figure class="act"><div class="act__img"><img src="assets/fabrika-deck/chainz-dj.jpg" alt="DJ in the booth under blue light" loading="lazy"></div><figcaption>Curated DJs</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- the offer -->
+  <section class="lb-sec">
+    <div class="lb" style="padding-top:80px">
+      <div class="offer reveal">
+        <div class="offer__lead">
+          <span class="tag">The offer, plainly</span>
+          <h2>We don&rsquo;t outbid. We out-build.</h2>
+          <p>Other rooms put the whole budget in your fee and leave the party to chance. We put it into the night. <b>Less straight to you, a far better party.</b> We value the art of it over the quick money.</p>
+        </div>
+        <div class="lb-card cap">
+          <span class="tag">Headline appearance &middot; 2&ndash;3 songs</span>
+          <div class="cap__num">$15K</div>
+          <p class="cap__note">Our ceiling for major artists, including a 2&ndash;3 song performance. Everything past it goes into the room around you.</p>
+          <ul>
+            <li><span>Appearance + 2&ndash;3 songs</span><span>Up to $15K</span></li>
+            <li><span>Private balcony for your team</span><span>Included</span></li>
+            <li><span>Aerialists &amp; fire</span><span>On us</span></li>
+            <li><span>Live performers &amp; DJs</span><span>On us</span></li>
+            <li><span>Production &amp; hospitality</span><span>On us</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- history -->
+  <section id="work" class="lb-sec">
+    <div class="jhead reveal">
+      <span class="tag">Who&rsquo;s partied with us</span>
+      <h2>The room remembers.</h2>
+    </div>
+    <div class="work">
+
+      <article class="wrow reveal">
+        <div class="wrow__fig"><b>2026</b><span>Sep</span></div>
+        <div>
+          <span class="wrow__meta">Birthday &middot; Fabrika</span>
+          <h3>2 Chainz</h3>
+          <p>A birthday night with dancers, live sets, and a floor that never sat down.</p>
+        </div>
+        <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/poster-2-chainz.jpg"><source src="assets/video-2-chainz.mp4" type="video/mp4"></video><button class="snd" type="button" title="Sound" aria-label="Sound on"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w" d="M16 9a4 4 0 0 1 0 6"/></svg></button></div>
+        <div class="strip">
+          <img src="assets/fabrika-deck/chainz-show.jpg" alt="Two guests posing on the floor" loading="lazy">
+          <img src="assets/fabrika-deck/chainz-floor.jpg" alt="Guest in sunglasses under blue light" loading="lazy">
+          <img src="assets/fabrika-deck/chainz-dance.jpg" alt="Guest dancing on the floor" loading="lazy">
+        </div>
+      </article>
+
+      <article class="wrow reveal">
+        <div class="wrow__fig"><b>2026</b><span>Apr</span></div>
+        <div>
+          <span class="wrow__meta">Official afterparty &middot; Fabrika</span>
+          <h3>KWN</h3>
+          <p>Aerialists in the air, the artist on the mic, the whole building in on it.</p>
+        </div>
+        <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/poster-kwn.jpg"><source src="assets/hero.mp4" type="video/mp4"></video><button class="snd" type="button" title="Sound" aria-label="Sound on"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w" d="M16 9a4 4 0 0 1 0 6"/></svg></button></div>
+        <div class="strip">
+          <img src="assets/fabrika-deck/kwn-mic.jpg" alt="Artist on the mic in a yellow hoodie" loading="lazy">
+          <img src="assets/fabrika-deck/kwn-aerial2.jpg" alt="Aerialist in a hoop over the crowd" loading="lazy">
+          <img src="assets/fabrika-deck/kwn-hood.jpg" alt="Artist in the crowd" loading="lazy">
+        </div>
+      </article>
+
+      <article class="wrow reveal">
+        <div class="wrow__fig"><b>2025</b><span>Nov</span></div>
+        <div>
+          <span class="wrow__meta">Afterparty &middot; Fabrika</span>
+          <h3>Leon Thomas &amp; Ty Dolla $ign</h3>
+          <p>Two artists, one booth, and a room that came dressed for it.</p>
+        </div>
+        <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/poster-leon.jpg"><source src="assets/video-leon-thomas.mp4" type="video/mp4"></video><button class="snd" type="button" title="Sound" aria-label="Sound on"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w" d="M16 9a4 4 0 0 1 0 6"/></svg></button></div>
+        <div class="strip">
+          <img class="wide" src="assets/fabrika-deck/leon-stage.jpg" alt="Leon Thomas and Ty Dolla $ign in the DJ booth" loading="lazy">
+          <img src="assets/fabrika-deck/leon-guests.jpg" alt="Guests in a section with bottles" loading="lazy">
+        </div>
+      </article>
+
+      <article class="wrow reveal">
+        <div class="wrow__fig"><b>2025</b><span>Nov</span></div>
+        <div>
+          <span class="wrow__meta">Afterparty &middot; Margolis</span>
+          <h3>Skrilla</h3>
+          <p>The official afterparty from his show at the Fillmore.</p>
+        </div>
+        <div class="wrow__media"><video muted loop playsinline preload="none" poster="assets/fabrika-deck/skrilla-poster.jpg"><source src="assets/fabrika-deck/skrilla.mp4" type="video/mp4"></video><button class="snd" type="button" title="Sound" aria-label="Sound on"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w" d="M16 9a4 4 0 0 1 0 6"/></svg></button></div>
+      </article>
+
+    </div>
+    <div class="lb">
+      <div class="also reveal">
+        <span class="tag">Also through our doors</span>
+        <span class="chip">Smino</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="lb-end reveal">
+    <h2>Celebrated, not stared at.</h2>
+    <p>Fabrika &middot; Philadelphia &middot; 800 guests &middot; private balcony</p>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__bottom">
+      <span class="footer__legal">&copy; 2026 Jubyr LLC &middot; Fabrika, Philadelphia</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // fade-ins (Margolis .reveal)
+  var rv = ('IntersectionObserver' in window && !reduced) ? new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-visible'); rv.unobserve(e.target); } });
+  }, {threshold:.12}) : null;
+  document.querySelectorAll('.reveal').forEach(function(el){ rv ? rv.observe(el) : el.classList.add('is-visible'); });
+
+  // films play only while on screen
+  var vio = ('IntersectionObserver' in window && !reduced) ? new IntersectionObserver(function(es){
+    es.forEach(function(e){ e.isIntersecting ? e.target.play().catch(function(){}) : e.target.pause(); });
+  }, {threshold:.25}) : null;
+  document.querySelectorAll('.wrow__media video').forEach(function(v){ vio ? vio.observe(v) : v.setAttribute('controls',''); });
+
+  // sound: one film at a time
+  document.querySelectorAll('.snd').forEach(function(b){ b.addEventListener('click', function(){
+    var v = b.parentNode.querySelector('video'), on = v.muted;
+    document.querySelectorAll('.wrow__media video').forEach(function(x){ x.muted = true; });
+    document.querySelectorAll('.snd').forEach(function(x){ x.classList.remove('on'); x.setAttribute('aria-label','Sound on'); });
+    if (on) { v.muted = false; v.play(); b.classList.add('on'); b.setAttribute('aria-label','Sound off'); }
+  }); });
+})();
+</script>
+</body>
+</html>
