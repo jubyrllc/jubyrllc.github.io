@@ -23,11 +23,7 @@ var FtPct = (function(){
     }
     return null;
   }
-  function draw(bar, go, done, total){
-    if (!bar) return;
-    var old = bar.querySelector('.ft-pct');
-    var st = step();
-    if (!go || !go.isConnected || !seen(go) || (!total && !st)){ if (old) old.remove(); return; }
+  function style(){
     if (!css){
       css = document.createElement('style');
       css.textContent = '.ft-pct{display:inline-flex;align-items:center;gap:8px;flex:none;margin-left:auto;font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap;opacity:.82}' +
@@ -39,6 +35,13 @@ var FtPct = (function(){
         '@media (prefers-reduced-motion: reduce){.ft-pct b{transition:none}}';
       document.head.appendChild(css);
     }
+  }
+  function draw(bar, go, done, total){
+    if (!bar) return;
+    var old = bar.querySelector('.ft-pct');
+    var st = step();
+    if (!go || !go.isConnected || !seen(go) || (!total && !st)){ if (old) old.remove(); return; }
+    style();
     var here = total ? done / total : 1;
     var f = st ? ((st.at - 1) + here) / st.of : here;
     var pct = Math.round(Math.max(0, Math.min(1, f)) * 100);
@@ -62,7 +65,7 @@ var FtPct = (function(){
       old.classList.toggle('is-full', pct === 100);
     }
   }
-  return {draw: draw};
+  return {draw: draw, style: style};
 })();
 
 /* The end-of-form button (2026-11-17). Ruby: "I'm worried people won't
@@ -103,11 +106,19 @@ var FtPct = (function(){
    Options on the <script> tag:
      data-bar     the bar (default .ft-bar)
      data-after   put the button after this element instead of just
-     data-before  before the bar (or before this element) */
+     data-before  before the bar (or before this element)
+     data-scope   (2026-11-19) a selector for pages with many small forms
+                  and no single bar, e.g. the DJ & host dashboard: each
+                  matching element is gated on its own. Its button is the
+                  [data-gate-go] inside it, else its last .btn--green; the
+                  same NN% meter sits just left of that button, counted off
+                  that element's data-req fields only. No end button: the
+                  button already sits under its own card. Without
+                  data-scope nothing below changes. */
 (function(){
   var me = document.currentScript;
   function opt(n){ return me ? me.getAttribute('data-' + n) : null; }
-  var BAR = opt('bar') || '.ft-bar', AFTER = opt('after'), BEFORE = opt('before');
+  var BAR = opt('bar') || '.ft-bar', AFTER = opt('after'), BEFORE = opt('before'), SCOPE = opt('scope');
 
   function init(){
     var css = document.createElement('style');
@@ -161,9 +172,9 @@ var FtPct = (function(){
       return Array.prototype.some.call(el.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=button]):not([type=submit]):not([type=hidden]), textarea, select'),
         function(i){ return String(i.value || '').trim() !== ''; });
     }
-    function missing(){
+    function missing(root){
       var out = [], groups = {}, order = [];
-      Array.prototype.forEach.call(document.querySelectorAll('[data-req]'), function(el){
+      Array.prototype.forEach.call((root || document).querySelectorAll('[data-req]'), function(el){
         if (!seen(el) || el.disabled) return;
         var cond = el.getAttribute('data-req-if');
         if (cond) { var c = document.querySelector(cond); if (!c || !filled(c)) return; }
@@ -176,9 +187,9 @@ var FtPct = (function(){
     }
     /* [done, total] over the same marks missing() reads; a data-req-one
        group counts once. */
-    function tally(){
+    function tally(root){
       var t = 0, d = 0, groups = {};
-      Array.prototype.forEach.call(document.querySelectorAll('[data-req]'), function(el){
+      Array.prototype.forEach.call((root || document).querySelectorAll('[data-req]'), function(el){
         if (!seen(el) || el.disabled) return;
         var cond = el.getAttribute('data-req-if');
         if (cond) { var c = document.querySelector(cond); if (!c || !filled(c)) return; }
@@ -208,6 +219,66 @@ var FtPct = (function(){
       el.classList.add('gate-flag');
       clearTimeout(el.__gateT);
       el.__gateT = setTimeout(function(){ el.classList.remove('gate-flag'); }, 1800);
+    }
+
+    if (SCOPE) { scoped(); return; }
+
+    /* ---- data-scope: one gate + meter per small form ---- */
+    function scoped(){
+      function go(s){
+        var b = s.querySelector('[data-gate-go]');
+        if (b) return b;
+        var all = s.querySelectorAll('.btn--green, button[type=submit]');
+        return all.length ? all[all.length - 1] : null;
+      }
+      function meter(s, p, d, t){
+        var old = s.querySelector('.ft-pct');
+        if (!t || !seen(p)) { if (old) old.remove(); return; }
+        FtPct.style();
+        var pct = Math.round(Math.max(0, Math.min(1, d / t)) * 100);
+        if (!old){
+          old = document.createElement('span');
+          old.className = 'ft-pct';
+          old.setAttribute('role', 'progressbar');
+          old.setAttribute('aria-label', 'Form progress');
+          old.setAttribute('aria-valuemin', '0');
+          old.setAttribute('aria-valuemax', '100');
+          old.innerHTML = '<i><b></b></i><em></em>';
+        }
+        if (old.nextSibling !== p) p.parentNode.insertBefore(old, p);
+        if (old.getAttribute('aria-valuenow') !== String(pct)){
+          old.setAttribute('aria-valuenow', String(pct));
+          old.querySelector('em').textContent = pct + '%';
+          old.querySelector('b').style.width = pct + '%';
+          old.classList.toggle('is-full', pct === 100);
+        }
+      }
+      function syncAll(){
+        Array.prototype.forEach.call(document.querySelectorAll(SCOPE), function(s){
+          var p = go(s);
+          if (!p) return;
+          var tl = tally(s);
+          meter(s, p, tl[0], tl[1]);
+          var own = !!p.disabled || (p.getAttribute('aria-disabled') === 'true' && !p.hasAttribute('data-gated'));
+          grey(p, !own && missing(s).length > 0);
+        });
+      }
+      window.addEventListener('click', function(e){
+        var t = e.target && e.target.closest ? e.target.closest('button, a') : null;
+        if (!t || t.disabled) return;
+        var s = t.closest(SCOPE);
+        if (!s || go(s) !== t) return;
+        var m = missing(s);
+        syncAll();
+        if (!m.length) return;
+        e.preventDefault(); e.stopImmediatePropagation();
+        nudge(m[0]);
+      }, true);
+      ['input', 'change'].forEach(function(ev){ document.addEventListener(ev, syncAll, true); });
+      document.addEventListener('click', function(){ setTimeout(syncAll, 0); });
+      new MutationObserver(syncAll).observe(document.body, {subtree:true, childList:true, characterData:true,
+        attributes:true, attributeFilter:['hidden', 'style', 'class', 'disabled', 'aria-disabled', 'open']});
+      syncAll();
     }
 
     /* Writes only what changed, so its own writes settle the observer. */
