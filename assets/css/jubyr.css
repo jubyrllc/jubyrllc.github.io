@@ -84,6 +84,20 @@
 @media (max-width:960px){.ways{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:520px){.ways{grid-template-columns:1fr}}
 
+/* ---- pricing: white option rows, price on the right (2026-11-23) ---- */
+.offers{max-width:var(--maxw);margin:0 auto;padding:0 var(--gutter);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.offer{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:grid;
+  grid-template-columns:1fr auto;grid-template-areas:"k p" "n p" "l l" "g g";gap:4px 16px;align-items:start;transition:border-color .15s ease}
+.offer:hover{border-color:var(--ink)}
+.offer__k{grid-area:k;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon)}
+.offer h3{grid-area:n;font-size:20px;margin:0}
+.offer__p{grid-area:p;font-family:var(--mono);font-size:13px;white-space:nowrap;text-align:right;padding-top:2px}
+.offer p{grid-area:l;margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.55}
+.offer__go{grid-area:g;align-self:end;font-size:13px;font-weight:600;margin-top:6px}
+.offers__fine{max-width:var(--maxw);margin:14px auto 0;padding:0 var(--gutter);font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.offer:last-child:nth-child(odd){grid-column:1/-1}
+@media (max-width:760px){.offers{grid-template-columns:1fr}}
+
 /* founder photo sits a bit higher in the 4:5 frame */
 .about__frame img{object-position:center 25%}
 .footer__brand p{color:var(--muted);font-size:13px;line-height:1.6;max-width:32ch;margin:0}

@@ -6,10 +6,11 @@
    retail reference, rebuilt around Margolis's own film photos.
    ============================================================ */
 
-/* Fraunces draws its capital J hanging below the line; swap just that
-   one letter for Newsreader's (J-only subset, ~2 KB each). */
-@font-face{font-family:"Margolis J";font-style:normal;font-weight:300 700;font-display:swap;src:url(../fonts/j-newsreader.woff2) format("woff2");unicode-range:U+004A}
-@font-face{font-family:"Margolis J";font-style:italic;font-weight:300 700;font-display:swap;src:url(../fonts/j-newsreader-italic.woff2) format("woff2");unicode-range:U+004A}
+/* Fraunces draws its capital J hanging below the line and its f with the
+   crossbar on one side only; swap just those two letters for Newsreader's
+   (J + f subset, ~4 KB each). Ruby, 2026-11-23: "the fs are always messed up". */
+@font-face{font-family:"Margolis J";font-style:normal;font-weight:300 700;font-display:swap;src:url(../fonts/jf-newsreader.woff2) format("woff2");unicode-range:U+004A,U+0066}
+@font-face{font-family:"Margolis J";font-style:italic;font-weight:300 700;font-display:swap;src:url(../fonts/jf-newsreader-italic.woff2) format("woff2");unicode-range:U+004A,U+0066}
 :root{
   --paper: #FAF7F2;
   --paper-2: #F1EBE0;

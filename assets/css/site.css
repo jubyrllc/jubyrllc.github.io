@@ -1,7 +1,7 @@
 /* site.css = styles.css re-skinned on the margolis.events look (2026-11-17).
    styles.css itself is untouched: the DJ dashboard/login pages still use it. */
-@font-face{font-family:"Margolis J";font-style:normal;font-weight:300 700;font-display:swap;src:url(../fonts/j-newsreader.woff2) format("woff2");unicode-range:U+004A}
-@font-face{font-family:"Margolis J";font-style:italic;font-weight:300 700;font-display:swap;src:url(../fonts/j-newsreader-italic.woff2) format("woff2");unicode-range:U+004A}
+@font-face{font-family:"Margolis J";font-style:normal;font-weight:300 700;font-display:swap;src:url(../fonts/jf-newsreader.woff2) format("woff2");unicode-range:U+004A,U+0066}
+@font-face{font-family:"Margolis J";font-style:italic;font-weight:300 700;font-display:swap;src:url(../fonts/jf-newsreader-italic.woff2) format("woff2");unicode-range:U+004A,U+0066}
   :root {
     /* Margolis tokens (Ruby 2026-11-17: jubyr.com mimics margolis.events), with
        Jubyr's own olive (#4C6300, the form-standard green) in place of Margolis
