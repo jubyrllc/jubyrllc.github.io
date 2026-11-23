@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Book a Free Consultation — Jubyr LLC</title>
+<title>Book a Consultation — Jubyr LLC</title>
 <script src="assets/js/analytics.js?v=1"></script>
-<meta name="description" content="Pick a time on Ruby's real calendar and book a free 15 minute consultation with Jubyr LLC. Events, venues, booking, and custom tools.">
+<meta name="description" content="Pick a time on Ruby's real calendar: a free 15 minute call, or a 90 minute strategy session with a written recap. Events, venues, booking, and custom tools.">
 <link rel="icon" type="image/png" href="assets/consultation-icon.png?v=1">
 <link rel="apple-touch-icon" href="assets/consultation-icon.png?v=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,9 +16,19 @@
 <link rel="stylesheet" href="assets/css/chrome.css?v=3">
 <!-- The margolis.events ticket-site form layout, in Jubyr's colours. -->
 <link rel="stylesheet" href="assets/forms-tix.css?v=3">
+<style>
+  /* Which session: white option rows, the event-card look (tile rules). */
+  .kinds{display:grid;gap:8px}
+  .kind{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:baseline;width:100%;text-align:left;font:inherit;color:var(--ft-ink);
+    background:var(--ft-card);border:1px solid var(--ft-line);border-radius:12px;padding:14px 16px;cursor:pointer}
+  .kind b{font-size:16px;font-weight:700}
+  .kind .kind__m{font-family:"IBM Plex Mono",Menlo,monospace;font-size:12px;letter-spacing:.04em;white-space:nowrap}
+  .kind small{grid-column:1/-1;color:var(--ft-muted);font-size:13.5px}
+  .kind.on{border-color:var(--ft-ink);box-shadow:inset 0 0 0 1px var(--ft-ink)}
+</style>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Jubyr LLC">
-<meta property="og:title" content="Book a Free Consultation — Jubyr LLC">
+<meta property="og:title" content="Book a Consultation — Jubyr LLC">
 <meta property="og:description" content="Pick a time on Ruby's real calendar and book a free 15 minute consultation with Jubyr LLC.">
 <meta property="og:url" content="https://jubyr.com/consultation">
 <meta property="og:image" content="https://jubyr.com/assets/og-default.jpg?v=2">
@@ -83,9 +93,17 @@
   <main id="top" class="ft">
     <div class="ft-col">
       <div class="ft-intro">
-        <span class="ft-eyebrow">Free consultation</span>
-        <h1>Book a 15 minute call.</h1>
-        <p class="ft-sub">Live times from Ruby&rsquo;s calendar &middot; she calls you.</p>
+        <span class="ft-eyebrow" id="kEyebrow">Free consultation</span>
+        <h1 id="kH1">Book a 15 minute call.</h1>
+        <p class="ft-sub" id="kSub">Live times from Ruby&rsquo;s calendar &middot; she calls you.</p>
+      </div>
+      <div class="kinds" id="kinds" role="radiogroup" aria-label="Which session">
+        <button type="button" class="kind" data-kind="free" role="radio">
+          <b>Free call</b><span class="kind__m">15 min &middot; Free</span>
+          <small>Find the problem &middot; Ruby calls you</small></button>
+        <button type="button" class="kind" data-kind="strategy" role="radio">
+          <b>Strategy session</b><span class="kind__m">90 min &middot; $250</span>
+          <small>Written recap in 48 h &middot; counts toward any package booked within 14 days</small></button>
       </div>
       <div id="schedWrap" class="stack14">
         <p class="mg-calnote">Loading open times&hellip;</p>
@@ -284,6 +302,36 @@
   };
 
   let configured = false, durationMin = 15, loadError = null;
+  // Which session. ?type=strategy opens on the paid one, so a link can be sent.
+  const QS = new URLSearchParams(location.search);
+  let kind = QS.get("type") === "strategy" ? "strategy" : "free";
+  let price = 0;
+  const KIND_COPY = {
+    free: { eyebrow: "Free consultation", h1: "Book a 15 minute call.", sub: "Live times from Ruby\u2019s calendar \u00b7 she calls you." },
+    strategy: { eyebrow: "Strategy session \u00b7 $250", h1: "Book a 90 minute session.",
+      sub: "Paid at booking \u00b7 written recap in 48 h \u00b7 she calls you." },
+  };
+  function paintKind() {
+    const c = KIND_COPY[kind];
+    document.getElementById("kEyebrow").textContent = c.eyebrow;
+    document.getElementById("kH1").textContent = c.h1;
+    document.getElementById("kSub").textContent = c.sub;
+    document.querySelectorAll("#kinds .kind").forEach(b => {
+      const on = b.dataset.kind === kind;
+      b.classList.toggle("on", on); b.setAttribute("aria-checked", on);
+    });
+  }
+  document.querySelectorAll("#kinds .kind").forEach(b => b.addEventListener("click", () => {
+    if (b.dataset.kind === kind) return;
+    kind = b.dataset.kind;
+    selectedDay = null; selectedSlot = null;
+    const u = new URL(location.href);
+    if (kind === "strategy") u.searchParams.set("type", "strategy"); else u.searchParams.delete("type");
+    history.replaceState(null, "", u);
+    paintKind();
+    document.getElementById("schedWrap").innerHTML = `<p class="mg-calnote">Loading open times&hellip;</p>`;
+    load();
+  }));
   let slots = [], byDay = {}, dayKeys = [];
   let selectedDay = null, selectedSlot = null;
   let selectedTopic = "", branch = {};
@@ -299,10 +347,11 @@
   async function load() {
     const wrap = document.getElementById("schedWrap");
     try {
-      const res = await fetch(ENDPOINT + "?action=slots");
+      const res = await fetch(ENDPOINT + "?action=slots&kind=" + kind);
       const out = await res.json();
       configured = !!out.configured;
       durationMin = out.durationMinutes || 15;
+      price = out.price || 0;
       slots = Array.isArray(out.slots) ? out.slots : [];
       // "calendar_unreadable" means the endpoint refused to guess. It is a
       // different situation from a genuinely full calendar and says so.
@@ -457,8 +506,8 @@
       <div class="ft-bar"><div class="ft-bar__in">
         <div class="ft-bar__l">${mode.manual
           ? `<b>Call request</b><small>Ruby confirms a time</small>`
-          : `<b>${esc(new Date(selectedSlot.start).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }))} &middot; ${esc(timeLabel(selectedSlot.start))}</b><small>Free &middot; ${durationMin} min &middot; Ruby calls you</small>`}</div>
-        <div class="ft-bar__r"><button type="button" class="ft-btn" id="fGo">${mode.manual ? "Send" : "Confirm"}</button></div>
+          : `<b>${esc(new Date(selectedSlot.start).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }))} &middot; ${esc(timeLabel(selectedSlot.start))}</b><small>${price ? "$" + price : "Free"} &middot; ${durationMin} min &middot; Ruby calls you</small>`}</div>
+        <div class="ft-bar__r"><button type="button" class="ft-btn" id="fGo">${mode.manual ? "Send" : price ? "Pay $" + price : "Confirm"}</button></div>
       </div></div>`;
   }
 
@@ -602,7 +651,7 @@
     // pattern the contact form on this site uses. Nothing is silently lost.
     if (mode.manual) {
       const body =
-        "Consultation request from jubyr.com/consultation\n\n" +
+        (kind === "strategy" ? "Strategy session ($250) request" : "Consultation request") + " from jubyr.com/consultation\n\n" +
         "Name: " + f.name + "\n" +
         "Email: " + f.email + "\n" +
         "Phone: " + f.phone + "\n" +
@@ -627,12 +676,12 @@
     const btn = document.getElementById("fGo");
     const label = btn.innerHTML;
     btn.disabled = true;
-    btn.textContent = "Booking…";
+    btn.textContent = price ? "Holding your time…" : "Booking…";
     try {
       const res = await fetch(ENDPOINT + "?action=book", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...f, start: selectedSlot.start, end: selectedSlot.end }),
+        body: JSON.stringify({ ...f, kind, start: selectedSlot.start, end: selectedSlot.end }),
       });
       const out = await res.json().catch(() => ({}));
       if (!res.ok || !out.ok) {
@@ -644,6 +693,9 @@
         if (res.status === 409) { selectedSlot = null; await load(); return flash(msg); }
         return err(msg);
       }
+      // Paid: the time is held for 30 minutes while they pay on Square.
+      // It is booked when Square says paid; the page checks on the way back.
+      if (out.pay) { btn.textContent = "Opening Square…"; location.href = out.pay; return; }
       const when = dayLabel(selectedSlot.start) + " at " + timeLabel(selectedSlot.start);
       done({
         heading: "You're booked.",
@@ -678,7 +730,37 @@
     document.getElementById("schedWrap").scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
-  load();
+  // Back from Square: ?paid=<id>&t=<token>. Ask until it is booked.
+  async function paidReturn(id, t) {
+    document.getElementById("kinds").hidden = true;
+    const wrap = document.getElementById("schedWrap");
+    wrap.innerHTML = `<p class="mg-calnote">Confirming your payment&hellip;</p>`;
+    const again = `<a href="/consultation?type=strategy" style="color:var(--green)">pick a time again</a>`;
+    for (let i = 0; i < 12; i++) {
+      let o = {};
+      try {
+        const r = await fetch(ENDPOINT + "?action=paidStatus&id=" + encodeURIComponent(id) + "&t=" + encodeURIComponent(t));
+        o = await r.json();
+      } catch (e) {}
+      const when = o.start ? dayLabel(o.start) + " at " + timeLabel(o.start) : "";
+      if (o.state === "booked") return done({ heading: "You're booked.",
+        body: "<strong>Ruby calls " + esc(o.phone) + "</strong> on " + esc(when) + ", Eastern, for " + (o.minutes || 90) +
+              " minutes. Paid. The invite and receipt are in your inbox. Your written recap follows within 48 hours of the call." });
+      if (o.state === "paidUnbooked") return done({ heading: "Paid. Ruby will confirm your time.",
+        body: "Your payment went through but the calendar didn't take the booking. Ruby has your details and will call " +
+              esc(o.phone) + " to confirm " + esc(when) + "." });
+      if (o.state === "notFound") break;
+      if (o.state === "expired" && i > 3) return done({ heading: "That hold ran out.",
+        body: "Nothing was charged. Please " + again + "." });
+      await new Promise(r => setTimeout(r, 2500));
+    }
+    done({ heading: "Still waiting on Square.",
+      body: "If you paid, your confirmation email arrives in a few minutes. If you didn't, nothing was charged: " + again + "." });
+  }
+
+  paintKind();
+  if (QS.get("paid") && QS.get("t")) paidReturn(QS.get("paid"), QS.get("t"));
+  else load();
 </script>
 
 <div class="jubyr-credit" style="text-align:center;font-family:'IBM Plex Mono','SF Mono',Menlo,monospace;font-size:10.5px;letter-spacing:.06em;color:#9A9A92;padding:28px 20px 34px;line-height:1.55;">This entire user interface and website design was created by Jubyr LLC.</div>
