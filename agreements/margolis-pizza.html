@@ -76,11 +76,11 @@
         <div class="ft-head">Your pay</div>
         <ol class="flow">
           <li><b><span class="tFloor"></span> guaranteed every night you work,</b> whatever sells.</li>
-          <li><b>Plus <span class="tBonus"></span> for every pie after the <span class="tAfter"></span>th</b> sold that night.</li>
+          <li><b>Plus half the night's profit</b> after the first <span class="tFloor"></span>. Profit = food sales minus ingredients, boxes and card fees. Pies and salads both count.</li>
           <li><b>Paid with the night's checkout,</b> same as staff.</li>
         </ol>
         <table class="menu" id="payTbl">
-          <thead><tr><th>Pies sold</th><th>Your pay</th></tr></thead>
+          <thead><tr><th>Pies sold</th><th>Profit</th><th>Your pay</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -147,8 +147,8 @@
 const ISSUED = "2026-11-24";
 const TRIAL  = "2026-12-04";
 const FLOOR  = 250;    // guaranteed pay per night
-const BONUS  = 5;      // per pie after BONUS_AFTER
-const BONUS_AFTER = 15; // pies it takes for sales to cover the $250 (about $16.36 left per pie after food, box, card fee)
+const SPLIT  = 0.5;    // his share of profit above FLOOR
+const PER    = 16.36;  // avg profit per pie after food, box ($0.43), card fee (3%), at the prices below
 const MENU = [
   { name: "The Red Standard",   pie: 16 },
   { name: "Wild Rose",          pie: 19 },
@@ -164,18 +164,17 @@ const longDate = iso => new Date(iso + "T12:00:00").toLocaleDateString("en-US", 
 const m0 = n => "$" + n;
 $("issued").textContent = longDate(ISSUED).replace(/^\w+, /, "");
 $("kvTrial").textContent = longDate(TRIAL);
-$("kvTrialPay").textContent = `${m0(FLOOR)} + ${m0(BONUS)} a pie after ${BONUS_AFTER}`;
+$("kvTrialPay").textContent = `${m0(FLOOR)} + half the profit after ${m0(FLOOR)}`;
 document.querySelectorAll(".tFloor").forEach(e => e.textContent = m0(FLOOR));
-document.querySelectorAll(".tBonus").forEach(e => e.textContent = m0(BONUS));
-document.querySelectorAll(".tAfter").forEach(e => e.textContent = BONUS_AFTER);
 
 document.querySelector("#menu tbody").innerHTML = MENU.map(i => i.salad
   ? `<tr><td><b>${esc(i.name)}</b></td><td>${m0(i.salad)}</td></tr>`
   : `<tr><td><b>${esc(i.name)}</b> <small>12" pie</small></td><td>${m0(i.pie)}</td></tr>`).join("");
 
-const pay = n => FLOOR + BONUS * Math.max(0, n - BONUS_AFTER);
+const profit = n => Math.round(n * PER);
+const pay = n => Math.round(FLOOR + SPLIT * Math.max(0, n * PER - FLOOR));
 document.querySelector("#payTbl tbody").innerHTML = [10, 15, 20, 25, 30, 40]
-  .map(n => `<tr><td>${n}</td><td><b>${m0(pay(n))}</b></td></tr>`).join("");
+  .map(n => `<tr><td>${n}</td><td>${m0(profit(n))}</td><td><b>${m0(pay(n))}</b></td></tr>`).join("");
 
 /* ---- Signing ---- */
 const F = { name:"fName", phone:"fPhone" };
@@ -204,7 +203,7 @@ $("fGo").addEventListener("click", () => {
     "",
     "Name: " + name + " · Phone: " + phone,
     "Trial night: " + longDate(TRIAL) + ", 5:00 PM – 9:00 PM",
-    "Pay: $" + FLOOR + " guaranteed per night + $" + BONUS + " per pie after " + BONUS_AFTER,
+    "Pay: $" + FLOOR + " guaranteed per night + half the profit after the first $" + FLOOR,
     "",
     "Terms: as shown at https://jubyr.com/agreements/margolis-pizza",
     "",
