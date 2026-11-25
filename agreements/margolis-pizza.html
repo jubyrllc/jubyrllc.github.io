@@ -56,6 +56,12 @@
 
     <div id="formWrap" class="ft-col" style="padding:0">
       <div class="ft-card">
+        <div class="ft-head">Between</div>
+        <div class="ft-kv"><span>Jubyr LLC</span><span>Ruby Johnston · ruby@jubyr.com</span></div>
+        <div class="ft-kv"><span>Cook</span><span><a href="mailto:localfolks12@gmail.com">localfolks12@gmail.com</a> · <a href="tel:+18159800653">(815) 980-0653</a></span></div>
+      </div>
+
+      <div class="ft-card">
         <div class="ft-head">What this agreement is</div>
         <ol class="flow">
           <li><b>Temporary.</b> It covers one night only: the trial on <span class="tTrial"></span>, 5:00 – 9:00 PM.</li>
@@ -170,6 +176,8 @@ const MENU = [
   { name: "House Caesar Salad", salad: 12, food: 1.35 }
 ];
 const KEY = "jubyr-proposal-margolis-pizza";
+const COOK_EMAIL = "localfolks12@gmail.com";
+const COOK_PHONE = "(815) 980-0653";
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -196,6 +204,7 @@ const F = { name:"fName", phone:"fPhone" };
 let saved = {};
 try { saved = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) {}
 for (const k in F) $(F[k]).value = saved[k] || "";
+if (!$("fPhone").value) $("fPhone").value = COOK_PHONE;
 function ready(){
   for (const el of document.querySelectorAll("[data-req]")) if (el.type === "checkbox" ? !el.checked : !el.value.trim()) return false;
   return true;
@@ -217,7 +226,7 @@ $("fGo").addEventListener("click", () => {
     "Term: trial night " + longDate(TRIAL) + " only. Renewed, changed in writing, or ended after the trial.",
     "Issued by Jubyr LLC on " + ISSUED,
     "",
-    "Name: " + name + " · Phone: " + phone,
+    "Name: " + name + " · Phone: " + phone + " · Email: " + COOK_EMAIL,
     "Trial night: " + longDate(TRIAL) + ", 5:00 PM – 9:00 PM",
     "Pay: $" + FLOOR + " guaranteed per night + food money back per item sold + half the profit after the first $" + FLOOR,
     "If renewed: Fridays and Saturdays, 9:00 PM – 2:00 AM. He buys his ingredients; we supply boxes.",
@@ -227,7 +236,7 @@ $("fGo").addEventListener("click", () => {
     "Agreed and signed: " + sig,
     "Signed: " + stamp
   ];
-  const mail = "mailto:ruby@jubyr.com?subject=" + encodeURIComponent("Signed: Margolis pizza trial agreement · " + name)
+  const mail = "mailto:ruby@jubyr.com?cc=" + encodeURIComponent(COOK_EMAIL) + "&subject=" + encodeURIComponent("Signed: Margolis pizza trial agreement · " + name)
     + "&body=" + encodeURIComponent(lines.join("\n"));
   document.querySelectorAll("#formWrap input").forEach(el => el.disabled = true);
   const sign = document.querySelector("#formWrap .ft-card:last-child");
