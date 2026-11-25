@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Pizza Kitchen Proposal · Margolis · Jubyr LLC</title>
+<link rel="icon" type="image/png" href="/assets/jubyr-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css?v=4">
+<link rel="stylesheet" href="/assets/forms-tix.css?v=3">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Jubyr LLC">
+<meta property="og:title" content="Pizza Kitchen Proposal · Margolis">
+<meta property="og:description" content="Margolis, 9 W Wildey St · trial night Friday, December 4">
+<meta property="og:image" content="https://jubyr.com/assets/og-default.jpg?v=2">
+<style>
+  .terms{margin:0;padding:6px 14px 14px 36px;display:grid;gap:10px;font-size:14px;color:var(--ft-ink-2)}
+  .terms li{padding-left:4px}
+  .terms b{color:var(--ft-ink)}
+  .menu{width:100%;border-collapse:collapse;font-size:14px}
+  .menu th{font:600 10.5px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ft-muted);text-align:right;padding:8px 14px 6px 4px}
+  .menu th:first-child,.menu td:first-child{text-align:left;padding-left:14px}
+  .menu td{padding:9px 14px 9px 4px;border-top:1px solid var(--ft-line,#e6e1d8);text-align:right;color:var(--ft-ink-2);font-variant-numeric:tabular-nums}
+  .menu td b{color:var(--ft-ink);font-weight:600}
+  .menu small{display:block;color:var(--ft-muted);font-size:12px}
+  .flow{margin:0;padding:6px 14px 14px 36px;display:grid;gap:8px;font-size:14px;color:var(--ft-ink-2)}
+  .flow b{color:var(--ft-ink)}
+  .note{padding:0 14px 14px;font-size:12.5px;color:var(--ft-muted)}
+  .sig input{font-family:"Margolis J",'Fraunces',Georgia,serif;font-style:italic;font-size:22px}
+  .signed{font-family:"Margolis J",'Fraunces',Georgia,serif;font-style:italic;font-size:24px;color:var(--ft-ink)}
+  .stamp{font:500 12px/1.4 var(--mono);color:var(--ft-muted)}
+  .acts{display:flex;flex-wrap:wrap;gap:8px}
+  .ft-foot-line{text-align:center;font:500 11px/1.4 var(--mono);letter-spacing:.06em;color:var(--ft-muted);padding:8px 0 90px}
+  @media (max-width:420px){ .menu .hide-sm{display:none} }
+  @media print{
+    .ft-bar,.acts,.no-print{display:none!important}
+    .ft{background:#fff}
+    .ft-card,.ft-intro{break-inside:avoid;border-color:#bbb}
+    .ft-foot-line{padding-bottom:0}
+  }
+</style>
+</head>
+<body class="ft-page">
+<main class="ft">
+  <div class="ft-col">
+    <div class="ft-top"><a href="/"><img src="/assets/jubyr-logo.png?v=2" alt="Jubyr LLC"></a><span class="ft-top__tag">Proposal</span></div>
+
+    <div class="ft-intro">
+      <span class="ft-eyebrow">Margolis · 9 W Wildey St</span>
+      <h1>Pizza kitchen proposal</h1>
+      <p class="ft-sub">Trial night first, then regular nights · issued by Jubyr LLC on <span id="issued"></span></p>
+    </div>
+
+    <div id="formWrap" class="ft-col" style="padding:0">
+      <div class="ft-card">
+        <div class="ft-head">Trial night</div>
+        <div class="ft-kv"><span>Date</span><span id="kvTrial"></span></div>
+        <div class="ft-kv"><span>Hours</span><span>5:00 PM – 9:00 PM</span></div>
+        <div class="ft-kv"><span>Pay</span><span id="kvTrialPay"></span></div>
+        <div class="ft-kv"><span>Prep</span><span>25 pies + 30 dough balls</span></div>
+        <div class="ft-kv"><span>After</span><span>Regular nights, 9:00 PM – 2:00 AM, if it goes well</span></div>
+      </div>
+
+      <div class="ft-card">
+        <div class="ft-head">Menu prices</div>
+        <table class="menu" id="menu">
+          <thead><tr><th>Item</th><th>Price</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="ft-card">
+        <div class="ft-head">Your pay</div>
+        <ol class="flow">
+          <li><b><span class="tFloor"></span> guaranteed every night you work,</b> whatever sells.</li>
+          <li><b>Plus <span class="tBonus"></span> for every pie after the <span class="tAfter"></span>th</b> sold that night.</li>
+          <li><b>Paid with the night's checkout,</b> same as staff.</li>
+        </ol>
+        <table class="menu" id="payTbl">
+          <thead><tr><th>Pies sold</th><th>Your pay</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="ft-card">
+        <div class="ft-head">Prep</div>
+        <ol class="flow">
+          <li><b>Trial night: 25 pies,</b> mixed across the four. Make <b>30 dough balls</b> and toppings for 25, so a busy night can go past 25.</li>
+          <li><b>Regular nights: 30 to 35 pies</b> until we have real sales to go on.</li>
+          <li><b>Running out costs more than leftovers.</b> When in doubt, prep more.</li>
+          <li><b>Leftovers:</b> freeze unused dough; cheese and sauce keep for the next night.</li>
+          <li><b>Log pies sold each hour.</b> After two or three nights we set prep from the real numbers.</li>
+        </ol>
+      </div>
+
+      <div class="ft-card">
+        <div class="ft-head">How the kitchen runs</div>
+        <ol class="flow">
+          <li><b>Margolis buys the ingredients, boxes and containers</b> from your order list, or pays you back with receipts.</li>
+          <li><b>Every sale rings on Margolis's Clover</b> under Kitchen. No cash, no other register.</li>
+          <li><b>Sales go to Margolis.</b> They cover your guaranteed pay, supplies, gas, power and the kitchen.</li>
+        </ol>
+      </div>
+
+      <div class="ft-card">
+        <div class="ft-head">Ground rules</div>
+        <ol class="terms">
+          <li><b>Who.</b> You run prep, cooking, service, inventory and closing the kitchen clean. A Margolis staff member is on site.</li>
+          <li><b>Whole pies only.</b> 12" pies, sold whole in a 12" pie box. No slices.</li>
+          <li><b>Delivery apps.</b> Not out of the Margolis kitchen. Any delivery is a separate conversation.</li>
+          <li><b>Food safety.</b> A current food handler or ServSafe certificate before the trial night.</li>
+          <li><b>Equipment.</b> What Margolis buys stays Margolis's. What you bring stays yours.</li>
+                    <li><b>Review.</b> After the trial we look at the real sales together and keep, adjust or end the plan.</li>
+        </ol>
+      </div>
+
+      <div class="ft-card">
+        <div class="ft-head">Sign</div>
+        <div class="ifield"><div class="ft-pair">
+          <div><label class="ft-lbl" for="fName">Full name <span class="req">*</span></label>
+            <input type="text" id="fName" autocomplete="name" data-req></div>
+          <div><label class="ft-lbl" for="fPhone">Phone <span class="req">*</span></label>
+            <input type="tel" id="fPhone" autocomplete="tel" data-req></div>
+        </div></div>
+        <div class="ft-row"><label class="ft-check"><input type="checkbox" id="fAgree" data-req>
+          <span>I've read this proposal and agree to it.</span></label></div>
+        <div class="ifield sig"><label for="fSig">Type your full name to sign <span class="req">*</span></label>
+          <input type="text" id="fSig" autocomplete="off" data-req></div>
+      </div>
+    </div>
+
+    <div id="doneWrap" hidden></div>
+    <p class="ft-foot-line">Jubyr LLC · Philadelphia · ruby@jubyr.com</p>
+  </div>
+
+  <div class="ft-bar" id="bar"><div class="ft-bar__in">
+    <div class="ft-bar__l"><b>Trial · Fri, Dec 4</b><small>5:00 – 9:00 PM</small></div>
+    <div class="ft-bar__r"><button type="button" class="ft-btn" id="fGo" disabled>Sign</button></div>
+  </div></div>
+</main>
+
+<script>
+/* ---- The numbers. Change one here and every table on the page follows. ---- */
+const ISSUED = "2026-11-24";
+const TRIAL  = "2026-12-04";
+const FLOOR  = 250;    // guaranteed pay per night
+const BONUS  = 5;      // per pie after BONUS_AFTER
+const BONUS_AFTER = 15; // pies it takes for sales to cover the $250 (about $16.36 left per pie after food, box, card fee)
+const MENU = [
+  { name: "The Red Standard",   pie: 16 },
+  { name: "Wild Rose",          pie: 19 },
+  { name: "House Blend",        pie: 19 },
+  { name: "The Hail Caesar",    pie: 21 },
+  { name: "House Caesar Salad", salad: 12 }
+];
+const KEY = "jubyr-proposal-margolis-pizza";
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const longDate = iso => new Date(iso + "T12:00:00").toLocaleDateString("en-US", { weekday:"long", month:"long", day:"numeric", year:"numeric" });
+const m0 = n => "$" + n;
+$("issued").textContent = longDate(ISSUED).replace(/^\w+, /, "");
+$("kvTrial").textContent = longDate(TRIAL);
+$("kvTrialPay").textContent = `${m0(FLOOR)} + ${m0(BONUS)} a pie after ${BONUS_AFTER}`;
+document.querySelectorAll(".tFloor").forEach(e => e.textContent = m0(FLOOR));
+document.querySelectorAll(".tBonus").forEach(e => e.textContent = m0(BONUS));
+document.querySelectorAll(".tAfter").forEach(e => e.textContent = BONUS_AFTER);
+
+document.querySelector("#menu tbody").innerHTML = MENU.map(i => i.salad
+  ? `<tr><td><b>${esc(i.name)}</b></td><td>${m0(i.salad)}</td></tr>`
+  : `<tr><td><b>${esc(i.name)}</b> <small>12" pie</small></td><td>${m0(i.pie)}</td></tr>`).join("");
+
+const pay = n => FLOOR + BONUS * Math.max(0, n - BONUS_AFTER);
+document.querySelector("#payTbl tbody").innerHTML = [10, 15, 20, 25, 30, 40]
+  .map(n => `<tr><td>${n}</td><td><b>${m0(pay(n))}</b></td></tr>`).join("");
+
+/* ---- Signing ---- */
+const F = { name:"fName", phone:"fPhone" };
+let saved = {};
+try { saved = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) {}
+for (const k in F) $(F[k]).value = saved[k] || "";
+function ready(){
+  for (const el of document.querySelectorAll("[data-req]")) if (el.type === "checkbox" ? !el.checked : !el.value.trim()) return false;
+  return true;
+}
+function refresh(){
+  $("fGo").disabled = !ready();
+  const k2 = {}; for (const k in F) k2[k] = $(F[k]).value;
+  try { localStorage.setItem(KEY, JSON.stringify(k2)); } catch (e) {}
+}
+document.querySelectorAll("input").forEach(el => { el.addEventListener("input", refresh); el.addEventListener("change", refresh); });
+refresh();
+
+$("fGo").addEventListener("click", () => {
+  if (!ready()) return;
+  const name = $("fName").value.trim(), phone = $("fPhone").value.trim(), sig = $("fSig").value.trim();
+  const stamp = new Date().toLocaleString("en-US", { month:"long", day:"numeric", year:"numeric", hour:"numeric", minute:"2-digit", timeZoneName:"short" });
+  const lines = [
+    "PIZZA KITCHEN PROPOSAL · MARGOLIS (9 W Wildey St, Philadelphia)",
+    "Issued by Jubyr LLC on " + ISSUED,
+    "",
+    "Name: " + name + " · Phone: " + phone,
+    "Trial night: " + longDate(TRIAL) + ", 5:00 PM – 9:00 PM",
+    "Pay: $" + FLOOR + " guaranteed per night + $" + BONUS + " per pie after " + BONUS_AFTER,
+    "",
+    "Terms: as shown at https://jubyr.com/agreements/margolis-pizza",
+    "",
+    "Agreed and signed: " + sig,
+    "Signed: " + stamp
+  ];
+  const mail = "mailto:ruby@jubyr.com?subject=" + encodeURIComponent("Signed: Margolis pizza proposal · " + name)
+    + "&body=" + encodeURIComponent(lines.join("\n"));
+  document.querySelectorAll("#formWrap input").forEach(el => el.disabled = true);
+  const sign = document.querySelector("#formWrap .ft-card:last-child");
+  sign.innerHTML = `<div class="ft-head">Signatures</div>
+    <div class="ft-row"><span class="signed">${esc(sig)}</span><span class="stamp">${esc(name)} · ${esc(phone)} · signed ${esc(stamp)}</span></div>
+    <div class="ft-row"><span class="signed">Ruby Johnston</span><span class="stamp">Jubyr LLC · issued ${esc(longDate(ISSUED))}</span></div>`;
+  $("bar").hidden = true;
+  $("doneWrap").hidden = false;
+  $("doneWrap").className = "ft-col no-print";
+  $("doneWrap").style.padding = "0";
+  $("doneWrap").innerHTML = `<div class="ft-card ft-done">
+      <div class="mark">✓</div>
+      <h2>Last step: send it.</h2>
+      <p>Tap Email to send Ruby your signed copy. Save a PDF for yourself.</p>
+      <div class="acts">
+        <a class="ft-btn" href="${mail}">Email to Ruby</a>
+        <button type="button" class="ft-btn ghost" onclick="window.print()">Save PDF</button>
+      </div></div>`;
+  document.querySelector(".ft-col").insertBefore($("doneWrap"), $("formWrap"));
+  window.scrollTo(0, 0);
+});
+</script>
+</body>
+</html>
